@@ -234,8 +234,9 @@
 #define VARIOUS_STORE_HEALING_WISH                   142
 #define VARIOUS_HIT_SWITCH_TARGET_FAILED             143
 #define VARIOUS_TRY_REVIVAL_BLESSING                 144
+#define VARIOUS_GIVE_DROPPED_ITEMS                   145
 // pokefirered
-#define VARIOUS_GET_BATTLERS_FOR_RECALL              145 // for battle tower
+#define VARIOUS_GET_BATTLERS_FOR_RECALL              146 // for battle tower
 
 // Cmd_manipulatedamage
 #define DMG_CHANGE_SIGN            0
