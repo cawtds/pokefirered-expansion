@@ -145,6 +145,13 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
             input->checkStandardWildEncounter = TRUE;
     }
 
+    // If B is pressed, field controls are allowed, and the player is either running or walking.
+    if ((newKeys & B_BUTTON) && (!ArePlayerFieldControlsLocked())
+    && (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_DASH | PLAYER_AVATAR_FLAG_ON_FOOT)))
+    {
+        gRunToggleBtnSet = TRUE;
+    }
+
     if (!QL_IS_PLAYBACK_STATE)
     {
         if (heldKeys & DPAD_UP)
