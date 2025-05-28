@@ -123,7 +123,7 @@ static const u16 sDexAreas_Sevii6[][2] = {
 	{ MAPSEC_RUIN_VALLEY,    DEX_AREA_RUIN_VALLEY },
 	{ MAPSEC_DOTTED_HOLE,    DEX_AREA_DOTTED_HOLE },
 	{ MAPSEC_PATTERN_BUSH,   DEX_AREA_PATTERN_BUSH },
-	{ MAPSEC_ALTERING_CAVE_FRLG,  DEX_AREA_ALTERING_CAVE }    
+	{ MAPSEC_ALTERING_CAVE,  DEX_AREA_ALTERING_CAVE }    
 };
 
 static const u16 sDexAreas_Sevii7[][2] = {
@@ -182,10 +182,10 @@ s32 GetSpeciesPokedexAreaMarkers(u16 species, struct Subsprite * subsprites)
     alteringCaveNum = VarGet(VAR_ALTERING_CAVE_WILD_SET);
     if (alteringCaveNum >= NUM_ALTERING_CAVE_TABLES)
         alteringCaveNum = 0;
-    for (i = 0, areaCount = 0; gWildMonHeaders[i].mapGroup != MAP_GROUP(UNDEFINED); i++)
+    for (i = 0, areaCount = 0; gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED); i++)
     {
         mapSecId = GetMapSecIdFromWildMonHeader(&gWildMonHeaders[i]);
-        if (mapSecId == MAPSEC_ALTERING_CAVE_FRLG)
+        if (mapSecId == MAPSEC_ALTERING_CAVE)
         {
             alteringCaveCount++;
             if (alteringCaveNum != alteringCaveCount - 1)

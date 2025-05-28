@@ -145,8 +145,8 @@ class WildEncounterAssembler:
     
     def WriteTerminator(self):
         self.WriteLine("{", 1)
-        self.WriteLine(".mapGroup = MAP_GROUP(UNDEFINED),", 2)
-        self.WriteLine(".mapNum = MAP_NUM(UNDEFINED),", 2)
+        self.WriteLine(".mapGroup = MAP_GROUP(MAP_UNDEFINED),", 2)
+        self.WriteLine(".mapNum = MAP_NUM(MAP_UNDEFINED),", 2)
         self.WriteLine(".encounterTypes =", 2)
         self.WriteLine("{", 2)
         for season in seasons:
@@ -238,8 +238,8 @@ class WildEncounterAssembler:
                 map_num = str(map_num_counter)
                 map_num_counter += 1
                 if for_maps:
-                    map_group = f"MAP_GROUP({map_ident})"
-                    map_num = f"MAP_NUM({map_ident})"
+                    map_group = f"MAP_GROUP(MAP_{map_ident})"
+                    map_num = f"MAP_NUM(MAP_{map_ident})"
                 base_label = map_encounters["base_label"]
                 shared_label = base_label
                 season = self.config.season_fallback
