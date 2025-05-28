@@ -567,7 +567,7 @@ static bool32 TrainerSeeFunc_OffscreenAboveTrainerCreateCameraObj(u8 taskId, str
 {
     u32 specialObjectId;
     task->tData5 = 0;
-    specialObjectId = SpawnSpecialObjectEventParameterized(OBJ_EVENT_GFX_YOUNGSTER, 7, OBJ_EVENT_ID_CAMERA, gSaveBlock1Ptr->pos.x + 7, gSaveBlock1Ptr->pos.y + 7, 3);
+    specialObjectId = SpawnSpecialObjectEventParameterized(OBJ_EVENT_GFX_YOUNGSTER, 7, LOCALID_CAMERA, gSaveBlock1Ptr->pos.x + 7, gSaveBlock1Ptr->pos.y + 7, 3);
     gObjectEvents[specialObjectId].invisible = TRUE;
     CameraObjectSetFollowedObjectId(gObjectEvents[specialObjectId].spriteId);
     task->tFuncId++;
@@ -577,7 +577,7 @@ static bool32 TrainerSeeFunc_OffscreenAboveTrainerCreateCameraObj(u8 taskId, str
 static bool32 TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveUp(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     u8 specialObjectId;
-    TryGetObjectEventIdByLocalIdAndMap(OBJ_EVENT_ID_CAMERA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &specialObjectId);
+    TryGetObjectEventIdByLocalIdAndMap(LOCALID_CAMERA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &specialObjectId);
 
     if (ObjectEventIsMovementOverridden(&gObjectEvents[specialObjectId]) && !ObjectEventClearHeldMovementIfFinished(&gObjectEvents[specialObjectId]))
         return FALSE;
@@ -600,7 +600,7 @@ static bool32 TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveUp(u8 taskId, str
 static bool32 TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveDown(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
 {
     u8 specialObjectId;
-    TryGetObjectEventIdByLocalIdAndMap(OBJ_EVENT_ID_CAMERA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &specialObjectId);
+    TryGetObjectEventIdByLocalIdAndMap(LOCALID_CAMERA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &specialObjectId);
 
     if (FieldEffectActiveListContains(FLDEFF_EXCLAMATION_MARK_ICON))
         return FALSE;
@@ -616,7 +616,7 @@ static bool32 TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveDown(u8 taskId, s
     else
     {
         CameraObjectSetFollowedObjectId(GetPlayerAvatarObjectId());
-        RemoveObjectEventByLocalIdAndMap(OBJ_EVENT_ID_CAMERA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+        RemoveObjectEventByLocalIdAndMap(LOCALID_CAMERA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
         task->tData5 = 0;
         task->tFuncId = 2;
     }
