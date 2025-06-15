@@ -2,7 +2,6 @@
 #include "gflib.h"
 #include "item.h"
 #include "task.h"
-#include "menu_indicators.h"
 #include "strings.h"
 #include "menu.h"
 #include "mail.h"
@@ -16,7 +15,6 @@
 #include "item_menu.h"
 #include "item_pc.h"
 #include "party_menu.h"
-#include "constants/item_menu.h"
 #include "constants/items.h"
 #include "constants/songs.h"
 #include "constants/field_weather.h"
@@ -273,7 +271,7 @@ static void PrintStringOnWindow0WithDialogueFrame(const u8 *str)
 
 static void Task_TopMenu_ItemStorageSubmenu_HandleInput(u8 taskId)
 {
-    if (JOY_REPT(DPAD_UP))
+    if (JOY_REPEAT(DPAD_UP))
     {
         if (Menu_GetCursorPos() != 0)
         {
@@ -282,7 +280,7 @@ static void Task_TopMenu_ItemStorageSubmenu_HandleInput(u8 taskId)
             PrintStringOnWindow0WithDialogueFrame(sItemStorageActionDescriptionPtrs[Menu_GetCursorPos()]);
         }
     }
-    else if (JOY_REPT(DPAD_DOWN))
+    else if (JOY_REPEAT(DPAD_DOWN))
     {
         if (Menu_GetCursorPos() != 2)
         {
@@ -308,7 +306,7 @@ static void Task_DepositItem_WaitFadeAndGoToBag(u8 taskId)
     if (!gPaletteFade.active)
     {
         CleanupOverworldWindowsAndTilemaps();
-        GoToBagMenu(ITEMMENULOCATION_ITEMPC, OPEN_BAG_ITEMS, CB2_ReturnToField);
+        GoToBagMenu(ITEMMENULOCATION_ITEMPC, ITEMS_POCKET, CB2_ReturnToField);
         gFieldCallback = CB2_ReturnFromDepositMenu;
         DestroyTask(taskId);
     }
@@ -695,7 +693,7 @@ void Mailbox_ReturnToMailListAfterDeposit(void)
 
 static void Task_Error_NoPokemon(u8 taskId)
 {
-    DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_ThereIsNoPokemon, Task_PlayerPcExitMailSubmenu);
+    DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_NoPokemon, Task_PlayerPcExitMailSubmenu);
 }
 
 static void Task_RedrawPlayerPcMailboxAndSetUpInputHandler(u8 taskId)

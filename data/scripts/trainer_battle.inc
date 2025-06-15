@@ -63,7 +63,7 @@ EventScript_TryDoRematchBattle::
 	special ShowTrainerIntroSpeech
 	waitmessage
 	waitbuttonpress
-	special StartRematchBattle
+	special BattleSetup_StartRematchBattle
 	waitstate
 	releaseall
 	end
@@ -81,7 +81,7 @@ EventScript_TryDoDoubleRematchBattle::
 	special ShowTrainerIntroSpeech
 	waitmessage
 	waitbuttonpress
-	special StartRematchBattle
+	special BattleSetup_StartRematchBattle
 	waitstate
 	releaseall
 	end

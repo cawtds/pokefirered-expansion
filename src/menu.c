@@ -1,4 +1,5 @@
 #include "global.h"
+#include "decompress.h"
 #include "gflib.h"
 #include "field_specials.h"
 #include "field_weather.h"
@@ -777,13 +778,13 @@ s8 ProcessMenuInput_other(void)
     {
         return MENU_B_PRESSED;
     }
-    if (JOY_REPT(DPAD_ANY) == DPAD_UP)
+    if (JOY_REPEAT(DPAD_ANY) == DPAD_UP)
     {
         PlaySE(SE_SELECT);
         Menu_MoveCursor(-1);
         return MENU_NOTHING_CHOSEN;
     }
-    if (JOY_REPT(DPAD_ANY) == DPAD_DOWN)
+    if (JOY_REPEAT(DPAD_ANY) == DPAD_DOWN)
     {
         PlaySE(SE_SELECT);
         Menu_MoveCursor(1);
@@ -806,13 +807,13 @@ s8 Menu_ProcessInputNoWrapAround_other(void)
     {
         return MENU_B_PRESSED;
     }
-    if (JOY_REPT(DPAD_ANY) == DPAD_UP)
+    if (JOY_REPEAT(DPAD_ANY) == DPAD_UP)
     {
         if (oldPos != Menu_MoveCursorNoWrapAround(-1))
             PlaySE(SE_SELECT);
         return MENU_NOTHING_CHOSEN;
     }
-    if (JOY_REPT(DPAD_ANY) == DPAD_DOWN)
+    if (JOY_REPEAT(DPAD_ANY) == DPAD_DOWN)
     {
         if (oldPos != Menu_MoveCursorNoWrapAround(1))
             PlaySE(SE_SELECT);
@@ -1028,7 +1029,7 @@ void *DecompressAndCopyTileDataToVram(u8 bgId, const void *src, u32 size, u16 of
 
     if (sTempTileDataBufferCursor < NELEMS(sTempTileDataBuffers))
     {
-        void *ptr = MallocAndDecompress(src, &sizeOut);
+        void *ptr = malloc_and_decompress(src, &sizeOut);
         if (!size)
             size = sizeOut;
         if (ptr)
@@ -1041,30 +1042,11 @@ void *DecompressAndCopyTileDataToVram(u8 bgId, const void *src, u32 size, u16 of
     return NULL;
 }
 
-void *DecompressAndCopyTileDataToVram2(u8 bgId, const void *src, u32 size, u16 offset, u8 mode)
-{
-    u32 sizeOut;
-
-    if (sTempTileDataBufferCursor < NELEMS(sTempTileDataBuffers))
-    {
-        void *ptr = MallocAndDecompress(src, &sizeOut);
-        if (sizeOut > size)
-            sizeOut = size;
-        if (ptr)
-        {
-            CopyDecompressedTileDataToVram(bgId, ptr, sizeOut, offset, mode);
-            sTempTileDataBuffers[sTempTileDataBufferCursor++] = ptr;
-        }
-        return ptr;
-    }
-    return NULL;
-}
-
 void DecompressAndLoadBgGfxUsingHeap(u8 bgId, const void *src, u32 size, u16 offset, u8 mode)
 {
     u32 sizeOut;
 
-    void *ptr = MallocAndDecompress(src, &sizeOut);
+    void *ptr = malloc_and_decompress(src, &sizeOut);
     if (!size)
         size = sizeOut;
     if (ptr)
@@ -1079,7 +1061,7 @@ void DecompressAndLoadBgGfxUsingHeap2(u8 bgId, const void *src, u32 size, u16 of
 {
     u32 sizeOut;
 
-    void *ptr = MallocAndDecompress(src, &sizeOut);
+    void *ptr = malloc_and_decompress(src, &sizeOut);
     if (sizeOut > size)
         sizeOut = size;
     if (ptr)
@@ -1099,25 +1081,17 @@ static void TaskFreeBufAfterCopyingTileDataToVram(u8 taskId)
     }
 }
 
-void *MallocAndDecompress(const void *src, u32 *size)
+void *malloc_and_decompress(const void *src, u32 *size)
 {
-    u32 sizeLocal; // If size is passed as NULL, because we don't care about knowing the size
     void *ptr;
+    u32 localSize = GetDecompressedDataSize(src);
 
-    if (size == NULL)
-        size = &sizeLocal;
+    if (size != NULL)
+        *size = localSize;
 
-    u8 *sizeAsBytes = (u8 *)size;
-    u8 *srcAsBytes = (u8 *)src;
-
-    sizeAsBytes[0] = srcAsBytes[1];
-    sizeAsBytes[1] = srcAsBytes[2];
-    sizeAsBytes[2] = srcAsBytes[3];
-    sizeAsBytes[3] = 0;
-
-    ptr = Alloc(*size);
+    ptr = Alloc(localSize);
     if (ptr)
-        LZ77UnCompWram(src, ptr);
+        DecompressDataWithHeaderWram(src, ptr);
     return ptr;
 }
 

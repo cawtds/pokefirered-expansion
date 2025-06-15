@@ -611,7 +611,7 @@ static void Task_ResetObjectsRematchWantedState(u8 taskId)
 
     if (task->data[0] == 0 && IsPlayerStandingStill() == TRUE)
     {
-        HandleEnforcedLookDirectionOnPlayerStopMoving();
+        PlayerFreeze();
         task->data[0] = 1;
     }
 

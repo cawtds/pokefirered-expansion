@@ -24,7 +24,6 @@
 #include "task.h"
 #include "text_window.h"
 #include "trig.h"
-#include "constants/item_menu.h"
 #include "constants/items.h"
 #include "constants/pokemon_icon.h"
 #include "constants/songs.h"
@@ -3491,7 +3490,7 @@ static void Task_ChangeScreen(u8 taskId)
         break;
     case SCREEN_CHANGE_ITEM_FROM_BAG:
         FreePokeStorageData();
-        GoToBagMenu(ITEMMENULOCATION_PCBOX, OPEN_BAG_ITEMS, CB2_ReturnToPokeStorage);
+        GoToBagMenu(ITEMMENULOCATION_PCBOX, ITEMS_POCKET, CB2_ReturnToPokeStorage);
         break;
     }
 
@@ -3527,7 +3526,7 @@ static void SetScrollingBackground(void)
 {
     SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(3) | BGCNT_16COLOR | BGCNT_SCREENBASE(31));
     DecompressAndLoadBgGfxUsingHeap(3, sScrollingBg_Gfx, 0, 0, 0);
-    LZ77UnCompVram(sScrollingBg_Tilemap, (void *)BG_SCREEN_ADDR(31));
+    DecompressDataWithHeaderVram(sScrollingBg_Tilemap, (void *)BG_SCREEN_ADDR(31));
 }
 
 static void ScrollBackground(void)
@@ -3540,7 +3539,7 @@ static void LoadPokeStorageMenuGfx(void)
 {
     InitBgsFromTemplates(0, sBgTemplates, ARRAY_COUNT(sBgTemplates));
     DecompressAndLoadBgGfxUsingHeap(1, gPokeStorageMenu_Gfx, 0, 0, 0);
-    LZ77UnCompWram(sMenu_Tilemap, gStorage->menuTilemapBuffer);
+    DecompressDataWithHeaderWram(sMenu_Tilemap, gStorage->menuTilemapBuffer);
     SetBgTilemapBuffer(1, gStorage->menuTilemapBuffer);
     ShowBg(1);
     ScheduleBgCopyTilemapToVram(1);
@@ -3748,7 +3747,7 @@ static void UpdateWaveformAnimation(void)
 
 static void InitSupplementalTilemaps(void)
 {
-    LZ77UnCompWram(gPokeStoragePartyMenu_Tilemap, gStorage->partyMenuTilemapBuffer);
+    DecompressDataWithHeaderWram(gPokeStoragePartyMenu_Tilemap, gStorage->partyMenuTilemapBuffer);
     LoadPalette(gPokeStoragePartyMenu_Pal, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
     TilemapUtil_SetTilemap(TILEMAP_PARTY_MENU, 1, gStorage->partyMenuTilemapBuffer, 12, 22);
     TilemapUtil_SetTilemap(TILEMAP_CLOSE_BUTTON, 1, sCloseBoxButton_Tilemap, 9, 4);
@@ -5046,7 +5045,7 @@ static void LoadWallpaperGfx(u8 boxId, s8 direction)
 
     wallpaperId = GetBoxWallpaper(gStorage->wallpaperLoadBoxId);
     wallpaper = &sWallpapers[wallpaperId];
-    LZ77UnCompWram(wallpaper->tileMap, gStorage->wallpaperTilemap);
+    DecompressDataWithHeaderWram(wallpaper->tileMap, gStorage->wallpaperTilemap);
     DrawWallpaper(gStorage->wallpaperBgTilemapBuffer, gStorage->wallpaperTilemap, gStorage->wallpaperLoadDir, gStorage->wallpaperOffset);
 
     if (gStorage->wallpaperLoadDir != 0)
@@ -6523,7 +6522,7 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
 
         // Buffer item name
         if (gStorage->displayMonItemId != ITEM_NONE)
-            StringCopyPadded(gStorage->displayMonItemNameText, ItemId_GetName(gStorage->displayMonItemId), CHAR_SPACE, 8);
+            StringCopyPadded(gStorage->displayMonItemNameText, GetItemName(gStorage->displayMonItemId), CHAR_SPACE, 8);
         else
             StringFill(gStorage->displayMonItemNameText, CHAR_SPACE, 8);
     }
@@ -6561,7 +6560,7 @@ static u8 HandleInput_InBox_Normal(void)
         gStorage->cursorVerticalWrap = 0;
         gStorage->cursorHorizontalWrap = 0;
         gStorage->cursorFlipTimer = 0;
-        if (JOY_REPT(DPAD_UP))
+        if (JOY_REPEAT(DPAD_UP))
         {
             input = INPUT_MOVE_CURSOR;
             if (sCursorPosition >= IN_BOX_COLUMNS)
@@ -6573,7 +6572,7 @@ static u8 HandleInput_InBox_Normal(void)
             }
             break;
         }
-        else if (JOY_REPT(DPAD_DOWN))
+        else if (JOY_REPEAT(DPAD_DOWN))
         {
             input = INPUT_MOVE_CURSOR;
             cursorPosition += IN_BOX_COLUMNS;
@@ -6587,7 +6586,7 @@ static u8 HandleInput_InBox_Normal(void)
             }
             break;
         }
-        else if (JOY_REPT(DPAD_LEFT))
+        else if (JOY_REPEAT(DPAD_LEFT))
         {
             input = INPUT_MOVE_CURSOR;
             if (sCursorPosition % IN_BOX_COLUMNS != 0)
@@ -6599,7 +6598,7 @@ static u8 HandleInput_InBox_Normal(void)
             }
             break;
         }
-        else if (JOY_REPT(DPAD_RIGHT))
+        else if (JOY_REPEAT(DPAD_RIGHT))
         {
             input = INPUT_MOVE_CURSOR;
             if ((sCursorPosition + 1) % IN_BOX_COLUMNS != 0)
@@ -6684,7 +6683,7 @@ static u8 HandleInput_InBox_GrabbingMultiple(void)
 {
     if (JOY_HELD(A_BUTTON))
     {
-        if (JOY_REPT(DPAD_UP))
+        if (JOY_REPEAT(DPAD_UP))
         {
             if (sCursorPosition / IN_BOX_COLUMNS != 0)
             {
@@ -6694,7 +6693,7 @@ static u8 HandleInput_InBox_GrabbingMultiple(void)
             else
                 return INPUT_MULTIMOVE_UNABLE;
         }
-        else if (JOY_REPT(DPAD_DOWN))
+        else if (JOY_REPEAT(DPAD_DOWN))
         {
             if (sCursorPosition + IN_BOX_COLUMNS < IN_BOX_COUNT)
             {
@@ -6704,7 +6703,7 @@ static u8 HandleInput_InBox_GrabbingMultiple(void)
             else
                 return INPUT_MULTIMOVE_UNABLE;
         }
-        else if (JOY_REPT(DPAD_LEFT))
+        else if (JOY_REPEAT(DPAD_LEFT))
         {
             if (sCursorPosition % IN_BOX_COLUMNS != 0)
             {
@@ -6714,7 +6713,7 @@ static u8 HandleInput_InBox_GrabbingMultiple(void)
             else
                 return INPUT_MULTIMOVE_UNABLE;
         }
-        else if (JOY_REPT(DPAD_RIGHT))
+        else if (JOY_REPEAT(DPAD_RIGHT))
         {
             if ((sCursorPosition + 1) % IN_BOX_COLUMNS != 0)
             {
@@ -6747,7 +6746,7 @@ static u8 HandleInput_InBox_GrabbingMultiple(void)
 
 static u8 HandleInput_InBox_MovingMultiple(void)
 {
-    if (JOY_REPT(DPAD_UP))
+    if (JOY_REPEAT(DPAD_UP))
     {
         if (MultiMove_TryMoveGroup(0))
         {
@@ -6757,7 +6756,7 @@ static u8 HandleInput_InBox_MovingMultiple(void)
         else
             return INPUT_MULTIMOVE_UNABLE;
     }
-    else if (JOY_REPT(DPAD_DOWN))
+    else if (JOY_REPEAT(DPAD_DOWN))
     {
         if (MultiMove_TryMoveGroup(1))
         {
@@ -6767,7 +6766,7 @@ static u8 HandleInput_InBox_MovingMultiple(void)
         else
             return INPUT_MULTIMOVE_UNABLE;
     }
-    else if (JOY_REPT(DPAD_LEFT))
+    else if (JOY_REPEAT(DPAD_LEFT))
     {
         if (MultiMove_TryMoveGroup(2))
         {
@@ -6777,7 +6776,7 @@ static u8 HandleInput_InBox_MovingMultiple(void)
         else
             return INPUT_SCROLL_LEFT;
     }
-    else if (JOY_REPT(DPAD_RIGHT))
+    else if (JOY_REPEAT(DPAD_RIGHT))
     {
         if (MultiMove_TryMoveGroup(3))
         {
@@ -6832,7 +6831,7 @@ static u8 HandleInput_InParty(void)
         gotoBox = FALSE;
         input = INPUT_NONE;
 
-        if (JOY_REPT(DPAD_UP))
+        if (JOY_REPEAT(DPAD_UP))
         {
             if (--cursorPosition < 0)
                 cursorPosition = PARTY_SIZE;
@@ -6840,7 +6839,7 @@ static u8 HandleInput_InParty(void)
                 input = INPUT_MOVE_CURSOR;
             break;
         }
-        else if (JOY_REPT(DPAD_DOWN))
+        else if (JOY_REPEAT(DPAD_DOWN))
         {
             if (++cursorPosition > PARTY_SIZE)
                 cursorPosition = 0;
@@ -6848,14 +6847,14 @@ static u8 HandleInput_InParty(void)
                 input = INPUT_MOVE_CURSOR;
             break;
         }
-        else if (JOY_REPT(DPAD_LEFT) && sCursorPosition != 0)
+        else if (JOY_REPEAT(DPAD_LEFT) && sCursorPosition != 0)
         {
             input = INPUT_MOVE_CURSOR;
             gStorage->cursorPrevPartyPos = sCursorPosition;
             cursorPosition = 0;
             break;
         }
-        else if (JOY_REPT(DPAD_RIGHT))
+        else if (JOY_REPEAT(DPAD_RIGHT))
         {
             if (sCursorPosition == 0)
             {
@@ -6947,7 +6946,7 @@ static u8 HandleInput_BoxTitle(void)
         gStorage->cursorVerticalWrap = 0;
         gStorage->cursorFlipTimer = 0;
 
-        if (JOY_REPT(DPAD_UP))
+        if (JOY_REPEAT(DPAD_UP))
         {
             input = INPUT_MOVE_CURSOR;
             cursorArea = CURSOR_AREA_BUTTONS;
@@ -6955,7 +6954,7 @@ static u8 HandleInput_BoxTitle(void)
             gStorage->cursorFlipTimer = 1;
             break;
         }
-        else if (JOY_REPT(DPAD_DOWN))
+        else if (JOY_REPEAT(DPAD_DOWN))
         {
             input = INPUT_MOVE_CURSOR;
             cursorArea = CURSOR_AREA_IN_BOX;
@@ -7020,7 +7019,7 @@ static u8 HandleInput_OnButtons(void)
         gStorage->cursorVerticalWrap = 0;
         gStorage->cursorFlipTimer = 0;
 
-        if (JOY_REPT(DPAD_UP))
+        if (JOY_REPEAT(DPAD_UP))
         {
             input = INPUT_MOVE_CURSOR;
             cursorArea = CURSOR_AREA_IN_BOX;
@@ -7032,7 +7031,7 @@ static u8 HandleInput_OnButtons(void)
             gStorage->cursorFlipTimer = 1;
             break;
         }
-        else if (JOY_REPT(DPAD_DOWN | START_BUTTON))
+        else if (JOY_REPEAT(DPAD_DOWN | START_BUTTON))
         {
             input = INPUT_MOVE_CURSOR;
             cursorArea = CURSOR_AREA_BOX_TITLE;
@@ -7041,14 +7040,14 @@ static u8 HandleInput_OnButtons(void)
             break;
         }
 
-        if (JOY_REPT(DPAD_LEFT))
+        if (JOY_REPEAT(DPAD_LEFT))
         {
             input = INPUT_MOVE_CURSOR;
             if (--cursorPosition < 0)
                 cursorPosition = 1;
             break;
         }
-        else if (JOY_REPT(DPAD_RIGHT))
+        else if (JOY_REPEAT(DPAD_RIGHT))
         {
             input = INPUT_MOVE_CURSOR;
             if (++cursorPosition > 1)
@@ -8435,7 +8434,7 @@ static bool8 IsActiveItemMoving(void)
 
 static const u8 *GetMovingItemName(void)
 {
-    return ItemId_GetName(gStorage->movingItemId);
+    return GetItemName(gStorage->movingItemId);
 }
 
 static u16 GetMovingItem(void)
@@ -8546,7 +8545,7 @@ static void LoadItemIconGfx(u8 id, const u32 *itemTiles, const u16 *itemPal)
         return;
 
     CpuFastFill(0, gStorage->itemIconBuffer, 0x200);
-    LZ77UnCompWram(itemTiles, gStorage->tileBuffer);
+    DecompressDataWithHeaderWram(itemTiles, gStorage->tileBuffer);
     for (i = 0; i < 3; i++)
         CpuFastCopy(gStorage->tileBuffer + (i * 0x60), gStorage->itemIconBuffer + (i * 0x80), 0x60);
 
@@ -8623,9 +8622,9 @@ static void PrintItemDescription(void)
     const u8 *description;
 
     if (IsActiveItemMoving())
-        description = ItemId_GetDescription(gStorage->movingItemId);
+        description = GetItemDescription(gStorage->movingItemId);
     else
-        description = ItemId_GetDescription(gStorage->displayMonItemId);
+        description = GetItemDescription(gStorage->displayMonItemId);
 
     FillWindowPixelBuffer(2, PIXEL_FILL(1));
     AddTextPrinterParameterized5(2, FONT_NORMAL, description, 2, 0, 0, NULL, 0, 0);

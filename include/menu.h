@@ -9,6 +9,12 @@
 #define MENU_NOTHING_CHOSEN -2
 #define MENU_B_PRESSED -1
 
+#define MENU_CURSOR_DELTA_NONE   0
+#define MENU_CURSOR_DELTA_UP    -1
+#define MENU_CURSOR_DELTA_DOWN   1
+#define MENU_CURSOR_DELTA_LEFT  -1
+#define MENU_CURSOR_DELTA_RIGHT  1
+
 #define MENU_INFO_ICON_CAUGHT    0
 #define MENU_INFO_ICON_TYPE      (NUMBER_OF_MON_TYPES + 1)
 #define MENU_INFO_ICON_POWER     (NUMBER_OF_MON_TYPES + 2)
@@ -105,12 +111,11 @@ void DisplayYesNoMenuDefaultYes(void);
 void InitStandardTextBoxWindows(void);
 void DecompressAndLoadBgGfxUsingHeap(u8 bgId, const void *src, u32 size, u16 offset, u8 mode);
 void InitTextBoxGfxAndPrinters(void);
-void *DecompressAndCopyTileDataToVram2(u8 bgId, const void *src, u32 size, u16 offset, u8 mode);
 void LoadMessageBoxAndFrameGfx(u8 windowId, bool8 copyToVram);
 void SetStandardWindowBorderStyle(u8 windowId, bool8 copyToVram);
 void ResetBgPositions(void);
 void DisplayItemMessageOnField(u8 taskId, u8 fontId, const u8 *src, TaskFunc callback);
-void *MallocAndDecompress(const void *src, u32 * size);
+void *malloc_and_decompress(const void *src, u32 * size);
 u8 GetStartMenuWindowId(void);
 u8 AddStartMenuWindow(u8 height);
 void RemoveStartMenuWindow(void);
