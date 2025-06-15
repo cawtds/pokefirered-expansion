@@ -39,7 +39,7 @@ extern const struct Item gItemsInfo[];
 extern struct BagPocket gBagPockets[];
 
 void GetBerryCountString(u8 *dst, const u8 *berryName, u32 quantity);
-void CopyItemName(u16 itemId, u8 *string);
+u8 *CopyItemName(u16 itemId, u8 *string);
 u8 *CopyItemNameHandlePlural(u16 itemId, u8 *string, u32 quantity);
 bool8 IsBagPocketNonEmpty(u8 pocket);
 bool8 CheckBagHasItem(u16 itemId, u16 count);
@@ -52,38 +52,37 @@ u8 CountUsedPCItemSlots(void);
 bool8 CheckPCHasItem(u16 itemId, u16 count);
 bool8 AddPCItem(u16 itemId, u16 count);
 void SwapRegisteredBike(void);
-const u8 *ItemId_GetName(u16 itemId);
-u32 ItemId_GetPrice(u16 itemId);
-u8 ItemId_GetHoldEffect(u16 itemId);
-u8 ItemId_GetHoldEffectParam(u16 itemId);
-const u8 *ItemId_GetDescription(u16 itemId);
-bool32 ItemId_CopyDescription(u8 *a, u32 itemId, u32 c);
-u8 ItemId_GetImportance(u16 itemId);
-u8 ItemId_GetConsumability(u16 itemId);
-u8 ItemId_GetUnknownValue(u16 itemId);
-u8 ItemId_GetPocket(u16 itemId);
-u8 ItemId_GetType(u16 itemId);
-ItemUseFunc ItemId_GetFieldFunc(u16 itemId);
-u8 ItemId_GetBattleUsage(u16 itemId);
-u16 ItemId_GetSecondaryId(u16 itemId);
-u32 ItemId_GetFlingPower(u32 itemId);
+const u8 *GetItemName(u16 itemId);
+u32 GetItemPrice(u16 itemId);
+u8 GetItemHoldEffect(u16 itemId);
+u8 GetItemHoldEffectParam(u16 itemId);
+const u8 *GetItemDescription(u16 itemId);
+u8 GetItemImportance(u16 itemId);
+u8 GetItemConsumability(u16 itemId);
+u8 GetItemPocket(u16 itemId);
+u8 GetItemType(u16 itemId);
+ItemUseFunc GetItemFieldFunc(u16 itemId);
+u8 GetItemBattleUsage(u16 itemId);
+u16 GetItemSecondaryId(u16 itemId);
+u32 GetItemFlingPower(u32 itemId);
+void MoveItemSlotInList(struct ItemSlot *itemSlots_, u32 from, u32 to_);
 void ClearBag(void);
 void ClearPCItemSlots(void);
 void TrySetObtainedItemQuestLogEvent(u16 itemId);
 bool8 AddBagItem(u16 itemId, u16 amount);
 
-void SortPocketAndPlaceHMsFirst(struct BagPocket * pocket);
 u16 BagGetItemIdByPocketPosition(u8 pocketId, u16 itemId);
 u16 BagGetQuantityByPocketPosition(u8 pocketId, u16 itemId);
 u16 BagGetQuantityByItemId(u16 item);
-u8 ItemId_GetImportance(u16 itemId);
+u8 GetItemImportance(u16 itemId);
 void BagPocketCompaction(struct ItemSlot * slots, u8 capacity);
 u16 GetPcItemQuantity(u16 *);
 void SetBagPocketsPointers(void);
 
 void ItemPcCompaction(void);
 void RemovePCItem(u16 itemId, u16 quantity);
-void SortAndCompactBagPocket(struct BagPocket * pocket);
+void CompactItemsInBagPocket(struct BagPocket * pocket);
+void SortBerriesOrTMHMs(struct BagPocket *bagPocket);
 u8 CountItemsInPC(void);
 bool8 HasAtLeastOneBerry(void);
 bool8 HasAtLeastOnePokeBall(void);
@@ -94,9 +93,10 @@ bool8 IsItemTMHM(u16 itemId);
 
 bool8 IsItemBall(u16 itemId);
 
-const u8 *ItemId_GetEffect(u32 itemId);
+const u8 *GetItemEffect(u32 itemId);
 u32 GetItemStatus1Mask(u16 itemId);
 u32 GetItemStatus2Mask(u16 itemId);
+u32 GetItemSellPrice(u32 itemId);
 
 /* Expands to:
  * enum

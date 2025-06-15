@@ -95,7 +95,7 @@ static void SetUpItemUseCallback(u8 taskId)
     if (gSpecialVar_ItemId == ITEM_ENIGMA_BERRY_E_READER)
         itemType = gTasks[taskId].data[4] - 1;
     else
-        itemType = ItemId_GetType(gSpecialVar_ItemId) - 1;
+        itemType = GetItemType(gSpecialVar_ItemId) - 1;
     if (GetPocketByItemId(gSpecialVar_ItemId) == POCKET_BERRIES)
     {
         BerryPouch_SetExitCallback(sExitCallbackByItemType[itemType]);
@@ -104,9 +104,7 @@ static void SetUpItemUseCallback(u8 taskId)
     else
     {
         ItemMenu_SetExitCallback(sExitCallbackByItemType[itemType]);
-        if (itemType == ITEM_USE_FIELD - 1)
-            Bag_BeginCloseWin0Animation();
-        ItemMenu_StartFadeToExitCallback(taskId);
+        Task_FadeAndCloseBagMenu(taskId);
     }
 }
 
@@ -137,7 +135,7 @@ static void DisplayItemMessageInCurrentContext(u8 taskId, bool8 inField, u8 font
 {
     StringExpandPlaceholders(gStringVar4, str);
     if (inField == FALSE)
-        DisplayItemMessageInBag(taskId, fontId, gStringVar4, Task_ReturnToBagFromContextMenu);
+        DisplayItemMessage(taskId, fontId, gStringVar4, CloseItemMessage);
     else
         DisplayItemMessageOnField(taskId, fontId, gStringVar4, Task_ItemUse_CloseMessageBoxAndReturnToField);
 }
@@ -157,9 +155,9 @@ static void Task_ItemUse_CloseMessageBoxAndReturnToField(u8 taskId)
 
 u8 CheckIfItemIsTMHMOrEvolutionStone(u16 itemId)
 {
-    if (ItemId_GetPocket(itemId) == POCKET_TM_HM)
+    if (GetItemPocket(itemId) == POCKET_TM_HM)
         return 1;
-    else if (ItemId_GetFieldFunc(itemId) == ItemUseOutOfBattle_EvolutionStone)
+    else if (GetItemFieldFunc(itemId) == ItemUseOutOfBattle_EvolutionStone)
         return 2;
     else
         return 0;
@@ -205,7 +203,7 @@ void ItemUseOutOfBattle_AbilityPatch(u8 taskId)
 void ItemUseOutOfBattle_Mail(u8 taskId)
 {
     ItemMenu_SetExitCallback(CB2_CheckMail);
-    ItemMenu_StartFadeToExitCallback(taskId);
+    Task_FadeAndCloseBagMenu(taskId);
 }
 
 static void CB2_CheckMail(void)
@@ -227,7 +225,7 @@ void ItemUseOutOfBattle_ExpShare(u8 taskId)
         if (!gTasks[taskId].data[2]) // to account for pressing select in the overworld
             DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_ExpShareOff, Task_ItemUse_CloseMessageBoxAndReturnToField);
         else
-            DisplayItemMessageInBag(taskId, FONT_NORMAL, gText_ExpShareOff, Task_ReturnToBagFromContextMenu);
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_ExpShareOff, CloseItemMessage);
     }
     else
     {
@@ -235,7 +233,7 @@ void ItemUseOutOfBattle_ExpShare(u8 taskId)
         if (!gTasks[taskId].data[2]) // to account for pressing select in the overworld
             DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_ExpShareOn, Task_ItemUse_CloseMessageBoxAndReturnToField);
         else
-            DisplayItemMessageInBag(taskId, FONT_NORMAL, gText_ExpShareOn, Task_ReturnToBagFromContextMenu);
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_ExpShareOn, CloseItemMessage);
     }
     FlagToggle(I_EXP_SHARE_FLAG);
 #else
@@ -384,7 +382,7 @@ static bool8 CanFish(void)
 
 static void ItemUseOnFieldCB_Rod(u8 taskId)
 {
-    StartFishing(ItemId_GetSecondaryId(gSpecialVar_ItemId));
+    StartFishing(GetItemSecondaryId(gSpecialVar_ItemId));
     DestroyTask(taskId);
 }
 
@@ -415,7 +413,7 @@ void ItemUseOutOfBattle_CoinCase(u8 taskId)
     StringExpandPlaceholders(gStringVar4, gText_CoinCase);
     ItemUse_SetQuestLogEvent(QL_EVENT_USED_ITEM, NULL, gSpecialVar_ItemId, 0xFFFF);
     if (gTasks[taskId].tIsFieldUse == FALSE)
-        DisplayItemMessageInBag(taskId, FONT_NORMAL, gStringVar4, Task_ReturnToBagFromContextMenu);
+        DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
     else
         DisplayItemMessageOnField(taskId, FONT_NORMAL, gStringVar4, Task_ItemUse_CloseMessageBoxAndReturnToField);
 }
@@ -432,7 +430,7 @@ void ItemUseOutOfBattle_PowderJar(u8 taskId)
     StringExpandPlaceholders(gStringVar4, gText_PowderQty);
     ItemUse_SetQuestLogEvent(QL_EVENT_USED_ITEM, NULL, gSpecialVar_ItemId, 0xFFFF);
     if (gTasks[taskId].tIsFieldUse == FALSE)
-        DisplayItemMessageInBag(taskId, FONT_NORMAL, gStringVar4, Task_ReturnToBagFromContextMenu);
+        DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
     else
         DisplayItemMessageOnField(taskId, FONT_NORMAL, gStringVar4, Task_ItemUse_CloseMessageBoxAndReturnToField);
 }
@@ -499,14 +497,14 @@ void ItemUseOutOfBattle_PokeFlute(u8 taskId)
     {
         ItemUse_SetQuestLogEvent(QL_EVENT_USED_ITEM, NULL, gSpecialVar_ItemId, 0xFFFF);
         if (gTasks[taskId].tIsFieldUse == FALSE)
-            DisplayItemMessageInBag(taskId, FONT_NORMAL, gText_PlayedPokeFlute, Task_PlayPokeFlute);
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_PlayedPokeFlute, Task_PlayPokeFlute);
         else
             DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_PlayedPokeFlute, Task_PlayPokeFlute);
     }
     else
     {
         if (gTasks[taskId].tIsFieldUse == FALSE)
-            DisplayItemMessageInBag(taskId, FONT_NORMAL, gText_PlayedPokeFluteCatchy, Task_ReturnToBagFromContextMenu);
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_PlayedPokeFluteCatchy, CloseItemMessage);
         else
             DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_PlayedPokeFluteCatchy, Task_ItemUse_CloseMessageBoxAndReturnToField);
     }
@@ -523,7 +521,7 @@ static void Task_DisplayPokeFluteMessage(u8 taskId)
     if (WaitFanfare(FALSE))
     {
         if (gTasks[taskId].tIsFieldUse == FALSE)
-            DisplayItemMessageInBag(taskId, FONT_NORMAL, gText_PokeFluteAwakenedMon, Task_ReturnToBagFromContextMenu);
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_PokeFluteAwakenedMon, CloseItemMessage);
         else
             DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_PokeFluteAwakenedMon, Task_ItemUse_CloseMessageBoxAndReturnToField);
     }
@@ -534,7 +532,7 @@ void ItemUseOutOfBattle_TmCase(u8 taskId)
     if (gTasks[taskId].tIsFieldUse == FALSE)
     {
         ItemMenu_SetExitCallback(InitTMCaseFromBag);
-        ItemMenu_StartFadeToExitCallback(taskId);
+        Task_FadeAndCloseBagMenu(taskId);
     }
     else
     {
@@ -549,7 +547,7 @@ void ItemUseOutOfBattle_BerryPouch(u8 taskId)
     if (gTasks[taskId].tIsFieldUse == FALSE)
     {
         ItemMenu_SetExitCallback(InitBerryPouchFromBag);
-        ItemMenu_StartFadeToExitCallback(taskId);
+        Task_FadeAndCloseBagMenu(taskId);
     }
     else
     {
@@ -565,7 +563,7 @@ void ItemUseOutOfBattle_TeachyTv(u8 taskId)
     if (gTasks[taskId].tIsFieldUse == FALSE)
     {
         ItemMenu_SetExitCallback(InitTeachyTvFromBag);
-        ItemMenu_StartFadeToExitCallback(taskId);
+        Task_FadeAndCloseBagMenu(taskId);
     }
     else
     {
@@ -580,7 +578,7 @@ void ItemUseOutOfBattle_TownMap(u8 taskId)
     if (gTasks[taskId].tIsFieldUse == FALSE)
     {
         ItemMenu_SetExitCallback(UseTownMapFromBag);
-        ItemMenu_StartFadeToExitCallback(taskId);
+        Task_FadeAndCloseBagMenu(taskId);
     }
     else
     {
@@ -596,7 +594,7 @@ void ItemUseOutOfBattle_FameChecker(u8 taskId)
     if (gTasks[taskId].tIsFieldUse == FALSE)
     {
         ItemMenu_SetExitCallback(UseFameCheckerFromBag);
-        ItemMenu_StartFadeToExitCallback(taskId);
+        Task_FadeAndCloseBagMenu(taskId);
     }
     else
     {
@@ -690,7 +688,7 @@ static void Task_InitBerryPouchFromField(u8 taskId)
 static void ItemUseInBattle_BerryPouch(u8 taskId)
 {
     ItemMenu_SetExitCallback(InitBerryPouchFromBattle);
-    ItemMenu_StartFadeToExitCallback(taskId);
+    Task_FadeAndCloseBagMenu(taskId);
 }
 
 static void InitBerryPouchFromBattle(void)
@@ -723,7 +721,7 @@ void ItemUseOutOfBattle_Repel(u8 taskId)
     }
     else
         // An earlier repel is still in effect
-        DisplayItemMessageInBag(taskId, FONT_NORMAL, gText_RepelEffectsLingered, Task_ReturnToBagFromContextMenu);
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_RepelEffectsLingered, CloseItemMessage);
 }
 
 static void Task_UseRepel(u8 taskId)
@@ -731,12 +729,12 @@ static void Task_UseRepel(u8 taskId)
     if (!IsSEPlaying())
     {
         ItemUse_SetQuestLogEvent(QL_EVENT_USED_ITEM, NULL, gSpecialVar_ItemId, 0xFFFF);
-        VarSet(VAR_REPEL_STEP_COUNT, ItemId_GetHoldEffectParam(gSpecialVar_ItemId));
+        VarSet(VAR_REPEL_STEP_COUNT, GetItemHoldEffectParam(gSpecialVar_ItemId));
     #if VAR_LAST_REPEL_LURE_USED != 0
         VarSet(VAR_LAST_REPEL_LURE_USED, gSpecialVar_ItemId);
     #endif
         RemoveUsedItem();
-        DisplayItemMessageInBag(taskId, FONT_NORMAL, gStringVar4, Task_ReturnToBagFromContextMenu);
+        DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
     }
 }
 
@@ -745,7 +743,7 @@ void ItemUseOutOfBattle_Lure(u8 taskId)
     if (LURE_STEP_COUNT == 0)
         gTasks[taskId].func = Task_StartUseLure;
     else
-        DisplayItemMessageInBag(taskId, FONT_NORMAL, gText_LureEffectsLingered, Task_ReturnToBagFromContextMenu);
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_LureEffectsLingered, CloseItemMessage);
 }
 
 static void Task_StartUseLure(u8 taskId)
@@ -764,12 +762,12 @@ static void Task_UseLure(u8 taskId)
 {
     if (!IsSEPlaying())
     {
-        VarSet(VAR_REPEL_STEP_COUNT, ItemId_GetHoldEffectParam(gSpecialVar_ItemId) | REPEL_LURE_MASK);
+        VarSet(VAR_REPEL_STEP_COUNT, GetItemHoldEffectParam(gSpecialVar_ItemId) | REPEL_LURE_MASK);
     #if VAR_LAST_REPEL_LURE_USED != 0
         VarSet(VAR_LAST_REPEL_LURE_USED, gSpecialVar_ItemId);
     #endif
         RemoveUsedItem();
-        DisplayItemMessageInBag(taskId, FONT_NORMAL, gStringVar4, Task_ReturnToBagFromContextMenu);
+        DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
     }
 }
 
@@ -787,10 +785,10 @@ void ItemUseOutOfBattle_ResetEVs(u8 taskId)
 
 static void RemoveUsedItem(void)
 {
-    u8 pocketId = ItemId_GetPocket(gSpecialVar_ItemId) - 1;
+    u8 pocketId = GetItemPocket(gSpecialVar_ItemId) - 1;
     RemoveBagItem(gSpecialVar_ItemId, 1);
-    Pocket_CalculateNItemsAndMaxShowed(pocketId);
-    PocketCalculateInitialCursorPosAndItemsAbove(pocketId);
+    UpdatePocketItemList(pocketId);
+    UpdatePocketListPosition(pocketId);
     CopyItemName(gSpecialVar_ItemId, gStringVar2);
     StringExpandPlaceholders(gStringVar4, gText_PlayerUsedVar2);
 }
@@ -823,7 +821,7 @@ static void Task_UsedBlackWhiteFlute(u8 taskId)
     if (++gTasks[taskId].data[8] > 7)
     {
         PlaySE(SE_GLASS_FLUTE);
-        DisplayItemMessageInBag(taskId, FONT_NORMAL, gStringVar4, Task_ReturnToBagFromContextMenu);
+        DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
     }
 }
 
@@ -933,7 +931,7 @@ static void ItemUse_SwitchToPartyMenuInBattle(u8 taskId)
     else
     {
         ItemMenu_SetExitCallback(EnterPartyFromItemMenuInBattle);
-        ItemMenu_StartFadeToExitCallback(taskId);
+        Task_FadeAndCloseBagMenu(taskId);
     }
 }
 
@@ -945,17 +943,17 @@ void ItemUseInBattle_BagMenu(u8 taskId)
     } 
     else if (CannotUseItemsInBattle(gSpecialVar_ItemId, NULL))
     {
-        DisplayItemMessageInBag(taskId, FONT_NORMAL, gStringVar4, Task_ReturnToBagFromContextMenu);
+        DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
     }
     else
     {
         PlaySE(SE_SELECT);
-        if (!(B_TRY_CATCH_TRAINER_BALL >= GEN_4 && (ItemId_GetBattleUsage(gSpecialVar_ItemId) == EFFECT_ITEM_THROW_BALL) && (gBattleTypeFlags & BATTLE_TYPE_TRAINER))) 
+        if (!(B_TRY_CATCH_TRAINER_BALL >= GEN_4 && (GetItemBattleUsage(gSpecialVar_ItemId) == EFFECT_ITEM_THROW_BALL) && (gBattleTypeFlags & BATTLE_TYPE_TRAINER))) 
         {
             RemoveBagItem(gSpecialVar_ItemId, 1);
         }
         ScheduleBgCopyTilemapToVram(2);
-        gTasks[taskId].func = ItemMenu_StartFadeToExitCallback;
+        gTasks[taskId].func = Task_FadeAndCloseBagMenu;
     }
 }
 
@@ -997,7 +995,7 @@ static const u8 sText_CantThrowPokeBall_Disabled[] = _("POKé BALLS cannot be us
 // Returns whether an item can be used in battle and sets the fail text.
 bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
 {
-    u16 battleUsage = ItemId_GetBattleUsage(itemId);
+    u16 battleUsage = GetItemBattleUsage(itemId);
     bool8 cannotUse = FALSE;
     const u8* failStr = NULL;
     u32 i;
@@ -1014,7 +1012,7 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
     switch (battleUsage)
     {
     case EFFECT_ITEM_INCREASE_STAT:
-        if (gBattleMons[gBattlerInMenuId].statStages[ItemId_GetEffect(itemId)[1]] == MAX_STAT_STAGE)
+        if (gBattleMons[gBattlerInMenuId].statStages[GetItemEffect(itemId)[1]] == MAX_STAT_STAGE)
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_SET_FOCUS_ENERGY:
@@ -1080,7 +1078,7 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_RESTORE_PP:
-        if (ItemId_GetEffect(itemId)[6] == ITEM4_HEAL_PP)
+        if (GetItemEffect(itemId)[6] == ITEM4_HEAL_PP)
         {
             for (i = 0; i < MAX_MON_MOVES; i++)
             {
