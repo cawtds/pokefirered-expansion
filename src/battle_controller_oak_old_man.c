@@ -427,7 +427,7 @@ static void PrintOakText_ForPetesSake(u32 battler)
         ++gBattleStruct->simulatedInputState[0];
         break;
     case 3:
-        if (!IsTextPrinterActive(24))
+        if (!IsTextPrinterActive(B_WIN_OAK_OLD_MAN))
         {
             mask = (gBitTable[gBattleStruct->simulatedInputState[1]] | gBitTable[gBattleStruct->simulatedInputState[3]]) << 16;
             BeginNormalPaletteFade(mask,
@@ -447,7 +447,7 @@ static void PrintOakText_ForPetesSake(u32 battler)
         }
         break;
     case 5:
-        if (!IsTextPrinterActive(24))
+        if (!IsTextPrinterActive(B_WIN_OAK_OLD_MAN))
         {
             mask = (gBitTable[gBattleStruct->simulatedInputState[1]] | gBitTable[gBattleStruct->simulatedInputState[3]]) << 16;
             BeginNormalPaletteFade(mask,
@@ -467,7 +467,7 @@ static void PrintOakText_ForPetesSake(u32 battler)
         }
         break;
     case 7:
-        if (!IsTextPrinterActive(24))
+        if (!IsTextPrinterActive(B_WIN_OAK_OLD_MAN))
         {
             BeginNormalPaletteFade(0xFFFFFF7E,
                                    4,
@@ -550,7 +550,7 @@ static void PrintOakTextWithMainBgDarkened(u32 battler, const u8 *text, u8 delay
         ++gBattleStruct->simulatedInputState[0];
         break;
     case 4:
-        if (!IsTextPrinterActive(24))
+        if (!IsTextPrinterActive(B_WIN_OAK_OLD_MAN))
         {
             BeginNormalPaletteFade(0xFFFFFF7E,
                                    4,
@@ -618,7 +618,7 @@ static void PrintOakText_KeepAnEyeOnHP(u32 battler)
         ++gBattleStruct->simulatedInputState[0];
         break;
     case 4:
-        if (!IsTextPrinterActive(24))
+        if (!IsTextPrinterActive(B_WIN_OAK_OLD_MAN))
         {
             mask = (gBitTable[gBattleStruct->simulatedInputState[1]] | gBitTable[gBattleStruct->simulatedInputState[3]]) << 16;
             BeginNormalPaletteFade(mask,
@@ -697,7 +697,7 @@ static void OakOldManHandlePrintString(u32 battler)
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;
     stringId = (u16 *)(&gBattleResources->bufferA[battler][2]);
-    if (gBattleTypeFlags & BATTLE_TYPE_OLD_MAN_TUTORIAL && *stringId == 1)
+    if (gBattleTypeFlags & BATTLE_TYPE_OLD_MAN_TUTORIAL && *stringId == STRINGID_INTROSENDOUT)
     {
         OakOldManBufferExecCompleted(battler);
     }
