@@ -782,11 +782,6 @@ bool8 DoesCurrentMapHaveFishingMons(void)
     return TRUE;
 }
 
-u32 CalculateChainFishingShinyRolls(void)
-{
-    return (2 * min(gChainFishingDexNavStreak, FISHING_CHAIN_SHINY_STREAK_MAX));
-}
-
 static void UpdateChainFishingStreak()
 {
     if (!I_FISHING_CHAIN)
