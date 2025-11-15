@@ -12,12 +12,15 @@
 #include "data.h"
 #include "list_menu.h"
 #include "pokedex.h"
+#include "pokedex_emerald.h"
+#include "pokedex_plus_hgss.h"
 #include "trainer_pokemon_sprites.h"
 #include "decompress.h"
 #include "constants/songs.h"
 #include "constants/sound.h"
 #include "pokedex_area_markers.h"
 #include "field_specials.h"
+#include "config/pokedex_plus_hgss.h"
 
 #define TAG_AREA_MARKERS 2001
 
@@ -954,6 +957,18 @@ void DexScreen_LoadResources(void)
 
 void CB2_OpenPokedexFromStartMenu(void)
 {
+    if (POKEDEX_PLUS_HGSS)
+    {
+        CB2_OpenPokedexPlusHGSS();
+        return;
+    }
+    
+    if (POKEDEX_EMERALD)
+    {
+        CB2_OpenPokedex();
+        return;
+    }
+
     DexScreen_LoadResources();
     ClearGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON | DISPCNT_WIN1_ON);
     SetGpuReg(REG_OFFSET_BLDCNT, 0);
@@ -3462,19 +3477,43 @@ void DexScreen_InputHandler_StartToCry(void)
         PlayCry_NormalNoDucking(sPokedexScreenData->dexSpecies, 0, CRY_VOLUME_RS, CRY_PRIORITY_NORMAL);
 }
 
-u8 DexScreen_RegisterMonToPokedex(u16 species)
+#define tState         data[0]
+#define tSpecies        data[1]
+#define tPalTimer      data[2]
+#define tMonSpriteId   data[3]
+#define tIsShiny       data[13]
+#define tPersonalityLo 14
+#define tPersonalityHi 15
+
+u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality)
 {
-    DexScreen_GetSetPokedexFlag(species, FLAG_SET_SEEN, TRUE);
-    DexScreen_GetSetPokedexFlag(species, FLAG_SET_CAUGHT, TRUE);
+    u8 taskId = 0;
+    if (POKEDEX_PLUS_HGSS)
+    {
+        taskId = CreateTask(Task_DisplayCaughtMonDexPageHGSS, 0);
+    }
+    else if (POKEDEX_EMERALD)
+    {
+        taskId = CreateTask(Task_DisplayCaughtMonDexPage, 0);
+    }
+    else
+    {
+        if ((!IsNationalPokedexEnabled() && !IsSpeciesInKantoDex(species)) || !DexScreen_MonHasCategoryEntry(species))
+            return CreateTask(Task_DexScreen_RegisterNonKantoMonBeforeNationalDex, 0);
 
-    if ((!IsNationalPokedexEnabled() && !IsSpeciesInKantoDex(species)) || !DexScreen_MonHasCategoryEntry(species))
-        return CreateTask(Task_DexScreen_RegisterNonKantoMonBeforeNationalDex, 0);
+        DexScreen_LoadResources();
+        gTasks[sPokedexScreenData->taskId].func = Task_DexScreen_RegisterMonToPokedex;
+        DexScreen_LookUpCategoryBySpecies(species);
 
-    DexScreen_LoadResources();
-    gTasks[sPokedexScreenData->taskId].func = Task_DexScreen_RegisterMonToPokedex;
-    DexScreen_LookUpCategoryBySpecies(species);
+        return sPokedexScreenData->taskId;
+    }
 
-    return sPokedexScreenData->taskId;
+    gTasks[taskId].tState = 0;
+    gTasks[taskId].tSpecies = species;
+    gTasks[taskId].tIsShiny = isShiny;
+    gTasks[taskId].data[tPersonalityLo] = personality;
+    gTasks[taskId].data[tPersonalityHi] = personality >> 16;
+    return taskId;
 }
 
 static void Task_DexScreen_RegisterNonKantoMonBeforeNationalDex(u8 taskId)
