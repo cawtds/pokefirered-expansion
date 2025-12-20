@@ -6,7 +6,7 @@ MID_ASM_DIR := $(MID_SUBDIR)
 CRY_BIN_DIR := $(CRY_SUBDIR)
 SOUND_BIN_DIR := sound
 
-SPECIAL_OUTDIRS := $(MID_ASM_DIR) $(CRY_BIN_DIR) 
+SPECIAL_OUTDIRS := $(MID_ASM_DIR) $(CRY_BIN_DIR)
 SPECIAL_OUTDIRS += $(SOUND_BIN_DIR) $(SOUND_BIN_DIR)/direct_sound_samples/phonemes $(SOUND_BIN_DIR)/direct_sound_samples/cries
 $(shell mkdir -p $(SPECIAL_OUTDIRS) )
 
@@ -18,10 +18,10 @@ $(MID_BUILDDIR)/%.o: $(MID_ASM_DIR)/%.s
 
 $(CRY_BIN_DIR)/%.bin: $(CRY_SUBDIR)/%.wav
 # NOTE: If using ipatix's High Quality Audio Mixer, remove "--no-pad" below.
-	$(WAV2AGB) -b -c -l 1 --no-pad $< $@
+	$(WAV2AGB) -b -c -l 1 $< $@
 
 # Uncompressed cries
-$(CRY_BIN_DIR)/uncomp_%.bin: $(CRY_SUBDIR)/uncomp_%.aif 
+$(CRY_BIN_DIR)/uncomp_%.bin: $(CRY_SUBDIR)/uncomp_%.aif
 	$(AIF) $< $@
 
 # Uncompressed sounds
