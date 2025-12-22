@@ -671,34 +671,6 @@ void CompactItemsInBagPocket(enum Pocket pocketId)
     }
 }
 
-static u32 GetSortIndex(u32 itemId)
-{
-    if (!IsItemHM(itemId))
-        return itemId;
-
-    return (itemId - (NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES));
-}
-
-void SortBerriesOrTMHMs(enum Pocket pocketId)
-{
-    u16 i, j;
-
-    for (i = 0; i < gBagPockets[pocketId].capacity - 1; i++)
-    {
-        for (j = i + 1; j < gBagPockets[pocketId].capacity; j++)
-        {
-            if (GetBagItemQuantity(pocketId, i) != 0)
-            {
-                if (GetBagItemQuantity(pocketId, j) == 0)
-                    continue;
-                if (GetSortIndex(GetBagItemId(pocketId, i)) <= GetSortIndex(GetBagItemId(pocketId, j)))
-                    continue;
-            }
-            SwapItemSlots(pocketId, i, j);
-        }
-    }
-}
-
 u16 CountTotalItemQuantityInBag(u16 itemId)
 {
     u16 i;
@@ -751,8 +723,11 @@ void TrySetObtainedItemQuestLogEvent(u16 itemId)
 
 u16 SanitizeItemId(u16 itemId)
 {
-    if (itemId >= ITEMS_COUNT)
+    assertf(itemId < ITEMS_COUNT, "invalid item: %d", itemId)
+    {
         return ITEM_NONE;
+    }
+
     return itemId;
 }
 
