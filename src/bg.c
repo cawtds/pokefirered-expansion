@@ -4,6 +4,8 @@
 #include "decompress.h"
 #include "dma3.h"
 #include "gpu_regs.h"
+#include "malloc.h"
+#include "menu.h"
 
 #define DISPCNT_ALL_BG_AND_MODE_BITS    (DISPCNT_BG_ALL_ON | 0x7)
 
