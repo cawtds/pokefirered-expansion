@@ -916,6 +916,14 @@ void CopyToBgTilemapBuffer(u8 bg, const void *src, u16 mode, u16 destOffset)
     }
 }
 
+void DecompressAndCopyToBgTilemapBuffer(u32 bg, const u32 *src, u32 mode, u32 destOffset)
+{
+    void *buffer = malloc_and_decompress(src, NULL);
+
+    CopyToBgTilemapBuffer(bg, buffer, mode, destOffset);
+    Free(buffer);
+}
+
 void CopyBgTilemapBufferToVram(u8 bg)
 {
     u16 sizeToLoad;
