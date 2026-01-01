@@ -2798,7 +2798,6 @@ static const u8 sBagMenuSortPokeBalls[] =
 {
     ACTION_BY_NAME,
     ACTION_BY_AMOUNT,
-    ACTION_DUMMY,
     ACTION_CANCEL,
 };
 
