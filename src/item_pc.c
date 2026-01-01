@@ -956,12 +956,10 @@ static void ItemPc_DoWithdraw(u8 taskId)
 static void Task_ItemPcWaitButtonAndFinishWithdrawMultiple(u8 taskId)
 {
     s16 * data = gTasks[taskId].data;
-    u16 itemId;
 
     if (JOY_NEW(A_BUTTON) || JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
-        itemId = ItemPc_GetItemIdBySlotId(tListPosition);
         RemovePCItem(sListMenuState.scroll + sListMenuState.row, tItemCount);
         ItemPcCompaction();
         Task_ItemPcCleanUpWithdraw(taskId);
