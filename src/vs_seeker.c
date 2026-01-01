@@ -24,6 +24,7 @@
 #include "constants/maps.h"
 #include "constants/items.h"
 #include "constants/quest_log.h"
+#include "constants/script_commands.h"
 #include "constants/trainer_types.h"
 
 // Each trainer can have up to 6 parties, including their original party.
@@ -649,7 +650,7 @@ void VsSeekerResetObjectMovementAfterChargeComplete(void)
     for (i = 0; i < gMapHeader.events->objectEventCount; i++)
     {
         if ((templates[i].trainerType == TRAINER_TYPE_NORMAL
-          || templates[i].trainerType == TRAINER_TYPE_BURIED) 
+          || templates[i].trainerType == TRAINER_TYPE_BURIED)
          && (templates[i].movementType == MOVEMENT_TYPE_RAISE_HAND_AND_STOP
           || templates[i].movementType == MOVEMENT_TYPE_RAISE_HAND_AND_JUMP
           || templates[i].movementType == MOVEMENT_TYPE_RAISE_HAND_AND_SWIM))
@@ -950,7 +951,7 @@ void ClearRematchStateByTrainerId(void)
 
    for (int i = 0; i < gMapHeader.events->objectEventCount; i++)
    {
-      if ((objectEventTemplates[i].trainerType == TRAINER_TYPE_NORMAL 
+      if ((objectEventTemplates[i].trainerType == TRAINER_TYPE_NORMAL
          || objectEventTemplates[i].trainerType == TRAINER_TYPE_BURIED)
          && vsSeekerDataIdx == LookupVsSeekerOpponentInArray(sRematches, GetTrainerFlagFromScript(objectEventTemplates[i].script)))
       {
@@ -1019,11 +1020,16 @@ static u8 GetRematchTrainerIdGivenGameState(const u16 *trainerIdxs, u8 rematchId
 
 bool8 ShouldTryRematchBattle(void)
 {
-    if (ShouldTryRematchBattleInternal(sRematches, TRAINER_BATTLE_PARAM.opponentA))
+   return ShouldTryRematchBattleForTrainerId(TRAINER_BATTLE_PARAM.opponentA);
+}
+
+bool8 ShouldTryRematchBattleForTrainerId(u16 trainerId)
+{
+    if (ShouldTryRematchBattleInternal(sRematches, trainerId))
     {
         return TRUE;
     }
-    return HasRematchTrainerAlreadyBeenFought(sRematches, TRAINER_BATTLE_PARAM.opponentA);
+    return HasRematchTrainerAlreadyBeenFought(sRematches, trainerId);
 }
 
 static bool8 ShouldTryRematchBattleInternal(const struct RematchData *vsSeekerData, u16 trainerBattleOpponent)
@@ -1178,24 +1184,44 @@ static u8 GetRunningBehaviorFromGraphicsId(u16 graphicsId)
 }
 #endif //FREE_MATCH_CALL
 
-static u16 GetTrainerFlagFromScript(const u8 *script)
-/*
- * The trainer flag is a little-endian short located +2 from
- * the script pointer, assuming the trainerbattle command is
- * first in the script.  Because scripts are unaligned, and
- * because the ARM processor requires shorts to be 16-bit
- * aligned, this function needs to perform explicit bitwise
- * operations to get the correct flag.
- *
- * 5c XX YY ZZ ...
- *       -- --
- */
+void NativeVsSeekerRematchId(struct ScriptContext *ctx)
 {
-    u16 trainerFlag;
+    u16 trainerId = ScriptReadHalfword(ctx);
+    if (ctx->breakOnTrainerBattle && HasTrainerBeenFought(trainerId) && !ShouldTryRematchBattleForTrainerId(trainerId))
+        StopScript(ctx);
+}
 
-    script += 2;
-    trainerFlag = script[0];
-    trainerFlag |= script[1] << 8;
+static u16 GetTrainerFlagFromScript(const u8 *script)
+{
+    // The trainer flag is located 3 bytes (command + flags + localIdA) from the script pointer, assuming the trainerbattle command is first in the script.
+    // Because scripts are unaligned, and because the ARM processor requires shorts to be 16-bit aligned, this function needs to perform explicit bitwise operations to get the correct flag.
+    u16 trainerFlag;
+    switch (script[0])
+    {
+        case SCR_OP_TRAINERBATTLE:
+            script += 3;
+            trainerFlag = script[0];
+            trainerFlag |= script[1] << 8;
+            break;
+        case SCR_OP_CALLNATIVE:
+        {
+            u32 callnativeFunc = (((((script[4] << 8) + script[3]) << 8) + script[2]) << 8) + script[1];
+            if (callnativeFunc == ((u32)NativeVsSeekerRematchId | 0xA000000)) // | 0xA000000 corresponds to the request_effects=1 version of the function
+            {
+                script += 5;
+                trainerFlag = script[0];
+                trainerFlag |= script[1] << 8;
+            }
+            else
+            {
+                trainerFlag = TRAINER_NONE;
+            }
+            break;
+        }
+        default:
+            trainerFlag = TRAINER_NONE;
+        break;
+    }
     return trainerFlag;
 }
 
