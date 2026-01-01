@@ -962,7 +962,7 @@ static void Task_ItemPcWaitButtonAndFinishWithdrawMultiple(u8 taskId)
     {
         PlaySE(SE_SELECT);
         itemId = ItemPc_GetItemIdBySlotId(tListPosition);
-        RemovePCItem(itemId, tItemCount);
+        RemovePCItem(sListMenuState.scroll + sListMenuState.row, tItemCount);
         ItemPcCompaction();
         Task_ItemPcCleanUpWithdraw(taskId);
     }
