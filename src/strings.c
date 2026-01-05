@@ -854,6 +854,7 @@ const u8 gText_PokeSum_ExpPoints[] = _("EXP. POINTS");
 const u8 gText_PokeSum_NextLv[] = _("NEXT LV.");
 const u8 gText_PokeSum_Controls_PageCancel[] = _("{DPAD_RIGHT}PAGE {A_BUTTON}CANCEL");
 const u8 gText_PokeSum_Controls_Cancel[] = _("{A_BUTTON}CANCEL");
+const u8 gText_PokeSum_Controls_PageRename[] = _("{DPAD_RIGHT}PAGE {A_BUTTON}RENAME");
 const u8 gText_PokeSum_Controls_PageJudge[] = _("{DPAD_LEFTRIGHT}PAGE {A_BUTTON}JUDGE");
 const u8 gText_PokeSum_Controls_PageDetail[] = _("{DPAD_LEFT}PAGE {A_BUTTON}DETAIL");
 const u8 gText_PokeSum_Controls_PickSwitch[] = _("{DPAD_UPDOWN}PICK {A_BUTTON}SWITCH");

@@ -35,6 +35,7 @@
 #include "battle_interface.h"
 #include "mon_markings.h"
 #include "pokemon_storage_system.h"
+#include "naming_screen.h"
 #include "constants/battle_move_effects.h"
 #include "constants/sound.h"
 
@@ -46,6 +47,7 @@ extern s16 SeekToNextMonInBox(struct BoxPokemon * boxMons, u8 curIndex, u8 maxIn
 
 static void BufferSelectedMonData(struct Pokemon * mon);
 static void CB2_SetUpPSS(void);
+static void CB2_ReturnToSummaryAfterRename(void);
 static void PokeSum_TryPlayMonCry(void);
 static void PokeSum_RemoveWindows(u8 curPageIndex);
 static void Task_PokeSum_FlipPages(u8 taskId);
@@ -333,6 +335,15 @@ static EWRAM_DATA u8 sLastViewedMonIndex = 0;
 static EWRAM_DATA u8 sMoveSelectionCursorPos = 0;
 static EWRAM_DATA u8 sMoveSwapCursorPos = 0;
 static EWRAM_DATA struct MonPicBounceState * sMonPicBounceState = NULL;
+
+#if P_SUMMARY_SCREEN_RENAME == TRUE
+// Context saved when transitioning to naming screen
+static EWRAM_DATA void *sSavedMonList = NULL;
+static EWRAM_DATA MainCallback sSavedSummaryCallback = NULL;
+static EWRAM_DATA u8 sSavedLastIndex = 0;
+static EWRAM_DATA u8 sSavedMode = 0;
+static EWRAM_DATA bool8 sSavedIsBoxMon = FALSE;
+#endif
 
 extern const u32 gSummaryScreen_PageSkills_Tilemap[];
 extern const u32 gSummaryScreen_PageMoves_Tilemap[];
@@ -1408,8 +1419,25 @@ static void Task_InputHandler_Info(u8 taskId)
             {
                 if (sMonSummaryScreen->curPageIndex == PSS_PAGE_INFO)
                 {
+#if P_SUMMARY_SCREEN_RENAME == TRUE
+                    if (!sMonSummaryScreen->isEgg)
+                    {
+                        // Open naming screen to rename Pokemon
+                        PlaySE(SE_SELECT);
+                        GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_NICKNAME, gStringVar3);
+                        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, 0);
+                        sMonSummaryScreen->state3270 = PSS_STATE3270_WAITFADE_RENAME;
+                    }
+                    else
+                    {
+                        // Eggs can't be renamed, exit
+                        PlaySE(SE_SELECT);
+                        sMonSummaryScreen->state3270 = PSS_STATE3270_ATEXIT_FADEOUT;
+                    }
+#else
                     PlaySE(SE_SELECT);
                     sMonSummaryScreen->state3270 = PSS_STATE3270_ATEXIT_FADEOUT;
+#endif
                 }
                 else if (sMonSummaryScreen->curPageIndex == PSS_PAGE_SKILLS)
                 {
@@ -1467,6 +1495,37 @@ static void Task_InputHandler_Info(u8 taskId)
 
         sMonSummaryScreen->state3270 = PSS_STATE3270_ATEXIT_WAITFADE;
         break;
+#if P_SUMMARY_SCREEN_RENAME == TRUE
+    case PSS_STATE3270_WAITFADE_RENAME:
+        if (!gPaletteFade.active)
+        {
+            u16 species = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES);
+            u8 gender = GetMonGender(&sMonSummaryScreen->currentMon);
+            u32 personality = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_PERSONALITY);
+
+            // Save context before destroying summary screen
+            sSavedMonList = sMonSummaryScreen->monList.mons;
+            sSavedSummaryCallback = sMonSummaryScreen->savedCallback;
+            sSavedLastIndex = sMonSummaryScreen->lastIndex;
+            sSavedMode = sMonSummaryScreen->mode;
+            sSavedIsBoxMon = sMonSummaryScreen->isBoxMon;
+
+            // Cleanup summary screen resources
+            PokeSum_DestroySprites();
+            FreeAllSpritePalettes();
+            if (IsCryPlayingOrClearCrySongs() == TRUE)
+                StopCryAndClearCrySongs();
+            PokeSum_RemoveWindows(sMonSummaryScreen->curPageIndex);
+            FreeAllWindowBuffers();
+            DestroyTask(taskId);
+            FREE_AND_SET_NULL_IF_SET(sMonSummaryScreen);
+            FREE_AND_SET_NULL_IF_SET(sMonSkillsPrinterXpos);
+
+            // Open naming screen
+            DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar3, species, gender, personality, CB2_ReturnToSummaryAfterRename);
+        }
+        break;
+#endif
     default:
         if (!gPaletteFade.active)
             Task_DestroyResourcesOnExit(taskId);
@@ -3397,7 +3456,13 @@ static void PokeSum_PrintPageHeaderText(u8 curPageIndex)
     case PSS_PAGE_INFO:
         PokeSum_PrintPageName(gText_PokeSum_PageName_PokemonInfo);
         if (!sMonSummaryScreen->isEgg)
+        {
+#if P_SUMMARY_SCREEN_RENAME == TRUE
+            PokeSum_PrintControlsString(gText_PokeSum_Controls_PageRename);
+#else
             PokeSum_PrintControlsString(gText_PokeSum_Controls_PageCancel);
+#endif
+        }
         else
             PokeSum_PrintControlsString(gText_PokeSum_Controls_Cancel);
 
@@ -3464,6 +3529,30 @@ static void CB2_RunPokemonSummaryScreen(void)
     BuildOamBuffer();
     UpdatePaletteFade();
 }
+
+#if P_SUMMARY_SCREEN_RENAME == TRUE
+static void CB2_ReturnToSummaryAfterRename(void)
+{
+    struct Pokemon *mon;
+
+    // Apply the new nickname
+    if (!sSavedIsBoxMon)
+    {
+        struct Pokemon *partyMons = (struct Pokemon *)sSavedMonList;
+        mon = &partyMons[sLastViewedMonIndex];
+        SetMonData(mon, MON_DATA_NICKNAME, gStringVar3);
+    }
+    else
+    {
+        struct BoxPokemon *boxMons = (struct BoxPokemon *)sSavedMonList;
+        struct BoxPokemon *boxMon = &boxMons[sLastViewedMonIndex];
+        SetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar3);
+    }
+
+    // Recreate the summary screen with saved context
+    ShowPokemonSummaryScreen((struct Pokemon *)sSavedMonList, sLastViewedMonIndex, sSavedLastIndex, sSavedSummaryCallback, sSavedMode);
+}
+#endif
 
 static void PokeSum_FlipPages_SlideHpExpBarsOut(void)
 {

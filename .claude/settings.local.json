@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmd /c \"grep -n P_SUMMARY_SCREEN C:\\\\Users\\\\caleb\\\\Documents\\\\pokefirered-qol\\\\src\\\\pokemon_summary_screen.c\")",
+      "Bash(make:*)",
+      "Bash(cmd /c \"make -j4 2>&1 | head -100\")"
+    ]
+  }
+}
