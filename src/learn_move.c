@@ -143,6 +143,7 @@ struct LearnMoveGfxResources
 };
 
 static EWRAM_DATA struct LearnMoveGfxResources * sMoveRelearner = NULL;
+static EWRAM_DATA MainCallback sSavedReturnCallback = NULL;
 
 static void Task_InitMoveRelearnerMenu(u8 taskId);
 static void CB2_MoveRelearner_Init(void);
@@ -358,6 +359,15 @@ static void VBlankCB_MoveRelearner(void)
 
 void TeachMoveRelearnerMove(void)
 {
+    sSavedReturnCallback = NULL;
+    LockPlayerFieldControls();
+    CreateTask(Task_InitMoveRelearnerMenu, 10);
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+}
+
+void TeachMoveRelearnerMoveWithCallback(MainCallback callback)
+{
+    sSavedReturnCallback = callback;
     LockPlayerFieldControls();
     CreateTask(Task_InitMoveRelearnerMenu, 10);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
@@ -509,6 +519,23 @@ static void MoveRelearnerStateMachine(void)
             {
                 StringExpandPlaceholdersAndPrintTextOnWindow7Color2(gText_MonLearnedMove);
                 gSpecialVar_0x8004 = TRUE;
+#if P_SUMMARY_MOVE_RELEARNER_FULL_PP == TRUE
+                // Restore PP to full if relearning from summary screen
+                if (sSavedReturnCallback != NULL)
+                {
+                    u8 i;
+                    // Find which slot the move was added to
+                    for (i = 0; i < MAX_MON_MOVES; i++)
+                    {
+                        if (GetMonData(&gPlayerParty[sMoveRelearner->selectedPartyMember], MON_DATA_MOVE1 + i) == sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex])
+                        {
+                            u8 maxPP = CalculatePPWithBonus(sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex], 0, 0);
+                            SetMonData(&gPlayerParty[sMoveRelearner->selectedPartyMember], MON_DATA_PP1 + i, &maxPP);
+                            break;
+                        }
+                    }
+                }
+#endif
                 sMoveRelearner->state = 31;
             }
             else
@@ -611,7 +638,17 @@ static void MoveRelearnerStateMachine(void)
         {
             FreeAllWindowBuffers();
             Free(sMoveRelearner);
-            SetMainCallback2(CB2_ReturnToField);
+            // Return to custom callback if set, otherwise return to field
+            if (sSavedReturnCallback != NULL)
+            {
+                MainCallback callback = sSavedReturnCallback;
+                sSavedReturnCallback = NULL;
+                SetMainCallback2(callback);
+            }
+            else
+            {
+                SetMainCallback2(CB2_ReturnToField);
+            }
         }
         break;
     case MENU_STATE_FADE_FROM_SUMMARY_SCREEN:
@@ -638,6 +675,14 @@ static void MoveRelearnerStateMachine(void)
                 StringCopy(gStringVar3, GetMoveName(move));
                 RemoveMonPPBonus(&gPlayerParty[sMoveRelearner->selectedPartyMember], sMoveRelearner->selectedMoveSlot);
                 SetMonMoveSlot(&gPlayerParty[sMoveRelearner->selectedPartyMember], sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex], sMoveRelearner->selectedMoveSlot);
+#if P_SUMMARY_MOVE_RELEARNER_FULL_PP == TRUE
+                // Restore PP to full if relearning from summary screen
+                if (sSavedReturnCallback != NULL)
+                {
+                    u8 maxPP = CalculatePPWithBonus(sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex], 0, 0);
+                    SetMonData(&gPlayerParty[sMoveRelearner->selectedPartyMember], MON_DATA_PP1 + sMoveRelearner->selectedMoveSlot, &maxPP);
+                }
+#endif
                 StringCopy(gStringVar2, GetMoveName(sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex]));
                 StringExpandPlaceholdersAndPrintTextOnWindow7Color2(gText_1_2_and_Poof);
                 sMoveRelearner->state = 30;

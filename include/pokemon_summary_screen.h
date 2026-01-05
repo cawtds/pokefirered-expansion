@@ -51,6 +51,7 @@ enum PokemonSummaryScreenState3270
     PSS_STATE3270_ATEXIT_WAITLINKDELAY,
     PSS_STATE3270_ATEXIT_WAITFADE,
     PSS_STATE3270_WAITFADE_RENAME,
+    PSS_STATE3270_WAITFADE_MOVERELEARNER,
 };
 
 enum PokemonSummaryScreenStat
@@ -68,8 +69,18 @@ enum PokemonSummaryScreenSkillPageMode
     PSS_SKILL_PAGE_STATS,
     PSS_SKILL_PAGE_IVS,
     PSS_SKILL_PAGE_EVS,
-    PSS_SKILL_PAGE_MODE_COUNT
 };
+
+// Dynamic mode count based on config
+#if P_SUMMARY_SCREEN_IV_ONLY == TRUE
+    #define PSS_SKILL_PAGE_MODE_COUNT 1
+#elif P_SUMMARY_SCREEN_EV_ONLY == TRUE
+    #define PSS_SKILL_PAGE_MODE_COUNT 1
+#elif P_SUMMARY_SCREEN_SHOW_EVS == FALSE
+    #define PSS_SKILL_PAGE_MODE_COUNT 2  // Only Stats and IVs
+#else
+    #define PSS_SKILL_PAGE_MODE_COUNT 3  // Stats, IVs, and EVs
+#endif
 
 struct StatData {
     u8 monDataStat;

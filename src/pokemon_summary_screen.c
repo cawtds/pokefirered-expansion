@@ -48,6 +48,12 @@ extern s16 SeekToNextMonInBox(struct BoxPokemon * boxMons, u8 curIndex, u8 maxIn
 static void BufferSelectedMonData(struct Pokemon * mon);
 static void CB2_SetUpPSS(void);
 static void CB2_ReturnToSummaryAfterRename(void);
+static void CB2_ReturnToSummaryAfterMoveRelearner(void);
+static bool8 IsCyclingAllowed(void);
+
+#if P_SUMMARY_SCREEN_MOVE_RELEARNER == TRUE
+extern void TeachMoveRelearnerMoveWithCallback(MainCallback callback);
+#endif
 static void PokeSum_TryPlayMonCry(void);
 static void PokeSum_RemoveWindows(u8 curPageIndex);
 static void Task_PokeSum_FlipPages(u8 taskId);
@@ -336,8 +342,8 @@ static EWRAM_DATA u8 sMoveSelectionCursorPos = 0;
 static EWRAM_DATA u8 sMoveSwapCursorPos = 0;
 static EWRAM_DATA struct MonPicBounceState * sMonPicBounceState = NULL;
 
-#if P_SUMMARY_SCREEN_RENAME == TRUE
-// Context saved when transitioning to naming screen
+#if P_SUMMARY_SCREEN_RENAME == TRUE || P_SUMMARY_SCREEN_MOVE_RELEARNER == TRUE
+// Context saved when transitioning to naming screen or move relearner
 static EWRAM_DATA void *sSavedMonList = NULL;
 static EWRAM_DATA MainCallback sSavedSummaryCallback = NULL;
 static EWRAM_DATA u8 sSavedLastIndex = 0;
@@ -1271,7 +1277,13 @@ void ShowPokemonSummaryScreen(struct Pokemon * party, u8 cursorPos, u8 lastIdx, 
     sMonSummaryScreen->infoAndMovesPageBgNum = 1;
     sMonSummaryScreen->flippingPages = FALSE;
     sMonSummaryScreen->categoryIconSpriteId = 0xFF;
-    sMonSummaryScreen->skillsPageMode = 0;
+#if P_SUMMARY_SCREEN_IV_ONLY == TRUE
+    sMonSummaryScreen->skillsPageMode = PSS_SKILL_PAGE_IVS;
+#elif P_SUMMARY_SCREEN_EV_ONLY == TRUE
+    sMonSummaryScreen->skillsPageMode = PSS_SKILL_PAGE_EVS;
+#else
+    sMonSummaryScreen->skillsPageMode = PSS_SKILL_PAGE_STATS;
+#endif
 
     sMonSummaryScreen->unk3228 = 0;
     sMonSummaryScreen->unk322C = 1;
@@ -1441,12 +1453,15 @@ static void Task_InputHandler_Info(u8 taskId)
                 }
                 else if (sMonSummaryScreen->curPageIndex == PSS_PAGE_SKILLS)
                 {
-                    sMonSummaryScreen->skillsPageMode = (sMonSummaryScreen->skillsPageMode + 1) % PSS_SKILL_PAGE_MODE_COUNT;
-                    BufferMonSkills();
-                    RemoveWindow(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE]);
-                    AddWindow(&sWindowTemplates_Skills[0]);
-                    PokeSum_PrintRightPaneText();
-                    CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2);
+                    if (IsCyclingAllowed())
+                    {
+                        sMonSummaryScreen->skillsPageMode = (sMonSummaryScreen->skillsPageMode + 1) % PSS_SKILL_PAGE_MODE_COUNT;
+                        BufferMonSkills();
+                        RemoveWindow(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE]);
+                        AddWindow(&sWindowTemplates_Skills[0]);
+                        PokeSum_PrintRightPaneText();
+                        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2);
+                    }
                 }
                 else if (sMonSummaryScreen->curPageIndex == PSS_PAGE_MOVES)
                 {
@@ -1458,6 +1473,33 @@ static void Task_InputHandler_Info(u8 taskId)
                 }
                 return;
             }
+#if P_SUMMARY_SCREEN_MOVE_RELEARNER == TRUE
+            else if (JOY_NEW(START_BUTTON))
+            {
+                // Check if on moves page and Pokemon has relearnable moves
+                if (sMonSummaryScreen->curPageIndex == PSS_PAGE_MOVES && !sMonSummaryScreen->isEgg)
+                {
+                    if (GetNumberOfRelearnableMoves(&sMonSummaryScreen->currentMon) > 0)
+                    {
+                        // Set up for move relearner
+                        gSpecialVar_0x8004 = sLastViewedMonIndex;
+                        gSpecialVar_0x8005 = GetNumberOfRelearnableMoves(&sMonSummaryScreen->currentMon);
+
+                        // Save context for returning to summary screen
+                        sSavedMonList = sMonSummaryScreen->monList.mons;
+                        sSavedSummaryCallback = sMonSummaryScreen->savedCallback;
+                        sSavedLastIndex = sMonSummaryScreen->lastIndex;
+                        sSavedMode = sMonSummaryScreen->mode;
+                        sSavedIsBoxMon = sMonSummaryScreen->isBoxMon;
+
+                        PlaySE(SE_SELECT);
+                        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+                        sMonSummaryScreen->state3270 = PSS_STATE3270_WAITFADE_MOVERELEARNER;
+                    }
+                }
+                return;
+            }
+#endif
             else if (JOY_NEW(B_BUTTON))
             {
                 sMonSummaryScreen->state3270 = PSS_STATE3270_ATEXIT_FADEOUT;
@@ -1523,6 +1565,26 @@ static void Task_InputHandler_Info(u8 taskId)
 
             // Open naming screen
             DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar3, species, gender, personality, CB2_ReturnToSummaryAfterRename);
+        }
+        break;
+#endif
+#if P_SUMMARY_SCREEN_MOVE_RELEARNER == TRUE
+    case PSS_STATE3270_WAITFADE_MOVERELEARNER:
+        if (!gPaletteFade.active)
+        {
+            // Cleanup summary screen resources
+            PokeSum_DestroySprites();
+            FreeAllSpritePalettes();
+            if (IsCryPlayingOrClearCrySongs() == TRUE)
+                StopCryAndClearCrySongs();
+            PokeSum_RemoveWindows(sMonSummaryScreen->curPageIndex);
+            FreeAllWindowBuffers();
+            DestroyTask(taskId);
+            FREE_AND_SET_NULL_IF_SET(sMonSummaryScreen);
+            FREE_AND_SET_NULL_IF_SET(sMonSkillsPrinterXpos);
+
+            // Call move relearner with custom callback
+            TeachMoveRelearnerMoveWithCallback(CB2_ReturnToSummaryAfterMoveRelearner);
         }
         break;
 #endif
@@ -2606,12 +2668,42 @@ static const u8 sText_JudgeFantastic[] = _("Fantastic");
 static const u8 sText_JudgeBest[] = _("Best");
 static const u8 sText_JudgeHyperTrained[] = _("Hyper trained!");
 
+// Letter grade constants
+static const u8 sText_GradeF[] = _("F");
+static const u8 sText_GradeD[] = _("D");
+static const u8 sText_GradeC[] = _("C");
+static const u8 sText_GradeB[] = _("B");
+static const u8 sText_GradeA[] = _("A");
+static const u8 sText_GradeS[] = _("S");
+
 static void BufferIVString(u8 stat)
 {
     bool8 isHyperTrained = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataHyperTrained);
     u16 statValue = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataIv);
     u8 *dst = sMonSummaryScreen->summary.statValueStrBufs[sStatData[stat].pssStat];
 
+#if P_SUMMARY_SCREEN_IV_EV_VALUES == TRUE
+    // Show numeric values
+    if (isHyperTrained)
+    {
+    #if P_SUMMARY_SCREEN_IV_HYPERTRAIN == TRUE
+        // Show "31/S" for hyper trained
+        ConvertIntToDecimalStringN(dst, 31, STR_CONV_MODE_LEFT_ALIGN, 2);
+        StringAppend(dst, gText_Slash);
+        StringAppend(dst, sText_GradeS);
+    #else
+        // Show "Hyper trained!" text
+        StringCopy(dst, sText_JudgeHyperTrained);
+    #endif
+    }
+    else
+    {
+        // Show raw IV value (0-31)
+        ConvertIntToDecimalStringN(dst, statValue, STR_CONV_MODE_LEFT_ALIGN, 2);
+    }
+    SetStatXPos(stat, GetNumberRightAlign63(dst));
+#else
+    // Original judgment text behavior
     if (isHyperTrained)
         StringCopy(dst, sText_JudgeHyperTrained);
     else if (statValue == 31)
@@ -2628,8 +2720,34 @@ static void BufferIVString(u8 stat)
         StringCopy(dst, sText_JudgeNoGood);
 
     SetStatXPos(stat, 0);
+#endif
+
     if (stat != STAT_HP)
         ApplyNatureColor(dst, stat);
+}
+
+static bool8 IsCyclingAllowed(void)
+{
+#if P_SUMMARY_SCREEN_IV_ONLY == TRUE || P_SUMMARY_SCREEN_EV_ONLY == TRUE
+    return FALSE;
+#else
+    bool8 allowed;
+
+    #if P_SUMMARY_SCREEN_IV_EV_INFO == TRUE
+        allowed = TRUE;
+    #elif P_FLAG_SUMMARY_SCREEN_IV_EV_INFO != 0
+        allowed = FlagGet(P_FLAG_SUMMARY_SCREEN_IV_EV_INFO);
+    #else
+        return FALSE;
+    #endif
+
+    #if P_SUMMARY_SCREEN_IV_EV_BOX_ONLY == TRUE
+        if (allowed && sMonSummaryScreen->mode != PSS_MODE_BOX)
+            return FALSE;
+    #endif
+
+    return allowed;
+#endif
 }
 
 static void BufferStat(u8 stat)
@@ -3549,6 +3667,14 @@ static void CB2_ReturnToSummaryAfterRename(void)
         SetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar3);
     }
 
+    // Recreate the summary screen with saved context
+    ShowPokemonSummaryScreen((struct Pokemon *)sSavedMonList, sLastViewedMonIndex, sSavedLastIndex, sSavedSummaryCallback, sSavedMode);
+}
+#endif
+
+#if P_SUMMARY_SCREEN_MOVE_RELEARNER == TRUE
+static void CB2_ReturnToSummaryAfterMoveRelearner(void)
+{
     // Recreate the summary screen with saved context
     ShowPokemonSummaryScreen((struct Pokemon *)sSavedMonList, sLastViewedMonIndex, sSavedLastIndex, sSavedSummaryCallback, sSavedMode);
 }
