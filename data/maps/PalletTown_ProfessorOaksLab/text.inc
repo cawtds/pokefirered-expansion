@@ -355,3 +355,16 @@ PalletTown_ProfessorOaksLab_Text_RivalIllCompleteThePokedex::
     .string "ONE ISLAND first…\p"
     .string "Anyways, I'm outta here!$"
 
+PalletTown_ProfessorOaksLab_Text_AideGiftIntro::
+    .string "Oh, wait just a moment!\p"
+    .string "The PROFESSOR asked me to give\n"
+    .string "you something for your journey.$"
+
+PalletTown_ProfessorOaksLab_Text_AideReceivedItem::
+    .string "{PLAYER} received a RARE CANDY\n"
+    .string "from the AIDE!$"
+
+PalletTown_ProfessorOaksLab_Text_AideGiftOutro::
+    .string "Take good care of your POKéMON!\n"
+    .string "Good luck out there!$"
+

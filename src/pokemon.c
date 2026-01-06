@@ -2664,22 +2664,13 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
             retVal = GetSubstruct1(boxMon)->pp4;
             break;
         case MON_DATA_HP_EV:
-            retVal = GetSubstruct2(boxMon)->hpEV;
-            break;
         case MON_DATA_ATK_EV:
-            retVal = GetSubstruct2(boxMon)->attackEV;
-            break;
         case MON_DATA_DEF_EV:
-            retVal = GetSubstruct2(boxMon)->defenseEV;
-            break;
         case MON_DATA_SPEED_EV:
-            retVal = GetSubstruct2(boxMon)->speedEV;
-            break;
         case MON_DATA_SPATK_EV:
-            retVal = GetSubstruct2(boxMon)->spAttackEV;
-            break;
         case MON_DATA_SPDEF_EV:
-            retVal = GetSubstruct2(boxMon)->spDefenseEV;
+            // EVs are disabled - always return 0
+            retVal = 0;
             break;
         case MON_DATA_COOL:
             retVal = GetSubstruct2(boxMon)->cool;
@@ -3173,22 +3164,12 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             SET8(GetSubstruct1(boxMon)->pp4);
             break;
         case MON_DATA_HP_EV:
-            SET8(GetSubstruct2(boxMon)->hpEV);
-            break;
         case MON_DATA_ATK_EV:
-            SET8(GetSubstruct2(boxMon)->attackEV);
-            break;
         case MON_DATA_DEF_EV:
-            SET8(GetSubstruct2(boxMon)->defenseEV);
-            break;
         case MON_DATA_SPEED_EV:
-            SET8(GetSubstruct2(boxMon)->speedEV);
-            break;
         case MON_DATA_SPATK_EV:
-            SET8(GetSubstruct2(boxMon)->spAttackEV);
-            break;
         case MON_DATA_SPDEF_EV:
-            SET8(GetSubstruct2(boxMon)->spDefenseEV);
+            // EVs are disabled - do not set EVs
             break;
         case MON_DATA_COOL:
             SET8(GetSubstruct2(boxMon)->cool);
@@ -5563,6 +5544,9 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
 
 void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
 {
+    // EVs are disabled - Pokemon do not gain EVs from battles
+    return;
+
     u8 evs[NUM_STATS];
     u16 evIncrease = 0;
     u16 totalEVs = 0;
@@ -5673,13 +5657,8 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
 
 u16 GetMonEVCount(struct Pokemon *mon)
 {
-    int i;
-    u16 count = 0;
-
-    for (i = 0; i < NUM_STATS; i++)
-        count += GetMonData(mon, MON_DATA_HP_EV + i, 0);
-
-    return count;
+    // EVs are disabled - return max so EV items won't work
+    return MAX_TOTAL_EVS;
 }
 
 void RandomlyGivePartyPokerus(struct Pokemon *party)

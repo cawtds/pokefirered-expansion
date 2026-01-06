@@ -1299,3 +1299,37 @@ PalletTown_ProfessorOaksLab_EventScript_RightSignAlt::
 	msgbox PalletTown_ProfessorOaksLab_Text_AllMonTypesHaveStrongAndWeakPoints
 	releaseall
 	end
+
+@ Aide gift cutscene - triggers when leaving lab after receiving Pokedex
+PalletTown_ProfessorOaksLab_EventScript_AideGiftTrigger::
+	goto_if_set FLAG_RECEIVED_AIDE_GIFT, PalletTown_ProfessorOaksLab_EventScript_AideGiftEnd
+	lockall
+	applymovement LOCALID_OAKS_LAB_AIDE1, PalletTown_ProfessorOaksLab_Movement_AideApproach
+	waitmovement 0
+	applymovement LOCALID_PLAYER, PalletTown_ProfessorOaksLab_Movement_PlayerFaceAide
+	waitmovement 0
+	msgbox PalletTown_ProfessorOaksLab_Text_AideGiftIntro
+	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedItem, ITEM_RARE_CANDY, 1
+	msgbox PalletTown_ProfessorOaksLab_Text_AideGiftOutro
+	setflag FLAG_RECEIVED_AIDE_GIFT
+	applymovement LOCALID_OAKS_LAB_AIDE1, PalletTown_ProfessorOaksLab_Movement_AideReturn
+	waitmovement 0
+	releaseall
+	end
+
+PalletTown_ProfessorOaksLab_EventScript_AideGiftEnd::
+	releaseall
+	end
+
+PalletTown_ProfessorOaksLab_Movement_AideApproach::
+	walk_right
+	walk_in_place_faster_right
+	step_end
+
+PalletTown_ProfessorOaksLab_Movement_PlayerFaceAide::
+	walk_in_place_faster_left
+	step_end
+
+PalletTown_ProfessorOaksLab_Movement_AideReturn::
+	walk_left
+	step_end

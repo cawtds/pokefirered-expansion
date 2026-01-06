@@ -240,6 +240,33 @@
       "var": "VAR_MAP_SCENE_PALLET_TOWN_PROFESSOR_OAKS_LAB",
       "var_value": "3",
       "script": "PalletTown_ProfessorOaksLab_EventScript_RivalBattleTriggerRight"
+    },
+    {
+      "type": "trigger",
+      "x": 5,
+      "y": 11,
+      "elevation": 3,
+      "var": "VAR_MAP_SCENE_PALLET_TOWN_PROFESSOR_OAKS_LAB",
+      "var_value": "6",
+      "script": "PalletTown_ProfessorOaksLab_EventScript_AideGiftTrigger"
+    },
+    {
+      "type": "trigger",
+      "x": 6,
+      "y": 11,
+      "elevation": 3,
+      "var": "VAR_MAP_SCENE_PALLET_TOWN_PROFESSOR_OAKS_LAB",
+      "var_value": "6",
+      "script": "PalletTown_ProfessorOaksLab_EventScript_AideGiftTrigger"
+    },
+    {
+      "type": "trigger",
+      "x": 7,
+      "y": 11,
+      "elevation": 3,
+      "var": "VAR_MAP_SCENE_PALLET_TOWN_PROFESSOR_OAKS_LAB",
+      "var_value": "6",
+      "script": "PalletTown_ProfessorOaksLab_EventScript_AideGiftTrigger"
     }
   ],
   "bg_events": [
