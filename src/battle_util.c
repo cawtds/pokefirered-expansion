@@ -6260,6 +6260,9 @@ u32 GetBattleMoveTarget(u16 move, u8 setTarget)
 
 u8 GetAttackerObedienceForAction()
 {
+    // Pokemon always obey the trainer
+    return OBEYS;
+
     s32 rnd;
     s32 calc;
     u8 obedienceLevel = 0;
