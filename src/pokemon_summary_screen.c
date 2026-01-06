@@ -53,6 +53,7 @@ static bool8 IsCyclingAllowed(void);
 
 #if P_SUMMARY_SCREEN_MOVE_RELEARNER == TRUE
 extern void TeachMoveRelearnerMoveWithCallback(MainCallback callback);
+extern void TeachMoveRelearnerMoveForBoxMon(MainCallback callback, struct BoxPokemon *boxMon);
 #endif
 static void PokeSum_TryPlayMonCry(void);
 static void PokeSum_RemoveWindows(u8 curPageIndex);
@@ -349,6 +350,7 @@ static EWRAM_DATA MainCallback sSavedSummaryCallback = NULL;
 static EWRAM_DATA u8 sSavedLastIndex = 0;
 static EWRAM_DATA u8 sSavedMode = 0;
 static EWRAM_DATA bool8 sSavedIsBoxMon = FALSE;
+static EWRAM_DATA u8 sSavedMonIndex = 0;
 #endif
 
 extern const u32 gSummaryScreen_PageSkills_Tilemap[];
@@ -1476,26 +1478,26 @@ static void Task_InputHandler_Info(u8 taskId)
 #if P_SUMMARY_SCREEN_MOVE_RELEARNER == TRUE
             else if (JOY_NEW(START_BUTTON))
             {
-                // Check if on moves page and Pokemon has relearnable moves
-                if (sMonSummaryScreen->curPageIndex == PSS_PAGE_MOVES && !sMonSummaryScreen->isEgg)
+                // Check if on moves page, not an egg, and has relearnable moves
+                if (sMonSummaryScreen->curPageIndex == PSS_PAGE_MOVES
+                    && !sMonSummaryScreen->isEgg
+                    && GetNumberOfRelearnableMoves(&sMonSummaryScreen->currentMon) > 0)
                 {
-                    if (GetNumberOfRelearnableMoves(&sMonSummaryScreen->currentMon) > 0)
-                    {
-                        // Set up for move relearner
-                        gSpecialVar_0x8004 = sLastViewedMonIndex;
-                        gSpecialVar_0x8005 = GetNumberOfRelearnableMoves(&sMonSummaryScreen->currentMon);
+                    // Set up for move relearner
+                    gSpecialVar_0x8004 = sLastViewedMonIndex;
+                    gSpecialVar_0x8005 = GetNumberOfRelearnableMoves(&sMonSummaryScreen->currentMon);
 
-                        // Save context for returning to summary screen
-                        sSavedMonList = sMonSummaryScreen->monList.mons;
-                        sSavedSummaryCallback = sMonSummaryScreen->savedCallback;
-                        sSavedLastIndex = sMonSummaryScreen->lastIndex;
-                        sSavedMode = sMonSummaryScreen->mode;
-                        sSavedIsBoxMon = sMonSummaryScreen->isBoxMon;
+                    // Save context for returning to summary screen
+                    sSavedMonList = sMonSummaryScreen->monList.mons;
+                    sSavedSummaryCallback = sMonSummaryScreen->savedCallback;
+                    sSavedLastIndex = sMonSummaryScreen->lastIndex;
+                    sSavedMode = sMonSummaryScreen->mode;
+                    sSavedIsBoxMon = sMonSummaryScreen->isBoxMon;
+                    sSavedMonIndex = sLastViewedMonIndex;
 
-                        PlaySE(SE_SELECT);
-                        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
-                        sMonSummaryScreen->state3270 = PSS_STATE3270_WAITFADE_MOVERELEARNER;
-                    }
+                    PlaySE(SE_SELECT);
+                    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+                    sMonSummaryScreen->state3270 = PSS_STATE3270_WAITFADE_MOVERELEARNER;
                 }
                 return;
             }
@@ -1551,6 +1553,7 @@ static void Task_InputHandler_Info(u8 taskId)
             sSavedLastIndex = sMonSummaryScreen->lastIndex;
             sSavedMode = sMonSummaryScreen->mode;
             sSavedIsBoxMon = sMonSummaryScreen->isBoxMon;
+            sSavedMonIndex = sLastViewedMonIndex;
 
             // Cleanup summary screen resources
             PokeSum_DestroySprites();
@@ -1572,6 +1575,9 @@ static void Task_InputHandler_Info(u8 taskId)
     case PSS_STATE3270_WAITFADE_MOVERELEARNER:
         if (!gPaletteFade.active)
         {
+            bool8 isBoxMon = sMonSummaryScreen->isBoxMon;
+            struct BoxPokemon *boxMon = isBoxMon ? &sMonSummaryScreen->monList.boxMons[sLastViewedMonIndex] : NULL;
+
             // Cleanup summary screen resources
             PokeSum_DestroySprites();
             FreeAllSpritePalettes();
@@ -1584,7 +1590,10 @@ static void Task_InputHandler_Info(u8 taskId)
             FREE_AND_SET_NULL_IF_SET(sMonSkillsPrinterXpos);
 
             // Call move relearner with custom callback
-            TeachMoveRelearnerMoveWithCallback(CB2_ReturnToSummaryAfterMoveRelearner);
+            if (isBoxMon)
+                TeachMoveRelearnerMoveForBoxMon(CB2_ReturnToSummaryAfterMoveRelearner, boxMon);
+            else
+                TeachMoveRelearnerMoveWithCallback(CB2_ReturnToSummaryAfterMoveRelearner);
         }
         break;
 #endif
@@ -1843,7 +1852,13 @@ static void Task_BackOutOfSelectMove(u8 taskId)
         break;
     case 4:
         PokeSum_PrintPageName(gText_PokeSum_PageName_KnownMoves);
-        PokeSum_PrintControlsString(gText_PokeSum_Controls_PageDetail);
+#if P_SUMMARY_SCREEN_MOVE_RELEARNER == TRUE
+        if (!sMonSummaryScreen->isEgg
+            && GetNumberOfRelearnableMoves(&sMonSummaryScreen->currentMon) > 0)
+            PokeSum_PrintControlsString(gText_PokeSum_Controls_PageRelearn);
+        else
+#endif
+            PokeSum_PrintControlsString(gText_PokeSum_Controls_PageDetail);
         break;
     case 5:
         CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_PAGE_NAME], 2);
@@ -3593,7 +3608,13 @@ static void PokeSum_PrintPageHeaderText(u8 curPageIndex)
         break;
     case PSS_PAGE_MOVES:
         PokeSum_PrintPageName(gText_PokeSum_PageName_KnownMoves);
-        PokeSum_PrintControlsString(gText_PokeSum_Controls_PageDetail);
+#if P_SUMMARY_SCREEN_MOVE_RELEARNER == TRUE
+        if (!sMonSummaryScreen->isEgg
+            && GetNumberOfRelearnableMoves(&sMonSummaryScreen->currentMon) > 0)
+            PokeSum_PrintControlsString(gText_PokeSum_Controls_PageRelearn);
+        else
+#endif
+            PokeSum_PrintControlsString(gText_PokeSum_Controls_PageDetail);
         PrintMonLevelNickOnWindow2(gText_PokeSum_NoData);
         break;
     case PSS_PAGE_MOVES_INFO:
@@ -3657,18 +3678,18 @@ static void CB2_ReturnToSummaryAfterRename(void)
     if (!sSavedIsBoxMon)
     {
         struct Pokemon *partyMons = (struct Pokemon *)sSavedMonList;
-        mon = &partyMons[sLastViewedMonIndex];
+        mon = &partyMons[sSavedMonIndex];
         SetMonData(mon, MON_DATA_NICKNAME, gStringVar3);
     }
     else
     {
         struct BoxPokemon *boxMons = (struct BoxPokemon *)sSavedMonList;
-        struct BoxPokemon *boxMon = &boxMons[sLastViewedMonIndex];
+        struct BoxPokemon *boxMon = &boxMons[sSavedMonIndex];
         SetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar3);
     }
 
     // Recreate the summary screen with saved context
-    ShowPokemonSummaryScreen((struct Pokemon *)sSavedMonList, sLastViewedMonIndex, sSavedLastIndex, sSavedSummaryCallback, sSavedMode);
+    ShowPokemonSummaryScreen((struct Pokemon *)sSavedMonList, sSavedMonIndex, sSavedLastIndex, sSavedSummaryCallback, sSavedMode);
 }
 #endif
 
@@ -3676,7 +3697,7 @@ static void CB2_ReturnToSummaryAfterRename(void)
 static void CB2_ReturnToSummaryAfterMoveRelearner(void)
 {
     // Recreate the summary screen with saved context
-    ShowPokemonSummaryScreen((struct Pokemon *)sSavedMonList, sLastViewedMonIndex, sSavedLastIndex, sSavedSummaryCallback, sSavedMode);
+    ShowPokemonSummaryScreen((struct Pokemon *)sSavedMonList, sSavedMonIndex, sSavedLastIndex, sSavedSummaryCallback, sSavedMode);
 }
 #endif
 
@@ -4453,7 +4474,7 @@ static u8 PokeSum_CanForgetSelectedMove(void)
 
     move = GetMonMoveBySlotId(&sMonSummaryScreen->currentMon, sMoveSelectionCursorPos);
 
-    if (IsMoveHM(move) == TRUE && sMonSummaryScreen->mode != PSS_MODE_FORGET_MOVE)
+    if (CannotForgetMove(move) == TRUE && sMonSummaryScreen->mode != PSS_MODE_FORGET_MOVE)
         return FALSE;
 
     return TRUE;

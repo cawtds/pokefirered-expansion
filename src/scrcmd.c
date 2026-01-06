@@ -2298,15 +2298,55 @@ bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
     return FALSE;
 }
 
+// Map field moves to their corresponding HM items
+static u16 GetHMItemForFieldMove(enum FieldMove fieldMove)
+{
+    switch (fieldMove)
+    {
+        case FIELD_MOVE_CUT:        return ITEM_HM01;
+        case FIELD_MOVE_FLY:        return ITEM_HM02;
+        case FIELD_MOVE_SURF:       return ITEM_HM03;
+        case FIELD_MOVE_STRENGTH:   return ITEM_HM04;
+        case FIELD_MOVE_FLASH:      return ITEM_HM05;
+        case FIELD_MOVE_ROCK_SMASH: return ITEM_HM06;
+        case FIELD_MOVE_WATERFALL:  return ITEM_HM07;
+        default:                    return ITEM_NONE;
+    }
+}
+
 bool8 ScrCmd_checkfieldmoveusable(struct ScriptContext* ctx)
 {
     u32 partyIndex;
+    u16 species;
     enum FieldMove fieldMove = ScriptReadHalfword(ctx);
     u16 moveId = gFieldMovesInfo[fieldMove].moveId;
+    u16 hmItem = GetHMItemForFieldMove(fieldMove);
     gSpecialVar_Result = FALSE;
 
     Script_RequestEffects(SCREFF_V1);
 
+    // For HM moves, only check if the player has the HM item in bag
+    if (hmItem != ITEM_NONE)
+    {
+        // Check if player has the HM item
+        if (!CheckBagHasItem(hmItem, 1))
+            return FALSE;
+
+        // Check if badge is obtained (still required to USE the HM)
+        if (!FieldMove_IsUnlocked(fieldMove))
+            return FALSE;
+
+        // Use default species for the animation
+        species = FieldMove_GetDefaultSpecies(fieldMove);
+        gFieldEffectArguments[0] = species | NOT_IN_PARTY_MASK;
+        gSpecialVar_0x8004 = species;
+        gSpecialVar_Result = TRUE;
+        StringCopy(gStringVar1, gSpeciesInfo[species].speciesName);
+        StringCopy(gStringVar2, gMovesInfo[moveId].name);
+        return FALSE;
+    }
+
+    // For non-HM field moves (Teleport, Dig, Sweet Scent, etc.), use original logic
     if (!FieldMove_IsUnlocked(fieldMove))
         return FALSE;
 

@@ -1493,6 +1493,7 @@ extern const u8 gText_PokeSum_Controls_PickSwitch[];
 extern const u8 gText_PokeSum_Controls_Pick[];
 extern const u8 gText_PokeSum_NoData[];
 extern const u8 gText_PokeSum_Controls_PageDetail[];
+extern const u8 gText_PokeSum_Controls_PageRelearn[];
 extern const u8 gText_PokeSum_DexNoUnknown[];
 extern const u8 gText_PokeSum_Item_None[];
 extern const u8 gText_PokeSum_OneHyphen[];

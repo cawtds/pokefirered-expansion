@@ -11,6 +11,7 @@
 #include "event_data.h"
 #include "text_window.h"
 #include "pokemon_summary_screen.h"
+#include "pokemon.h"
 #include "graphics.h"
 #include "move.h"
 #include "strings.h"
@@ -144,6 +145,8 @@ struct LearnMoveGfxResources
 
 static EWRAM_DATA struct LearnMoveGfxResources * sMoveRelearner = NULL;
 static EWRAM_DATA MainCallback sSavedReturnCallback = NULL;
+static EWRAM_DATA struct BoxPokemon *sTargetBoxMon = NULL;
+static EWRAM_DATA struct Pokemon sTempMonForBoxMon = {0};
 
 static void Task_InitMoveRelearnerMenu(u8 taskId);
 static void CB2_MoveRelearner_Init(void);
@@ -368,6 +371,18 @@ void TeachMoveRelearnerMove(void)
 void TeachMoveRelearnerMoveWithCallback(MainCallback callback)
 {
     sSavedReturnCallback = callback;
+    sTargetBoxMon = NULL;
+    LockPlayerFieldControls();
+    CreateTask(Task_InitMoveRelearnerMenu, 10);
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+}
+
+void TeachMoveRelearnerMoveForBoxMon(MainCallback callback, struct BoxPokemon *boxMon)
+{
+    sSavedReturnCallback = callback;
+    sTargetBoxMon = boxMon;
+    // Convert box mon to temp mon for reading
+    BoxMonToMon(boxMon, &sTempMonForBoxMon);
     LockPlayerFieldControls();
     CreateTask(Task_InitMoveRelearnerMenu, 10);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
@@ -515,32 +530,51 @@ static void MoveRelearnerStateMachine(void)
         switch (YesNoMenuProcessInput())
         {
         case 0:
-            if (GiveMoveToMon(&gPlayerParty[sMoveRelearner->selectedPartyMember], sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex]) != 0xFFFF)
             {
-                StringExpandPlaceholdersAndPrintTextOnWindow7Color2(gText_MonLearnedMove);
-                gSpecialVar_0x8004 = TRUE;
-#if P_SUMMARY_MOVE_RELEARNER_FULL_PP == TRUE
-                // Restore PP to full if relearning from summary screen
-                if (sSavedReturnCallback != NULL)
+                u16 result;
+                u16 move = sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex];
+
+                if (sTargetBoxMon != NULL)
+                    result = GiveMoveToBoxMon(sTargetBoxMon, move);
+                else
+                    result = GiveMoveToMon(&gPlayerParty[sMoveRelearner->selectedPartyMember], move);
+
+                if (result != MON_HAS_MAX_MOVES)
                 {
-                    u8 i;
-                    // Find which slot the move was added to
-                    for (i = 0; i < MAX_MON_MOVES; i++)
+                    StringExpandPlaceholdersAndPrintTextOnWindow7Color2(gText_MonLearnedMove);
+                    gSpecialVar_0x8004 = TRUE;
+#if P_SUMMARY_MOVE_RELEARNER_FULL_PP == TRUE
+                    // Restore PP to full if relearning from summary screen
+                    if (sSavedReturnCallback != NULL)
                     {
-                        if (GetMonData(&gPlayerParty[sMoveRelearner->selectedPartyMember], MON_DATA_MOVE1 + i) == sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex])
+                        u8 i;
+                        // Find which slot the move was added to
+                        for (i = 0; i < MAX_MON_MOVES; i++)
                         {
-                            u8 maxPP = CalculatePPWithBonus(sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex], 0, 0);
-                            SetMonData(&gPlayerParty[sMoveRelearner->selectedPartyMember], MON_DATA_PP1 + i, &maxPP);
-                            break;
+                            u16 slotMove;
+                            if (sTargetBoxMon != NULL)
+                                slotMove = GetBoxMonData(sTargetBoxMon, MON_DATA_MOVE1 + i);
+                            else
+                                slotMove = GetMonData(&gPlayerParty[sMoveRelearner->selectedPartyMember], MON_DATA_MOVE1 + i);
+
+                            if (slotMove == move)
+                            {
+                                u8 maxPP = CalculatePPWithBonus(move, 0, 0);
+                                if (sTargetBoxMon != NULL)
+                                    SetBoxMonData(sTargetBoxMon, MON_DATA_PP1 + i, &maxPP);
+                                else
+                                    SetMonData(&gPlayerParty[sMoveRelearner->selectedPartyMember], MON_DATA_PP1 + i, &maxPP);
+                                break;
+                            }
                         }
                     }
-                }
 #endif
-                sMoveRelearner->state = 31;
-            }
-            else
-            {
-                sMoveRelearner->state = 16;
+                    sMoveRelearner->state = 31;
+                }
+                else
+                {
+                    sMoveRelearner->state = 16;
+                }
             }
             break;
         case 1:
@@ -619,7 +653,10 @@ static void MoveRelearnerStateMachine(void)
         {
             ListMenuGetScrollAndRow(sMoveRelearner->listMenuTaskId, &sMoveRelearner->listMenuScrollPos, &sMoveRelearner->listMenuScrollRow);
             FreeAllWindowBuffers();
-            ShowSelectMovePokemonSummaryScreen(gPlayerParty, sMoveRelearner->selectedPartyMember, gPlayerPartyCount - 1, CB2_MoveRelearner_Resume, sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex]);
+            if (sTargetBoxMon != NULL)
+                ShowSelectMovePokemonSummaryScreen(&sTempMonForBoxMon, 0, 0, CB2_MoveRelearner_Resume, sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex]);
+            else
+                ShowSelectMovePokemonSummaryScreen(gPlayerParty, sMoveRelearner->selectedPartyMember, gPlayerPartyCount - 1, CB2_MoveRelearner_Resume, sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex]);
             sMoveRelearner->state = 28;
         }
         break;
@@ -671,19 +708,42 @@ static void MoveRelearnerStateMachine(void)
             }
             else
             {
-                move = GetMonData(&gPlayerParty[sMoveRelearner->selectedPartyMember], MON_DATA_MOVE1 + sMoveRelearner->selectedMoveSlot);
-                StringCopy(gStringVar3, GetMoveName(move));
-                RemoveMonPPBonus(&gPlayerParty[sMoveRelearner->selectedPartyMember], sMoveRelearner->selectedMoveSlot);
-                SetMonMoveSlot(&gPlayerParty[sMoveRelearner->selectedPartyMember], sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex], sMoveRelearner->selectedMoveSlot);
-#if P_SUMMARY_MOVE_RELEARNER_FULL_PP == TRUE
-                // Restore PP to full if relearning from summary screen
-                if (sSavedReturnCallback != NULL)
+                u16 newMove = sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex];
+                u8 slot = sMoveRelearner->selectedMoveSlot;
+
+                if (sTargetBoxMon != NULL)
                 {
-                    u8 maxPP = CalculatePPWithBonus(sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex], 0, 0);
-                    SetMonData(&gPlayerParty[sMoveRelearner->selectedPartyMember], MON_DATA_PP1 + sMoveRelearner->selectedMoveSlot, &maxPP);
-                }
+                    u32 pp;
+                    move = GetBoxMonData(sTargetBoxMon, MON_DATA_MOVE1 + slot);
+                    StringCopy(gStringVar3, GetMoveName(move));
+                    // Clear PP bonus for this slot
+                    u8 ppBonuses = GetBoxMonData(sTargetBoxMon, MON_DATA_PP_BONUSES);
+                    ppBonuses &= ~(3 << (slot * 2));
+                    SetBoxMonData(sTargetBoxMon, MON_DATA_PP_BONUSES, &ppBonuses);
+                    // Set new move
+                    SetBoxMonData(sTargetBoxMon, MON_DATA_MOVE1 + slot, &newMove);
+                    pp = GetMovePP(newMove);
+#if P_SUMMARY_MOVE_RELEARNER_FULL_PP == TRUE
+                    if (sSavedReturnCallback != NULL)
+                        pp = CalculatePPWithBonus(newMove, 0, 0);
 #endif
-                StringCopy(gStringVar2, GetMoveName(sMoveRelearner->learnableMoves[sMoveRelearner->selectedIndex]));
+                    SetBoxMonData(sTargetBoxMon, MON_DATA_PP1 + slot, &pp);
+                }
+                else
+                {
+                    move = GetMonData(&gPlayerParty[sMoveRelearner->selectedPartyMember], MON_DATA_MOVE1 + slot);
+                    StringCopy(gStringVar3, GetMoveName(move));
+                    RemoveMonPPBonus(&gPlayerParty[sMoveRelearner->selectedPartyMember], slot);
+                    SetMonMoveSlot(&gPlayerParty[sMoveRelearner->selectedPartyMember], newMove, slot);
+#if P_SUMMARY_MOVE_RELEARNER_FULL_PP == TRUE
+                    if (sSavedReturnCallback != NULL)
+                    {
+                        u8 maxPP = CalculatePPWithBonus(newMove, 0, 0);
+                        SetMonData(&gPlayerParty[sMoveRelearner->selectedPartyMember], MON_DATA_PP1 + slot, &maxPP);
+                    }
+#endif
+                }
+                StringCopy(gStringVar2, GetMoveName(newMove));
                 StringExpandPlaceholdersAndPrintTextOnWindow7Color2(gText_1_2_and_Poof);
                 sMoveRelearner->state = 30;
                 gSpecialVar_0x8004 = TRUE;
@@ -778,17 +838,25 @@ static void SpawnListMenuScrollIndicatorSprites(void)
         gSprites[sMoveRelearner->spriteIds[i]].invisible = TRUE;
 }
 
+static struct Pokemon *GetCurrentMon(void)
+{
+    if (sTargetBoxMon != NULL)
+        return &sTempMonForBoxMon;
+    return &gPlayerParty[sMoveRelearner->selectedPartyMember];
+}
+
 static void MoveRelearnerInitListMenuBuffersEtc(void)
 {
     int i;
     s32 count;
     u8 nickname[POKEMON_NAME_LENGTH + 1];
+    struct Pokemon *mon = GetCurrentMon();
 
-    sMoveRelearner->numLearnableMoves = GetMoveRelearnerMoves(&gPlayerParty[sMoveRelearner->selectedPartyMember], sMoveRelearner->learnableMoves);
-    count = GetMoveRelearnerMoves(&gPlayerParty[sMoveRelearner->selectedPartyMember], sMoveRelearner->learnableMoves);
+    sMoveRelearner->numLearnableMoves = GetMoveRelearnerMoves(mon, sMoveRelearner->learnableMoves);
+    count = GetMoveRelearnerMoves(mon, sMoveRelearner->learnableMoves);
     for (i = 0; i < sMoveRelearner->numLearnableMoves; i++)
         StringCopy(sMoveRelearner->listMenuStrbufs[i], gMovesInfo[sMoveRelearner->learnableMoves[i]].name);
-    GetMonData(&gPlayerParty[sMoveRelearner->selectedPartyMember], MON_DATA_NICKNAME, nickname);
+    GetMonData(mon, MON_DATA_NICKNAME, nickname);
     StringCopy_Nickname(gStringVar1, nickname);
     StringCopy(sMoveRelearner->listMenuStrbufs[sMoveRelearner->numLearnableMoves], gFameCheckerText_Cancel);
     sMoveRelearner->numLearnableMoves++;
