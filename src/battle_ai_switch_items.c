@@ -2296,13 +2296,8 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     }
     else
     {
-        // Return Trapper > Type Matchup > Best Defensive > Baton Pass
-        if (trapperId != PARTY_SIZE)                    return trapperId;
-        else if (typeMatchupEffectiveId != PARTY_SIZE)  return typeMatchupEffectiveId;
-        else if (typeMatchupId != PARTY_SIZE)           return typeMatchupId;
-        else if (defensiveMonId != PARTY_SIZE)          return defensiveMonId;
-        else if (batonPassId != PARTY_SIZE)             return batonPassId;
-        else if (generic1v1MonId != PARTY_SIZE)         return generic1v1MonId;
+        // Never switch mid-battle
+        return PARTY_SIZE;
     }
     // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
     if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount
