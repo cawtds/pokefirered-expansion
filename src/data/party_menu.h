@@ -527,6 +527,17 @@ static const struct WindowTemplate sZygardeCubeSelectWindowTemplate =
     .baseBlock = 0x2E9,
 };
 
+static const struct WindowTemplate sPowderVialSelectWindowTemplate =
+{
+    .bg = 2,
+    .tilemapLeft = 17,
+    .tilemapTop = 1,
+    .width = 12,
+    .height = 14,
+    .paletteNum = 14,
+    .baseBlock = 0x2E9,
+};
+
 static const struct WindowTemplate sMoveSelectWindowTemplate =
 {
     .bg = 2,
@@ -1015,6 +1026,13 @@ enum
     CURSOR_OPTION_CATALOG_MOWER,
     CURSOR_OPTION_CHANGE_FORM,
     CURSOR_OPTION_CHANGE_ABILITY,
+    // Powder Vial status options
+    CURSOR_OPTION_STATUS_POISON,
+    CURSOR_OPTION_STATUS_BURN,
+    CURSOR_OPTION_STATUS_PARALYSIS,
+    CURSOR_OPTION_STATUS_SLEEP,
+    CURSOR_OPTION_STATUS_FREEZE,
+    CURSOR_OPTION_STATUS_TOXIC,
     CURSOR_OPTION_FIELD_MOVES, // needs to be last
 };
 
@@ -1050,6 +1068,13 @@ static struct
     [CURSOR_OPTION_CATALOG_MOWER]                        = {gText_LawnMower,                   CursorCB_CatalogMower    },
     [CURSOR_OPTION_CHANGE_FORM]                          = {gText_ChangeForm,                  CursorCB_ChangeForm      },
     [CURSOR_OPTION_CHANGE_ABILITY]                       = {gText_ChangeAbility,               CursorCB_ChangeAbility   },
+    // Powder Vial status options
+    [CURSOR_OPTION_STATUS_POISON]                        = {gText_StatusPoison,                CursorCB_StatusPoison    },
+    [CURSOR_OPTION_STATUS_BURN]                          = {gText_StatusBurn,                  CursorCB_StatusBurn      },
+    [CURSOR_OPTION_STATUS_PARALYSIS]                     = {gText_StatusParalysis,             CursorCB_StatusParalysis },
+    [CURSOR_OPTION_STATUS_SLEEP]                         = {gText_StatusSleep,                 CursorCB_StatusSleep     },
+    [CURSOR_OPTION_STATUS_FREEZE]                        = {gText_StatusFreeze,                CursorCB_StatusFreeze    },
+    [CURSOR_OPTION_STATUS_TOXIC]                         = {gText_StatusToxic,                 CursorCB_StatusToxic     },
 };
 
 static const u8 sPartyMenuAction_SummarySwitchCancel[]   = {CURSOR_OPTION_SUMMARY,  CURSOR_OPTION_SWITCH,    CURSOR_OPTION_CANCEL1};
@@ -1066,6 +1091,7 @@ static const u8 sPartyMenuAction_TradeSummaryCancel1[]   = {CURSOR_OPTION_TRADE1
 static const u8 sPartyMenuAction_TradeSummaryCancel2[]   = {CURSOR_OPTION_TRADE2,   CURSOR_OPTION_SUMMARY,   CURSOR_OPTION_CANCEL1};
 static const u8 sPartyMenuAction_RotomCatalog[]          = {CURSOR_OPTION_CATALOG_BULB, CURSOR_OPTION_CATALOG_OVEN, CURSOR_OPTION_CATALOG_WASHING, CURSOR_OPTION_CATALOG_FRIDGE, CURSOR_OPTION_CATALOG_FAN, CURSOR_OPTION_CATALOG_MOWER, CURSOR_OPTION_CANCEL1};
 static const u8 sPartyMenuAction_ZygardeCube[]           = {CURSOR_OPTION_CHANGE_FORM, CURSOR_OPTION_CHANGE_ABILITY, CURSOR_OPTION_CANCEL1};
+static const u8 sPartyMenuAction_PowderVial[]            = {CURSOR_OPTION_STATUS_POISON, CURSOR_OPTION_STATUS_BURN, CURSOR_OPTION_STATUS_PARALYSIS, CURSOR_OPTION_STATUS_SLEEP, CURSOR_OPTION_STATUS_FREEZE, CURSOR_OPTION_STATUS_TOXIC, CURSOR_OPTION_CANCEL1};
 
 // IDs for the action lists that appear when a party mon is selected
 enum
@@ -1085,6 +1111,7 @@ enum
     ACTIONS_SPIN_TRADE,
     ACTIONS_ROTOM_CATALOG,
     ACTIONS_ZYGARDE_CUBE,
+    ACTIONS_POWDER_VIAL,
 };
 
 static const u8 *const sPartyMenuActions[] =
@@ -1104,6 +1131,7 @@ static const u8 *const sPartyMenuActions[] =
     [ACTIONS_SPIN_TRADE]    = sPartyMenuAction_TradeSummaryCancel2,
     [ACTIONS_ROTOM_CATALOG] = sPartyMenuAction_RotomCatalog,
     [ACTIONS_ZYGARDE_CUBE]  = sPartyMenuAction_ZygardeCube,
+    [ACTIONS_POWDER_VIAL]   = sPartyMenuAction_PowderVial,
 };
 
 static const u8 sPartyMenuActionCounts[] =
@@ -1123,6 +1151,7 @@ static const u8 sPartyMenuActionCounts[] =
     [ACTIONS_SPIN_TRADE]    = NELEMS(sPartyMenuAction_TradeSummaryCancel2),
     [ACTIONS_ROTOM_CATALOG] = NELEMS(sPartyMenuAction_RotomCatalog),
     [ACTIONS_ZYGARDE_CUBE]  = NELEMS(sPartyMenuAction_ZygardeCube),
+    [ACTIONS_POWDER_VIAL]   = NELEMS(sPartyMenuAction_PowderVial),
 };
 
 static const u8 *const sUnionRoomTradeMessages[] =

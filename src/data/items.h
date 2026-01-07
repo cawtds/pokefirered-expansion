@@ -15438,6 +15438,22 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_Repel,
         .iconPalette = gItemIconPalette_Repel,
     },
+
+    [ITEM_POWDER_VIAL] =
+    {
+        .name = ITEM_NAME("Powder Vial"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A vial of powder\n"
+            "that applies status\n"
+            "conditions."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_PowderVial,
+        .iconPic = gItemIcon_PowderJar,
+        .iconPalette = gItemIconPalette_PowderJar,
+    },
 };
 
 #undef ITEM_NAME

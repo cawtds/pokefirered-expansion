@@ -300,6 +300,15 @@ extern const u8 gText_SendOut[];
 extern const u8 gText_Enter[];
 extern const u8 gText_NoEntry[];
 extern const u8 gText_Store[];
+// Powder Vial status menu options
+extern const u8 gText_StatusPoison[];
+extern const u8 gText_StatusBurn[];
+extern const u8 gText_StatusParalysis[];
+extern const u8 gText_StatusSleep[];
+extern const u8 gText_StatusFreeze[];
+extern const u8 gText_StatusToxic[];
+extern const u8 gText_PkmnAlreadyHasStatus[];
+extern const u8 gText_StatusApplied[];
 extern const u8 gText_Trade4[];
 extern const u8 gText_NotPkmnOtherTrainerWants[];
 extern const u8 gText_ThatIsntAnEgg[];

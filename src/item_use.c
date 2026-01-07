@@ -683,6 +683,12 @@ void ItemUseOutOfBattle_CapCandy(u8 taskId)
     DoSetUpItemUseCallback(taskId);
 }
 
+void ItemUseOutOfBattle_PowderVial(u8 taskId)
+{
+    gItemUseCB = ItemUseCB_PowderVial;
+    DoSetUpItemUseCallback(taskId);
+}
+
 void ItemUseOutOfBattle_EvolutionStone(u8 taskId)
 {
     gItemUseCB = ItemUseCB_EvolutionStone;

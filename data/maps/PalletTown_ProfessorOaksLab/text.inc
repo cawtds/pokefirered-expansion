@@ -376,6 +376,10 @@ PalletTown_ProfessorOaksLab_Text_AideReceivedRepellant::
     .string "{PLAYER} received a\n"
     .string "REPELLANT from the AIDE!$"
 
+PalletTown_ProfessorOaksLab_Text_AideReceivedPowderVial::
+    .string "{PLAYER} received a\n"
+    .string "POWDER VIAL from the AIDE!$"
+
 PalletTown_ProfessorOaksLab_Text_AideGiftOutro::
     .string "These special candies can be\n"
     .string "used over and over again!\p"
@@ -383,6 +387,8 @@ PalletTown_ProfessorOaksLab_Text_AideGiftOutro::
     .string "your PC storage anywhere!\p"
     .string "The REPELLANT can be toggled\n"
     .string "on to prevent wild encounters!\p"
+    .string "The POWDER VIAL can apply\n"
+    .string "status conditions to POKéMON!\p"
     .string "Take good care of your POKéMON!\n"
     .string "Good luck out there!$"
 

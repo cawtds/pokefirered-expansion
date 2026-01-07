@@ -102,6 +102,7 @@
 #define SELECTWINDOW_MOVES          3
 #define SELECTWINDOW_CATALOG        4
 #define SELECTWINDOW_ZYGARDECUBE    5
+#define SELECTWINDOW_POWDER_VIAL    6
 
 enum
 {

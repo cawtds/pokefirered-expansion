@@ -150,6 +150,15 @@ const u8 gOtherText_Check[] = _("CHECK");
 const u8 gText_PokeSum_Item_None[] = _("NONE");
 const u8 gOtherText_Open[] = _("OPEN");
 const u8 gOtherText_Deselect[] = _("DESELECT");
+// Powder Vial status menu options
+const u8 gText_StatusPoison[] = _("POISON");
+const u8 gText_StatusBurn[] = _("BURN");
+const u8 gText_StatusParalysis[] = _("PARALYSIS");
+const u8 gText_StatusSleep[] = _("SLEEP");
+const u8 gText_StatusFreeze[] = _("FREEZE");
+const u8 gText_StatusToxic[] = _("TOXIC");
+const u8 gText_PkmnAlreadyHasStatus[] = _("{STR_VAR_1} already has a\nstatus condition!{PAUSE_UNTIL_PRESS}");
+const u8 gText_StatusApplied[] = _("{STR_VAR_1} was afflicted\nwith {STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
 const u8 gText_PokeSum_DexNoUnknown[] = _("???");
 const u8 gText_FiveMarks[] = _("?????");
 const u8 gText_Slash[] = _("/");
