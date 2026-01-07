@@ -15388,6 +15388,40 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_PokeshiDoll,
         .iconPalette = gItemIconPalette_PokeshiDoll,
     },
+
+// Custom Level Candies
+
+    [ITEM_INFINITE_CANDY] =
+    {
+        .name = ITEM_NAME("Infinite Candy"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A reusable candy\n"
+            "that raises level\n"
+            "by one."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_InfiniteCandy,
+        .iconPic = gItemIcon_RareCandy,
+        .iconPalette = gItemIconPalette_RareCandy,
+    },
+
+    [ITEM_CAP_CANDY] =
+    {
+        .name = ITEM_NAME("Cap Candy"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A reusable candy\n"
+            "that raises level\n"
+            "to the cap."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CapCandy,
+        .iconPic = gItemIcon_RareCandy,
+        .iconPalette = gItemIconPalette_RareCandy,
+    },
 };
 
 #undef ITEM_NAME

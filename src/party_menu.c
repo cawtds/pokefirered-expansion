@@ -350,6 +350,8 @@ static void Task_StopLearningMoveYesNo(u8 taskId);
 static void Task_HandleStopLearningMoveYesNoInput(u8 taskId);
 static void Task_TryLearningNextMoveAfterText(u8 taskId);
 static void ItemUseCB_RareCandyStep(u8 taskId, TaskFunc func);
+static void ItemUseCB_InfiniteCandyStep(u8 taskId, TaskFunc func);
+static void ItemUseCB_CapCandyStep(u8 taskId, TaskFunc func);
 static void Task_DisplayLevelUpStatsPg1(u8 taskId);
 static void Task_DisplayLevelUpStatsPg2(u8 taskId);
 static void UpdateMonDisplayInfoAfterRareCandy(u8 slot, struct Pokemon *mon);
@@ -5783,6 +5785,137 @@ static void ItemUseCB_RareCandyStep(u8 taskId, TaskFunc func)
             ScheduleBgCopyTilemapToVram(2);
             gTasks[taskId].func = Task_ClosePartyMenuAfterText;
     }
+}
+
+// Infinite Candy - raises level by 1, not consumed (key item)
+void ItemUseCB_InfiniteCandy(u8 taskId, TaskFunc func)
+{
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    bool8 cannotUseEffect;
+    u32 levelCap = GetCurrentLevelCap();
+
+    sInitialLevel = GetMonData(mon, MON_DATA_LEVEL);
+    if (sInitialLevel >= levelCap || sInitialLevel >= MAX_LEVEL)
+    {
+        cannotUseEffect = TRUE;
+    }
+    else
+    {
+        GetMonLevelUpWindowStats(mon, sLevelUpStatsBefore);
+        cannotUseEffect = ExecuteTableBasedItemEffect(mon, ITEM_RARE_CANDY, gPartyMenu.slotId, 0);
+        GetMonLevelUpWindowStats(mon, sLevelUpStatsAfter);
+    }
+    PlaySE(SE_SELECT);
+    if (cannotUseEffect)
+    {
+        sInitialLevel = 0;
+        sFinalLevel = 0;
+        gPartyMenuUseExitCallback = FALSE;
+        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = func;
+    }
+    else
+    {
+        sFinalLevel = GetMonData(mon, MON_DATA_LEVEL, NULL);
+        AdjustFriendship(mon, FRIENDSHIP_EVENT_GROW_LEVEL);
+        Task_DoUseItemAnim(taskId);
+        gItemUseCB = ItemUseCB_InfiniteCandyStep;
+    }
+}
+
+static void ItemUseCB_InfiniteCandyStep(u8 taskId, TaskFunc func)
+{
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    u8 i;
+
+    for (i = 0; i < NUM_STATS; i++) {
+        sPartyMenuInternal->data[i] = sLevelUpStatsBefore[i];
+        sPartyMenuInternal->data[NUM_STATS + i] = sLevelUpStatsAfter[i];
+    }
+
+    gPartyMenuUseExitCallback = TRUE;
+    ItemUse_SetQuestLogEvent(QL_EVENT_USED_ITEM, mon, gSpecialVar_ItemId, 0xFFFF);
+    UpdateMonDisplayInfoAfterRareCandy(gPartyMenu.slotId, mon);
+    // Key item - do NOT remove from bag
+    GetMonNickname(mon, gStringVar1);
+    PlayFanfareByFanfareNum(FANFARE_LEVEL_UP);
+    ConvertIntToDecimalStringN(gStringVar2, sFinalLevel, STR_CONV_MODE_LEFT_ALIGN, 3);
+    StringExpandPlaceholders(gStringVar4, gText_PkmnElevatedToLvVar2);
+    DisplayPartyMenuMessage(gStringVar4, TRUE);
+    ScheduleBgCopyTilemapToVram(2);
+    gTasks[taskId].func = Task_DisplayLevelUpStatsPg1;
+}
+
+// Cap Candy - raises level to current cap, not consumed (key item)
+void ItemUseCB_CapCandy(u8 taskId, TaskFunc func)
+{
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    bool8 cannotUseEffect = FALSE;
+    u32 levelCap = GetCurrentLevelCap();
+    u32 currentLevel;
+    u8 i;
+
+    sInitialLevel = GetMonData(mon, MON_DATA_LEVEL);
+    currentLevel = sInitialLevel;
+
+    if (currentLevel >= levelCap || currentLevel >= MAX_LEVEL)
+    {
+        cannotUseEffect = TRUE;
+    }
+    else
+    {
+        GetMonLevelUpWindowStats(mon, sLevelUpStatsBefore);
+        // Level up repeatedly until we hit the cap
+        while (currentLevel < levelCap && currentLevel < MAX_LEVEL)
+        {
+            ExecuteTableBasedItemEffect(mon, ITEM_RARE_CANDY, gPartyMenu.slotId, 0);
+            currentLevel = GetMonData(mon, MON_DATA_LEVEL);
+        }
+        GetMonLevelUpWindowStats(mon, sLevelUpStatsAfter);
+    }
+
+    PlaySE(SE_SELECT);
+    if (cannotUseEffect)
+    {
+        sInitialLevel = 0;
+        sFinalLevel = 0;
+        gPartyMenuUseExitCallback = FALSE;
+        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = func;
+    }
+    else
+    {
+        sFinalLevel = GetMonData(mon, MON_DATA_LEVEL, NULL);
+        for (i = sInitialLevel; i < sFinalLevel; i++)
+            AdjustFriendship(mon, FRIENDSHIP_EVENT_GROW_LEVEL);
+        Task_DoUseItemAnim(taskId);
+        gItemUseCB = ItemUseCB_CapCandyStep;
+    }
+}
+
+static void ItemUseCB_CapCandyStep(u8 taskId, TaskFunc func)
+{
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    u8 i;
+
+    for (i = 0; i < NUM_STATS; i++) {
+        sPartyMenuInternal->data[i] = sLevelUpStatsBefore[i];
+        sPartyMenuInternal->data[NUM_STATS + i] = sLevelUpStatsAfter[i];
+    }
+
+    gPartyMenuUseExitCallback = TRUE;
+    ItemUse_SetQuestLogEvent(QL_EVENT_USED_ITEM, mon, gSpecialVar_ItemId, 0xFFFF);
+    UpdateMonDisplayInfoAfterRareCandy(gPartyMenu.slotId, mon);
+    // Key item - do NOT remove from bag
+    GetMonNickname(mon, gStringVar1);
+    PlayFanfareByFanfareNum(FANFARE_LEVEL_UP);
+    ConvertIntToDecimalStringN(gStringVar2, sFinalLevel, STR_CONV_MODE_LEFT_ALIGN, 3);
+    StringExpandPlaceholders(gStringVar4, gText_PkmnElevatedToLvVar2);
+    DisplayPartyMenuMessage(gStringVar4, TRUE);
+    ScheduleBgCopyTilemapToVram(2);
+    gTasks[taskId].func = Task_DisplayLevelUpStatsPg1;
 }
 
 static void UpdateMonDisplayInfoAfterRareCandy(u8 slot, struct Pokemon *mon)

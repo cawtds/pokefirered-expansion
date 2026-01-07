@@ -137,6 +137,8 @@
 #define ITEM_EXP_CANDY_L 106
 #define ITEM_EXP_CANDY_XL 107
 #define ITEM_DYNAMAX_CANDY 108
+#define ITEM_INFINITE_CANDY 874
+#define ITEM_CAP_CANDY 875
 
 // Medicinal Flutes
 #define ITEM_BLUE_FLUTE 109
@@ -1040,7 +1042,7 @@
 #define ITEM_TATSUGIRINITE 872
 #define ITEM_GLIMMORANITE 873
 
-#define ITEMS_COUNT 874
+#define ITEMS_COUNT 876
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

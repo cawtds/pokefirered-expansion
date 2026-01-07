@@ -1300,7 +1300,7 @@ PalletTown_ProfessorOaksLab_EventScript_RightSignAlt::
 	releaseall
 	end
 
-@ Aide gift cutscene - triggers when leaving lab after receiving Pokedex
+@ Aide gift cutscene - triggers when leaving lab after received Pokedex
 PalletTown_ProfessorOaksLab_EventScript_AideGiftTrigger::
 	goto_if_set FLAG_RECEIVED_AIDE_GIFT, PalletTown_ProfessorOaksLab_EventScript_AideGiftEnd
 	lockall
@@ -1309,7 +1309,8 @@ PalletTown_ProfessorOaksLab_EventScript_AideGiftTrigger::
 	applymovement LOCALID_PLAYER, PalletTown_ProfessorOaksLab_Movement_PlayerFaceAide
 	waitmovement 0
 	msgbox PalletTown_ProfessorOaksLab_Text_AideGiftIntro
-	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedItem, ITEM_RARE_CANDY, 1
+	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedInfiniteCandy, ITEM_INFINITE_CANDY, 1, MUS_OBTAIN_KEY_ITEM
+	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedCapCandy, ITEM_CAP_CANDY, 1, MUS_OBTAIN_KEY_ITEM
 	msgbox PalletTown_ProfessorOaksLab_Text_AideGiftOutro
 	setflag FLAG_RECEIVED_AIDE_GIFT
 	applymovement LOCALID_OAKS_LAB_AIDE1, PalletTown_ProfessorOaksLab_Movement_AideReturn

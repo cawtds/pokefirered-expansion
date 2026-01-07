@@ -360,11 +360,17 @@ PalletTown_ProfessorOaksLab_Text_AideGiftIntro::
     .string "The PROFESSOR asked me to give\n"
     .string "you something for your journey.$"
 
-PalletTown_ProfessorOaksLab_Text_AideReceivedItem::
-    .string "{PLAYER} received a RARE CANDY\n"
-    .string "from the AIDE!$"
+PalletTown_ProfessorOaksLab_Text_AideReceivedInfiniteCandy::
+    .string "{PLAYER} received an\n"
+    .string "INFINITE CANDY from the AIDE!$"
+
+PalletTown_ProfessorOaksLab_Text_AideReceivedCapCandy::
+    .string "{PLAYER} received a\n"
+    .string "CAP CANDY from the AIDE!$"
 
 PalletTown_ProfessorOaksLab_Text_AideGiftOutro::
+    .string "These special candies can be\n"
+    .string "used over and over again!\p"
     .string "Take good care of your POKéMON!\n"
     .string "Good luck out there!$"
 
