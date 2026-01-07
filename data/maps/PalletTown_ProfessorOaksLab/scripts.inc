@@ -1301,13 +1301,35 @@ PalletTown_ProfessorOaksLab_EventScript_RightSignAlt::
 	end
 
 @ Aide gift cutscene - triggers when leaving lab after received Pokedex
-PalletTown_ProfessorOaksLab_EventScript_AideGiftTrigger::
-	goto_if_set FLAG_RECEIVED_AIDE_GIFT, PalletTown_ProfessorOaksLab_EventScript_AideGiftEnd
+@ Aide starts at (3, 11), player triggers at y=8
+
+PalletTown_ProfessorOaksLab_EventScript_AideGiftTriggerLeft::
 	lockall
-	applymovement LOCALID_OAKS_LAB_AIDE1, PalletTown_ProfessorOaksLab_Movement_AideApproach
+	setvar VAR_TEMP_0, 1
+	goto PalletTown_ProfessorOaksLab_EventScript_AideGift
+	end
+
+PalletTown_ProfessorOaksLab_EventScript_AideGiftTriggerMid::
+	lockall
+	setvar VAR_TEMP_0, 2
+	goto PalletTown_ProfessorOaksLab_EventScript_AideGift
+	end
+
+PalletTown_ProfessorOaksLab_EventScript_AideGiftTriggerRight::
+	lockall
+	setvar VAR_TEMP_0, 3
+	goto PalletTown_ProfessorOaksLab_EventScript_AideGift
+	end
+
+PalletTown_ProfessorOaksLab_EventScript_AideGift::
+	goto_if_set FLAG_RECEIVED_AIDE_GIFT, PalletTown_ProfessorOaksLab_EventScript_AideGiftEnd
+	playse SE_PIN
+	applymovement LOCALID_OAKS_LAB_AIDE1, Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_PLAYER, PalletTown_ProfessorOaksLab_Movement_PlayerFaceAide
-	waitmovement 0
+	@ Aide approaches player based on trigger position
+	call_if_eq VAR_TEMP_0, 1, PalletTown_ProfessorOaksLab_EventScript_AideApproachLeft
+	call_if_eq VAR_TEMP_0, 2, PalletTown_ProfessorOaksLab_EventScript_AideApproachMid
+	call_if_eq VAR_TEMP_0, 3, PalletTown_ProfessorOaksLab_EventScript_AideApproachRight
 	msgbox PalletTown_ProfessorOaksLab_Text_AideGiftIntro
 	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedInfiniteCandy, ITEM_INFINITE_CANDY, 1, MUS_OBTAIN_KEY_ITEM
 	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedCapCandy, ITEM_CAP_CANDY, 1, MUS_OBTAIN_KEY_ITEM
@@ -1315,8 +1337,10 @@ PalletTown_ProfessorOaksLab_EventScript_AideGiftTrigger::
 	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedRepellant, ITEM_REPELLANT, 1, MUS_OBTAIN_KEY_ITEM
 	msgbox PalletTown_ProfessorOaksLab_Text_AideGiftOutro
 	setflag FLAG_RECEIVED_AIDE_GIFT
-	applymovement LOCALID_OAKS_LAB_AIDE1, PalletTown_ProfessorOaksLab_Movement_AideReturn
-	waitmovement 0
+	@ Aide returns to original position
+	call_if_eq VAR_TEMP_0, 1, PalletTown_ProfessorOaksLab_EventScript_AideReturnLeft
+	call_if_eq VAR_TEMP_0, 2, PalletTown_ProfessorOaksLab_EventScript_AideReturnMid
+	call_if_eq VAR_TEMP_0, 3, PalletTown_ProfessorOaksLab_EventScript_AideReturnRight
 	releaseall
 	end
 
@@ -1324,15 +1348,94 @@ PalletTown_ProfessorOaksLab_EventScript_AideGiftEnd::
 	releaseall
 	end
 
-PalletTown_ProfessorOaksLab_Movement_AideApproach::
+@ Aide approach movements - aide walks to trigger x, then up to player
+PalletTown_ProfessorOaksLab_EventScript_AideApproachLeft::
+	applymovement LOCALID_OAKS_LAB_AIDE1, PalletTown_ProfessorOaksLab_Movement_AideApproachLeft
+	waitmovement 0
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterDown
+	waitmovement 0
+	return
+
+PalletTown_ProfessorOaksLab_EventScript_AideApproachMid::
+	applymovement LOCALID_OAKS_LAB_AIDE1, PalletTown_ProfessorOaksLab_Movement_AideApproachMid
+	waitmovement 0
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterDown
+	waitmovement 0
+	return
+
+PalletTown_ProfessorOaksLab_EventScript_AideApproachRight::
+	applymovement LOCALID_OAKS_LAB_AIDE1, PalletTown_ProfessorOaksLab_Movement_AideApproachRight
+	waitmovement 0
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterDown
+	waitmovement 0
+	return
+
+@ Aide return movements - aide walks back to (3, 11)
+PalletTown_ProfessorOaksLab_EventScript_AideReturnLeft::
+	applymovement LOCALID_OAKS_LAB_AIDE1, PalletTown_ProfessorOaksLab_Movement_AideReturnLeft
+	waitmovement 0
+	return
+
+PalletTown_ProfessorOaksLab_EventScript_AideReturnMid::
+	applymovement LOCALID_OAKS_LAB_AIDE1, PalletTown_ProfessorOaksLab_Movement_AideReturnMid
+	waitmovement 0
+	return
+
+PalletTown_ProfessorOaksLab_EventScript_AideReturnRight::
+	applymovement LOCALID_OAKS_LAB_AIDE1, PalletTown_ProfessorOaksLab_Movement_AideReturnRight
+	waitmovement 0
+	return
+
+@ Movement data for aide approach
+@ Aide starts at (3, 11), walks to trigger x, then up to (x, 9) facing player at (x, 8)
+PalletTown_ProfessorOaksLab_Movement_AideApproachLeft::
 	walk_right
-	walk_in_place_faster_right
+	walk_right
+	walk_up
+	walk_up
+	walk_in_place_faster_up
 	step_end
 
-PalletTown_ProfessorOaksLab_Movement_PlayerFaceAide::
-	walk_in_place_faster_left
+PalletTown_ProfessorOaksLab_Movement_AideApproachMid::
+	walk_right
+	walk_right
+	walk_right
+	walk_up
+	walk_up
+	walk_in_place_faster_up
 	step_end
 
-PalletTown_ProfessorOaksLab_Movement_AideReturn::
+PalletTown_ProfessorOaksLab_Movement_AideApproachRight::
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_up
+	walk_up
+	walk_in_place_faster_up
+	step_end
+
+@ Movement data for aide return - walks back to (3, 11)
+PalletTown_ProfessorOaksLab_Movement_AideReturnLeft::
+	walk_down
+	walk_down
+	walk_left
+	walk_left
+	step_end
+
+PalletTown_ProfessorOaksLab_Movement_AideReturnMid::
+	walk_down
+	walk_down
+	walk_left
+	walk_left
+	walk_left
+	step_end
+
+PalletTown_ProfessorOaksLab_Movement_AideReturnRight::
+	walk_down
+	walk_down
+	walk_left
+	walk_left
+	walk_left
 	walk_left
 	step_end
