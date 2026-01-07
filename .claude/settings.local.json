@@ -7,7 +7,8 @@
       "Bash(cmd /c \"grep -n \"\"P_SUMMARY_SCREEN_MOVE_RELEARNER\"\" C:\\\\Users\\\\caleb\\\\Documents\\\\pokefirered-qol\\\\src\\\\pokemon_summary_screen.c\")",
       "Bash(cmd /c \"grep -n \"\"enum.*Cursor.*Option\\\\|^#define CURSOR_OPTION_SUMMARY\"\" C:\\\\Users\\\\caleb\\\\Documents\\\\pokefirered-qol\\\\src\\\\party_menu.c | head -30\")",
       "Bash(cmd /c \"find \"\"C:\\\\Users\\\\caleb\\\\Documents\\\\pokefirered-qol\"\" -name \"\"party_menu.h\"\"\")",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(dir \"C:\\\\Users\\\\caleb\\\\Documents\\\\pokefirered-qol\\\\tools\\\\trainerproc\")"
     ]
   }
 }
