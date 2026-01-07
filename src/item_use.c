@@ -243,6 +243,27 @@ void ItemUseOutOfBattle_ExpShare(u8 taskId)
 #endif
 }
 
+void ItemUseOutOfBattle_Repellant(u8 taskId)
+{
+    if (FlagGet(FLAG_SYS_REPELLANT_ACTIVE))
+    {
+        PlaySE(SE_PC_OFF);
+        if (!gTasks[taskId].data[2]) // to account for pressing select in the overworld
+            DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_RepellantOff, Task_ItemUse_CloseMessageBoxAndReturnToField);
+        else
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_RepellantOff, CloseItemMessage);
+    }
+    else
+    {
+        PlaySE(SE_REPEL);
+        if (!gTasks[taskId].data[2]) // to account for pressing select in the overworld
+            DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_RepellantOn, Task_ItemUse_CloseMessageBoxAndReturnToField);
+        else
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_RepellantOn, CloseItemMessage);
+    }
+    FlagToggle(FLAG_SYS_REPELLANT_ACTIVE);
+}
+
 void ItemUseOutOfBattle_Bike(u8 taskId)
 {
     s16 x, y;

@@ -18,6 +18,7 @@
 #include "rtc.h"
 #include "constants/maps.h"
 #include "constants/abilities.h"
+#include "constants/flags.h"
 #include "constants/item.h"
 #include "constants/items.h"
 #include "constants/weather.h"
@@ -904,6 +905,10 @@ bool8 UpdateRepelCounter(void)
 static bool8 IsWildLevelAllowedByRepel(u8 wildLevel)
 {
     u8 i;
+
+    // Repellant key item blocks ALL wild encounters
+    if (FlagGet(FLAG_SYS_REPELLANT_ACTIVE))
+        return FALSE;
 
     if (!REPEL_STEP_COUNT)
         return TRUE;

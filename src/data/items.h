@@ -15422,6 +15422,22 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_RareCandy,
         .iconPalette = gItemIconPalette_RareCandy,
     },
+
+    [ITEM_REPELLANT] =
+    {
+        .name = ITEM_NAME("Repellant"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A charm that repels\n"
+            "wild Pokémon when\n"
+            "active."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_Repellant,
+        .iconPic = gItemIcon_Repel,
+        .iconPalette = gItemIconPalette_Repel,
+    },
 };
 
 #undef ITEM_NAME

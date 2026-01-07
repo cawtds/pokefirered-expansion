@@ -1042,7 +1042,10 @@
 #define ITEM_TATSUGIRINITE 872
 #define ITEM_GLIMMORANITE 873
 
-#define ITEMS_COUNT 876
+// QoL Key Items
+#define ITEM_REPELLANT 876
+
+#define ITEMS_COUNT 877
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

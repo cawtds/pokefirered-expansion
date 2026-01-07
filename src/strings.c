@@ -1392,6 +1392,9 @@ const u8 gText_NextFusionMon[] = _("Choose {PKMN} to fuse with.");
 const u8 gText_ExpShareOn[] = _("The Exp. Share has been turned on.{PAUSE_UNTIL_PRESS}");
 const u8 gText_ExpShareOff[] = _("The Exp. Share has been turned off.{PAUSE_UNTIL_PRESS}");
 
+const u8 gText_RepellantOn[] = _("The Repellant is now active.{PAUSE_UNTIL_PRESS}");
+const u8 gText_RepellantOff[] = _("The Repellant has been turned off.{PAUSE_UNTIL_PRESS}");
+
 // stats
 const u8 gText_Attack[] = _("ATTACK");
 const u8 gText_Defense[] = _("DEFENSE");

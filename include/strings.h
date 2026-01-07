@@ -1565,6 +1565,10 @@ extern const u8 gText_NextFusionMon[];
 extern const u8 gText_ExpShareOn[];
 extern const u8 gText_ExpShareOff[];
 
+// Repellant
+extern const u8 gText_RepellantOn[];
+extern const u8 gText_RepellantOff[];
+
 // stats
 extern const u8 gText_Attack[];
 extern const u8 gText_Defense[];
