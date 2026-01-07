@@ -368,9 +368,15 @@ PalletTown_ProfessorOaksLab_Text_AideReceivedCapCandy::
     .string "{PLAYER} received a\n"
     .string "CAP CANDY from the AIDE!$"
 
+PalletTown_ProfessorOaksLab_Text_AideReceivedBoxLink::
+    .string "{PLAYER} received a\n"
+    .string "POKéMON BOX LINK from the AIDE!$"
+
 PalletTown_ProfessorOaksLab_Text_AideGiftOutro::
     .string "These special candies can be\n"
     .string "used over and over again!\p"
+    .string "The BOX LINK lets you access\n"
+    .string "your PC storage anywhere!\p"
     .string "Take good care of your POKéMON!\n"
     .string "Good luck out there!$"
 

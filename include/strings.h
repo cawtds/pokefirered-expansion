@@ -167,6 +167,7 @@ extern const u8 gText_Withdraw[];
 extern const u8 gText_ReturnToPC[];
 
 extern const u8 gText_OakForbidsUseOfItemHere[];
+extern const u8 gText_BoxLinkBlockedEliteFour[];
 extern const u8 gText_CantDismountBike[];
 extern const u8 gText_CoinCase[];
 extern const u8 gText_PlayerUsedVar2[];

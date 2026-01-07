@@ -36,6 +36,7 @@
 #include "tm_case.h"
 #include "vs_seeker.h"
 #include "constants/sound.h"
+#include "constants/flags.h"
 #include "constants/items.h"
 #include "constants/item_effects.h"
 #include "constants/maps.h"
@@ -396,8 +397,15 @@ void ItemUseOutOfBattle_Itemfinder(u8 taskId)
 
 void ItemUseOutOfBattle_PokemonBoxLink(u8 taskId)
 {
-    sItemUseOnFieldCB = Task_AccessPokemonBoxLink;
-    SetUpItemUseOnFieldCallback(taskId);
+    if (FlagGet(FLAG_DISABLE_BOX_LINK))
+    {
+        DisplayItemMessageInCurrentContext(taskId, gTasks[taskId].data[3], FONT_NORMAL, gText_BoxLinkBlockedEliteFour);
+    }
+    else
+    {
+        sItemUseOnFieldCB = Task_AccessPokemonBoxLink;
+        SetUpItemUseOnFieldCallback(taskId);
+    }
 }
 
 static void Task_AccessPokemonBoxLink(u8 taskId)

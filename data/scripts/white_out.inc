@@ -1,5 +1,6 @@
 EventScript_AfterWhiteOutHeal::
 	lockall
+	clearflag FLAG_DISABLE_BOX_LINK
 	textcolor NPC_TEXT_COLOR_FEMALE
 	msgbox Text_FirstShouldRestoreMonsHealth
 	call EventScript_PkmnCenterNurse_TakeAndHealPkmn
@@ -21,6 +22,7 @@ EventScript_AfterWhiteOutHealMsg::
 
 EventScript_AfterWhiteOutMomHeal::
 	lockall
+	clearflag FLAG_DISABLE_BOX_LINK
 	textcolor NPC_TEXT_COLOR_FEMALE
 	applymovement LOCALID_MOM, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0

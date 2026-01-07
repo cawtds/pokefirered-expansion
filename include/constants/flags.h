@@ -1253,8 +1253,8 @@
 #define FLAG_DEFEATED_LANCE           0x4BB
 #define FLAG_DEFEATED_CHAMP           0x4BC
 
-// Unused?
-#define FLAG_0x4BD               0x4BD
+// Elite Four flags
+#define FLAG_DISABLE_BOX_LINK    0x4BD // Disables Pokemon Box Link during E4 gauntlet
 #define FLAG_0x4BE               0x4BE
 #define FLAG_0x4BF               0x4BF
 #define FLAG_0x4C0               0x4C0

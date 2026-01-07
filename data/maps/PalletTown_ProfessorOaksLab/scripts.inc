@@ -1119,7 +1119,7 @@ PalletTown_ProfessorOaksLab_EventScript_ChoseStarter::
 	call EventScript_RestorePrevTextColor
 	setflag FLAG_SYS_POKEMON_GET
 	setflag FLAG_PALLET_LADY_NOT_BLOCKING_SIGN
-	givemon PLAYER_STARTER_SPECIES, 5
+	givemon PLAYER_STARTER_SPECIES, 5, ITEM_ORAN_BERRY
 	copyvar VAR_STARTER_MON, PLAYER_STARTER_NUM
 	bufferspeciesname STR_VAR_1, PLAYER_STARTER_SPECIES
 	message PalletTown_ProfessorOaksLab_Text_ReceivedMonFromOak
@@ -1311,6 +1311,7 @@ PalletTown_ProfessorOaksLab_EventScript_AideGiftTrigger::
 	msgbox PalletTown_ProfessorOaksLab_Text_AideGiftIntro
 	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedInfiniteCandy, ITEM_INFINITE_CANDY, 1, MUS_OBTAIN_KEY_ITEM
 	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedCapCandy, ITEM_CAP_CANDY, 1, MUS_OBTAIN_KEY_ITEM
+	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedBoxLink, ITEM_POKEMON_BOX_LINK, 1, MUS_OBTAIN_KEY_ITEM
 	msgbox PalletTown_ProfessorOaksLab_Text_AideGiftOutro
 	setflag FLAG_RECEIVED_AIDE_GIFT
 	applymovement LOCALID_OAKS_LAB_AIDE1, PalletTown_ProfessorOaksLab_Movement_AideReturn

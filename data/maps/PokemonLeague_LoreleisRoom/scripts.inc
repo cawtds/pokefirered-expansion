@@ -44,6 +44,7 @@ PokemonLeague_LoreleisRoom_EventScript_EnterRoom::
 	lockall
 	call PokemonLeague_EventScript_EnterRoom
 	setvar VAR_MAP_SCENE_POKEMON_LEAGUE, 1
+	setflag FLAG_DISABLE_BOX_LINK
 	releaseall
 	end
 
