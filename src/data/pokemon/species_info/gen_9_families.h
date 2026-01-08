@@ -1167,7 +1167,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         )
         .levelUpLearnset = sPawmoLevelUpLearnset,
         .teachableLearnset = sPawmoTeachableLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_PAWMOT, CONDITIONS({IF_MIN_OVERWORLD_STEPS, 1000})}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_PAWMOT}),
     },
 
     [SPECIES_PAWMOT] =
@@ -3847,7 +3847,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         )
         .levelUpLearnset = sTinkatuffLevelUpLearnset,
         .teachableLearnset = sTinkatuffTeachableLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 38, SPECIES_TINKATON}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_TINKATON}),
     },
 
     [SPECIES_TINKATON] =
@@ -4838,7 +4838,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .levelUpLearnset = sGreavardLevelUpLearnset,
         .teachableLearnset = sGreavardTeachableLearnset,
         .eggMoveLearnset = sGreavardEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_HOUNDSTONE, CONDITIONS({IF_TIME, TIME_NIGHT})}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_HOUNDSTONE}),
     },
 
     [SPECIES_HOUNDSTONE] =
@@ -6528,7 +6528,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .levelUpLearnset = sFrigibaxLevelUpLearnset,
         .teachableLearnset = sFrigibaxTeachableLearnset,
         .eggMoveLearnset = sFrigibaxEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 35, SPECIES_ARCTIBAX}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 24, SPECIES_ARCTIBAX}),
     },
 
     [SPECIES_ARCTIBAX] =
@@ -6592,7 +6592,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         )
         .levelUpLearnset = sArctibaxLevelUpLearnset,
         .teachableLearnset = sArctibaxTeachableLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 54, SPECIES_BAXCALIBUR}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 60, SPECIES_BAXCALIBUR}),
     },
 
     [SPECIES_BAXCALIBUR] =
