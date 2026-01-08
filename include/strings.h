@@ -309,6 +309,7 @@ extern const u8 gText_StatusFreeze[];
 extern const u8 gText_StatusToxic[];
 extern const u8 gText_PkmnAlreadyHasStatus[];
 extern const u8 gText_StatusApplied[];
+extern const u8 gText_PartyFullyHealed[];
 extern const u8 gText_Trade4[];
 extern const u8 gText_NotPkmnOtherTrainerWants[];
 extern const u8 gText_ThatIsntAnEgg[];

@@ -30,6 +30,7 @@
 #include "quest_log.h"
 #include "region_map.h"
 #include "script.h"
+#include "script_pokemon_util.h"
 #include "strings.h"
 #include "task.h"
 #include "teachy_tv.h"
@@ -687,6 +688,16 @@ void ItemUseOutOfBattle_PowderVial(u8 taskId)
 {
     gItemUseCB = ItemUseCB_PowderVial;
     DoSetUpItemUseCallback(taskId);
+}
+
+void ItemUseOutOfBattle_NurseKit(u8 taskId)
+{
+    HealPlayerParty();
+    PlaySE(SE_USE_ITEM);
+    if (!gTasks[taskId].data[2])
+        DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_PartyFullyHealed, Task_ItemUse_CloseMessageBoxAndReturnToField);
+    else
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_PartyFullyHealed, CloseItemMessage);
 }
 
 void ItemUseOutOfBattle_EvolutionStone(u8 taskId)

@@ -1336,6 +1336,7 @@ PalletTown_ProfessorOaksLab_EventScript_AideGift::
 	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedBoxLink, ITEM_POKEMON_BOX_LINK, 1, MUS_OBTAIN_KEY_ITEM
 	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedRepellant, ITEM_REPELLANT, 1, MUS_OBTAIN_KEY_ITEM
 	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedPowderVial, ITEM_POWDER_VIAL, 1, MUS_OBTAIN_KEY_ITEM
+	giveitem_msg PalletTown_ProfessorOaksLab_Text_AideReceivedNurseKit, ITEM_NURSE_KIT, 1, MUS_OBTAIN_KEY_ITEM
 	msgbox PalletTown_ProfessorOaksLab_Text_AideGiftOutro
 	setflag FLAG_RECEIVED_AIDE_GIFT
 	@ Aide returns to original position

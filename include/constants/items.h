@@ -1045,8 +1045,9 @@
 // QoL Key Items
 #define ITEM_REPELLANT 876
 #define ITEM_POWDER_VIAL 877
+#define ITEM_NURSE_KIT 878
 
-#define ITEMS_COUNT 878
+#define ITEMS_COUNT 879
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

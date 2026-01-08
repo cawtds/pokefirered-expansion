@@ -33,6 +33,7 @@ void ItemUseOutOfBattle_CapCandy(u8 taskId);
 void ItemUseOutOfBattle_Repel(u8 taskId);
 void ItemUseOutOfBattle_Repellant(u8 taskId);
 void ItemUseOutOfBattle_PowderVial(u8 taskId);
+void ItemUseOutOfBattle_NurseKit(u8 taskId);
 void ItemUseOutOfBattle_ReduceEV(u8 taksId);
 void ItemUseOutOfBattle_ResetEVs(u8 taskId);
 void ItemUseOutOfBattle_Rod(u8 taskId);

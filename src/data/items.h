@@ -15396,9 +15396,8 @@ const struct Item gItemsInfo[] =
         .name = ITEM_NAME("Infinite Candy"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A reusable candy\n"
-            "that raises level\n"
-            "by one."),
+            "A reusable candy that raises level"
+            "\n one."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_PARTY_MENU,
@@ -15412,9 +15411,8 @@ const struct Item gItemsInfo[] =
         .name = ITEM_NAME("Cap Candy"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A reusable candy\n"
-            "that raises level\n"
-            "to the cap."),
+            "A reusable candy that raises\n"
+            "level to the cap."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_PARTY_MENU,
@@ -15428,9 +15426,8 @@ const struct Item gItemsInfo[] =
         .name = ITEM_NAME("Repellant"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A charm that repels\n"
-            "wild Pokémon when\n"
-            "active."),
+            "A device that repels wild Pokémon\n"
+            "when active."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
@@ -15444,15 +15441,29 @@ const struct Item gItemsInfo[] =
         .name = ITEM_NAME("Powder Vial"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A vial of powder\n"
-            "that applies status\n"
-            "conditions."),
+            "A vial of powder that applies\n"
+            "status conditions.\n"),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_PowderVial,
         .iconPic = gItemIcon_PowderJar,
         .iconPalette = gItemIconPalette_PowderJar,
+    },
+
+    [ITEM_NURSE_KIT] =
+    {
+        .name = ITEM_NAME("Nurse Kit"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A kit that fully heals all \n"
+            "POKéMON in the party."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_NurseKit,
+        .iconPic = gItemIcon_FullHeal,
+        .iconPalette = gItemIconPalette_FullHeal,
     },
 };
 
