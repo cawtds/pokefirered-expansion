@@ -201,41 +201,7 @@ static void Task_ItemfinderUnderfootSoundsAndAnims(u8 taskId)
 
 static bool8 HiddenItemIsWithinRangeOfPlayer(const struct MapEvents * events, u8 taskId)
 {
-    s16 x, y, i, dx, dy;
-    PlayerGetDestCoords(&x, &y);
-    gTasks[taskId].tHiddenItemFound = FALSE;
-    for (i = 0; i < events->bgEventCount; i++)
-    {
-        if (events->bgEvents[i].kind == 7 && !FlagGet(GetHiddenItemAttr(events->bgEvents[i].bgUnion.hiddenItem, HIDDEN_ITEM_FLAG)))
-        {
-            dx = events->bgEvents[i].x + 7 - x;
-            dy = events->bgEvents[i].y + 7 - y;
-            if (GetHiddenItemAttr(events->bgEvents[i].bgUnion.hiddenItem, HIDDEN_ITEM_UNDERFOOT) == TRUE)
-            {
-                if (dx == 0 && dy == 0)
-                {
-                    SetUnderfootHiddenItem(taskId, events->bgEvents[i].bgUnion.hiddenItem);
-                    return TRUE;
-                }
-            }
-            else if (
-                dx >= -7
-             && dx <=  7
-             && dy >= -5
-             && dy <=  5
-            )
-            {
-                RegisterHiddenItemRelativeCoordsIfCloser(taskId, dx, dy);
-            }
-        }
-    }
-    FindHiddenItemsInConnectedMaps(taskId);
-    if (gTasks[taskId].tHiddenItemFound == TRUE)
-    {
-        SetNormalHiddenItem(taskId);
-        return TRUE;
-    }
-    return FALSE;
+    return FALSE; // Hidden items disabled
 }
 
 static void SetUnderfootHiddenItem(u8 taskId, u32 hiddenItem)
