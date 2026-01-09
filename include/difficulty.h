@@ -6,6 +6,8 @@
 
 enum DifficultyLevel GetCurrentDifficultyLevel(void);
 void SetCurrentDifficultyLevel(enum DifficultyLevel);
+void SetPendingDifficulty(enum DifficultyLevel);
+enum DifficultyLevel GetPendingDifficulty(void);
 
 enum DifficultyLevel GetBattlePartnerDifficultyLevel(u16);
 enum DifficultyLevel GetTrainerDifficultyLevel(u16);

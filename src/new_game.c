@@ -32,6 +32,7 @@
 #include "event_scripts.h"
 #include "save.h"
 #include "rtc.h"
+#include "difficulty.h"
 
 // this file's functions
 static void ResetMiniGamesResults(void);
@@ -160,6 +161,7 @@ void NewGameInitData(void)
     ResetTrainerTowerResults();
     ResetItemFlags();
     ResetDexNav();
+    SetCurrentDifficultyLevel(GetPendingDifficulty());
 }
 
 static void ResetMiniGamesResults(void)

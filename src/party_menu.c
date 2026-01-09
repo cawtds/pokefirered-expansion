@@ -5800,6 +5800,7 @@ static void ItemUseCB_RareCandyStep(u8 taskId, TaskFunc func)
 }
 
 // Infinite Candy - raises level by 1, not consumed (key item)
+// If at max level/cap but has pending level-up evolution, triggers evolution instead
 void ItemUseCB_InfiniteCandy(u8 taskId, TaskFunc func)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
@@ -5820,12 +5821,32 @@ void ItemUseCB_InfiniteCandy(u8 taskId, TaskFunc func)
     PlaySE(SE_SELECT);
     if (cannotUseEffect)
     {
+        u16 targetSpecies = SPECIES_NONE;
+        bool32 canStopEvo = TRUE;
+
+        // Resets values to 0 so other means of teaching moves doesn't overwrite levels
         sInitialLevel = 0;
         sFinalLevel = 0;
-        gPartyMenuUseExitCallback = FALSE;
-        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
-        ScheduleBgCopyTilemapToVram(2);
-        gTasks[taskId].func = func;
+
+        // Check if there's a pending level-up evolution that was already exceeded
+        targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, CHECK_EVO);
+
+        if (targetSpecies != SPECIES_NONE)
+        {
+            GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, DO_EVO);
+            // Key item - do NOT remove from bag
+            FreePartyPointers();
+            gCB2_AfterEvolution = gPartyMenu.exitCallback;
+            BeginEvolutionScene(mon, targetSpecies, canStopEvo, gPartyMenu.slotId);
+            DestroyTask(taskId);
+        }
+        else
+        {
+            gPartyMenuUseExitCallback = FALSE;
+            DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+            ScheduleBgCopyTilemapToVram(2);
+            gTasks[taskId].func = func;
+        }
     }
     else
     {
@@ -5860,6 +5881,7 @@ static void ItemUseCB_InfiniteCandyStep(u8 taskId, TaskFunc func)
 }
 
 // Cap Candy - raises level to current cap, not consumed (key item)
+// If at max level/cap but has pending level-up evolution, triggers evolution instead
 void ItemUseCB_CapCandy(u8 taskId, TaskFunc func)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
@@ -5890,12 +5912,32 @@ void ItemUseCB_CapCandy(u8 taskId, TaskFunc func)
     PlaySE(SE_SELECT);
     if (cannotUseEffect)
     {
+        u16 targetSpecies = SPECIES_NONE;
+        bool32 canStopEvo = TRUE;
+
+        // Resets values to 0 so other means of teaching moves doesn't overwrite levels
         sInitialLevel = 0;
         sFinalLevel = 0;
-        gPartyMenuUseExitCallback = FALSE;
-        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
-        ScheduleBgCopyTilemapToVram(2);
-        gTasks[taskId].func = func;
+
+        // Check if there's a pending level-up evolution that was already exceeded
+        targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, CHECK_EVO);
+
+        if (targetSpecies != SPECIES_NONE)
+        {
+            GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, DO_EVO);
+            // Key item - do NOT remove from bag
+            FreePartyPointers();
+            gCB2_AfterEvolution = gPartyMenu.exitCallback;
+            BeginEvolutionScene(mon, targetSpecies, canStopEvo, gPartyMenu.slotId);
+            DestroyTask(taskId);
+        }
+        else
+        {
+            gPartyMenuUseExitCallback = FALSE;
+            DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+            ScheduleBgCopyTilemapToVram(2);
+            gTasks[taskId].func = func;
+        }
     }
     else
     {

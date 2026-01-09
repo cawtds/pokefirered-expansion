@@ -961,6 +961,18 @@ extern const u8 gText_FrameTypeNumber[];
 extern const u8 gText_ButtonTypeNormal[];
 extern const u8 gTextJP_Type[];
 extern const u8 gText_PickSwitchCancel[];
+extern const u8 gText_Difficulty[];
+extern const u8 gText_DifficultyNormal[];
+extern const u8 gText_DifficultyHard[];
+extern const u8 gText_DifficultyExpert[];
+extern const u8 gText_OptionMenuSave[];
+extern const u8 gText_PickSwitchSave[];
+extern const u8 gText_DifficultyConfirm[];
+extern const u8 gText_TextSpeedDesc[];
+extern const u8 gText_DifficultyNormalDesc[];
+extern const u8 gText_DifficultyHardDesc[];
+extern const u8 gText_DifficultyExpertDesc[];
+extern const u8 gText_SaveDesc[];
 
 // evolution_scene
 extern const u8 gText_PkmnIsEvolving[];

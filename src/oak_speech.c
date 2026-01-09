@@ -2,6 +2,7 @@
 #include "bg.h"
 #include "data.h"
 #include "decompress.h"
+#include "difficulty.h"
 #include "event_scripts.h"
 #include "gpu_regs.h"
 #include "help_system.h"
@@ -15,6 +16,7 @@
 #include "random.h"
 #include "scanline_effect.h"
 #include "sound.h"
+#include "strings.h"
 #include "string_util.h"
 #include "task.h"
 #include "text_window.h"
@@ -56,6 +58,12 @@ static void ControlsGuide_LoadPage1(void);
 static void Task_ControlsGuide_HandleInput(u8);
 static void Task_ControlsGuide_ChangePage(u8);
 static void Task_ControlsGuide_Clear(u8);
+
+static void Task_DifficultyMenu_Init(u8);
+static void Task_DifficultyMenu_HandleInput(u8);
+static void Task_DifficultyMenu_Confirm(u8);
+static void Task_DifficultyMenu_ConfirmYesNo(u8);
+static void Task_DifficultyMenu_FadeOut(u8);
 
 static void Task_PikachuIntro_LoadPage1(u8);
 static void Task_PikachuIntro_HandleInput(u8);
@@ -334,6 +342,71 @@ static const struct WindowTemplate sIntro_WindowTemplates[NUM_INTRO_WINDOWS + 1]
 
 static const u8 sTextColor_White[] = { 0, 1, 2, 0 };
 static const u8 sTextColor_DarkGray[] = { 0, 2, 3, 0 };
+
+// New Game Options Menu
+enum
+{
+    NEWGAME_MENUITEM_TEXTSPEED,
+    NEWGAME_MENUITEM_DIFFICULTY,
+    NEWGAME_MENUITEM_SAVE,
+    NEWGAME_MENUITEM_COUNT
+};
+
+static const u8 *const sDifficultyOptionStrings[] =
+{
+    [DIFFICULTY_NORMAL] = gText_DifficultyNormal,
+    [DIFFICULTY_HARD] = gText_DifficultyHard,
+    [DIFFICULTY_EXPERT] = gText_DifficultyExpert,
+};
+
+static const u8 *const sTextSpeedOptionStrings[] =
+{
+    gText_TextSpeedSlow,
+    gText_TextSpeedMid,
+    gText_TextSpeedFast
+};
+
+static const u8 *const sNewGameOptionMenuItemNames[] =
+{
+    [NEWGAME_MENUITEM_TEXTSPEED] = gText_TextSpeed,
+    [NEWGAME_MENUITEM_DIFFICULTY] = gText_Difficulty,
+    [NEWGAME_MENUITEM_SAVE] = gText_OptionMenuSave,
+};
+
+static const u8 sNewGameOptionMenuItemCounts[] = {3, 3, 0};
+
+static const struct WindowTemplate sNewGameOptionsWindowTemplate =
+{
+    .bg = 0,
+    .tilemapLeft = 2,
+    .tilemapTop = 7,
+    .width = 26,
+    .height = 6,
+    .paletteNum = 15,
+    .baseBlock = 1
+};
+
+static const struct WindowTemplate sNewGameDescWindowTemplate =
+{
+    .bg = 0,
+    .tilemapLeft = 2,
+    .tilemapTop = 15,
+    .width = 26,
+    .height = 4,
+    .paletteNum = 15,
+    .baseBlock = 200
+};
+
+static const struct WindowTemplate sNewGameConfirmYesNoWindowTemplate =
+{
+    .bg = 0,
+    .tilemapLeft = 23,
+    .tilemapTop = 9,
+    .width = 6,
+    .height = 4,
+    .paletteNum = 15,
+    .baseBlock = 310
+};
 
 enum
 {
@@ -927,9 +1000,319 @@ static void Task_ControlsGuide_Clear(u8 taskId)
         sOakSpeechResources->windowIds[0] = RGB_BLACK;
         LoadPalette(sOakSpeechResources->windowIds, BG_PLTT_ID(0), PLTT_SIZEOF(1));
         gTasks[taskId].tTimer = 32;
-        gTasks[taskId].func = Task_PikachuIntro_LoadPage1;
+        gTasks[taskId].func = Task_DifficultyMenu_Init;
     }
 }
+
+// New Game Options Menu
+#define tCursorPos data[0]
+#define tTextSpeed data[1]
+#define tDifficulty data[2]
+#define tWindowId data[3]
+#define tDescWindowId data[4]
+#define tYesNoWindowId data[5]
+
+static const u8 sNewGameOptionTextColor[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
+
+static const u8 *const sDifficultyDescStrings[] =
+{
+    [DIFFICULTY_NORMAL] = gText_DifficultyNormalDesc,
+    [DIFFICULTY_HARD] = gText_DifficultyHardDesc,
+    [DIFFICULTY_EXPERT] = gText_DifficultyExpertDesc,
+};
+
+static void NewGameOptions_PrintOptionValue(u8 windowId, u8 menuItem, u8 value)
+{
+    u8 y = (menuItem * (GetFontAttribute(FONT_NORMAL, FONTATTR_MAX_LETTER_HEIGHT) - 1)) + 2;
+
+    // Clear the value area
+    FillWindowPixelRect(windowId, PIXEL_FILL(1), 104, y, 100, GetFontAttribute(FONT_NORMAL, FONTATTR_MAX_LETTER_HEIGHT));
+
+    // Print the value
+    switch (menuItem)
+    {
+    case NEWGAME_MENUITEM_TEXTSPEED:
+        AddTextPrinterParameterized3(windowId, FONT_NORMAL, 104, y, sNewGameOptionTextColor, TEXT_SKIP_DRAW, sTextSpeedOptionStrings[value]);
+        break;
+    case NEWGAME_MENUITEM_DIFFICULTY:
+        AddTextPrinterParameterized3(windowId, FONT_NORMAL, 104, y, sNewGameOptionTextColor, TEXT_SKIP_DRAW, sDifficultyOptionStrings[value]);
+        break;
+    }
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
+static void NewGameOptions_UpdateHighlight(u8 cursorPos)
+{
+    u16 maxLetterHeight = GetFontAttribute(FONT_NORMAL, FONTATTR_MAX_LETTER_HEIGHT);
+    u16 y = cursorPos * (maxLetterHeight - 1) + 0x3A;
+    SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(y, y + maxLetterHeight));
+    SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(0x10, 0xE0));
+}
+
+static void NewGameOptions_PrintDescription(u8 windowId, u8 cursorPos, u8 difficultyValue)
+{
+    const u8 *descText;
+
+    switch (cursorPos)
+    {
+    case NEWGAME_MENUITEM_TEXTSPEED:
+        descText = gText_TextSpeedDesc;
+        break;
+    case NEWGAME_MENUITEM_DIFFICULTY:
+        descText = sDifficultyDescStrings[difficultyValue];
+        break;
+    case NEWGAME_MENUITEM_SAVE:
+    default:
+        descText = gText_SaveDesc;
+        break;
+    }
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    AddTextPrinterParameterized4(windowId, FONT_NORMAL, 0, 1, 1, 1, sNewGameOptionTextColor, TEXT_SKIP_DRAW, descText);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
+static void Task_DifficultyMenu_Init(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    u8 i;
+
+    if (gTasks[taskId].tTimer != 0)
+    {
+        gTasks[taskId].tTimer--;
+        return;
+    }
+
+    // Set up top bar
+    HofPCTopBar_PrintPair(gText_Option, gText_PickSwitchSave, FALSE, 0, TRUE);
+
+    // Create options window
+    tWindowId = AddWindow(&sNewGameOptionsWindowTemplate);
+    FillWindowPixelBuffer(tWindowId, PIXEL_FILL(1));
+    DrawStdFrameWithCustomTileAndPalette(tWindowId, FALSE, 0x214, 14);
+
+    // Print all menu item labels
+    for (i = 0; i < NEWGAME_MENUITEM_COUNT; i++)
+    {
+        u8 y = (i * (GetFontAttribute(FONT_NORMAL, FONTATTR_MAX_LETTER_HEIGHT) - 1)) + 2;
+        AddTextPrinterParameterized3(tWindowId, FONT_NORMAL, 8, y, sNewGameOptionTextColor, TEXT_SKIP_DRAW, sNewGameOptionMenuItemNames[i]);
+    }
+
+    // Initialize values - text speed defaults to FAST, difficulty defaults to NORMAL
+    tTextSpeed = OPTIONS_TEXT_SPEED_FAST;
+    tDifficulty = DIFFICULTY_NORMAL;
+    tCursorPos = 0;
+
+    // Print initial values
+    NewGameOptions_PrintOptionValue(tWindowId, NEWGAME_MENUITEM_TEXTSPEED, tTextSpeed);
+    NewGameOptions_PrintOptionValue(tWindowId, NEWGAME_MENUITEM_DIFFICULTY, tDifficulty);
+
+    PutWindowTilemap(tWindowId);
+    CopyWindowToVram(tWindowId, COPYWIN_FULL);
+
+    // Create description window
+    tDescWindowId = AddWindow(&sNewGameDescWindowTemplate);
+    FillWindowPixelBuffer(tDescWindowId, PIXEL_FILL(1));
+    DrawStdFrameWithCustomTileAndPalette(tDescWindowId, FALSE, 0x214, 14);
+    NewGameOptions_PrintDescription(tDescWindowId, tCursorPos, tDifficulty);
+    PutWindowTilemap(tDescWindowId);
+    CopyWindowToVram(tDescWindowId, COPYWIN_FULL);
+
+    // Set up highlight window
+    SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG0 | BLDCNT_EFFECT_BLEND | BLDCNT_EFFECT_LIGHTEN);
+    SetGpuReg(REG_OFFSET_BLDY, BLDCNT_TGT1_BG1);
+    SetGpuReg(REG_OFFSET_WININ, WININ_WIN0_BG0);
+    SetGpuReg(REG_OFFSET_WINOUT, WINOUT_WIN01_BG0 | WINOUT_WIN01_BG1 | WINOUT_WIN01_CLR);
+    SetGpuReg(REG_OFFSET_DISPCNT, GetGpuReg(REG_OFFSET_DISPCNT) | DISPCNT_WIN0_ON);
+    NewGameOptions_UpdateHighlight(tCursorPos);
+
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
+    gTasks[taskId].func = Task_DifficultyMenu_HandleInput;
+}
+
+static void Task_DifficultyMenu_HandleInput(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    if (gPaletteFade.active)
+        return;
+
+    if (JOY_REPEAT(DPAD_UP))
+    {
+        if (tCursorPos > 0)
+            tCursorPos--;
+        else
+            tCursorPos = NEWGAME_MENUITEM_COUNT - 1;
+        PlaySE(SE_SELECT);
+        NewGameOptions_UpdateHighlight(tCursorPos);
+        NewGameOptions_PrintDescription(tDescWindowId, tCursorPos, tDifficulty);
+    }
+    else if (JOY_REPEAT(DPAD_DOWN))
+    {
+        if (tCursorPos < NEWGAME_MENUITEM_COUNT - 1)
+            tCursorPos++;
+        else
+            tCursorPos = 0;
+        PlaySE(SE_SELECT);
+        NewGameOptions_UpdateHighlight(tCursorPos);
+        NewGameOptions_PrintDescription(tDescWindowId, tCursorPos, tDifficulty);
+    }
+    else if (JOY_REPEAT(DPAD_RIGHT))
+    {
+        if (tCursorPos == NEWGAME_MENUITEM_SAVE)
+            return;
+
+        if (tCursorPos == NEWGAME_MENUITEM_TEXTSPEED)
+        {
+            if (tTextSpeed < sNewGameOptionMenuItemCounts[tCursorPos] - 1)
+                tTextSpeed++;
+            else
+                tTextSpeed = 0;
+            PlaySE(SE_SELECT);
+            NewGameOptions_PrintOptionValue(tWindowId, tCursorPos, tTextSpeed);
+        }
+        else if (tCursorPos == NEWGAME_MENUITEM_DIFFICULTY)
+        {
+            if (tDifficulty < sNewGameOptionMenuItemCounts[tCursorPos] - 1)
+                tDifficulty++;
+            else
+                tDifficulty = 0;
+            PlaySE(SE_SELECT);
+            NewGameOptions_PrintOptionValue(tWindowId, tCursorPos, tDifficulty);
+            NewGameOptions_PrintDescription(tDescWindowId, tCursorPos, tDifficulty);
+        }
+    }
+    else if (JOY_REPEAT(DPAD_LEFT))
+    {
+        if (tCursorPos == NEWGAME_MENUITEM_SAVE)
+            return;
+
+        if (tCursorPos == NEWGAME_MENUITEM_TEXTSPEED)
+        {
+            if (tTextSpeed > 0)
+                tTextSpeed--;
+            else
+                tTextSpeed = sNewGameOptionMenuItemCounts[tCursorPos] - 1;
+            PlaySE(SE_SELECT);
+            NewGameOptions_PrintOptionValue(tWindowId, tCursorPos, tTextSpeed);
+        }
+        else if (tCursorPos == NEWGAME_MENUITEM_DIFFICULTY)
+        {
+            if (tDifficulty > 0)
+                tDifficulty--;
+            else
+                tDifficulty = sNewGameOptionMenuItemCounts[tCursorPos] - 1;
+            PlaySE(SE_SELECT);
+            NewGameOptions_PrintOptionValue(tWindowId, tCursorPos, tDifficulty);
+            NewGameOptions_PrintDescription(tDescWindowId, tCursorPos, tDifficulty);
+        }
+    }
+    else if (JOY_NEW(A_BUTTON))
+    {
+        if (tCursorPos == NEWGAME_MENUITEM_SAVE)
+        {
+            PlaySE(SE_SELECT);
+            // Show confirmation message in description window
+            FillWindowPixelBuffer(tDescWindowId, PIXEL_FILL(1));
+            AddTextPrinterParameterized4(tDescWindowId, FONT_NORMAL, 0, 1, 1, 1, sNewGameOptionTextColor, 0, gText_DifficultyConfirm);
+            CopyWindowToVram(tDescWindowId, COPYWIN_GFX);
+            gTasks[taskId].func = Task_DifficultyMenu_Confirm;
+        }
+    }
+}
+
+static void Task_DifficultyMenu_Confirm(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    if (!IsTextPrinterActive(tDescWindowId))
+    {
+        // Disable highlight window so it doesn't appear above the Yes/No panel
+        SetGpuReg(REG_OFFSET_DISPCNT, GetGpuReg(REG_OFFSET_DISPCNT) & ~DISPCNT_WIN0_ON);
+        // Create Yes/No menu with default on No (1)
+        CreateYesNoMenuAtPos(&sNewGameConfirmYesNoWindowTemplate, FONT_NORMAL, 0, 2, 0x214, 14, 1);
+        gTasks[taskId].func = Task_DifficultyMenu_ConfirmYesNo;
+    }
+}
+
+static void Task_DifficultyMenu_ConfirmYesNo(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    s8 input = Menu_ProcessInputNoWrapClearOnChoose();
+
+    switch (input)
+    {
+    case 0: // YES
+        PlaySE(SE_SELECT);
+        // Save settings
+        gSaveBlock2Ptr->optionsTextSpeed = tTextSpeed;
+        SetPendingDifficulty(tDifficulty);
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+        gTasks[taskId].func = Task_DifficultyMenu_FadeOut;
+        break;
+    case 1: // NO
+    case MENU_B_PRESSED:
+        PlaySE(SE_SELECT);
+        // Redraw main options window frame (destroyed by Yes/No cleanup)
+        // Note: DrawStdFrameWithCustomTileAndPalette clears pixel buffer, so redraw all content
+        DrawStdFrameWithCustomTileAndPalette(tWindowId, FALSE, 0x214, 14);
+        {
+            u8 i;
+            for (i = 0; i < NEWGAME_MENUITEM_COUNT; i++)
+            {
+                u8 y = (i * (GetFontAttribute(FONT_NORMAL, FONTATTR_MAX_LETTER_HEIGHT) - 1)) + 2;
+                AddTextPrinterParameterized3(tWindowId, FONT_NORMAL, 8, y, sNewGameOptionTextColor, TEXT_SKIP_DRAW, sNewGameOptionMenuItemNames[i]);
+            }
+            NewGameOptions_PrintOptionValue(tWindowId, NEWGAME_MENUITEM_TEXTSPEED, tTextSpeed);
+            NewGameOptions_PrintOptionValue(tWindowId, NEWGAME_MENUITEM_DIFFICULTY, tDifficulty);
+        }
+        // Restore description text and return to menu
+        NewGameOptions_PrintDescription(tDescWindowId, tCursorPos, tDifficulty);
+        PutWindowTilemap(tDescWindowId);
+        ScheduleBgCopyTilemapToVram(0);
+        // Re-enable highlight window
+        SetGpuReg(REG_OFFSET_DISPCNT, GetGpuReg(REG_OFFSET_DISPCNT) | DISPCNT_WIN0_ON);
+        gTasks[taskId].func = Task_DifficultyMenu_HandleInput;
+        break;
+    }
+}
+
+static void Task_DifficultyMenu_FadeOut(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    if (gPaletteFade.active)
+        return;
+
+    // Clean up options window
+    ClearStdWindowAndFrameToTransparent(tWindowId, FALSE);
+    ClearWindowTilemap(tWindowId);
+    RemoveWindow(tWindowId);
+
+    // Clean up description window
+    ClearStdWindowAndFrameToTransparent(tDescWindowId, FALSE);
+    ClearWindowTilemap(tDescWindowId);
+    RemoveWindow(tDescWindowId);
+
+    // Disable highlight window
+    SetGpuReg(REG_OFFSET_WIN0H, 0);
+    SetGpuReg(REG_OFFSET_WIN0V, 0);
+    SetGpuReg(REG_OFFSET_DISPCNT, GetGpuReg(REG_OFFSET_DISPCNT) & ~DISPCNT_WIN0_ON);
+
+    // Clear the background
+    FillBgTilemapBufferRect_Palette0(1, 0, 0, 2, 30, 18);
+    CopyBgTilemapBufferToVram(1);
+
+    gTasks[taskId].tTimer = 32;
+    gTasks[taskId].func = Task_PikachuIntro_LoadPage1;
+}
+
+#undef tCursorPos
+#undef tTextSpeed
+#undef tDifficulty
+#undef tWindowId
+#undef tDescWindowId
+#undef tYesNoWindowId
 
 enum
 {
