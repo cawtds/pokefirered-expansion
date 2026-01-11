@@ -306,9 +306,9 @@ static bool32 Fishing_ChangeMinigame(struct Task *task)
 static bool32 Fishing_WaitForA(struct Task *task)
 {
     const s16 reelTimeouts[3] = {
-        [OLD_ROD]   = 36,
-        [GOOD_ROD]  = 33,
-        [SUPER_ROD] = 30
+        [OLD_ROD]   = 360,
+        [GOOD_ROD]  = 330,
+        [SUPER_ROD] = 300
     };
 
     AlignFishingAnimationFrames();

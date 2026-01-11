@@ -13468,10 +13468,10 @@ const struct Item gItemsInfo[] =
 
     [ITEM_SUPER_ROD] =
     {
-        .name = ITEM_NAME("Super Rod"),
+        .name = ITEM_NAME("Fishing Rod"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "The best fishing "
+            "A standard fishing "
             "rod for catching\n"
             "wild Pokémon."),
         .importance = 1,
