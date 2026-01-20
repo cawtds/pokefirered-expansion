@@ -228,13 +228,13 @@ bool8 PlayerHasGrassPokemonInParty(void)
 
 static bool32 IsBuildingPCTile(u32 tileId)
 {
-    return GetPrimaryTileset(gMapHeader.mapLayout) == &gTileset_Building 
+    return GetPrimaryTileset(gMapHeader.mapLayout) == &gTileset_Building
         && (tileId == METATILE_Building_PCOn || tileId == METATILE_Building_PCOff);
 }
 
 static bool32 IsPlayerHousePCTile(u32 tileId)
 {
-    return (GetSecondaryTileset(gMapHeader.mapLayout) == &gTileset_GenericBuilding1 
+    return (GetSecondaryTileset(gMapHeader.mapLayout) == &gTileset_GenericBuilding1
         && (tileId == METATILE_GenericBuilding1_PlayersPCOn || tileId == METATILE_GenericBuilding1_PlayersPCOff));
 }
 
@@ -489,14 +489,6 @@ bool8 IsThereRoomInAnyBoxForMorePokemon(void)
     return FALSE;
 }
 
-bool8 IsPokerusInParty(void)
-{
-    if (!CheckPartyPokerus(gPlayerParty, 0x3F))
-        return FALSE;
-    else
-        return TRUE;
-}
-
 #define tXtrans   data[0]
 #define tTimer    data[1]
 #define tNremain  data[2]
@@ -574,7 +566,7 @@ u16 ScriptGetPartyMonSpecies(void)
 bool8 IsMonOTNameNotPlayers(void)
 {
     GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_OT_NAME, gStringVar1);
-    
+
     if (!StringCompare(gSaveBlock2Ptr->playerName, gStringVar1))
         return FALSE;
     else
@@ -820,36 +812,36 @@ static const u8 sFloorNameWidthPadding[] = {
 
 static const u16 sElevatorWindowMetatilesGoingUp[][3] = {
     {
-        METATILE_SilphCo_ElevatorWindow_Top0, 
-        METATILE_SilphCo_ElevatorWindow_Top1, 
+        METATILE_SilphCo_ElevatorWindow_Top0,
+        METATILE_SilphCo_ElevatorWindow_Top1,
         METATILE_SilphCo_ElevatorWindow_Top2
     },
     {
-        METATILE_SilphCo_ElevatorWindow_Mid0, 
-        METATILE_SilphCo_ElevatorWindow_Mid1, 
+        METATILE_SilphCo_ElevatorWindow_Mid0,
+        METATILE_SilphCo_ElevatorWindow_Mid1,
         METATILE_SilphCo_ElevatorWindow_Mid2
     },
     {
-        METATILE_SilphCo_ElevatorWindow_Bottom0, 
-        METATILE_SilphCo_ElevatorWindow_Bottom1, 
+        METATILE_SilphCo_ElevatorWindow_Bottom0,
+        METATILE_SilphCo_ElevatorWindow_Bottom1,
         METATILE_SilphCo_ElevatorWindow_Bottom2
     }
 };
 
 static const u16 sElevatorWindowMetatilesGoingDown[][3] = {
     {
-        METATILE_SilphCo_ElevatorWindow_Top0, 
-        METATILE_SilphCo_ElevatorWindow_Top2, 
+        METATILE_SilphCo_ElevatorWindow_Top0,
+        METATILE_SilphCo_ElevatorWindow_Top2,
         METATILE_SilphCo_ElevatorWindow_Top1
     },
     {
-        METATILE_SilphCo_ElevatorWindow_Mid0, 
-        METATILE_SilphCo_ElevatorWindow_Mid2, 
+        METATILE_SilphCo_ElevatorWindow_Mid0,
+        METATILE_SilphCo_ElevatorWindow_Mid2,
         METATILE_SilphCo_ElevatorWindow_Mid1
     },
     {
-        METATILE_SilphCo_ElevatorWindow_Bottom0, 
-        METATILE_SilphCo_ElevatorWindow_Bottom2, 
+        METATILE_SilphCo_ElevatorWindow_Bottom0,
+        METATILE_SilphCo_ElevatorWindow_Bottom2,
         METATILE_SilphCo_ElevatorWindow_Bottom1
     }
 };
@@ -1207,7 +1199,7 @@ void ListMenu(void)
 {
     u8 taskId;
     struct Task *task;
-        
+
     taskId = CreateTask(Task_CreateScriptListMenu, 8);
     task = &gTasks[taskId];
     switch (gSpecialVar_0x8004)
@@ -1294,7 +1286,7 @@ void ListMenu(void)
 }
 
 static const u8 *const sListMenuLabels[][12] = {
-    [LISTMENU_BADGES] = 
+    [LISTMENU_BADGES] =
     {
         gText_BoulderBadge,
         gText_CascadeBadge,
@@ -1305,8 +1297,8 @@ static const u8 *const sListMenuLabels[][12] = {
         gText_VolcanoBadge,
         gText_EarthBadge,
         gOtherText_Exit,
-    }, 
-    [LISTMENU_SILPHCO_FLOORS] = 
+    },
+    [LISTMENU_SILPHCO_FLOORS] =
     {
         gText_11F,
         gText_10F,
@@ -1320,14 +1312,14 @@ static const u8 *const sListMenuLabels[][12] = {
         gText_2F,
         gText_1F,
         gOtherText_Exit,
-    }, 
+    },
     [LISTMENU_ROCKET_HIDEOUT_FLOORS] = // Unncessary, MULTICHOICE_ROCKET_HIDEOUT_ELEVATOR is used instead
     {
         gText_B1F,
         gText_B2F,
         gText_B4F,
         gOtherText_Exit,
-    }, 
+    },
     [LISTMENU_DEPT_STORE_FLOORS] = // Unncessary, MULTICHOICE_DEPT_STORE_ELEVATOR is used instead
     {
         gText_5F,
@@ -1336,15 +1328,15 @@ static const u8 *const sListMenuLabels[][12] = {
         gText_2F,
         gText_1F,
         gOtherText_Exit,
-    }, 
+    },
     [LISTMENU_WIRELESS_LECTURE_HEADERS] = // Unnecessary, MULTICHOICE_LINKED_DIRECT_UNION is used instead
     {
         gText_LinkedGamePlay,
         gText_DirectCorner,
         gText_UnionRoom,
         gOtherText_Quit,
-    }, 
-    [LISTMENU_BERRY_POWDER] = 
+    },
+    [LISTMENU_BERRY_POWDER] =
     {
         gText_Energypowder_50,
         gText_EnergyRoot_80,
@@ -1358,7 +1350,7 @@ static const u8 *const sListMenuLabels[][12] = {
         gText_HpUp_1000,
         gText_PpUp_3000,
         gOtherText_Exit,
-    }, 
+    },
     [LISTMENU_TRAINER_TOWER_FLOORS] = // Unnecessary, MULTICHOICE_ROOFTOP_B1F is used instead
     {
         gText_Rooftop,
@@ -1630,7 +1622,7 @@ u8 ContextNpcGetTextColor(void)
             gfxId = gObjectEvents[objEventId].graphicsId;
         else
             gfxId = gObjectEvents[gSelectedObjectEvent].graphicsId;
-        
+
         if (gfxId & OBJ_EVENT_MON)
             return GetFollowerTextColor();
 
@@ -2137,12 +2129,12 @@ bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
     //   8007 = Index of lead mon
     //   to specialvar = whether a move can be taught in the first place
     u8 i, leadMonSlot, moveCount = 0;
-    u16 moveId, tutorFlag; 
+    u16 moveId, tutorFlag;
     struct Pokemon *leadMon;
-    
+
     leadMonSlot = GetLeadMonIndex();
     leadMon = &gPlayerParty[leadMonSlot];
-    
+
     if (GetMonData(leadMon, MON_DATA_FRIENDSHIP) != 255)
         return FALSE;
 
@@ -2161,14 +2153,14 @@ bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
         default:
             return FALSE;
     }
-    
+
     StringCopy(gStringVar2, gMovesInfo[moveId].name);
     if (!I_REUSABLE_TMS && FlagGet(tutorFlag) == TRUE)
         return FALSE;
-    
+
     for (i = 0; i < MAX_MON_MOVES; i++)
         moveCount += (GetMonData(leadMon, MON_DATA_MOVE1 + i) != MOVE_NONE);
-    
+
     gSpecialVar_0x8005 = moveId;
     gSpecialVar_0x8006 = moveCount;
     gSpecialVar_0x8007 = leadMonSlot;
@@ -2404,7 +2396,7 @@ bool8 PlayerPartyContainsSpeciesWithPlayerID(void)
     u8 i;
     for (i = 0; i < playerCount; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) == gSpecialVar_0x8004 
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) == gSpecialVar_0x8004
             && GetPlayerTrainerId() == GetMonData(&gPlayerParty[i], MON_DATA_OT_ID, NULL))
             return TRUE;
     }

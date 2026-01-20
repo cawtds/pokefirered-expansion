@@ -34,6 +34,7 @@
 #include "battle_interface.h"
 #include "mon_markings.h"
 #include "pokemon_storage_system.h"
+#include "pokerus.h"
 #include "constants/battle_move_effects.h"
 #include "constants/sound.h"
 
@@ -2390,7 +2391,6 @@ static const struct StatData sStatData[] = {
     [STAT_HP] =
     {
         .monDataStat            = MON_DATA_HP,
-        .monDataStat2           = MON_DATA_HP,
         .monDataEv              = MON_DATA_HP_EV,
         .monDataIv              = MON_DATA_HP_IV,
         .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_HP,
@@ -2399,7 +2399,6 @@ static const struct StatData sStatData[] = {
     [STAT_ATK] =
     {
         .monDataStat            = MON_DATA_ATK,
-        .monDataStat2           = MON_DATA_ATK2,
         .monDataEv              = MON_DATA_ATK_EV,
         .monDataIv              = MON_DATA_ATK_IV,
         .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_ATK,
@@ -2408,7 +2407,6 @@ static const struct StatData sStatData[] = {
     [STAT_DEF] =
     {
         .monDataStat            = MON_DATA_DEF,
-        .monDataStat2           = MON_DATA_DEF2,
         .monDataEv              = MON_DATA_DEF_EV,
         .monDataIv              = MON_DATA_DEF_IV,
         .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_DEF,
@@ -2417,7 +2415,6 @@ static const struct StatData sStatData[] = {
     [STAT_SPATK] =
     {
         .monDataStat            = MON_DATA_SPATK,
-        .monDataStat2           = MON_DATA_SPATK2,
         .monDataEv              = MON_DATA_SPATK_EV,
         .monDataIv              = MON_DATA_SPATK_IV,
         .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_SPATK,
@@ -2426,7 +2423,6 @@ static const struct StatData sStatData[] = {
     [STAT_SPDEF] =
     {
         .monDataStat            = MON_DATA_SPDEF,
-        .monDataStat2           = MON_DATA_SPDEF2,
         .monDataEv              = MON_DATA_SPDEF_EV,
         .monDataIv              = MON_DATA_SPDEF_IV,
         .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_SPDEF,
@@ -2435,7 +2431,6 @@ static const struct StatData sStatData[] = {
     [STAT_SPEED] =
     {
         .monDataStat            = MON_DATA_SPEED,
-        .monDataStat2           = MON_DATA_SPEED2,
         .monDataEv              = MON_DATA_SPEED_EV,
         .monDataIv              = MON_DATA_SPEED_IV,
         .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_SPEED,
@@ -2492,12 +2487,7 @@ static void ApplyNatureColor(u8 *str, u8 stat)
 static void BufferStatString(u8 stat)
 {
     u8 *dst = sMonSummaryScreen->summary.statValueStrBufs[sStatData[stat].pssStat];
-    u16 statValue;
-
-    if (sMonSummaryScreen->savedCallback == CB2_ReturnToTradeMenuFromSummary && sMonSummaryScreen->isEnemyParty == TRUE)
-        statValue = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataStat2);
-    else
-        statValue = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataStat);
+    u16 statValue = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataStat);
 
     ConvertIntToDecimalStringN(dst, statValue, STR_CONV_MODE_LEFT_ALIGN, 3);
     if (stat == STAT_HP)
@@ -2616,7 +2606,7 @@ static void BufferMonSkills(void)
 
     sMonSummaryScreen->curMonStatusAilment = StatusToAilment(GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_STATUS));
     if (sMonSummaryScreen->curMonStatusAilment == AILMENT_NONE)
-        if (CheckPartyPokerus(&sMonSummaryScreen->currentMon, 0))
+        if (ShouldPokemonShowActivePokerus(&sMonSummaryScreen->currentMon))
             sMonSummaryScreen->curMonStatusAilment = AILMENT_PKRS;
 }
 
@@ -3929,7 +3919,7 @@ static u8 StatusToAilment(u32 status)
     if ((status & STATUS1_FROSTBITE) != 0)
         return AILMENT_FRB;
 
-    if (CheckPartyPokerus(&sMonSummaryScreen->currentMon, 0))
+    if (ShouldPokemonShowActivePokerus(&sMonSummaryScreen->currentMon))
         return AILMENT_PKRS;
 
     return AILMENT_NONE;
@@ -4554,8 +4544,7 @@ static void ShowOrHideBallIconObj(u8 invisible)
 
 static void DestroyBallIconObj(void)
 {
-    // Redundant, as DestroySpriteAndFreeResources could've been used.
-    DestroySpriteAndFreeResources_Ball(&gSprites[sMonSummaryScreen->ballIconSpriteId]);
+    DestroySpriteAndFreeResources(&gSprites[sMonSummaryScreen->ballIconSpriteId]);
 }
 
 static void PokeSum_CreateMonIconSprite(void)
@@ -5145,8 +5134,8 @@ static void DestroyPokerusIconObj(void)
 
 static void ShowPokerusIconObjIfHasOrHadPokerus(void)
 {
-    if (!CheckPartyPokerus(&sMonSummaryScreen->currentMon, 0)
-        && CheckPartyHasHadPokerus(&sMonSummaryScreen->currentMon, 0))
+    if (!ShouldPokemonShowActivePokerus(&sMonSummaryScreen->currentMon)
+        && CheckMonHasHadPokerus(&sMonSummaryScreen->currentMon))
         HideShowPokerusIcon(FALSE);
     else
         HideShowPokerusIcon(TRUE);
@@ -5154,8 +5143,8 @@ static void ShowPokerusIconObjIfHasOrHadPokerus(void)
 
 static void HideShowPokerusIcon(bool8 invisible)
 {
-    if (!CheckPartyPokerus(&sMonSummaryScreen->currentMon, 0)
-        && CheckPartyHasHadPokerus(&sMonSummaryScreen->currentMon, 0))
+    if (!ShouldPokemonShowActivePokerus(&sMonSummaryScreen->currentMon)
+        && CheckMonHasHadPokerus(&sMonSummaryScreen->currentMon))
     {
         sPokerusIconObj->sprite->invisible = invisible;
         return;

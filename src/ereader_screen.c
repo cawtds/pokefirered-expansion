@@ -18,17 +18,10 @@
 struct EReaderTaskData
 {
     u16 timer;
-    u16 unused1;
-    u16 unused2;
-    u16 unused3;
     u8 state;
     u8 textState;
-    u8 unused4;
-    u8 unused5;
-    u8 unused6;
-    u8 unused7;
     u8 status;
-    u8 *unusedBuffer;
+    u8 *buffer;
 };
 
 struct EReaderData
@@ -98,7 +91,6 @@ static u8 EReader_Transfer(struct EReaderData *eReader)
 
 static void OpenEReaderLink(void)
 {
-    memset(gDecompressionBuffer, 0, 0x2000);
     gLinkType = LINKTYPE_EREADER_FRLG;
     OpenLink();
     SetSuppressLinkErrorMessage(TRUE);
@@ -203,7 +195,7 @@ static u32 TryReceiveCard(u8 * state, u16 * timer)
             *state = 0;
             return RECV_TIMEOUT;
         }
-        
+
         if (IsLinkConnectionEstablished())
         {
             if (gReceivedRemoteLinkPlayers)
@@ -241,16 +233,9 @@ void CreateEReaderTask(void)
     struct EReaderTaskData *data = (struct EReaderTaskData *)gTasks[taskId].data;
     data->state = 0;
     data->textState = 0;
-    data->unused4 = 0;
-    data->unused5 = 0;
-    data->unused6 = 0;
-    data->unused7 = 0;
     data->timer = 0;
-    data->unused1 = 0;
-    data->unused2 = 0;
-    data->unused3 = 0;
     data->status = 0;
-    data->unusedBuffer = AllocZeroed(CLIENT_MAX_MSG_SIZE);
+    data->buffer = AllocZeroed(0x2000);
 }
 
 static void ResetTimer(u16 *timer)
@@ -458,7 +443,7 @@ static void Task_EReader(u8 taskId)
         }
         break;
     case ER_STATE_VALIDATE_CARD:
-        data->status = ValidateTrainerTowerData((struct EReaderTrainerTowerSet *)gDecompressionBuffer);
+        data->status = ValidateTrainerTowerData((struct EReaderTrainerTowerSet *)data->buffer);
         SetCloseLinkCallbackAndType(data->status);
         data->state = ER_STATE_WAIT_DISCONNECT;
         break;
@@ -472,7 +457,7 @@ static void Task_EReader(u8 taskId)
         }
         break;
     case ER_STATE_SAVE:
-        if (CEReaderTool_SaveTrainerTower((struct EReaderTrainerTowerSet *)gDecompressionBuffer))
+        if (CEReaderTool_SaveTrainerTower((struct EReaderTrainerTowerSet *)data->buffer))
         {
             AddTextPrinterToWindow1(gJPText_ConnectionComplete);
             ResetTimer(&data->timer);
@@ -510,7 +495,7 @@ static void Task_EReader(u8 taskId)
             data->state = ER_STATE_START;
         break;
     case ER_STATE_END:
-        Free(data->unusedBuffer);
+        Free(data->buffer);
         DestroyTask(taskId);
         SetMainCallback2(MainCB_FreeAllBuffersAndReturnToInitTitleScreen);
         break;

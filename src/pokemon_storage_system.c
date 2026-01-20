@@ -418,7 +418,6 @@ struct PokemonStorageSystemData
     u16 scrollUnused6; // Never read
     u8 filler1[22];
     u8 boxTitleTiles[512];
-    u8 boxTitleUnused[512];
     u8 boxTitleCycleId;
     u8 wallpaperLoadState; // Written to, but never read.
     u8 wallpaperLoadBoxId;
@@ -1273,7 +1272,7 @@ static const u16 sHandCursorShadow_Gfx[] = INCBIN_U16("graphics/pokemon_storage/
 //  SECTION: Misc utility
 //------------------------------------------------------------------------------
 
-void DrawTextWindowAndBufferTiles(const u8 *string, void *dst, u8 zero1, u8 zero2, u8 *unused, s32 bytesToBuffer)
+void DrawTextWindowAndBufferTiles(const u8 *string, void *dst, u8 zero1, u8 zero2, s32 bytesToBuffer)
 {
     s32 i, tileBytesToBuffer, remainingBytes;
     u16 windowId;
@@ -5133,7 +5132,7 @@ static void InitBoxTitle(u8 boxId)
     gStorage->wallpaperPalBits |= (1 << 16) << tagIndex;
 
     StringCopyPadded(gStorage->boxTitleText, GetBoxNamePtr(boxId), 0, 8);
-    DrawTextWindowAndBufferTiles(gStorage->boxTitleText, gStorage->boxTitleTiles, 0, 0, gStorage->boxTitleUnused, 2);
+    DrawTextWindowAndBufferTiles(gStorage->boxTitleText, gStorage->boxTitleTiles, 0, 0, 2);
     LoadSpriteSheet(&spriteSheet);
     x = GetBoxTitleBaseX(GetBoxNamePtr(boxId));
 
@@ -5169,7 +5168,7 @@ static void CreateIncomingBoxTitle(u8 boxId, s8 direction)
     }
 
     StringCopyPadded(gStorage->boxTitleText, GetBoxNamePtr(boxId), 0, BOX_NAME_LENGTH);
-    DrawTextWindowAndBufferTiles(gStorage->boxTitleText, gStorage->boxTitleTiles, 0, 0, gStorage->boxTitleUnused, 2);
+    DrawTextWindowAndBufferTiles(gStorage->boxTitleText, gStorage->boxTitleTiles, 0, 0, 2);
     LoadSpriteSheet(&spriteSheet);
     LoadPalette(sBoxTitleColors[GetBoxWallpaper(boxId)], palOffset, sizeof(sBoxTitleColors[0]));
     x = GetBoxTitleBaseX(GetBoxNamePtr(boxId));
@@ -5962,7 +5961,7 @@ static void SetPlacedMonData(u8 boxId, u8 position)
 {
     if (OW_PC_HEAL <= GEN_7)
         HealPokemon(&gStorage->movingMon);
-    
+
     if (boxId == TOTAL_BOXES_COUNT)
     {
         gPlayerParty[position] = gStorage->movingMon;
@@ -8876,6 +8875,20 @@ void GetBoxMonNickAt(u8 boxId, u8 boxPosition, u8 *dst)
         GetBoxMonData(&gPokemonStoragePtr->boxes[boxId][boxPosition], MON_DATA_NICKNAME, dst);
     else
         *dst = EOS;
+}
+
+u32 GetBoxMonLevelAt(u8 boxId, u8 boxPosition)
+{
+    u32 lvl;
+
+    if (boxId < TOTAL_BOXES_COUNT && boxPosition < IN_BOX_COUNT && GetBoxMonData(&gPokemonStoragePtr->boxes[boxId][boxPosition], MON_DATA_SANITY_HAS_SPECIES))
+        lvl = GetLevelFromBoxMonExp(&gPokemonStoragePtr->boxes[boxId][boxPosition]);
+#ifdef BUGFIX
+    else
+#endif
+        lvl = 0;
+
+    return lvl;
 }
 
 void SetBoxMonNickAt(u8 boxId, u8 boxPosition, const u8 *nick)
