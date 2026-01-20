@@ -17,7 +17,6 @@
 #include "menu.h"
 #include "battle_controllers.h"
 #include "graphics.h"
-#include "battle_ai_switch_items.h"
 #include "recorded_battle.h"
 #include "test_runner.h"
 #include "constants/abilities.h"
@@ -299,6 +298,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_STATSWONTINCREASE2]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s stats won't go any higher!"),
     [STRINGID_AVOIDEDDAMAGE]                        = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} avoided damage with {B_DEF_ABILITY}!"), //not in gen 5+, ability popup
     [STRINGID_ITDOESNTAFFECT]                       = COMPOUND_STRING("It doesn't affect {B_DEF_NAME_WITH_PREFIX2}…"),
+    [STRINGID_SCR_ITDOESNTAFFECT]                   = COMPOUND_STRING("It doesn't affect {B_SCR_NAME_WITH_PREFIX2}…"),
     [STRINGID_BATTLERFAINTED]                       = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} fainted!\p"),
     [STRINGID_PLAYERGOTMONEY]                       = COMPOUND_STRING("You got ¥{B_BUFF1} for winning!\p"),
     [STRINGID_PLAYERWHITEOUT]                       = COMPOUND_STRING("You have no more Pokémon that can fight!\p"),
@@ -478,6 +478,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_STATFELL]                             = gText_StatFell,
     [STRINGID_ATTACKERSSTATROSE]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_BUFF1} {B_BUFF2}rose!"),
     [STRINGID_DEFENDERSSTATROSE]                    = gText_DefendersStatRose,
+    [STRINGID_SCRIPTINGSTATROSE]                    = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_BUFF1} {B_BUFF2}rose!"),
     [STRINGID_ATTACKERSSTATFELL]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_BUFF1} {B_BUFF2}fell!"),
     [STRINGID_DEFENDERSSTATFELL]                    = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_BUFF1} {B_BUFF2}fell!"),
     [STRINGID_CRITICALHIT]                          = COMPOUND_STRING("A critical hit!"),
@@ -1043,6 +1044,11 @@ const u16 gStartingStatusStringIds[B_MSG_STARTING_STATUS_COUNT] =
     [B_MSG_SET_RAINBOW]          = STRINGID_ARAINBOWAPPEAREDONSIDE,
     [B_MSG_SET_SEA_OF_FIRE]      = STRINGID_SEAOFFIREENVELOPEDSIDE,
     [B_MSG_SET_SWAMP]            = STRINGID_SWAMPENVELOPEDSIDE,
+    [B_MSG_SET_SPIKES]           = STRINGID_SPIKESSCATTERED,
+    [B_MSG_SET_POISON_SPIKES]    = STRINGID_POISONSPIKESSCATTERED,
+    [B_MSG_SET_STICKY_WEB]       = STRINGID_STICKYWEBUSED,
+    [B_MSG_SET_STEALTH_ROCK]     = STRINGID_POINTEDSTONESFLOAT,
+    [B_MSG_SET_SHARP_STEEL]      = STRINGID_SHARPSTEELFLOATS,
 };
 
 const u16 gTerrainStringIds[B_MSG_TERRAIN_COUNT] =
@@ -1133,6 +1139,18 @@ const u16 gMoveWeatherChangeStringIds[] =
     [B_MSG_STARTED_HAIL]      = STRINGID_STARTEDHAIL,
     [B_MSG_STARTED_SNOW]      = STRINGID_STARTEDSNOW,
     [B_MSG_STARTED_FOG]       = STRINGID_FOGCREPTUP, // Unused, can use for custom moves that set fog
+};
+
+const u16 gAbilityWeatherChangeStringId[] =
+{
+    [B_MSG_STARTED_DRIZZLE]        = STRINGID_PKMNMADEITRAIN,
+    [B_MSG_STARTED_SAND_STREAM]    = STRINGID_PKMNSXWHIPPEDUPSANDSTORM,
+    [B_MSG_STARTED_DROUGHT]        = STRINGID_PKMNSXINTENSIFIEDSUN,
+    [B_MSG_STARTED_HAIL_WARNING]   = STRINGID_SNOWWARNINGHAIL,
+    [B_MSG_STARTED_SNOW_WARNING]   = STRINGID_SNOWWARNINGSNOW,
+    [B_MSG_STARTED_DESOLATE_LAND]  = STRINGID_EXTREMELYHARSHSUNLIGHT,
+    [B_MSG_STARTED_PRIMORDIAL_SEA] = STRINGID_HEAVYRAIN,
+    [B_MSG_STARTED_STRONG_WINDS]   = STRINGID_MYSTERIOUSAIRCURRENT,
 };
 
 const u16 gWeatherEndsStringIds[B_MSG_WEATHER_END_COUNT] =
@@ -1717,7 +1735,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                 stringPtr = sText_WildPkmnAppeared2;
             else if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT))))
                 stringPtr = sText_TwoWildPkmnAppeared;
-            else if (gBattleTypeFlags & BATTLE_TYPE_OLD_MAN_TUTORIAL)
+            else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
                 stringPtr = sText_WildPkmnAppearedPause;
             else
                 stringPtr = sText_WildPkmnAppeared;
@@ -2146,6 +2164,8 @@ static const u8 *BattleStringGetOpponentName(u8 *text, u8 multiplayerId, u8 batt
         else
             toCpy = BattleStringGetOpponentNameByTrainerId(TRAINER_BATTLE_PARAM.opponentA, text, multiplayerId, battler);
         break;
+    default:
+        break;
     }
 
     return toCpy;
@@ -2182,6 +2202,8 @@ static const u8 *BattleStringGetPlayerName(u8 *text, u8 battler)
         {
             toCpy = gSaveBlock2Ptr->playerName;
         }
+        break;
+    default:
         break;
     }
 
@@ -2649,6 +2671,8 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                     else
                         toCpy = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentA);
                     break;
+                default:
+                    break;
                 }
                 break;
             case B_TXT_ATK_TRAINER_NAME_WITH_CLASS:
@@ -2674,6 +2698,8 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                             classString = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentB);
                         else
                             classString = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentA);
+                        break;
+                    default:
                         break;
                     }
                     classLength = 0;
@@ -3277,11 +3303,11 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] = {
     },
 };
 
-static const u8 sNpcTextColorToFont[] = 
+static const u8 sNpcTextColorToFont[] =
 {
-    [NPC_TEXT_COLOR_MALE]    = FONT_MALE, 
-    [NPC_TEXT_COLOR_FEMALE]  = FONT_FEMALE, 
-    [NPC_TEXT_COLOR_MON]     = FONT_NORMAL, 
+    [NPC_TEXT_COLOR_MALE]    = FONT_MALE,
+    [NPC_TEXT_COLOR_FEMALE]  = FONT_FEMALE,
+    [NPC_TEXT_COLOR_MON]     = FONT_NORMAL,
     [NPC_TEXT_COLOR_NEUTRAL] = FONT_NORMAL,
 };
 

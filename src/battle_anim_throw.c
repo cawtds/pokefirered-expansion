@@ -1000,7 +1000,7 @@ void AnimTask_ThrowBall_StandingTrainer(u8 taskId)
     u8 subpriority;
     u8 spriteId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_OLD_MAN_TUTORIAL)
+    if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
     {
         x = 28;
         y = 11;
@@ -2700,7 +2700,7 @@ void AnimTask_SafariGetReaction(u8 taskId)
         gBattleAnimArgs[7] = 0;
     else
         gBattleAnimArgs[7] = gBattleCommunication[MULTISTRING_CHOOSER];
-    
+
     DestroyAnimVisualTask(taskId);
 }
 
@@ -2820,7 +2820,7 @@ static void GhostBallDodge2(struct Sprite *sprite)
         if ((sprite->y + sprite->y2) < 65)
             return;
     }
-    
+
     sprite->data[0] = 0;
     sprite->callback = DestroySpriteAfterOneFrame;
     gDoingBattleAnim = FALSE;
