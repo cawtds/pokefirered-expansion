@@ -11259,8 +11259,8 @@ static void Cmd_handleballthrow(void)
         if (shakes == maxShakes) // mon caught, copy of the code above
         {
             if (IsCriticalCapture())
+                gBattleSpritesDataPtr->animationData->criticalCaptureSuccess = TRUE;
             FinalizeCapture();
-            gBattleSpritesDataPtr->animationData->criticalCaptureSuccess = TRUE;
             return;
         }
 
