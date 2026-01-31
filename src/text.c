@@ -735,7 +735,7 @@ void DecompressGlyphTile(const void *src_, void *dest_)
     *(dest++) = (sFontHalfRowLookupTable[temp & 0xFF] << 16) | (sFontHalfRowLookupTable[temp >> 8]);
 }
 
-static u8 UNUSED GetLastTextColor(enum TextColorType colorType)
+static u8 GetLastTextColor(enum TextColorType colorType)
 {
     switch (colorType)
     {
@@ -1241,8 +1241,8 @@ void TextPrinterClearDownArrow(struct TextPrinter *textPrinter)
         textPrinter->printerTemplate.color.background << 4 | textPrinter->printerTemplate.color.background,
         textPrinter->printerTemplate.currentX,
         textPrinter->printerTemplate.currentY,
-        8,
-        16);
+        10,
+        12);
     CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
 }
 
