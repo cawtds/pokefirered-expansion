@@ -4,7 +4,6 @@
 #include "global.h"
 #include "constants/battle_tower.h"
 
-#define BATTLE_TOWER_EREADER_TRAINER_ID 200
 #define BATTLE_TOWER_RECORD_MIXING_TRAINER_BASE_ID 100
 
 struct BattleTowerTrainer
@@ -25,16 +24,9 @@ struct BattleTowerPokemonTemplate
     u8 nature;
 };
 
-extern const u16 gBattleTowerBannedSpecies[];
 
-void ClearEReaderTrainer(struct BattleTowerEReaderTrainer *);
-void ValidateEReaderTrainer(void);
 u8 GetBattleTowerTrainerFrontSpriteId(u16 trainerId);
-u8 GetEreaderTrainerFrontSpriteId(void);
-void CopyEReaderTrainerName5(u8 *dest);
-void GetBattleTowerTrainerName(u8 *text);
-u8 GetEreaderTrainerClassId(void);
 u8 GetBattleTowerTrainerClassNameId(void);
-void DoSpecialTrainerBattle(void);
+void GetBattleTowerTrainerName(u8 *text);
 
 #endif //GUARD_BATTLE_TOWER_H

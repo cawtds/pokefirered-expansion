@@ -1,13 +1,13 @@
 #include "global.h"
-#include "gflib.h"
+#include "battle_special.h"
 #include "decompress.h"
-#include "overworld.h"
-#include "script.h"
-#include "battle_tower.h"
+#include "malloc.h"
 #include "mystery_event_script.h"
-#include "mystery_gift.h"
 #include "mystery_gift_client.h"
 #include "mystery_gift_server.h"
+#include "mystery_gift.h"
+#include "overworld.h"
+#include "script.h"
 
 enum {
     FUNC_INIT,

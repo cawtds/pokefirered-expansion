@@ -1,7 +1,7 @@
 #include "global.h"
 #include "gflib.h"
 #include "berry.h"
-#include "battle_tower.h"
+#include "battle_special.h"
 #include "easy_chat.h"
 #include "event_data.h"
 #include "mail.h"

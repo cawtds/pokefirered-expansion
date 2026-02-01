@@ -3,6 +3,7 @@
 #include "constants/global.h"
 #include "constants/flags.h"
 #include "constants/battle_tower.h"
+#include "constants/battle_special.h"
 #include "constants/berry.h"
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
@@ -812,7 +813,7 @@ gStdScriptsEnd::
 
 	.include "data/scripts/std_msgbox.inc"
 	.include "data/scripts/trainer_battle.inc"
-	
+
 	.include "data/scripts/config.inc"
 	.include "data/scripts/debug.inc"
 
@@ -1129,7 +1130,7 @@ EventScript_HandOverItem::
 	return
 
 	.include "data/scripts/pokemon_league.inc"
-	.include "data/scripts/movement.inc"	
+	.include "data/scripts/movement.inc"
 	.include "data/scripts/flavor_text.inc"
 	.include "data/scripts/questionnaire.inc"
 

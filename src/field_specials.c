@@ -376,11 +376,6 @@ void RemoveCameraObject(void)
     RemoveObjectEventByLocalIdAndMap(LOCALID_CAMERA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
 }
 
-void BufferEReaderTrainerName(void)
-{
-    CopyEReaderTrainerName5(gStringVar1);
-}
-
 // Unused
 static const u8 sSlotMachineRandomSeeds[] = {
     13,
