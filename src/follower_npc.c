@@ -24,6 +24,7 @@
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "party_menu.h"
+#include "quest_log.h"
 #include "script.h"
 #include "script_movement.h"
 #include "script_pokemon_util.h"
@@ -143,6 +144,8 @@ const u8 *GetFollowerNPCScriptPointer(void)
 
 u32 GetFollowerNPCData(enum FollowerNPCDataTypes type)
 {
+    if (QL_IS_PLAYBACK_STATE)
+        return 0;
 #if FNPC_ENABLE_NPC_FOLLOWERS
     switch (type)
     {
@@ -1265,6 +1268,9 @@ void NPCFollow(struct ObjectEvent *npc, u32 state, bool32 ignoreScriptActive)
         ObjectEventClearHeldMovementIfFinished(follower);
         return;
     }
+
+    if (gQuestLogPlaybackState == QL_PLAYBACK_STATE_RECORDING)
+        QuestLogRecordNPCStep(follower->localId, follower->mapNum, follower->mapGroup, newState);
 
     // Follower gets on surf blob.
     if (GetFollowerNPCData(FNPC_DATA_SURF_BLOB) == FNPC_SURF_BLOB_NEW && IsStateMovement(state))
