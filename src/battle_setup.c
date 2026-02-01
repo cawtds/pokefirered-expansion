@@ -130,7 +130,7 @@ static void Task_BattleStart(u8 taskId)
     case 1:
         if (IsBattleTransitionDone() == TRUE)
         {
-            // PrepareForFollowerNPCBattle();
+            PrepareForFollowerNPCBattle();
             CleanupOverworldWindowsAndTilemaps();
             SetMainCallback2(CB2_InitBattle);
             RestartWildEncounterImmunitySteps();
@@ -230,7 +230,11 @@ static void DoStandardWildBattle(bool32 isDouble)
     StopPlayerAvatar();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = 0;
-    if (isDouble)
+    if (IsNPCFollowerWildBattle())
+    {
+        gBattleTypeFlags |= BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_DOUBLE;
+    }
+    else if (isDouble)
         gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
     // if (InBattlePyramid())
     // {
@@ -477,14 +481,14 @@ static void CB2_EndWildBattle(void)
     CpuFill16(0, (void *)(BG_PLTT), BG_PLTT_SIZE);
     ResetOamRange(0, 128);
 
-    // if (IsNPCFollowerWildBattle())
-    // {
-    //     RestorePartyAfterFollowerNPCBattle();
-    //     if (FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE != 0
-    //      && (FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE == FNPC_ALWAYS
-    //      || FlagGet(FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE)))
-    //         HealPlayerParty();
-    // }
+    if (IsNPCFollowerWildBattle())
+    {
+        RestorePartyAfterFollowerNPCBattle();
+        if (FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE != 0
+         && (FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE == FNPC_ALWAYS
+         || FlagGet(FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE)))
+            HealPlayerParty();
+    }
 
     if (IsPlayerDefeated(gBattleOutcome) == TRUE)
     {
@@ -746,7 +750,7 @@ void ResetTrainerOpponentIds(void)
     TRAINER_BATTLE_PARAM.opponentB = 0;
 }
 
-static void InitTrainerBattleVariables(void)
+void InitTrainerBattleParameter(void)
 {
     memset(gTrainerBattleParameter.data, 0, sizeof(TrainerBattleParameter));
     sTrainerBattleEndScript = NULL;
@@ -754,7 +758,7 @@ static void InitTrainerBattleVariables(void)
 
 void TrainerBattleLoadArgs(const u8 *data)
 {
-    InitTrainerBattleVariables();
+    InitTrainerBattleParameter();
     memcpy(gTrainerBattleParameter.data, data, sizeof(TrainerBattleParameter));
     sTrainerBattleEndScript = (u8*)data + sizeof(TrainerBattleParameter);
 }
@@ -953,11 +957,22 @@ void BattleSetup_StartTrainerBattle(void)
 {
     if (gNoOfApproachingTrainers == 2)
     {
-        gBattleTypeFlags = (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TRAINER);
+        if (FollowerNPCIsBattlePartner())
+            gBattleTypeFlags = (BATTLE_TYPE_MULTI | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TRAINER);
+        else
+            gBattleTypeFlags = (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TRAINER);
     }
     else
     {
-        gBattleTypeFlags = (BATTLE_TYPE_TRAINER);
+        if (FollowerNPCIsBattlePartner())
+        {
+            gBattleTypeFlags = (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TRAINER);
+            TRAINER_BATTLE_PARAM.opponentB = 0xFFFF;
+        }
+        else
+        {
+            gBattleTypeFlags = (BATTLE_TYPE_TRAINER);
+        }
     }
 
     if (GetTrainerBattleMode() == TRAINER_BATTLE_EARLY_RIVAL && GetRivalBattleFlags() & RIVAL_BATTLE_TUTORIAL)
@@ -1013,6 +1028,16 @@ static void HandleBattleVariantEndParty(void)
 static void CB2_EndTrainerBattle(void)
 {
     HandleBattleVariantEndParty();
+
+    gIsDebugBattle = FALSE;
+    if (FollowerNPCIsBattlePartner())
+    {
+        RestorePartyAfterFollowerNPCBattle();
+        if (FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE != 0
+         && (FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE == FNPC_ALWAYS
+         || FlagGet(FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE)))
+            HealPlayerParty();
+    }
 
     if (GetTrainerBattleMode() == TRAINER_BATTLE_EARLY_RIVAL)
     {
@@ -1138,6 +1163,19 @@ void ShowTrainerCantBattleSpeech(void)
     ShowFieldMessage(GetTrainerCantBattleSpeech());
 }
 
+s32 FirstBattleTrainerIdToRematchTableId(const struct RematchData *table, u16 trainerId)
+{
+    s32 i;
+
+    for (i = 0; i < REMATCH_TRAINER_COUNT; i++)
+    {
+        if (table[i].trainerIDs[0] == trainerId)
+            return i;
+    }
+
+    return -1;
+}
+
 void PlayTrainerEncounterMusic(void)
 {
     u16 trainerId;
@@ -1216,3 +1254,40 @@ static const u8 *GetTrainerCantBattleSpeech(void)
 {
     return ReturnEmptyStringIfNull(TRAINER_BATTLE_PARAM.cannotBattleText);
 }
+
+u16 CountMaxPossibleRematch(u16 trainerId)
+{
+    for (u32 i = 1; i < MAX_REMATCH_PARTIES; i++)
+    {
+        if (sRematches[trainerId].trainerIDs[i] == 0)
+            return i;
+    }
+    return MAX_REMATCH_PARTIES - 1;
+}
+
+u16 CountBattledRematchTeams(u16 trainerId)
+{
+    if (HasTrainerBeenFought(sRematches[trainerId].trainerIDs[0]) != TRUE)
+        return 0;
+
+    for (u32 i = 1; i < MAX_REMATCH_PARTIES; i++)
+    {
+        if (sRematches[trainerId].trainerIDs[i] == 0)
+            return i;
+        if (!HasTrainerBeenFought(sRematches[trainerId].trainerIDs[i]))
+            return i;
+    }
+
+    return MAX_REMATCH_PARTIES - 1;
+}
+
+void SetMultiTrainerBattle(struct ScriptContext *ctx)
+{
+    InitTrainerBattleParameter();
+
+    TRAINER_BATTLE_PARAM.opponentA = ScriptReadHalfword(ctx);
+    TRAINER_BATTLE_PARAM.defeatTextA = (u8*)ScriptReadWord(ctx);
+    TRAINER_BATTLE_PARAM.opponentB = ScriptReadHalfword(ctx);
+    TRAINER_BATTLE_PARAM.defeatTextB = (u8*)ScriptReadWord(ctx);
+    gPartnerTrainerId = TRAINER_PARTNER(ScriptReadHalfword(ctx));
+};

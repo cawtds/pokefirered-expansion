@@ -79,7 +79,7 @@ static const u8 sTextSpeedFrameDelays[] =
     [OPTIONS_TEXT_SPEED_FAST] = 1
 };
 
-static const struct WindowTemplate sStandardTextBox_WindowTemplates[] = 
+static const struct WindowTemplate sStandardTextBox_WindowTemplates[] =
 {
     {
         .bg = 0,
@@ -93,7 +93,7 @@ static const struct WindowTemplate sStandardTextBox_WindowTemplates[] =
     DUMMY_WIN_TEMPLATE
 };
 
-static const struct WindowTemplate sYesNo_WindowTemplate = 
+static const struct WindowTemplate sYesNo_WindowTemplate =
 {
     .bg = 0,
     .tilemapLeft = 21,
@@ -158,7 +158,7 @@ void InitTextBoxGfxAndPrinters(void)
 u16 RunTextPrintersAndIsPrinter0Active(void)
 {
     RunTextPrinters();
-    return IsTextPrinterActive(0);
+    return IsTextPrinterActiveOnWindow(0);
 }
 
 u16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16), u8 fgColor, u8 bgColor, u8 shadowColor)
@@ -166,6 +166,7 @@ u16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 speed
     struct TextPrinterTemplate printer;
 
     printer.currentChar = str;
+    printer.type = WINDOW_TEXT_PRINTER;
     printer.windowId = windowId;
     printer.fontId = fontId;
     printer.x = 0;
@@ -174,10 +175,10 @@ u16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 speed
     printer.currentY = 1;
     printer.letterSpacing = 1;
     printer.lineSpacing = 1;
-    printer.unk = 0;
-    printer.fgColor = fgColor;
-    printer.bgColor = bgColor;
-    printer.shadowColor = shadowColor;
+    printer.color.background = bgColor;
+    printer.color.foreground = fgColor;
+    printer.color.shadow = shadowColor;
+    printer.color.accent = bgColor;
     gTextFlags.useAlternateDownArrow = 0;
     return AddTextPrinter(&printer, speed, callback);
 }
@@ -187,7 +188,7 @@ void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress)
     u8 color;
     void *nptr = NULL;
 
-    gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;    
+    gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
     color = ContextNpcGetTextColor();
     if (color == NPC_TEXT_COLOR_MALE)
         AddTextPrinterParameterized2(0, FONT_MALE, gStringVar4, GetPlayerTextSpeedDelay(), nptr, TEXT_COLOR_BLUE, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
@@ -236,6 +237,7 @@ void DrawStdWindowFrame(u8 windowId, bool8 copyToVram)
 
 void ClearDialogWindowAndFrame(u8 windowId, bool8 copyToVram)
 {
+    DeactivateSingleTextPrinter(windowId, WINDOW_TEXT_PRINTER);
     CallWindowFunction(windowId, WindowFunc_ClearDialogWindowAndFrame);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
     ClearWindowTilemap(windowId);
@@ -377,13 +379,6 @@ void DisplayYesNoMenuDefaultYes(void)
 void DisplayYesNoMenuWithDefault(void)
 {
     CreateYesNoMenuAtPos(&sYesNo_WindowTemplate, FONT_NORMAL, 0, 2, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM, 1);
-}
-
-u8 GetPlayerTextSpeedDelay(void)
-{
-    if (gSaveBlock2Ptr->optionsTextSpeed > OPTIONS_TEXT_SPEED_FAST)
-        gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_MID;
-    return sTextSpeedFrameDelays[gSaveBlock2Ptr->optionsTextSpeed];
 }
 
 u8 AddStartMenuWindow(u8 height)
@@ -539,10 +534,10 @@ static void WindowFunc_ClearStdWindowAndFrameToTransparent(u8 bg, u8 tilemapLeft
 
 /*
    The following functions are used for handling top bar window
-   in hall of fame screen and story mode screen before oak intro. 
+   in hall of fame screen and story mode screen before oak intro.
    However, you can still designate a yPos value to place that bar
    as well as the bar width.
-   The xPos is simply computed according to width (always right aligned). 
+   The xPos is simply computed according to width (always right aligned).
 */
 u8 HofPCTopBar_AddWindow(u8 bg, u8 width, u8 yPos, u8 palette, u16 baseTile)
 {
@@ -853,11 +848,12 @@ void PrintMenuActionTexts(u8 windowId, u8 fontId, u8 left, u8 top, u8 letterSpac
     struct TextPrinterTemplate printer;
 
     printer.windowId = windowId;
+    printer.type = WINDOW_TEXT_PRINTER;
     printer.fontId = fontId;
-    printer.fgColor = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
-    printer.bgColor = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
-    printer.shadowColor = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
-    printer.unk = GetFontAttribute(fontId, FONTATTR_UNKNOWN);
+    printer.color.foreground = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
+    printer.color.background = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
+    printer.color.shadow = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
+    printer.color.accent = GetFontAttribute(fontId, FONTATTR_COLOR_ACCENT);
     printer.letterSpacing = letterSpacing;
     printer.lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
     printer.x = left;
@@ -904,16 +900,17 @@ void CreateYesNoMenuAtPos(const struct WindowTemplate *window, u8 fontId, u8 lef
     sYesNoWindowId = AddWindow(window);
     DrawStdFrameWithCustomTileAndPalette(sYesNoWindowId, 1, baseTileNum, paletteNum);
     textSubPrinter.currentChar = gText_YesNo;
+    textSubPrinter.type = WINDOW_TEXT_PRINTER;
     textSubPrinter.windowId = sYesNoWindowId;
     textSubPrinter.fontId = fontId;
     textSubPrinter.x = GetMenuCursorDimensionByFont(fontId, 0) + left;
     textSubPrinter.y = top;
     textSubPrinter.currentX = textSubPrinter.x;
     textSubPrinter.currentY = textSubPrinter.y;
-    textSubPrinter.fgColor = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
-    textSubPrinter.bgColor = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
-    textSubPrinter.shadowColor = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
-    textSubPrinter.unk = GetFontAttribute(fontId, FONTATTR_UNKNOWN);
+    textSubPrinter.color.foreground = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
+    textSubPrinter.color.background = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
+    textSubPrinter.color.shadow = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
+    textSubPrinter.color.accent = GetFontAttribute(fontId, FONTATTR_COLOR_ACCENT);
     textSubPrinter.letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     textSubPrinter.lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
     AddTextPrinter(&textSubPrinter, 0xFF, NULL);
@@ -1101,7 +1098,7 @@ static u16 CopyDecompressedTileDataToVram(u8 bgId, const void *src, u16 size, u1
     {
     case 1:
         break;
-    case 0:        
+    case 0:
     default:
         return LoadBgTiles(bgId, src, size, offset);
     }
@@ -1225,7 +1222,7 @@ static void MultichoiceGrid_RedrawCursor(u8 oldCursorPos, u8 newCursorPos)
     u8 cursorHeight = GetMenuCursorDimensionByFont(sMenu.fontId, 1);
     u8 xPos = (oldCursorPos % sMenu.columns) * sMenu.optionWidth + sMenu.left;
     u8 yPos = (oldCursorPos / sMenu.columns) * sMenu.optionHeight + sMenu.top;
-    
+
     FillWindowPixelRect(sMenu.windowId, PIXEL_FILL(1), xPos, yPos, cursorWidth, cursorHeight);
     xPos = (newCursorPos % sMenu.columns) * sMenu.optionWidth + sMenu.left;
     yPos = (newCursorPos / sMenu.columns) * sMenu.optionHeight + sMenu.top;
@@ -1349,6 +1346,7 @@ void AddTextPrinterParameterized3(u8 windowId, u8 fontId, u8 x, u8 y, const u8 *
     struct TextPrinterTemplate printer;
 
     printer.currentChar = str;
+    printer.type = WINDOW_TEXT_PRINTER;
     printer.windowId = windowId;
     printer.fontId = fontId;
     printer.x = x;
@@ -1357,10 +1355,11 @@ void AddTextPrinterParameterized3(u8 windowId, u8 fontId, u8 x, u8 y, const u8 *
     printer.currentY = printer.y;
     printer.letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     printer.lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
-    printer.unk = 0;
-    printer.fgColor = color[1];
-    printer.bgColor = color[0];
-    printer.shadowColor = color[2];
+    printer.color.background = color[0];
+    printer.color.foreground = color[1];
+    printer.color.shadow = color[2];
+    printer.color.accent = color[0];
+
     AddTextPrinter(&printer, speed, NULL);
 }
 
@@ -1369,6 +1368,7 @@ void AddTextPrinterParameterized4(u8 windowId, u8 fontId, u8 x, u8 y, u8 letterS
     struct TextPrinterTemplate printer;
 
     printer.currentChar = str;
+    printer.type = WINDOW_TEXT_PRINTER;
     printer.windowId = windowId;
     printer.fontId = fontId;
     printer.x = x;
@@ -1377,10 +1377,11 @@ void AddTextPrinterParameterized4(u8 windowId, u8 fontId, u8 x, u8 y, u8 letterS
     printer.currentY = printer.y;
     printer.letterSpacing = letterSpacing;
     printer.lineSpacing = lineSpacing;
-    printer.unk = 0;
-    printer.fgColor = color[1];
-    printer.bgColor = color[0];
-    printer.shadowColor = color[2];
+    printer.color.background = color[0];
+    printer.color.foreground = color[1];
+    printer.color.shadow = color[2];
+    printer.color.accent = color[0];
+
     AddTextPrinter(&printer, speed, NULL);
 }
 
@@ -1389,6 +1390,7 @@ void AddTextPrinterParameterized5(u8 windowId, u8 fontId, const u8 *str, u8 x, u
     struct TextPrinterTemplate printer;
 
     printer.currentChar = str;
+    printer.type = WINDOW_TEXT_PRINTER;
     printer.windowId = windowId;
     printer.fontId = fontId;
     printer.x = x;
@@ -1397,10 +1399,10 @@ void AddTextPrinterParameterized5(u8 windowId, u8 fontId, const u8 *str, u8 x, u
     printer.currentY = y;
     printer.letterSpacing = letterSpacing;
     printer.lineSpacing = lineSpacing;
-    printer.unk = 0;
-    printer.fgColor = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
-    printer.bgColor = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
-    printer.shadowColor = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
+    printer.color.background = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
+    printer.color.foreground = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
+    printer.color.shadow = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
+    printer.color.accent = GetFontAttribute(fontId, FONTATTR_COLOR_ACCENT);
     AddTextPrinter(&printer, speed, callback);
 }
 

@@ -7,12 +7,14 @@
 #include "credits.h"
 #include "dexnav.h"
 #include "event_data.h"
+#include "event_object_lock.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
 #include "fake_rtc.h"
 #include "field_camera.h"
 #include "field_control_avatar.h"
 #include "field_effect.h"
+#include "field_effect_helpers.h"
 #include "field_fadetransition.h"
 #include "field_message_box.h"
 #include "field_player_avatar.h"
@@ -22,6 +24,7 @@
 #include "field_weather.h"
 #include "fieldmap.h"
 #include "fldeff.h"
+#include "follower_npc.h"
 #include "heal_location.h"
 #include "item.h"
 #include "item_icon.h"
@@ -363,6 +366,7 @@ static void Overworld_ResetStateAfterWhitingOut(void)
         Overworld_ResetBattleFlagsAndVars();
     FlagClear(FLAG_SYS_QL_DEPARTED);
     VarSet(VAR_QL_ENTRANCE, 0);
+    FollowerNPC_TryRemoveFollowerOnWhiteOut();
 }
 
 static void Overworld_ResetStateOnContinue(void)
@@ -1404,6 +1408,9 @@ static void DoCB1_Overworld(u16 newKeys, u16 heldKeys)
             player_step(fieldInput.dpadDirection, newKeys, heldKeys);
         }
     }
+    // If stop running but keep holding B -> fix follower frame.
+    if (PlayerHasFollowerNPC() && (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT) && IsPlayerStandingStill())
+        ObjectEventSetHeldMovement(&gObjectEvents[GetFollowerNPCObjectId()], GetFaceDirectionAnimNum(gObjectEvents[GetFollowerNPCObjectId()].facingDirection));
 }
 
 void CB1_Overworld(void)
@@ -1484,7 +1491,7 @@ void UpdateTimeOfDay(void)
 #undef TIME_BLEND_WEIGHT
 
 // Whether a map type is naturally lit/outside
-bool8 MapHasNaturalLight(u8 mapType)
+bool32 MapHasNaturalLight(u8 mapType)
 {
     if (!OW_ENABLE_DNS)
         return FALSE;
@@ -1493,6 +1500,13 @@ bool8 MapHasNaturalLight(u8 mapType)
          || mapType == MAP_TYPE_ROUTE
          || mapType == MAP_TYPE_OCEAN_ROUTE
     );
+}
+
+bool32 CurrentMapHasShadows(void)
+{
+    // Add all conditionals here for maps that shouldn't have shadows
+    // By default only cave maps are excluded from having shadows under object events
+    return (gMapHeader.mapType != MAP_TYPE_UNDERGROUND);
 }
 
 // Update & mix day / night bg palettes (into unfaded)
@@ -1525,20 +1539,20 @@ void UpdateAltBgPalettes(u16 palettes)
 
 void UpdatePalettesWithTime(u32 palettes)
 {
-    if (MapHasNaturalLight(gMapHeader.mapType))
-    {
-        u32 i;
-        u32 mask = 1 << 16;
-        if (palettes >= (1 << 16))
-            for (i = 0; i < 16; i++, mask <<= 1)
-                if (IS_BLEND_IMMUNE_TAG(GetSpritePaletteTagByPaletteNum(i)))
-                    palettes &= ~(mask);
+    if (!MapHasNaturalLight(gMapHeader.mapType))
+        return;
 
-        palettes &= PALETTES_MAP | PALETTES_OBJECTS; // Don't blend UI pals
-        if (!palettes)
-            return;
-        TimeMixPalettes(palettes, gPlttBufferUnfaded, gPlttBufferFaded, &gTimeBlend.startBlend, &gTimeBlend.endBlend, gTimeBlend.weight);
-    }
+    u32 i;
+    u32 mask = 1 << 16;
+    if (palettes >= (1 << 16))
+        for (i = 0; i < 16; i++, mask <<= 1)
+            if (IS_BLEND_IMMUNE_TAG(GetSpritePaletteTagByPaletteNum(i)))
+                palettes &= ~(mask);
+
+    palettes &= PALETTES_MAP | PALETTES_OBJECTS; // Don't blend UI pals
+    if (!palettes)
+        return;
+    TimeMixPalettes(palettes, gPlttBufferUnfaded, gPlttBufferFaded, &gTimeBlend.startBlend, &gTimeBlend.endBlend, gTimeBlend.weight);
 }
 
 u8 UpdateSpritePaletteWithTime(u8 paletteNum)
@@ -1660,6 +1674,7 @@ void CB2_WhiteOut(void)
         UnlockPlayerFieldControls();
         gFieldCallback = FieldCB_RushInjuredPokemonToCenter;
         val = 0;
+        SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
         DoMapLoadLoop(&val);
         SetFieldVBlankCallback();
         SetMainCallback1(CB1_Overworld);
@@ -2042,6 +2057,7 @@ static bool32 ReturnToFieldLocal(u8 *state)
         break;
     case 2:
         InitViewGraphics();
+        FollowerNPC_BindToSurfBlobOnReloadScreen();
         (*state)++;
         break;
     case 3:
@@ -2231,6 +2247,7 @@ static void InitObjectEventsLocal(void)
     SetPlayerAvatarTransitionFlags(player->transitionFlags);
     ResetInitialPlayerAvatarState();
     TrySpawnObjectEvents(0, 0);
+    FollowerNPC_HandleSprite();
     UpdateFollowingPokemon();
     TryRunOnWarpIntoMapScript();
 }
@@ -3453,6 +3470,8 @@ static void CreateLinkPlayerSprite(u8 linkPlayerId, u8 gameVersion)
         sprite->coordOffsetEnabled = TRUE;
         sprite->data[0] = linkPlayerId;
         objEvent->triggerGroundEffectsOnMove = FALSE;
+        objEvent->localId = OBJ_EVENT_ID_DYNAMIC_BASE + linkPlayerId;
+        SetUpShadow(objEvent);
     }
 }
 

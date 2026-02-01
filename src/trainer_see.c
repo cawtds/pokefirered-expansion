@@ -4,6 +4,7 @@
 #include "event_object_movement.h"
 #include "field_effect.h"
 #include "field_player_avatar.h"
+#include "follower_npc.h"
 #include "script.h"
 #include "script_movement.h"
 #include "task.h"
@@ -208,7 +209,7 @@ static u8 CheckTrainer(u8 objectEventId)
     {
         return 0; // no effect
     }
-    
+
     if (trainerBattlePtr)
     {
         if (GetTrainerFlagFromScriptPointer(trainerBattlePtr))
@@ -375,6 +376,9 @@ static void StartTrainerApproach(TaskFunc followupFunc)
         taskId = gApproachingTrainers[0].taskId;
     else
         taskId = gApproachingTrainers[1].taskId;
+
+    if (PlayerHasFollowerNPC() && (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT))
+        ObjectEventForceSetHeldMovement(&gObjectEvents[GetFollowerNPCObjectId()], GetFaceDirectionAnimNum(gObjectEvents[GetFollowerNPCObjectId()].facingDirection));
 
     taskFunc = Task_RunTrainerSeeFuncList;
     SetTaskFuncWithFollowupFunc(taskId, taskFunc, followupFunc);
