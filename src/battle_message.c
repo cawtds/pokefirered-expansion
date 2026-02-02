@@ -277,11 +277,6 @@ static const u8 sText_GotchaPkmnCaught2[] = _("Gotcha!\n{B_OPPONENT_MON1_NAME} w
 static const u8 sText_Bills[] = _("BILL's");
 const u8 gText_HighlightRed_Left[] = _("{HIGHLIGHT 2}Left: ");
 const u8 gText_HighlightRed[] = _("{HIGHLIGHT 2}");
-const u8 gText_BattleTowerBan_Space[] = _("  ");
-const u8 gText_BattleTowerBan_Newline1[] = _("\n");
-const u8 gText_BattleTowerBan_Newline2[] = _("\n");
-const u8 gText_BattleTowerBan_Is1[] = _(" is");
-const u8 gText_BattleTowerBan_Is2[] = _(" is");
 const u8 gText_TimeBoard[] = _("TIME BOARD");
 const u8 gText_XMinYZSec[] = _("{STR_VAR_1}MIN. {STR_VAR_2}.{STR_VAR_3}SEC.");
 
