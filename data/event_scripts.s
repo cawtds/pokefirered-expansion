@@ -2,7 +2,6 @@
 #include "config/battle.h"
 #include "constants/global.h"
 #include "constants/flags.h"
-#include "constants/battle_tower.h"
 #include "constants/battle_special.h"
 #include "constants/berry.h"
 #include "constants/event_objects.h"

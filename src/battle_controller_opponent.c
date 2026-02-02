@@ -11,7 +11,6 @@
 #include "battle_interface.h"
 #include "battle_setup.h"
 #include "battle_special.h"
-#include "battle_tower.h"
 // #include "battle_special.h"
 // #include "battle_tv.h"
 #include "battle_z_move.h"
@@ -318,17 +317,7 @@ static u32 OpponentGetTrainerPicId(u32 battlerId)
 
     if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
     {
-        if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI))
-        {
-            if (battlerId == 1)
-                trainerPicId = GetBattleTowerTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentA);
-            else
-                trainerPicId = GetBattleTowerTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentB);
-        }
-        else
-        {
-            trainerPicId = GetBattleTowerTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentA);
-        }
+        trainerPicId = TRAINER_PIC_RED; // placeholder
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER)
     {

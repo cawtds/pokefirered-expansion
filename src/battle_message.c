@@ -6,7 +6,6 @@
 #include "battle_message.h"
 #include "battle_setup.h"
 #include "battle_special.h"
-#include "battle_tower.h"
 #include "battle_z_move.h"
 #include "event_data.h"
 #include "event_scripts.h"
@@ -2106,6 +2105,8 @@ static void GetBattlerNick(u32 battler, u8 *dst)
     GetBattlerNick(battler, text);                                      \
     toCpy = text;
 
+static const u8 gText_Placeholder[] = _("PH");
+
 static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text, u8 multiplayerId, u8 battler)
 {
     const u8 *toCpy = NULL;
@@ -2132,7 +2133,7 @@ static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text,
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
     {
-        GetBattleTowerTrainerName(text);
+        StringCopy(text, gText_Placeholder);
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER)
     {
@@ -2236,7 +2237,7 @@ static const u8 *BattleStringGetOpponentClassByTrainerId(u16 trainerId)
     else if (trainerId == TRAINER_UNION_ROOM)
         toCpy = gTrainerClasses[GetUnionRoomTrainerClass()].name;
     else if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
-        toCpy = gTrainerClasses[GetBattleTowerTrainerClassNameId()].name;
+        toCpy = gTrainerClasses[TRAINER_CLASS_PLAYER].name;
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER)
         toCpy = gTrainerClasses[GetTrainerTowerOpponentClass()].name;
     else if (gBattleTypeFlags & BATTLE_TYPE_EREADER_TRAINER)

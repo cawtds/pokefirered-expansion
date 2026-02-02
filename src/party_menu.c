@@ -5,7 +5,6 @@
 #include "battle_controllers.h"
 #include "battle_gfx_sfx_util.h"
 #include "battle_interface.h"
-#include "battle_tower.h"
 #include "berry_pouch.h"
 #include "data.h"
 #include "decompress.h"
