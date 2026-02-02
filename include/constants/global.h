@@ -70,7 +70,17 @@
 #define MAX_REMATCH_ENTRIES 100
 #define UNION_ROOM_KB_ROW_COUNT 10
 #define GIFT_RIBBONS_COUNT 11
+#define PYRAMID_BAG_ITEMS_COUNT 10
 #define ROAMER_COUNT 1 // Number of maximum concurrent active roamers
+
+// Battle Frontier level modes.
+enum FrontierLevelMode
+{
+    FRONTIER_LVL_50,
+    FRONTIER_LVL_OPEN,
+    FRONTIER_LVL_TENT, // Special usage for indicating Battle Tent
+    FRONTIER_LVL_MODE_COUNT = FRONTIER_LVL_TENT,
+};
 
 // Contests
 #define CONTEST_CATEGORIES_COUNT  5

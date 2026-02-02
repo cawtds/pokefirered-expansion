@@ -82,7 +82,7 @@ static void ClearPokedexFlags(void)
 
 static void ClearEReaderTrainer(void)
 {
-    CpuFill32(0, &gSaveBlock2Ptr->ereaderTrainer, sizeof(gSaveBlock2Ptr->ereaderTrainer));
+    CpuFill32(0, &gSaveBlock2Ptr->frontier.ereaderTrainer, sizeof(gSaveBlock2Ptr->frontier.ereaderTrainer));
 }
 
 static void WarpToPlayersRoom(void)
