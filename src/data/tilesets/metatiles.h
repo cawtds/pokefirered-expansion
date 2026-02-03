@@ -291,3 +291,15 @@ const u32 gMetatileAttributes_IndigoPlateauAutumn[] = INCBIN_U32("data/tilesets/
 
 const u16 gMetatiles_IndigoPlateauWinter[] = INCBIN_U16("data/tilesets/secondary/indigo_plateau_winter/metatiles.bin");
 const u32 gMetatileAttributes_IndigoPlateauWinter[] = INCBIN_U32("data/tilesets/secondary/indigo_plateau_winter/metatile_attributes.bin");
+
+const u16 gMetatiles_PrimaryBattleFrontierOutsideWest[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/metatiles.bin");
+const u32 gMetatileAttributes_PrimaryBattleFrontierOutsideWest[] = INCBIN_U32("data/tilesets/primary/battle_frontier_outside_west/metatile_attributes.bin");
+
+const u16 gMetatiles_BattleFrontierOutsideWest[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_outside_west/metatiles.bin");
+const u32 gMetatileAttributes_BattleFrontierOutsideWest[] = INCBIN_U32("data/tilesets/secondary/battle_frontier_outside_west/metatile_attributes.bin");
+
+const u16 gMetatiles_PrimaryBattleFrontierOutsideEast[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_east/metatiles.bin");
+const u32 gMetatileAttributes_PrimaryBattleFrontierOutsideEast[] = INCBIN_U32("data/tilesets/primary/battle_frontier_outside_east/metatile_attributes.bin");
+
+const u16 gMetatiles_BattleFrontierOutsideEast[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_outside_east/metatiles.bin");
+const u32 gMetatileAttributes_BattleFrontierOutsideEast[] = INCBIN_U32("data/tilesets/secondary/battle_frontier_outside_east/metatile_attributes.bin");

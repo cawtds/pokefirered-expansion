@@ -4380,6 +4380,30 @@
       "secondary_tileset": "gTileset_MtEmber",
       "border_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa/border.bin",
       "blockdata_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_OUTSIDE_WEST",
+      "name": "BattleFrontier_OutsideWest_Layout",
+      "width": 56,
+      "height": 72,
+      "border_width": 0,
+      "border_height": 0,
+      "primary_tileset": "gTileset_PrimaryBattleFrontierOutsideWest",
+      "secondary_tileset": "gTileset_BattleFrontierOutsideWest",
+      "border_filepath": "data/layouts/BattleFrontier_OutsideWest/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_OutsideWest/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_OUTSIDE_EAST",
+      "name": "BattleFrontier_OutsideEast_Layout",
+      "width": 72,
+      "height": 72,
+      "border_width": 0,
+      "border_height": 0,
+      "primary_tileset": "gTileset_PrimaryBattleFrontierOutsideEast",
+      "secondary_tileset": "gTileset_BattleFrontierOutsideEast",
+      "border_filepath": "data/layouts/BattleFrontier_OutsideEast/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_OutsideEast/map.bin"
     }
   ]
 }

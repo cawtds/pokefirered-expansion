@@ -190,8 +190,8 @@
 #define FLAG_HIDE_SAFFRON_CITY_POKECENTER_SABRINA_JOURNALS 0x0AE
 
 // Unused?
-#define FLAG_0x0AF               0x0AF
-#define FLAG_0x0B0               0x0B0
+#define FLAG_HIDE_BATTLE_FRONTIER_SUDOWOODO   0x0AF
+#define FLAG_DEFEATED_SUDOWOODO               0x0B0
 #define FLAG_0x0B1               0x0B1
 #define FLAG_0x0B2               0x0B2
 #define FLAG_0x0B3               0x0B3

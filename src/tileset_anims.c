@@ -1,4 +1,5 @@
 #include "global.h"
+#include "fieldmap.h"
 
 static EWRAM_DATA struct {
     const u16 *src;
@@ -314,7 +315,7 @@ void InitTilesetAnim_VermilionGym(void)
 static void QueueAnimTiles_CeladonGym_Flowers(u16 timer)
 {
     u16 i = timer % ARRAY_COUNT(sTilesetAnims_CeladonGym_Flowers);
-    
+
     AppendTilesetAnimToBuffer(sTilesetAnims_CeladonGym_Flowers[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(739)), 4 * TILE_SIZE_4BPP);
 }
 
@@ -329,4 +330,201 @@ void InitTilesetAnim_CeladonGym(void)
     sSecondaryTilesetAnimCounter = 0;
     sSecondaryTilesetAnimCounterMax = 256;
     sSecondaryTilesetAnimCallback = TilesetAnim_CeladonGym;
+}
+
+
+const u16 gTilesetAnims_BattleFrontierOutsideWest_Flag_Frame0[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_outside_west/anim/flag/0.4bpp");
+const u16 gTilesetAnims_BattleFrontierOutsideWest_Flag_Frame1[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_outside_west/anim/flag/1.4bpp");
+const u16 gTilesetAnims_BattleFrontierOutsideWest_Flag_Frame2[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_outside_west/anim/flag/2.4bpp");
+const u16 gTilesetAnims_BattleFrontierOutsideWest_Flag_Frame3[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_outside_west/anim/flag/3.4bpp");
+
+const u16 *const gTilesetAnims_BattleFrontierOutsideWest_Flag[] = {
+    gTilesetAnims_BattleFrontierOutsideWest_Flag_Frame0,
+    gTilesetAnims_BattleFrontierOutsideWest_Flag_Frame1,
+    gTilesetAnims_BattleFrontierOutsideWest_Flag_Frame2,
+    gTilesetAnims_BattleFrontierOutsideWest_Flag_Frame3
+};
+
+const u16 gTilesetAnims_BattleFrontierOutsideEast_Flag_Frame0[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_outside_east/anim/flag/0.4bpp");
+const u16 gTilesetAnims_BattleFrontierOutsideEast_Flag_Frame1[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_outside_east/anim/flag/1.4bpp");
+const u16 gTilesetAnims_BattleFrontierOutsideEast_Flag_Frame2[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_outside_east/anim/flag/2.4bpp");
+const u16 gTilesetAnims_BattleFrontierOutsideEast_Flag_Frame3[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_outside_east/anim/flag/3.4bpp");
+
+const u16 *const gTilesetAnims_BattleFrontierOutsideEast_Flag[] = {
+    gTilesetAnims_BattleFrontierOutsideEast_Flag_Frame0,
+    gTilesetAnims_BattleFrontierOutsideEast_Flag_Frame1,
+    gTilesetAnims_BattleFrontierOutsideEast_Flag_Frame2,
+    gTilesetAnims_BattleFrontierOutsideEast_Flag_Frame3
+};
+
+static void QueueAnimTiles_BattleFrontierOutsideWest_Flag(u16 timer)
+{
+    u16 i = timer % ARRAY_COUNT(gTilesetAnims_BattleFrontierOutsideWest_Flag);
+    AppendTilesetAnimToBuffer(gTilesetAnims_BattleFrontierOutsideWest_Flag[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(NUM_TILES_IN_PRIMARY + 218)), 6 * TILE_SIZE_4BPP);
+}
+
+static void QueueAnimTiles_BattleFrontierOutsideEast_Flag(u16 timer)
+{
+    u16 i = timer % ARRAY_COUNT(gTilesetAnims_BattleFrontierOutsideEast_Flag);
+    AppendTilesetAnimToBuffer(gTilesetAnims_BattleFrontierOutsideEast_Flag[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(NUM_TILES_IN_PRIMARY + 218)), 6 * TILE_SIZE_4BPP);
+}
+
+static void TilesetAnim_BattleFrontierOutsideWest(u16 timer)
+{
+    if (timer % 8 == 0)
+        QueueAnimTiles_BattleFrontierOutsideWest_Flag(timer / 8);
+}
+
+static void TilesetAnim_BattleFrontierOutsideEast(u16 timer)
+{
+    if (timer % 8 == 0)
+        QueueAnimTiles_BattleFrontierOutsideEast_Flag(timer / 8);
+}
+
+const u16 gTilesetAnims_FrontierOutside_Flower_Frame1[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/flower/1.4bpp");
+const u16 gTilesetAnims_FrontierOutside_Flower_Frame0[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/flower/0.4bpp");
+const u16 gTilesetAnims_FrontierOutside_Flower_Frame2[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/flower/2.4bpp");
+const u16 tileset_anims_space_0[16] = {};
+
+const u16 *const gTilesetAnims_FrontierOutside_Flower[] = {
+    gTilesetAnims_FrontierOutside_Flower_Frame0,
+    gTilesetAnims_FrontierOutside_Flower_Frame1,
+    gTilesetAnims_FrontierOutside_Flower_Frame0,
+    gTilesetAnims_FrontierOutside_Flower_Frame2
+};
+
+const u16 gTilesetAnims_General_Water_Frame0[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/water/0.4bpp");
+const u16 gTilesetAnims_General_Water_Frame1[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/water/1.4bpp");
+const u16 gTilesetAnims_General_Water_Frame2[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/water/2.4bpp");
+const u16 gTilesetAnims_General_Water_Frame3[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/water/3.4bpp");
+const u16 gTilesetAnims_General_Water_Frame4[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/water/4.4bpp");
+const u16 gTilesetAnims_General_Water_Frame5[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/water/5.4bpp");
+const u16 gTilesetAnims_General_Water_Frame6[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/water/6.4bpp");
+const u16 gTilesetAnims_General_Water_Frame7[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/water/7.4bpp");
+
+const u16 *const gTilesetAnims_General_Water[] = {
+    gTilesetAnims_General_Water_Frame0,
+    gTilesetAnims_General_Water_Frame1,
+    gTilesetAnims_General_Water_Frame2,
+    gTilesetAnims_General_Water_Frame3,
+    gTilesetAnims_General_Water_Frame4,
+    gTilesetAnims_General_Water_Frame5,
+    gTilesetAnims_General_Water_Frame6,
+    gTilesetAnims_General_Water_Frame7
+};
+
+const u16 gTilesetAnims_General_SandWaterEdge_Frame0[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/sand_water_edge/0.4bpp");
+const u16 gTilesetAnims_General_SandWaterEdge_Frame1[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/sand_water_edge/1.4bpp");
+const u16 gTilesetAnims_General_SandWaterEdge_Frame2[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/sand_water_edge/2.4bpp");
+const u16 gTilesetAnims_General_SandWaterEdge_Frame3[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/sand_water_edge/3.4bpp");
+const u16 gTilesetAnims_General_SandWaterEdge_Frame4[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/sand_water_edge/4.4bpp");
+const u16 gTilesetAnims_General_SandWaterEdge_Frame5[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/sand_water_edge/5.4bpp");
+const u16 gTilesetAnims_General_SandWaterEdge_Frame6[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/sand_water_edge/6.4bpp");
+
+const u16 *const gTilesetAnims_General_SandWaterEdge[] = {
+    gTilesetAnims_General_SandWaterEdge_Frame0,
+    gTilesetAnims_General_SandWaterEdge_Frame1,
+    gTilesetAnims_General_SandWaterEdge_Frame2,
+    gTilesetAnims_General_SandWaterEdge_Frame3,
+    gTilesetAnims_General_SandWaterEdge_Frame4,
+    gTilesetAnims_General_SandWaterEdge_Frame5,
+    gTilesetAnims_General_SandWaterEdge_Frame6,
+    gTilesetAnims_General_SandWaterEdge_Frame0
+};
+
+const u16 gTilesetAnims_General_Waterfall_Frame0[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/waterfall/0.4bpp");
+const u16 gTilesetAnims_General_Waterfall_Frame1[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/waterfall/1.4bpp");
+const u16 gTilesetAnims_General_Waterfall_Frame2[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/waterfall/2.4bpp");
+const u16 gTilesetAnims_General_Waterfall_Frame3[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/waterfall/3.4bpp");
+
+const u16 *const gTilesetAnims_General_Waterfall[] = {
+    gTilesetAnims_General_Waterfall_Frame0,
+    gTilesetAnims_General_Waterfall_Frame1,
+    gTilesetAnims_General_Waterfall_Frame2,
+    gTilesetAnims_General_Waterfall_Frame3
+};
+
+const u16 gTilesetAnims_General_LandWaterEdge_Frame0[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/land_water_edge/0.4bpp");
+const u16 gTilesetAnims_General_LandWaterEdge_Frame1[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/land_water_edge/1.4bpp");
+const u16 gTilesetAnims_General_LandWaterEdge_Frame2[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/land_water_edge/2.4bpp");
+const u16 gTilesetAnims_General_LandWaterEdge_Frame3[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside_west/anim/land_water_edge/3.4bpp");
+
+const u16 *const gTilesetAnims_General_LandWaterEdge[] = {
+    gTilesetAnims_General_LandWaterEdge_Frame0,
+    gTilesetAnims_General_LandWaterEdge_Frame1,
+    gTilesetAnims_General_LandWaterEdge_Frame2,
+    gTilesetAnims_General_LandWaterEdge_Frame3
+};
+
+
+static void QueueAnimTiles_FrontierOutside_Flower(u16 timer)
+{
+    u16 i = timer % ARRAY_COUNT(gTilesetAnims_FrontierOutside_Flower);
+    AppendTilesetAnimToBuffer(gTilesetAnims_FrontierOutside_Flower[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(508)), 4 * TILE_SIZE_4BPP);
+}
+
+static void QueueAnimTiles_General_Water(u16 timer)
+{
+    u8 i = timer % ARRAY_COUNT(gTilesetAnims_General_Water);
+    AppendTilesetAnimToBuffer(gTilesetAnims_General_Water[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(432)), 30 * TILE_SIZE_4BPP);
+}
+
+static void QueueAnimTiles_General_SandWaterEdge(u16 timer)
+{
+    u16 i = timer % ARRAY_COUNT(gTilesetAnims_General_SandWaterEdge);
+    AppendTilesetAnimToBuffer(gTilesetAnims_General_SandWaterEdge[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(464)), 10 * TILE_SIZE_4BPP);
+}
+
+static void QueueAnimTiles_General_Waterfall(u16 timer)
+{
+    u16 i = timer % ARRAY_COUNT(gTilesetAnims_General_Waterfall);
+    AppendTilesetAnimToBuffer(gTilesetAnims_General_Waterfall[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(496)), 6 * TILE_SIZE_4BPP);
+}
+
+static void QueueAnimTiles_General_LandWaterEdge(u16 timer)
+{
+    u16 i = timer % ARRAY_COUNT(gTilesetAnims_General_LandWaterEdge);
+    AppendTilesetAnimToBuffer(gTilesetAnims_General_LandWaterEdge[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(480)), 10 * TILE_SIZE_4BPP);
+}
+
+static void TilesetAnim_PrimaryBattleFrontierOutside(u16 timer)
+{
+    if (timer % 16 == 0)
+        QueueAnimTiles_FrontierOutside_Flower(timer / 16);
+    if (timer % 16 == 1)
+        QueueAnimTiles_General_Water(timer / 16);
+    if (timer % 16 == 2)
+        QueueAnimTiles_General_SandWaterEdge(timer / 16);
+    if (timer % 16 == 3)
+        QueueAnimTiles_General_Waterfall(timer / 16);
+    if (timer % 16 == 4)
+        QueueAnimTiles_General_LandWaterEdge(timer / 16);
+}
+
+void InitTilesetAnim_PrimaryBattleFrontierOutsideWest(void)
+{
+    sPrimaryTilesetAnimCounter = 0;
+    sPrimaryTilesetAnimCounterMax = 256;
+    sPrimaryTilesetAnimCallback = TilesetAnim_PrimaryBattleFrontierOutside;
+}
+
+void InitTilesetAnim_BattleFrontierOutsideWest(void)
+{
+    sSecondaryTilesetAnimCounter = 0;
+    sSecondaryTilesetAnimCounterMax = sPrimaryTilesetAnimCounterMax;
+    sSecondaryTilesetAnimCallback = TilesetAnim_BattleFrontierOutsideWest;
+}
+
+void InitTilesetAnim_PrimaryBattleFrontierOutsideEast(void)
+{
+    sPrimaryTilesetAnimCounter = 0;
+    sPrimaryTilesetAnimCounterMax = 256;
+    sPrimaryTilesetAnimCallback = TilesetAnim_PrimaryBattleFrontierOutside;
+}
+
+void InitTilesetAnim_BattleFrontierOutsideEast(void)
+{
+    sSecondaryTilesetAnimCounter = 0;
+    sSecondaryTilesetAnimCounterMax = sPrimaryTilesetAnimCounterMax;
+    sSecondaryTilesetAnimCallback = TilesetAnim_BattleFrontierOutsideEast;
 }

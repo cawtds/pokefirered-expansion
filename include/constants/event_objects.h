@@ -164,6 +164,38 @@
 
 #define NUM_OBJ_EVENT_GFX     158
 
+#define OBJ_EVENT_GFX_MAN_3                 OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_HEX_MANIAC            OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_BLACK_BELT            OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_COOK                  OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_EXPERT_F              OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_RUNNING_TRIATHLETE_M  OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_RICH_BOY              OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_CYCLING_TRIATHLETE_F  OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_TWIN                  OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_MAN_1                 OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_ZIGZAGOON_2           OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_SUDOWOODO             OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_MANIAC                OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_GIRL_3                OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_PSYCHIC_M             OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_WOMAN_5               OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_WOMAN_4               OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_SS_TIDAL              OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_EXPERT_M              OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_MAN_5                 OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_GIRL_1                OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_MAN_2                 OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_FISHERMAN             OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_FISHERMAN             OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_BOY_1                 OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_OLD_MAN               OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_MAN_4                 OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_POKEFAN_F             OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_NINJA_BOY             OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_BOY_2                 OBJ_EVENT_GFX_HIKER
+
+
 // These are dynamic object gfx ids.
 // They correspond with the values of the VAR_OBJ_GFX_ID_X vars.
 // More info about them in include/constants/vars.h
