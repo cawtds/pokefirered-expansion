@@ -70,7 +70,7 @@
 #define MULTICHOICE_SEAGALLOP_V13                              59
 #define MULTICHOICE_SEAGALLOP_V12                              60
 #define MULTICHOICE_SEAGALLOP_VERMILION                        61
-#define MULTICHOICE_62                                         62
+#define MULTI_SSTIDAL_BATTLE_FRONTIER                          62
 #define MULTICHOICE_JOIN_OR_LEAD                               63
 #define MULTICHOICE_TRAINER_TOWER_MODE                         64
 

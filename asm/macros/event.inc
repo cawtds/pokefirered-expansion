@@ -688,6 +688,14 @@
 	map \map
 	.endm
 
+	@ Set the player object's invisibility to TRUE.
+	.macro hideplayer
+	.byte SCR_OP_HIDEOBJECTAT
+	.2byte LOCALID_PLAYER
+	.byte 0 @ map group
+	.byte 0 @ map num
+	.endm
+
 	@ Turns the currently selected object (if there is one) to face the player.
 	.macro faceplayer
 	.byte SCR_OP_FACEPLAYER

@@ -620,7 +620,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] = {
     [MULTICHOICE_SEAGALLOP_V13]                              = MULTICHOICE(sMultichoiceList_SeagallopV13),
     [MULTICHOICE_SEAGALLOP_V12]                              = MULTICHOICE(sMultichoiceList_SeagallopV12),
     [MULTICHOICE_SEAGALLOP_VERMILION]                        = MULTICHOICE(sMultichoiceList_SeagallopVermilion),
-    [MULTICHOICE_62]                                         = MULTICHOICE(sMultichoiceList_62),
+    [MULTI_SSTIDAL_BATTLE_FRONTIER]                          = MULTICHOICE(sMultichoiceList_62),
     [MULTICHOICE_JOIN_OR_LEAD]                               = MULTICHOICE(sMultichoiceList_JoinOrLead),
     [MULTICHOICE_TRAINER_TOWER_MODE]                         = MULTICHOICE(sMultichoiceList_TrainerTowerMode),
 };
@@ -1643,7 +1643,7 @@ void DrawSeagallopDestinationMenu(void)
     fontHeight = GetFontAttribute(FONT_NORMAL, FONTATTR_MAX_LETTER_HEIGHT);
     windowId = CreateWindowFromRect(17, top, 11, numItems * 2);
     SetStandardWindowBorderStyle(windowId, FALSE);
-    
+
     // -2 excludes "Other" and "Exit", appended after the loop
     for (i = 0; i < numItems - 2; i++)
     {
