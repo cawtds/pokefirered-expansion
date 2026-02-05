@@ -359,4 +359,8 @@
 
 #define MUS_NONE                    0xFFFF
 
+// placeholders
+#define SE_SUDOWOODO_SHAKE SE_USE_ITEM
+
+
 #endif  // GUARD_CONSTANTS_SONGS_H

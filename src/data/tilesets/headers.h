@@ -1103,7 +1103,7 @@ const struct Tileset gTileset_PrimaryBattleFrontierOutsideEast =
 {
     .isCompressed = TRUE,
     .isSecondary = FALSE,
-    .tiles = gTilesetTiles_PrimaryBattleFrontierOutsideEast,
+    .tiles = gTilesetTiles_PrimaryBattleFrontierOutsideWest,
     .palettes = gTilesetPalettes_PrimaryBattleFrontierOutsideEast,
     .metatiles = gMetatiles_PrimaryBattleFrontierOutsideEast,
     .metatileAttributes = gMetatileAttributes_PrimaryBattleFrontierOutsideEast,
