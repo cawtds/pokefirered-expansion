@@ -175,7 +175,12 @@
       "id": "MAPSEC_SAFARI_ZONE"
     },
     {
-      "id": "MAPSEC_BATTLE_FRONTIER"
+      "id": "MAPSEC_BATTLE_FRONTIER",
+      "name": "BATTLE FRONTIER",
+      "x": 9,
+      "y": 10,
+      "width": 1,
+      "height": 1
     },
     {
       "id": "MAPSEC_PETALBURG_WOODS"

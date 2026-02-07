@@ -1309,26 +1309,26 @@ static void InitMapBasedOnPlayerLocation(void)
 
     xOnMap = x;
 
-    dimensionScale = mapWidth / gRegionMapEntries[sRegionMap->mapSecId - KANTO_MAPSEC_START].width;
+    dimensionScale = mapWidth / gRegionMapEntries[sRegionMap->mapSecId].width;
     if (dimensionScale == 0)
     {
         dimensionScale = 1;
     }
     x /= dimensionScale;
-    if (x >= gRegionMapEntries[sRegionMap->mapSecId - KANTO_MAPSEC_START].width)
+    if (x >= gRegionMapEntries[sRegionMap->mapSecId].width)
     {
-        x = gRegionMapEntries[sRegionMap->mapSecId - KANTO_MAPSEC_START].width - 1;
+        x = gRegionMapEntries[sRegionMap->mapSecId].width - 1;
     }
 
-    dimensionScale = mapHeight / gRegionMapEntries[sRegionMap->mapSecId - KANTO_MAPSEC_START].height;
+    dimensionScale = mapHeight / gRegionMapEntries[sRegionMap->mapSecId].height;
     if (dimensionScale == 0)
     {
         dimensionScale = 1;
     }
     y /= dimensionScale;
-    if (y >= gRegionMapEntries[sRegionMap->mapSecId - KANTO_MAPSEC_START].height)
+    if (y >= gRegionMapEntries[sRegionMap->mapSecId].height)
     {
-        y = gRegionMapEntries[sRegionMap->mapSecId - KANTO_MAPSEC_START].height - 1;
+        y = gRegionMapEntries[sRegionMap->mapSecId].height - 1;
     }
 
     switch (sRegionMap->mapSecId)
@@ -1364,8 +1364,8 @@ static void InitMapBasedOnPlayerLocation(void)
     //     GetMarineCaveCoords(&sRegionMap->cursorPosX, &sRegionMap->cursorPosY);
     //     return;
     }
-    sRegionMap->cursorPosX = gRegionMapEntries[sRegionMap->mapSecId - KANTO_MAPSEC_START].x + x + MAPCURSOR_X_MIN;
-    sRegionMap->cursorPosY = gRegionMapEntries[sRegionMap->mapSecId - KANTO_MAPSEC_START].y + y + MAPCURSOR_Y_MIN;
+    sRegionMap->cursorPosX = gRegionMapEntries[sRegionMap->mapSecId].x + x + MAPCURSOR_X_MIN;
+    sRegionMap->cursorPosY = gRegionMapEntries[sRegionMap->mapSecId].y + y + MAPCURSOR_Y_MIN;
 }
 
 // static void RegionMap_InitializeStateBasedOnSSTidalLocation(void)
@@ -1862,7 +1862,7 @@ void TrySetPlayerIconBlink(void)
 //     {
 //         str = GetSecretBaseMapName(dest);
 //     }
-//     else 
+//     else
 //     if (regionMapId < MAPSEC_NONE)
 //     {
 //         str = StringCopy(dest, gRegionMapEntries[regionMapId].name);
@@ -1910,10 +1910,10 @@ u8 *GetMapNameHandleAquaHideout(u8 *dest, mapsec_u16_t mapSecId)
 
 static void GetMapSecDimensions(mapsec_u16_t mapSecId, u16 *x, u16 *y, u16 *width, u16 *height)
 {
-    *x = gRegionMapEntries[mapSecId - KANTO_MAPSEC_START].x;
-    *y = gRegionMapEntries[mapSecId - KANTO_MAPSEC_START].y;
-    *width = gRegionMapEntries[mapSecId - KANTO_MAPSEC_START].width;
-    *height = gRegionMapEntries[mapSecId - KANTO_MAPSEC_START].height;
+    *x = gRegionMapEntries[mapSecId].x;
+    *y = gRegionMapEntries[mapSecId].y;
+    *width = gRegionMapEntries[mapSecId].width;
+    *height = gRegionMapEntries[mapSecId].height;
 }
 
 bool8 IsRegionMapZoomed(void)
@@ -2129,7 +2129,7 @@ struct FlyLocation
 };
 
 static const struct FlyLocation sFlyLocations[] =
-{    
+{
     // {
     //     .regionMapType = REGION_MAP_HOENN,
     //     .mapsec = MAPSEC_LITTLEROOT_TOWN,
