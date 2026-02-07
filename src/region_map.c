@@ -826,7 +826,7 @@ static const u8 sTextColors[] = {TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_CO
 #include "data/region_map/region_map_layout_sevii_67.h"
 
 static const u8 sMapFlyDestinations[][3] = {
-    [MAPSEC_BATTLE_FRONTIER]     = {MAP(MAP_BATTLE_FRONTIER_OUTSIDE_EAST),          HEAL_LOCATION_NONE},
+    [MAPSEC_BATTLE_FRONTIER]     = {MAP(MAP_BATTLE_FRONTIER_OUTSIDE_EAST),          HEAL_LOCATION_BATTLE_FRONTIER_OUTSIDE_EAST},
     [MAPSEC_PALLET_TOWN]         = {MAP(MAP_PALLET_TOWN),                           HEAL_LOCATION_PALLET_TOWN},
     [MAPSEC_VIRIDIAN_CITY]       = {MAP(MAP_VIRIDIAN_CITY),                         HEAL_LOCATION_VIRIDIAN_CITY},
     [MAPSEC_PEWTER_CITY]         = {MAP(MAP_PEWTER_CITY),                           HEAL_LOCATION_PEWTER_CITY},

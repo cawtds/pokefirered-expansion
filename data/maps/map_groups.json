@@ -238,7 +238,9 @@
     "BirthIsland_Harbor",
     "NavelRock_Harbor",
     "BattleFrontier_OutsideWest",
-    "BattleFrontier_OutsideEast"
+    "BattleFrontier_OutsideEast",
+    "BattleFrontier_PokemonCenter_1F",
+    "BattleFrontier_PokemonCenter_2F"
   ],
   "gMapGroup_TownsAndRoutes": [
     "PalletTown",

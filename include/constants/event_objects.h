@@ -194,6 +194,12 @@
 #define OBJ_EVENT_GFX_POKEFAN_F             OBJ_EVENT_GFX_HIKER
 #define OBJ_EVENT_GFX_NINJA_BOY             OBJ_EVENT_GFX_HIKER
 #define OBJ_EVENT_GFX_BOY_2                 OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_SCHOOL_KID_M          OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_SKITTY                OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_TEALA                 OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_TEALA                 OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_TEALA                 OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_MYSTERY_GIFT_MAN      OBJ_EVENT_GFX_HIKER
 
 
 // These are dynamic object gfx ids.

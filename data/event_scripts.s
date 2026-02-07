@@ -520,6 +520,8 @@ gStdScriptsEnd::
 	.include "data/maps/SevenIsland_SevaultCanyon_House/scripts.inc"
 	.include "data/maps/BattleFrontier_OutsideWest/scripts.inc"
 	.include "data/maps/BattleFrontier_OutsideEast/scripts.inc"
+	.include "data/maps/BattleFrontier_PokemonCenter_1F/scripts.inc"
+	.include "data/maps/BattleFrontier_PokemonCenter_2F/scripts.inc"
 
 	.include "data/maps/ViridianForest/text.inc"
 	.include "data/maps/MtMoon_1F/text.inc"
