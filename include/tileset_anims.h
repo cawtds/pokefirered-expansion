@@ -13,9 +13,8 @@ void InitTilesetAnim_CeladonGym(void);
 void InitTilesetAnim_SilphCo(void);
 void InitTilesetAnim_MtEmber(void);
 
-void InitTilesetAnim_PrimaryBattleFrontierOutsideWest(void);
+void InitTilesetAnim_BattleFrontierOutside(void);
 void InitTilesetAnim_BattleFrontierOutsideWest(void);
-void InitTilesetAnim_PrimaryBattleFrontierOutsideEast(void);
 void InitTilesetAnim_BattleFrontierOutsideEast(void);
 
 #endif // GUARD_TILESET_ANIMS_H

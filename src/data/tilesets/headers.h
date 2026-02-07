@@ -1085,7 +1085,7 @@ const struct Tileset gTileset_BattleFrontierOutside =
     .palettes = gTilesetPalettes_BattleFrontierOutside,
     .metatiles = gMetatiles_BattleFrontierOutside,
     .metatileAttributes = gMetatileAttributes_BattleFrontierOutside,
-    .callback = NULL, // InitTilesetAnim_PrimaryBattleFrontierOutsideWest,
+    .callback = InitTilesetAnim_BattleFrontierOutside,
 };
 
 const struct Tileset gTileset_BattleFrontierOutsideWest =
@@ -1096,7 +1096,7 @@ const struct Tileset gTileset_BattleFrontierOutsideWest =
     .palettes = gTilesetPalettes_BattleFrontierOutsideWest,
     .metatiles = gMetatiles_BattleFrontierOutsideWest,
     .metatileAttributes = gMetatileAttributes_BattleFrontierOutsideWest,
-    .callback = NULL, // InitTilesetAnim_BattleFrontierOutsideWest,
+    .callback = InitTilesetAnim_BattleFrontierOutsideWest,
 };
 
 const struct Tileset gTileset_BattleFrontierOutsideEast =
@@ -1107,5 +1107,5 @@ const struct Tileset gTileset_BattleFrontierOutsideEast =
     .palettes = gTilesetPalettes_BattleFrontierOutsideEast,
     .metatiles = gMetatiles_BattleFrontierOutsideEast,
     .metatileAttributes = gMetatileAttributes_BattleFrontierOutsideEast,
-    .callback = NULL, // InitTilesetAnim_BattleFrontierOutsideEast,
+    .callback = InitTilesetAnim_BattleFrontierOutsideEast,
 };

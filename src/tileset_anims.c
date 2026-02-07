@@ -360,13 +360,19 @@ const u16 *const gTilesetAnims_BattleFrontierOutsideEast_Flag[] = {
 static void QueueAnimTiles_BattleFrontierOutsideWest_Flag(u16 timer)
 {
     u16 i = timer % ARRAY_COUNT(gTilesetAnims_BattleFrontierOutsideWest_Flag);
-    AppendTilesetAnimToBuffer(gTilesetAnims_BattleFrontierOutsideWest_Flag[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(NUM_TILES_IN_PRIMARY + 218)), 6 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_BattleFrontierOutsideWest_Flag[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x29E)), 2 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_BattleFrontierOutsideWest_Flag[i] + 3 * TILE_SIZE_4BPP/2, (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x2A0)), 2 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_BattleFrontierOutsideWest_Flag[i] + 2 * TILE_SIZE_4BPP/2, (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x2A2)), 1 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_BattleFrontierOutsideWest_Flag[i] + 5 * TILE_SIZE_4BPP/2, (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x2A3)), 1 * TILE_SIZE_4BPP);
 }
 
 static void QueueAnimTiles_BattleFrontierOutsideEast_Flag(u16 timer)
 {
     u16 i = timer % ARRAY_COUNT(gTilesetAnims_BattleFrontierOutsideEast_Flag);
-    AppendTilesetAnimToBuffer(gTilesetAnims_BattleFrontierOutsideEast_Flag[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(NUM_TILES_IN_PRIMARY + 218)), 6 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_BattleFrontierOutsideEast_Flag[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x29E)), 2 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_BattleFrontierOutsideEast_Flag[i] + 3 * TILE_SIZE_4BPP/2, (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x2A0)), 2 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_BattleFrontierOutsideEast_Flag[i] + 2 * TILE_SIZE_4BPP/2, (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x2A2)), 1 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_BattleFrontierOutsideEast_Flag[i] + 5 * TILE_SIZE_4BPP/2, (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x2A3)), 1 * TILE_SIZE_4BPP);
 }
 
 static void TilesetAnim_BattleFrontierOutsideWest(u16 timer)
@@ -460,25 +466,25 @@ const u16 *const gTilesetAnims_General_LandWaterEdge[] = {
 static void QueueAnimTiles_FrontierOutside_Flower(u16 timer)
 {
     u16 i = timer % ARRAY_COUNT(gTilesetAnims_FrontierOutside_Flower);
-    AppendTilesetAnimToBuffer(gTilesetAnims_FrontierOutside_Flower[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(508)), 4 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_FrontierOutside_Flower[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x1A7)), 4 * TILE_SIZE_4BPP);
 }
 
 static void QueueAnimTiles_General_Water(u16 timer)
 {
     u8 i = timer % ARRAY_COUNT(gTilesetAnims_General_Water);
-    AppendTilesetAnimToBuffer(gTilesetAnims_General_Water[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(432)), 30 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_General_Water[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x177)), 30 * TILE_SIZE_4BPP);
 }
 
 static void QueueAnimTiles_General_SandWaterEdge(u16 timer)
 {
     u16 i = timer % ARRAY_COUNT(gTilesetAnims_General_SandWaterEdge);
-    AppendTilesetAnimToBuffer(gTilesetAnims_General_SandWaterEdge[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(464)), 10 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_General_SandWaterEdge[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x197)), 10 * TILE_SIZE_4BPP);
 }
 
 static void QueueAnimTiles_General_Waterfall(u16 timer)
 {
     u16 i = timer % ARRAY_COUNT(gTilesetAnims_General_Waterfall);
-    AppendTilesetAnimToBuffer(gTilesetAnims_General_Waterfall[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(496)), 6 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_General_Waterfall[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x1A1)), 6 * TILE_SIZE_4BPP);
 }
 
 static void QueueAnimTiles_General_LandWaterEdge(u16 timer)
@@ -487,7 +493,7 @@ static void QueueAnimTiles_General_LandWaterEdge(u16 timer)
     AppendTilesetAnimToBuffer(gTilesetAnims_General_LandWaterEdge[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(480)), 10 * TILE_SIZE_4BPP);
 }
 
-static void TilesetAnim_PrimaryBattleFrontierOutside(u16 timer)
+static void TilesetAnim_BattleFrontierOutside(u16 timer)
 {
     if (timer % 16 == 0)
         QueueAnimTiles_FrontierOutside_Flower(timer / 16);
@@ -501,11 +507,11 @@ static void TilesetAnim_PrimaryBattleFrontierOutside(u16 timer)
         QueueAnimTiles_General_LandWaterEdge(timer / 16);
 }
 
-void InitTilesetAnim_PrimaryBattleFrontierOutsideWest(void)
+void InitTilesetAnim_BattleFrontierOutside(void)
 {
     sPrimaryTilesetAnimCounter = 0;
     sPrimaryTilesetAnimCounterMax = 256;
-    sPrimaryTilesetAnimCallback = TilesetAnim_PrimaryBattleFrontierOutside;
+    sPrimaryTilesetAnimCallback = TilesetAnim_BattleFrontierOutside;
 }
 
 void InitTilesetAnim_BattleFrontierOutsideWest(void)
@@ -513,13 +519,6 @@ void InitTilesetAnim_BattleFrontierOutsideWest(void)
     sSecondaryTilesetAnimCounter = 0;
     sSecondaryTilesetAnimCounterMax = sPrimaryTilesetAnimCounterMax;
     sSecondaryTilesetAnimCallback = TilesetAnim_BattleFrontierOutsideWest;
-}
-
-void InitTilesetAnim_PrimaryBattleFrontierOutsideEast(void)
-{
-    sPrimaryTilesetAnimCounter = 0;
-    sPrimaryTilesetAnimCounterMax = 256;
-    sPrimaryTilesetAnimCallback = TilesetAnim_PrimaryBattleFrontierOutside;
 }
 
 void InitTilesetAnim_BattleFrontierOutsideEast(void)
