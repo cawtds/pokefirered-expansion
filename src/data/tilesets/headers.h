@@ -1077,14 +1077,14 @@ const struct Tileset gTileset_IndigoPlateauWinter =
     .callback = NULL,
 };
 
-const struct Tileset gTileset_PrimaryBattleFrontierOutsideWest =
+const struct Tileset gTileset_BattleFrontierOutside =
 {
     .isCompressed = TRUE,
     .isSecondary = FALSE,
-    .tiles = gTilesetTiles_PrimaryBattleFrontierOutsideWest,
-    .palettes = gTilesetPalettes_PrimaryBattleFrontierOutsideWest,
-    .metatiles = gMetatiles_PrimaryBattleFrontierOutsideWest,
-    .metatileAttributes = gMetatileAttributes_PrimaryBattleFrontierOutsideWest,
+    .tiles = gTilesetTiles_BattleFrontierOutside,
+    .palettes = gTilesetPalettes_BattleFrontierOutside,
+    .metatiles = gMetatiles_BattleFrontierOutside,
+    .metatileAttributes = gMetatileAttributes_BattleFrontierOutside,
     .callback = NULL, // InitTilesetAnim_PrimaryBattleFrontierOutsideWest,
 };
 
@@ -1097,17 +1097,6 @@ const struct Tileset gTileset_BattleFrontierOutsideWest =
     .metatiles = gMetatiles_BattleFrontierOutsideWest,
     .metatileAttributes = gMetatileAttributes_BattleFrontierOutsideWest,
     .callback = NULL, // InitTilesetAnim_BattleFrontierOutsideWest,
-};
-
-const struct Tileset gTileset_PrimaryBattleFrontierOutsideEast =
-{
-    .isCompressed = TRUE,
-    .isSecondary = FALSE,
-    .tiles = gTilesetTiles_PrimaryBattleFrontierOutsideWest,
-    .palettes = gTilesetPalettes_PrimaryBattleFrontierOutsideEast,
-    .metatiles = gMetatiles_PrimaryBattleFrontierOutsideEast,
-    .metatileAttributes = gMetatileAttributes_PrimaryBattleFrontierOutsideEast,
-    .callback = NULL, // InitTilesetAnim_PrimaryBattleFrontierOutsideEast,
 };
 
 const struct Tileset gTileset_BattleFrontierOutsideEast =

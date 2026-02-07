@@ -4388,7 +4388,7 @@
       "height": 72,
       "border_width": 2,
       "border_height": 2,
-      "primary_tileset": "gTileset_PrimaryBattleFrontierOutsideWest",
+      "primary_tileset": "gTileset_BattleFrontierOutside",
       "secondary_tileset": "gTileset_BattleFrontierOutsideWest",
       "border_filepath": "data/layouts/BattleFrontier_OutsideWest/border.bin",
       "blockdata_filepath": "data/layouts/BattleFrontier_OutsideWest/map.bin"
@@ -4400,7 +4400,7 @@
       "height": 72,
       "border_width": 2,
       "border_height": 2,
-      "primary_tileset": "gTileset_PrimaryBattleFrontierOutsideEast",
+      "primary_tileset": "gTileset_BattleFrontierOutside",
       "secondary_tileset": "gTileset_BattleFrontierOutsideEast",
       "border_filepath": "data/layouts/BattleFrontier_OutsideEast/border.bin",
       "blockdata_filepath": "data/layouts/BattleFrontier_OutsideEast/map.bin"
