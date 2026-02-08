@@ -312,7 +312,7 @@
 #define METATILE_BattleFrontierOutsideEast_Door_Sliding     0x298
 
 // TODO: fix these
-#define METATILE_BattleFrontier_Door_Elevator 0xFFFF
+#define METATILE_BattleFrontier_Door_Elevator 0x289
 #define METATILE_BattleArena_Door 0xFFFF
 #define METATILE_BattleDome_Door_Lobby 0xFFFF
 #define METATILE_BattlePalace_Door 0xFFFF

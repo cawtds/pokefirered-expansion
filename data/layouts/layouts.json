@@ -4404,6 +4404,30 @@
       "secondary_tileset": "gTileset_BattleFrontierOutsideEast",
       "border_filepath": "data/layouts/BattleFrontier_OutsideEast/border.bin",
       "blockdata_filepath": "data/layouts/BattleFrontier_OutsideEast/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY",
+      "name": "BattleFrontier_BattleTowerLobby_Layout",
+      "width": 25,
+      "height": 10,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierBuilding",
+      "secondary_tileset": "gTileset_BattleFrontier",
+      "border_filepath": "data/layouts/BattleFrontier_BattleTowerLobby/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattleTowerLobby/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM",
+      "name": "BattleFrontier_BattleTowerBattleRoom_Layout",
+      "width": 10,
+      "height": 9,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierBuilding",
+      "secondary_tileset": "gTileset_BattleFrontier",
+      "border_filepath": "data/layouts/BattleFrontier_BattleTowerBattleRoom/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattleTowerBattleRoom/map.bin"
     }
   ]
 }

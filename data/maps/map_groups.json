@@ -237,10 +237,12 @@
     "OneIsland_KindleRoad_EmberSpa",
     "BirthIsland_Harbor",
     "NavelRock_Harbor",
-    "BattleFrontier_OutsideWest",
-    "BattleFrontier_OutsideEast",
     "BattleFrontier_PokemonCenter_1F",
-    "BattleFrontier_PokemonCenter_2F"
+    "BattleFrontier_PokemonCenter_2F",
+    "BattleFrontier_BattleTowerLobby",
+    "BattleFrontier_BattleTowerBattleRoom",
+    "BattleFrontier_OutsideWest",
+    "BattleFrontier_OutsideEast"
   ],
   "gMapGroup_TownsAndRoutes": [
     "PalletTown",

@@ -194,8 +194,8 @@
 #define FLAG_DEFEATED_SUDOWOODO               0x0B0
 #define FLAG_SYS_CTRL_OBJ_DELETE              0x0B1
 #define FLAG_HIDE_BATTLE_TOWER_REPORTER       0x0B2
-#define FLAG_0x0B3               0x0B3
-#define FLAG_0x0B4               0x0B4
+#define FLAG_HIDE_APPRENTICE                  0x0B3
+#define FLAG_HIDE_BATTLE_TOWER_OPPONENT       0x0B4
 #define FLAG_0x0B5               0x0B5
 #define FLAG_0x0B6               0x0B6
 #define FLAG_0x0B7               0x0B7
