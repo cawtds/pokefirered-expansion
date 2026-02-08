@@ -306,3 +306,6 @@ const u32 gMetatileAttributes_BattleFrontierBuilding[] = INCBIN_U32("data/tilese
 
 const u16 gMetatiles_BattleFrontier[] = INCBIN_U16("data/tilesets/secondary/battle_frontier/metatiles.bin");
 const u32 gMetatileAttributes_BattleFrontier[] = INCBIN_U32("data/tilesets/secondary/battle_frontier/metatile_attributes.bin");
+
+const u16 gMetatiles_BattleArena[] = INCBIN_U16("data/tilesets/secondary/battle_arena/metatiles.bin");
+const u32 gMetatileAttributes_BattleArena[] = INCBIN_U32("data/tilesets/secondary/battle_arena/metatile_attributes.bin");

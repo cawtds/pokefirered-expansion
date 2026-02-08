@@ -245,6 +245,9 @@
     "BattleFrontier_BattleTowerElevator",
     "BattleFrontier_BattleTowerMultiPartnerRoom",
     "BattleFrontier_BattleTowerMultiCorridor",
+    "BattleFrontier_BattleArenaBattleRoom",
+    "BattleFrontier_BattleArenaCorridor",
+    "BattleFrontier_BattleArenaLobby",
     "BattleFrontier_OutsideWest",
     "BattleFrontier_OutsideEast"
   ],
