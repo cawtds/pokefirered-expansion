@@ -532,6 +532,9 @@ gStdScriptsEnd::
 	.include "data/maps/BattleFrontier_BattleArenaBattleRoom/scripts.inc"
 	.include "data/maps/BattleFrontier_BattleArenaCorridor/scripts.inc"
 	.include "data/maps/BattleFrontier_BattleArenaLobby/scripts.inc"
+	.include "data/maps/BattleFrontier_BattlePalaceBattleRoom/scripts.inc"
+	.include "data/maps/BattleFrontier_BattlePalaceCorridor/scripts.inc"
+	.include "data/maps/BattleFrontier_BattlePalaceLobby/scripts.inc"
 	.include "data/scripts/apprentice.inc"
 
 	.include "data/maps/ViridianForest/text.inc"

@@ -364,6 +364,7 @@
 #define MUS_B_TOWER         MUS_ROUTE1
 #define MUS_B_FRONTIER      MUS_ROUTE1
 #define MUS_B_ARENA         MUS_ROUTE1
+#define MUS_B_PALACE        MUS_ROUTE1
 
 
 #endif  // GUARD_CONSTANTS_SONGS_H

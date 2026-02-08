@@ -248,6 +248,9 @@
     "BattleFrontier_BattleArenaBattleRoom",
     "BattleFrontier_BattleArenaCorridor",
     "BattleFrontier_BattleArenaLobby",
+    "BattleFrontier_BattlePalaceBattleRoom",
+    "BattleFrontier_BattlePalaceCorridor",
+    "BattleFrontier_BattlePalaceLobby",
     "BattleFrontier_OutsideWest",
     "BattleFrontier_OutsideEast"
   ],

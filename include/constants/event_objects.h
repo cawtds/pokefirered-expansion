@@ -198,6 +198,11 @@
 #define OBJ_EVENT_GFX_SKITTY                OBJ_EVENT_GFX_HIKER
 #define OBJ_EVENT_GFX_TEALA                 OBJ_EVENT_GFX_HIKER
 #define OBJ_EVENT_GFX_REPORTER_F            OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_DUSCLOPS              OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_AZURILL               OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_KIRLIA                OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_WINGULL               OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_AZUMARILL             OBJ_EVENT_GFX_HIKER
 
 
 // These are dynamic object gfx ids.

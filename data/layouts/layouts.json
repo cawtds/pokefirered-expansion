@@ -4512,6 +4512,42 @@
       "secondary_tileset": "gTileset_BattleArena",
       "border_filepath": "data/layouts/BattleFrontier_BattleArenaBattleRoom/border.bin",
       "blockdata_filepath": "data/layouts/BattleFrontier_BattleArenaBattleRoom/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY",
+      "name": "BattleFrontier_BattlePalaceLobby_Layout",
+      "width": 25,
+      "height": 12,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierBuilding",
+      "secondary_tileset": "gTileset_BattlePalace",
+      "border_filepath": "data/layouts/BattleFrontier_BattlePalaceLobby/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattlePalaceLobby/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_PALACE_CORRIDOR",
+      "name": "BattleFrontier_BattlePalaceCorridor_Layout",
+      "width": 17,
+      "height": 14,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierOutside",
+      "secondary_tileset": "gTileset_BattlePalace",
+      "border_filepath": "data/layouts/BattleFrontier_BattlePalaceCorridor/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattlePalaceCorridor/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_PALACE_BATTLE_ROOM",
+      "name": "BattleFrontier_BattlePalaceBattleRoom_Layout",
+      "width": 15,
+      "height": 10,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierOutside",
+      "secondary_tileset": "gTileset_BattlePalace",
+      "border_filepath": "data/layouts/BattleFrontier_BattlePalaceBattleRoom/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattlePalaceBattleRoom/map.bin"
     }
   ]
 }
