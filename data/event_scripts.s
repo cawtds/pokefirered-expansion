@@ -524,6 +524,11 @@ gStdScriptsEnd::
 	.include "data/maps/BattleFrontier_PokemonCenter_2F/scripts.inc"
 	.include "data/maps/BattleFrontier_BattleTowerLobby/scripts.inc"
 	.include "data/maps/BattleFrontier_BattleTowerBattleRoom/scripts.inc"
+	.include "data/maps/BattleFrontier_BattleTowerElevator/scripts.inc"
+	.include "data/maps/BattleFrontier_BattleTowerCorridor/scripts.inc"
+	.include "data/maps/BattleFrontier_BattleTowerMultiPartnerRoom/scripts.inc"
+	.include "data/maps/BattleFrontier_BattleTowerMultiCorridor/scripts.inc"
+	.include "data/maps/BattleFrontier_BattleTowerMultiBattleRoom/scripts.inc"
 	.include "data/scripts/apprentice.inc"
 
 	.include "data/maps/ViridianForest/text.inc"

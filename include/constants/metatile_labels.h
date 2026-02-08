@@ -311,13 +311,15 @@
 #define METATILE_BattleFrontierOutsideEast_Door_BattleArena 0x320
 #define METATILE_BattleFrontierOutsideEast_Door_Sliding     0x298
 
-// TODO: fix these
+// gTileset_BattleFrontier
 #define METATILE_BattleFrontier_Door_Elevator 0x289
+#define METATILE_BattleFrontier_Door_MultiCorridor 0x2E4
+
+// TODO:
 #define METATILE_BattleArena_Door 0xFFFF
 #define METATILE_BattleDome_Door_Lobby 0xFFFF
 #define METATILE_BattlePalace_Door 0xFFFF
 #define METATILE_BattleDome_Door_Corridor 0xFFFF
-#define METATILE_BattleFrontier_Door_MultiCorridor 0xFFFF
 #define METATILE_BattleDome_Door_PreBattleRoom 0xFFFF
 
 // Other

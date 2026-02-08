@@ -241,6 +241,10 @@
     "BattleFrontier_PokemonCenter_2F",
     "BattleFrontier_BattleTowerLobby",
     "BattleFrontier_BattleTowerBattleRoom",
+    "BattleFrontier_BattleTowerCorridor",
+    "BattleFrontier_BattleTowerElevator",
+    "BattleFrontier_BattleTowerMultiPartnerRoom",
+    "BattleFrontier_BattleTowerMultiCorridor",
     "BattleFrontier_OutsideWest",
     "BattleFrontier_OutsideEast"
   ],

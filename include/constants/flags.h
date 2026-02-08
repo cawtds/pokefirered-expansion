@@ -189,21 +189,21 @@
 #define FLAG_HIDE_MISC_KANTO_ROCKETS                       0x0AD
 #define FLAG_HIDE_SAFFRON_CITY_POKECENTER_SABRINA_JOURNALS 0x0AE
 
-// Unused?
-#define FLAG_HIDE_BATTLE_FRONTIER_SUDOWOODO   0x0AF
-#define FLAG_DEFEATED_SUDOWOODO               0x0B0
-#define FLAG_SYS_CTRL_OBJ_DELETE              0x0B1
-#define FLAG_HIDE_BATTLE_TOWER_REPORTER       0x0B2
-#define FLAG_HIDE_APPRENTICE                  0x0B3
-#define FLAG_HIDE_BATTLE_TOWER_OPPONENT       0x0B4
-#define FLAG_0x0B5               0x0B5
-#define FLAG_0x0B6               0x0B6
-#define FLAG_0x0B7               0x0B7
-#define FLAG_0x0B8               0x0B8
-#define FLAG_0x0B9               0x0B9
-#define FLAG_0x0BA               0x0BA
-#define FLAG_0x0BB               0x0BB
-#define FLAG_0x0BC               0x0BC
+// Frontier flags
+#define FLAG_HIDE_BATTLE_FRONTIER_SUDOWOODO                 0x0AF
+#define FLAG_DEFEATED_SUDOWOODO                             0x0B0
+#define FLAG_SYS_CTRL_OBJ_DELETE                            0x0B1
+#define FLAG_HIDE_BATTLE_TOWER_REPORTER                     0x0B2
+#define FLAG_HIDE_APPRENTICE                                0x0B3
+#define FLAG_HIDE_BATTLE_TOWER_OPPONENT                     0x0B4
+#define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_1       0x0B5
+#define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_2       0x0B6
+#define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_3       0x0B7
+#define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_4       0x0B8
+#define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_5       0x0B9
+#define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_6       0x0BA
+#define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_ALT_1   0x0BB
+#define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_ALT_2   0x0BC
 #define FLAG_0x0BD               0x0BD
 #define FLAG_0x0BE               0x0BE
 #define FLAG_0x0BF               0x0BF
