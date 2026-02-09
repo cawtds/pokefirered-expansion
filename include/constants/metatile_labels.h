@@ -315,10 +315,17 @@
 #define METATILE_BattleFrontier_Door_Elevator 0x289
 #define METATILE_BattleFrontier_Door_MultiCorridor 0x2E4
 
+// gTileset_BattleArena
+#define METATILE_BattleArena_Door 0x291
+
+// gTileset_BattlePalaceGeneral
+#define METATILE_BattlePalaceGeneral_Door 0x290
+
+// gTileset_BattlePalaceBuilding
+#define METATILE_BattlePalaceBuilding_Door 0x295
+
 // TODO:
-#define METATILE_BattleArena_Door 0xFFFF
 #define METATILE_BattleDome_Door_Lobby 0xFFFF
-#define METATILE_BattlePalace_Door 0xFFFF
 #define METATILE_BattleDome_Door_Corridor 0xFFFF
 #define METATILE_BattleDome_Door_PreBattleRoom 0xFFFF
 
