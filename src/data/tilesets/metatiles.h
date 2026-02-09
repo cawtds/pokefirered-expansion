@@ -295,20 +295,27 @@ const u32 gMetatileAttributes_IndigoPlateauWinter[] = INCBIN_U32("data/tilesets/
 const u16 gMetatiles_BattleFrontierOutside[] = INCBIN_U16("data/tilesets/primary/battle_frontier_outside/metatiles.bin");
 const u32 gMetatileAttributes_BattleFrontierOutside[] = INCBIN_U32("data/tilesets/primary/battle_frontier_outside/metatile_attributes.bin");
 
+const u16 gMetatiles_BattleFrontierInside[] = INCBIN_U16("data/tilesets/primary/battle_frontier_inside/metatiles.bin");
+const u32 gMetatileAttributes_BattleFrontierInside[] = INCBIN_U32("data/tilesets/primary/battle_frontier_inside/metatile_attributes.bin");
+
 const u16 gMetatiles_BattleFrontierOutsideWest[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_outside_west/metatiles.bin");
 const u32 gMetatileAttributes_BattleFrontierOutsideWest[] = INCBIN_U32("data/tilesets/secondary/battle_frontier_outside_west/metatile_attributes.bin");
 
 const u16 gMetatiles_BattleFrontierOutsideEast[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_outside_east/metatiles.bin");
 const u32 gMetatileAttributes_BattleFrontierOutsideEast[] = INCBIN_U32("data/tilesets/secondary/battle_frontier_outside_east/metatile_attributes.bin");
 
-const u16 gMetatiles_BattleFrontierBuilding[] = INCBIN_U16("data/tilesets/primary/battle_frontier_building/metatiles.bin");
-const u32 gMetatileAttributes_BattleFrontierBuilding[] = INCBIN_U32("data/tilesets/primary/battle_frontier_building/metatile_attributes.bin");
+const u16 gMetatiles_BattleFrontierGeneral[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_general/metatiles.bin");
+const u32 gMetatileAttributes_BattleFrontierGeneral[] = INCBIN_U32("data/tilesets/secondary/battle_frontier_general/metatile_attributes.bin");
 
-const u16 gMetatiles_BattleFrontier[] = INCBIN_U16("data/tilesets/secondary/battle_frontier/metatiles.bin");
-const u32 gMetatileAttributes_BattleFrontier[] = INCBIN_U32("data/tilesets/secondary/battle_frontier/metatile_attributes.bin");
+const u16 gMetatiles_BattleFrontierBuilding[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_building/metatiles.bin");
+const u32 gMetatileAttributes_BattleFrontierBuilding[] = INCBIN_U32("data/tilesets/secondary/battle_frontier_building/metatile_attributes.bin");
 
 const u16 gMetatiles_BattleArena[] = INCBIN_U16("data/tilesets/secondary/battle_arena/metatiles.bin");
 const u32 gMetatileAttributes_BattleArena[] = INCBIN_U32("data/tilesets/secondary/battle_arena/metatile_attributes.bin");
 
-const u16 gMetatiles_BattlePalace[] = INCBIN_U16("data/tilesets/secondary/battle_palace/metatiles.bin");
-const u32 gMetatileAttributes_BattlePalace[] = INCBIN_U32("data/tilesets/secondary/battle_palace/metatile_attributes.bin");
+const u16 gMetatiles_BattlePalaceGeneral[] = INCBIN_U16("data/tilesets/secondary/battle_palace_general/metatiles.bin");
+const u32 gMetatileAttributes_BattlePalaceGeneral[] = INCBIN_U32("data/tilesets/secondary/battle_palace_general/metatile_attributes.bin");
+
+const u16 gMetatiles_BattlePalaceBuilding[] = INCBIN_U16("data/tilesets/secondary/battle_palace_building/metatiles.bin");
+const u32 gMetatileAttributes_BattlePalaceBuilding[] = INCBIN_U32("data/tilesets/secondary/battle_palace_building/metatile_attributes.bin");
+

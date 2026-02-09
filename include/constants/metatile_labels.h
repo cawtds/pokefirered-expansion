@@ -311,7 +311,7 @@
 #define METATILE_BattleFrontierOutsideEast_Door_BattleArena 0x320
 #define METATILE_BattleFrontierOutsideEast_Door_Sliding     0x298
 
-// gTileset_BattleFrontier
+// gTileset_BattleFrontierBuilding
 #define METATILE_BattleFrontier_Door_Elevator 0x289
 #define METATILE_BattleFrontier_Door_MultiCorridor 0x2E4
 
