@@ -175,7 +175,9 @@
     "SixIsland_DottedHole_B4F",
     "SixIsland_DottedHole_SapphireRoom",
     "SixIsland_PatternBush",
-    "SixIsland_AlteringCave"
+    "SixIsland_AlteringCave",
+    "ArtisanCave_B1F",
+    "ArtisanCave_1F"
   ],
   "gMapGroup_SpecialArea": [
     "NavelRock_Exterior",

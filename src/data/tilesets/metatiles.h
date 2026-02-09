@@ -325,3 +325,5 @@ const u32 gMetatileAttributes_BattlePyramid[] = INCBIN_U32("data/tilesets/second
 const u16 gMetatiles_BattleFrontierRankingHall[] = INCBIN_U16("data/tilesets/secondary/battle_frontier_ranking_hall/metatiles.bin");
 const u32 gMetatileAttributes_BattleFrontierRankingHall[] = INCBIN_U32("data/tilesets/secondary/battle_frontier_ranking_hall/metatile_attributes.bin");
 
+const u16 gMetatiles_ArtisanCave[] = INCBIN_U16("data/tilesets/secondary/artisan_cave/metatiles.bin");
+const u32 gMetatileAttributes_ArtisanCave[] = INCBIN_U32("data/tilesets/secondary/artisan_cave/metatile_attributes.bin");

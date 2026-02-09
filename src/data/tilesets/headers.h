@@ -1197,3 +1197,14 @@ const struct Tileset gTileset_BattleFrontierRankingHall =
     .metatileAttributes = gMetatileAttributes_BattleFrontierRankingHall,
     .callback = NULL,
 };
+
+const struct Tileset gTileset_ArtisanCave =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_ArtisanCave,
+    .palettes = gTilesetPalettes_ArtisanCave,
+    .metatiles = gMetatiles_ArtisanCave,
+    .metatileAttributes = gMetatileAttributes_ArtisanCave,
+    .callback = NULL, // InitTilesetAnim_Cave,
+};

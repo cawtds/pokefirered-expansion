@@ -715,6 +715,10 @@ static const struct DungeonMapInfo sDungeonInfo[] = {
         .id = MAPSEC_DOTTED_HOLE,
         .name = sMapName_DOTTED_HOLE,
         .desc = gText_RegionMap_AreaDesc_DottedHole
+    }, {
+        .id = MAPSEC_ARTISAN_CAVE,
+        .name = sMapName_ARTISAN_CAVE,
+        .desc = gText_RegionMap_AreaDesc_ArtisanCave
     }
 };
 
