@@ -77,7 +77,7 @@ BattleFrontier_BattleTowerElevator_Movement_PlayerExit:
 
 BattleFrontier_BattleTowerElevator_OnWarp:
 	@map_script_2 VAR_TEMP_1, 0, BattleFrontier_BattleTowerElevator_EventScript_TurnPlayerNorth
-	@.2byte 0
+	.2byte 0
 
 BattleFrontier_BattleTowerElevator_EventScript_TurnPlayerNorth::
 	@setvar VAR_TEMP_1, 1

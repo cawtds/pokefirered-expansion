@@ -1175,3 +1175,14 @@ const struct Tileset gTileset_BattlePalaceBuilding =
     .metatileAttributes = gMetatileAttributes_BattlePalaceBuilding,
     .callback = NULL,
 };
+
+const struct Tileset gTileset_BattlePyramid =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_BattlePyramid,
+    .palettes = gTilesetPalettes_BattlePyramid,
+    .metatiles = gMetatiles_BattlePyramid,
+    .metatileAttributes = gMetatileAttributes_BattlePyramid,
+    .callback = NULL, // InitTilesetAnim_BattlePyramid,
+};

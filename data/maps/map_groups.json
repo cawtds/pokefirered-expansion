@@ -42,7 +42,8 @@
     "gMapGroup_IndoorFiveIslandRoute",
     "gMapGroup_IndoorTwoIslandRoute",
     "gMapGroup_IndoorSixIslandRoute",
-    "gMapGroup_IndoorSevenIslandRoute"
+    "gMapGroup_IndoorSevenIslandRoute",
+    "gMapGroup_IndoorDynamic"
   ],
   "gMapGroup_Link": [
     "BattleColosseum_2P",
@@ -251,6 +252,9 @@
     "BattleFrontier_BattlePalaceBattleRoom",
     "BattleFrontier_BattlePalaceCorridor",
     "BattleFrontier_BattlePalaceLobby",
+    "BattleFrontier_BattlePyramidLobby",
+    "BattleFrontier_BattlePyramidFloor",
+    "BattleFrontier_BattlePyramidTop",
     "BattleFrontier_OutsideWest",
     "BattleFrontier_OutsideEast"
   ],
@@ -570,5 +574,23 @@
   ],
   "gMapGroup_IndoorSevenIslandRoute": [
     "SevenIsland_SevaultCanyon_House"
+  ],
+  "gMapGroup_IndoorDynamic": [
+    "BattlePyramidSquare01",
+    "BattlePyramidSquare02",
+    "BattlePyramidSquare03",
+    "BattlePyramidSquare04",
+    "BattlePyramidSquare05",
+    "BattlePyramidSquare06",
+    "BattlePyramidSquare07",
+    "BattlePyramidSquare08",
+    "BattlePyramidSquare09",
+    "BattlePyramidSquare10",
+    "BattlePyramidSquare11",
+    "BattlePyramidSquare12",
+    "BattlePyramidSquare13",
+    "BattlePyramidSquare14",
+    "BattlePyramidSquare15",
+    "BattlePyramidSquare16"
   ]
 }

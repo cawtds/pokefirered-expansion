@@ -267,7 +267,12 @@
       "id": "MAPSEC_SECRET_BASE"
     },
     {
-      "id": "MAPSEC_DYNAMIC"
+      "id": "MAPSEC_DYNAMIC",
+      "name": "",
+      "x": 0,
+      "y": 0,
+      "width": 1,
+      "height": 1
     },
     {
       "id": "MAPSEC_PALLET_TOWN",

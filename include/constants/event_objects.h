@@ -203,7 +203,11 @@
 #define OBJ_EVENT_GFX_KIRLIA                OBJ_EVENT_GFX_HIKER
 #define OBJ_EVENT_GFX_WINGULL               OBJ_EVENT_GFX_HIKER
 #define OBJ_EVENT_GFX_AZUMARILL             OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_BOY_3                 OBJ_EVENT_GFX_HIKER
+#define OBJ_EVENT_GFX_GIRL_2                OBJ_EVENT_GFX_HIKER
 
+#define OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL OBJ_EVENT_GFX_RED_NORMAL
+#define OBJ_EVENT_GFX_BRANDON              OBJ_EVENT_GFX_RED_NORMAL
 
 // These are dynamic object gfx ids.
 // They correspond with the values of the VAR_OBJ_GFX_ID_X vars.
