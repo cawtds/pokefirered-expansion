@@ -343,7 +343,7 @@ static const struct DoorGraphics sDoorGraphics[] = {
     {METATILE_TrainerTower_RoofElevatorDoor,               &gTileset_TrainerTower,              DOOR_SOUND_SLIDING, DOOR_SIZE_1x2, sDoorAnimTiles_TrainerTowerRoofElevator, sDoorAnimPalettes_TrainerTowerRoofElevator},
     {METATILE_BattleFrontierOutside_Door_PokeCenter,       &gTileset_BattleFrontierOutside,     DOOR_SOUND_SLIDING, DOOR_SIZE_1x2, sDoorAnimTiles_PokeCenter, sDoorAnimPalettes_PokeCenter},
     {METATILE_BattleFrontierOutside_Door_PokeMart,         &gTileset_BattleFrontierOutside,     DOOR_SOUND_SLIDING, DOOR_SIZE_1x2, sDoorAnimTiles_PokeMart, sDoorAnimPalettes_PokeMart},
-    {METATILE_BattleFrontier_Door_Elevator,                &gTileset_BattleFrontierBuilding,            DOOR_SOUND_SLIDING, DOOR_SIZE_1x2, sDoorAnimTiles_BattleTowerElevator, sDoorAnimPalettes_BattleTowerElevator},
+    {METATILE_BattleFrontier_Door_Elevator,                &gTileset_BattleFrontierBuilding,    DOOR_SOUND_SLIDING, DOOR_SIZE_1x2, sDoorAnimTiles_BattleTowerElevator, sDoorAnimPalettes_BattleTowerElevator},
     {METATILE_BattleFrontierOutsideWest_Door_BattleDome,   &gTileset_BattleFrontierOutsideWest, DOOR_SOUND_SLIDING, DOOR_SIZE_1x2, sDoorAnimTiles_BattleDome, sDoorAnimPalettes_BattleDome},
     {METATILE_BattleFrontierOutsideWest_Door_BattleFactory,&gTileset_BattleFrontierOutsideWest, DOOR_SOUND_SLIDING, DOOR_SIZE_1x2, sDoorAnimTiles_BattleFactory, sDoorAnimPalettes_BattleFactory},
     {METATILE_BattleFrontierOutsideEast_Door_BattleTower,  &gTileset_BattleFrontierOutsideEast, DOOR_SOUND_SLIDING, DOOR_SIZE_1x2, sDoorAnimTiles_BattleTower, sDoorAnimPalettes_BattleTower},

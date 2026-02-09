@@ -296,20 +296,20 @@
 #define METATILE_ViridianForest_HugeTreeTopMiddle_Mowed  0x281
 
 // gTileset_BattleFrontierOutside
-#define METATILE_BattleFrontierOutside_Door_PokeCenter  0x036
-#define METATILE_BattleFrontierOutside_Door_PokeMart    0x01B
-#define METATILE_BattleFrontierOutsideDoor1             0x0D1
-#define METATILE_BattleFrontierOutsideDoor2             0x0ED
+#define METATILE_BattleFrontierOutside_Door_PokeCenter  0x037
+#define METATILE_BattleFrontierOutside_Door_PokeMart    0x01C
+#define METATILE_BattleFrontierOutsideDoor1             0x0D2
+#define METATILE_BattleFrontierOutsideDoor2             0x0EE
 
 // gTileset_BattleFrontierOutsideWest
 #define METATILE_BattleFrontierOutsideWest_Door_BattleDome      0x304
 #define METATILE_BattleFrontierOutsideWest_Door_BattleFactory   0x2E4
-#define METATILE_BattleFrontierOutsideWest_Door_Sliding         0x298
+#define METATILE_BattleFrontierOutsideWest_Door_Sliding         0x297
 
 // gTileset_BattleFrontierOutsideEast
 #define METATILE_BattleFrontierOutsideEast_Door_BattleTower 0x3A4
 #define METATILE_BattleFrontierOutsideEast_Door_BattleArena 0x320
-#define METATILE_BattleFrontierOutsideEast_Door_Sliding     0x298
+#define METATILE_BattleFrontierOutsideEast_Door_Sliding     0x297
 
 // gTileset_BattleFrontierBuilding
 #define METATILE_BattleFrontier_Door_Elevator 0x289

@@ -539,6 +539,7 @@ gStdScriptsEnd::
 	.include "data/maps/BattleFrontier_BattlePyramidLobby/scripts.inc"
 	.include "data/maps/BattleFrontier_BattlePyramidTop/scripts.inc"
 	.include "data/maps/BattlePyramidSquare01/scripts.inc"
+	.include "data/maps/BattleFrontier_RankingHall/scripts.inc"
 	.include "data/scripts/apprentice.inc"
 
 	.include "data/maps/ViridianForest/text.inc"

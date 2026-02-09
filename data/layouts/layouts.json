@@ -4776,6 +4776,18 @@
       "secondary_tileset": "gTileset_BattlePyramid",
       "border_filepath": "data/layouts/BattleFrontier_BattlePyramidTop/border.bin",
       "blockdata_filepath": "data/layouts/BattleFrontier_BattlePyramidTop/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_RANKING_HALL",
+      "name": "BattleFrontier_RankingHall_Layout",
+      "width": 53,
+      "height": 15,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattleFrontierRankingHall",
+      "border_filepath": "data/layouts/BattleFrontier_RankingHall/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_RankingHall/map.bin"
     }
   ]
 }
