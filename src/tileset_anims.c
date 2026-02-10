@@ -466,32 +466,32 @@ const u16 *const gTilesetAnims_General_LandWaterEdge[] = {
 static void QueueAnimTiles_FrontierOutside_Flower(u16 timer)
 {
     u16 i = timer % ARRAY_COUNT(gTilesetAnims_FrontierOutside_Flower);
-    AppendTilesetAnimToBuffer(gTilesetAnims_FrontierOutside_Flower[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x1A7)), 4 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_FrontierOutside_Flower[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x1AD)), 4 * TILE_SIZE_4BPP);
 }
 
 static void QueueAnimTiles_General_Water(u16 timer)
 {
     u8 i = timer % ARRAY_COUNT(gTilesetAnims_General_Water);
-    AppendTilesetAnimToBuffer(gTilesetAnims_General_Water[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x177)), 30 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_General_Water[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x17D)), 30 * TILE_SIZE_4BPP);
 }
 
 static void QueueAnimTiles_General_SandWaterEdge(u16 timer)
 {
     u16 i = timer % ARRAY_COUNT(gTilesetAnims_General_SandWaterEdge);
-    AppendTilesetAnimToBuffer(gTilesetAnims_General_SandWaterEdge[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x197)), 10 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_General_SandWaterEdge[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x19D)), 10 * TILE_SIZE_4BPP);
 }
 
 static void QueueAnimTiles_General_Waterfall(u16 timer)
 {
     u16 i = timer % ARRAY_COUNT(gTilesetAnims_General_Waterfall);
-    AppendTilesetAnimToBuffer(gTilesetAnims_General_Waterfall[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x1A1)), 6 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_General_Waterfall[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(0x1A7)), 6 * TILE_SIZE_4BPP);
 }
 
-static void QueueAnimTiles_General_LandWaterEdge(u16 timer)
-{
-    u16 i = timer % ARRAY_COUNT(gTilesetAnims_General_LandWaterEdge);
-    AppendTilesetAnimToBuffer(gTilesetAnims_General_LandWaterEdge[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(480)), 10 * TILE_SIZE_4BPP);
-}
+// static void QueueAnimTiles_General_LandWaterEdge(u16 timer)
+// {
+//     u16 i = timer % ARRAY_COUNT(gTilesetAnims_General_LandWaterEdge);
+//     AppendTilesetAnimToBuffer(gTilesetAnims_General_LandWaterEdge[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(480)), 10 * TILE_SIZE_4BPP);
+// }
 
 static void TilesetAnim_BattleFrontierOutside(u16 timer)
 {
@@ -503,8 +503,8 @@ static void TilesetAnim_BattleFrontierOutside(u16 timer)
         QueueAnimTiles_General_SandWaterEdge(timer / 16);
     if (timer % 16 == 3)
         QueueAnimTiles_General_Waterfall(timer / 16);
-    if (timer % 16 == 4)
-        QueueAnimTiles_General_LandWaterEdge(timer / 16);
+    // if (timer % 16 == 4)
+    //     QueueAnimTiles_General_LandWaterEdge(timer / 16);
 }
 
 void InitTilesetAnim_BattleFrontierOutside(void)
