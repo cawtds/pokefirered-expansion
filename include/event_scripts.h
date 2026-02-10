@@ -848,6 +848,7 @@ extern const u8 EventScript_TestSignpostMsg[];
 extern const u8 BerryTreeScript[];
 extern const u8 BerryTree_EventScript_ItemUsePlantBerry[];
 extern const u8 BerryTree_EventScript_ItemUseWailmerPail[];
+extern const u8 BattleFrontier_OutsideEast_EventScript_WaterSudowoodo[];
 
 // new_game
 extern const u8 EventScript_ResetAllMapFlags[];
