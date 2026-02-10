@@ -522,6 +522,7 @@ gStdScriptsEnd::
 	.include "data/maps/BattleFrontier_OutsideEast/scripts.inc"
 	.include "data/maps/BattleFrontier_PokemonCenter_1F/scripts.inc"
 	.include "data/maps/BattleFrontier_PokemonCenter_2F/scripts.inc"
+	.include "data/maps/BattleFrontier_Mart/scripts.inc"
 	.include "data/maps/BattleFrontier_BattleTowerLobby/scripts.inc"
 	.include "data/maps/BattleFrontier_BattleTowerBattleRoom/scripts.inc"
 	.include "data/maps/BattleFrontier_BattleTowerElevator/scripts.inc"
