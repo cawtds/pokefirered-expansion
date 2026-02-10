@@ -4982,6 +4982,30 @@
       "blockdata_filepath": "data/layouts/BattleFrontier_BattleFactoryBattleRoom/map.bin"
     },
     {
+      "id": "LAYOUT_BATTLE_FRONTIER_RECEPTION_GATE",
+      "name": "BattleFrontier_ReceptionGate_Layout",
+      "width": 9,
+      "height": 14,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierOutside",
+      "secondary_tileset": "gTileset_BattleFrontierGeneral",
+      "border_filepath": "data/layouts/BattleFrontier_ReceptionGate/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_ReceptionGate/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_SCOTTS_HOUSE",
+      "name": "BattleFrontier_ScottsHouse_Layout",
+      "width": 6,
+      "height": 8,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattleFrontierBuilding",
+      "border_filepath": "data/layouts/BattleFrontier_ScottsHouse/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_ScottsHouse/map.bin"
+    },
+    {
       "id": "LAYOUT_ARTISAN_CAVE_B1F",
       "name": "ArtisanCave_B1F_Layout",
       "width": 46,

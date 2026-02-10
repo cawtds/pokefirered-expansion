@@ -555,6 +555,8 @@ gStdScriptsEnd::
 	.include "data/maps/BattlePyramidSquare01/scripts.inc"
 	.include "data/maps/BattleFrontier_RankingHall/scripts.inc"
 	.include "data/maps/BattleFrontier_ExchangeServiceCorner/scripts.inc"
+	.include "data/maps/BattleFrontier_ScottsHouse/scripts.inc"
+	.include "data/maps/BattleFrontier_ReceptionGate/scripts.inc"
 	.include "data/maps/BattleFrontier_Lounge1/scripts.inc"
 	.include "data/maps/BattleFrontier_Lounge2/scripts.inc"
 	.include "data/maps/BattleFrontier_Lounge3/scripts.inc"
