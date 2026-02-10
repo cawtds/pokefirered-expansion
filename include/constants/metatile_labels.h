@@ -324,10 +324,10 @@
 // gTileset_BattlePalaceBuilding
 #define METATILE_BattlePalaceBuilding_Door 0x295
 
-// TODO:
-#define METATILE_BattleDome_Door_Lobby 0xFFFF
-#define METATILE_BattleDome_Door_Corridor 0xFFFF
-#define METATILE_BattleDome_Door_PreBattleRoom 0xFFFF
+// gTileset_BattleDome
+#define METATILE_BattleDome_Door_Lobby 0x286
+#define METATILE_BattleDome_Door_Corridor 0x2B9
+#define METATILE_BattleDome_Door_PreBattleRoom 0x287
 
 // Other
 #define METATILE_Fallarbor_AshGrass                      0x20A

@@ -1219,3 +1219,14 @@ const struct Tileset gTileset_BattlePike =
     .metatileAttributes = gMetatileAttributes_BattlePike,
     .callback = NULL,
 };
+
+const struct Tileset gTileset_BattleDome =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_BattleDome,
+    .palettes = gTilesetPalettes_BattleDome,
+    .metatiles = gMetatiles_BattleDome,
+    .metatileAttributes = gMetatileAttributes_BattleDome,
+    .callback = NULL, // InitTilesetAnim_BattleDome,
+};

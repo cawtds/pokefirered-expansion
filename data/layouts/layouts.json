@@ -4898,6 +4898,54 @@
       "blockdata_filepath": "data/layouts/BattleFrontier_BattlePikeRoomFinal/map.bin"
     },
     {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_DOME_LOBBY",
+      "name": "BattleFrontier_BattleDomeLobby_Layout",
+      "width": 23,
+      "height": 17,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattleDome",
+      "border_filepath": "data/layouts/BattleFrontier_BattleDomeLobby/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattleDomeLobby/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_DOME_CORRIDOR",
+      "name": "BattleFrontier_BattleDomeCorridor_Layout",
+      "width": 48,
+      "height": 7,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattleDome",
+      "border_filepath": "data/layouts/BattleFrontier_BattleDomeCorridor/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattleDomeCorridor/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_DOME_PRE_BATTLE_ROOM",
+      "name": "BattleFrontier_BattleDomePreBattleRoom_Layout",
+      "width": 9,
+      "height": 8,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattleDome",
+      "border_filepath": "data/layouts/BattleFrontier_BattleDomePreBattleRoom/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattleDomePreBattleRoom/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_DOME_BATTLE_ROOM",
+      "name": "BattleFrontier_BattleDomeBattleRoom_Layout",
+      "width": 20,
+      "height": 10,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattleDome",
+      "border_filepath": "data/layouts/BattleFrontier_BattleDomeBattleRoom/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattleDomeBattleRoom/map.bin"
+    },
+    {
       "id": "LAYOUT_ARTISAN_CAVE_B1F",
       "name": "ArtisanCave_B1F_Layout",
       "width": 46,

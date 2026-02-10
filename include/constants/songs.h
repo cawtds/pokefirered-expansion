@@ -370,6 +370,8 @@
 #define MUS_B_TOWER_RS      MUS_ROUTE1
 #define MUS_PETALBURG_WOODS MUS_ROUTE1
 #define MUS_B_PIKE          MUS_ROUTE1
+#define MUS_B_DOME_LOBBY    MUS_ROUTE1
+#define MUS_B_DOME          MUS_ROUTE1
 
 
 #endif  // GUARD_CONSTANTS_SONGS_H
