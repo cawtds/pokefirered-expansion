@@ -1230,3 +1230,14 @@ const struct Tileset gTileset_BattleDome =
     .metatileAttributes = gMetatileAttributes_BattleDome,
     .callback = NULL, // InitTilesetAnim_BattleDome,
 };
+
+const struct Tileset gTileset_BattleFactory =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_BattleFactory,
+    .palettes = gTilesetPalettes_BattleFactory,
+    .metatiles = gMetatiles_BattleFactory,
+    .metatileAttributes = gMetatileAttributes_BattleFactory,
+    .callback = NULL,
+};

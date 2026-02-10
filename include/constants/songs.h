@@ -372,6 +372,7 @@
 #define MUS_B_PIKE          MUS_ROUTE1
 #define MUS_B_DOME_LOBBY    MUS_ROUTE1
 #define MUS_B_DOME          MUS_ROUTE1
+#define MUS_B_FACTORY       MUS_ROUTE1
 
 
 #endif  // GUARD_CONSTANTS_SONGS_H

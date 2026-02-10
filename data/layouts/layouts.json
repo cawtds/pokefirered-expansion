@@ -4946,6 +4946,42 @@
       "blockdata_filepath": "data/layouts/BattleFrontier_BattleDomeBattleRoom/map.bin"
     },
     {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY",
+      "name": "BattleFrontier_BattleFactoryLobby_Layout",
+      "width": 19,
+      "height": 12,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattleFactory",
+      "border_filepath": "data/layouts/BattleFrontier_BattleFactoryLobby/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattleFactoryLobby/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_FACTORY_PRE_BATTLE_ROOM",
+      "name": "BattleFrontier_BattleFactoryPreBattleRoom_Layout",
+      "width": 17,
+      "height": 14,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattleFactory",
+      "border_filepath": "data/layouts/BattleFrontier_BattleFactoryPreBattleRoom/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattleFactoryPreBattleRoom/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_FACTORY_BATTLE_ROOM",
+      "name": "BattleFrontier_BattleFactoryBattleRoom_Layout",
+      "width": 13,
+      "height": 12,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattleFactory",
+      "border_filepath": "data/layouts/BattleFrontier_BattleFactoryBattleRoom/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattleFactoryBattleRoom/map.bin"
+    },
+    {
       "id": "LAYOUT_ARTISAN_CAVE_B1F",
       "name": "ArtisanCave_B1F_Layout",
       "width": 46,
