@@ -41,5 +41,6 @@ extern const struct Tileset gTileset_BattleFrontierOutsideEast;
 extern const struct Tileset gTileset_BattleArena;
 extern const struct Tileset gTileset_BattlePalaceGeneral;
 extern const struct Tileset gTileset_BattlePalaceBuilding;
+extern const struct Tileset gTileset_BattlePike;
 
 #endif // GUARD_TILESETS_H

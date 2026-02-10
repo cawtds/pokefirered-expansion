@@ -1208,3 +1208,14 @@ const struct Tileset gTileset_ArtisanCave =
     .metatileAttributes = gMetatileAttributes_ArtisanCave,
     .callback = NULL, // InitTilesetAnim_Cave,
 };
+
+const struct Tileset gTileset_BattlePike =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_BattlePike,
+    .palettes = gTilesetPalettes_BattlePike,
+    .metatiles = gMetatiles_BattlePike,
+    .metatileAttributes = gMetatileAttributes_BattlePike,
+    .callback = NULL,
+};

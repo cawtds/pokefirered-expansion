@@ -4826,6 +4826,78 @@
       "blockdata_filepath": "data/layouts/BattleFrontier_Lounge2/map.bin"
     },
     {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS",
+      "name": "BattleFrontier_BattlePikeRoomWildMons_Layout",
+      "width": 9,
+      "height": 20,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattlePike",
+      "border_filepath": "data/layouts/BattleFrontier_BattlePikeRoomWildMons/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattlePikeRoomWildMons/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY",
+      "name": "BattleFrontier_BattlePikeLobby_Layout",
+      "width": 11,
+      "height": 13,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattlePike",
+      "border_filepath": "data/layouts/BattleFrontier_BattlePikeLobby/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattlePikeLobby/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_CORRIDOR",
+      "name": "BattleFrontier_BattlePikeCorridor_Layout",
+      "width": 14,
+      "height": 8,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattlePike",
+      "border_filepath": "data/layouts/BattleFrontier_BattlePikeCorridor/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattlePikeCorridor/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_THREE_PATH_ROOM",
+      "name": "BattleFrontier_BattlePikeThreePathRoom_Layout",
+      "width": 13,
+      "height": 11,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattlePike",
+      "border_filepath": "data/layouts/BattleFrontier_BattlePikeThreePathRoom/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattlePikeThreePathRoom/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_NORMAL",
+      "name": "BattleFrontier_BattlePikeRoomNormal_Layout",
+      "width": 9,
+      "height": 8,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattlePike",
+      "border_filepath": "data/layouts/BattleFrontier_BattlePikeRoomNormal/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattlePikeRoomNormal/map.bin"
+    },
+    {
+      "id": "LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_FINAL",
+      "name": "BattleFrontier_BattlePikeRoomFinal_Layout",
+      "width": 5,
+      "height": 8,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_BattleFrontierInside",
+      "secondary_tileset": "gTileset_BattlePike",
+      "border_filepath": "data/layouts/BattleFrontier_BattlePikeRoomFinal/border.bin",
+      "blockdata_filepath": "data/layouts/BattleFrontier_BattlePikeRoomFinal/map.bin"
+    },
+    {
       "id": "LAYOUT_ARTISAN_CAVE_B1F",
       "name": "ArtisanCave_B1F_Layout",
       "width": 46,
