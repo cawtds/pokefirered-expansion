@@ -39,6 +39,7 @@ struct FrontierBrain
 // This file's functions.
 static void GetChallengeStatus(void);
 static void SetFrontierData(void);
+static void SaveSelectedParty(void);
 
 // battledBit: Flags to change the conversation when the Frontier Brain is encountered for a battle
 // First bit is has battled them before and not won yet, second bit is has battled them and won (obtained a Symbol)
@@ -248,7 +249,7 @@ static void (*const sFrontierUtilFuncs[])(void) =
     // [FRONTIER_UTIL_FUNC_SET_PARTY_ORDER]       = SetSelectedPartyOrder,
     // [FRONTIER_UTIL_FUNC_SOFT_RESET]            = DoSoftReset_,
     // [FRONTIER_UTIL_FUNC_SET_TRAINERS]          = SetFrontierTrainers,
-    // [FRONTIER_UTIL_FUNC_SAVE_PARTY]            = SaveSelectedParty,
+    [FRONTIER_UTIL_FUNC_SAVE_PARTY]            = SaveSelectedParty,
     // [FRONTIER_UTIL_FUNC_RESULTS_WINDOW]        = ShowFacilityResultsWindow,
     // [FRONTIER_UTIL_FUNC_CHECK_AIR_TV_SHOW]     = CheckPutFrontierTVShowOnAir,
     // [FRONTIER_UTIL_FUNC_GET_BRAIN_STATUS]      = Script_GetFrontierBrainStatus,
@@ -331,6 +332,18 @@ static void SetFrontierData(void)
     case FRONTIER_DATA_HEARD_BRAIN_SPEECH:
         gSaveBlock2Ptr->frontier.battledBrainFlags |= gFrontierBrainInfo[facility].battledBit[hasSymbol];
         break;
+    }
+}
+
+static void SaveSelectedParty(void)
+{
+    u8 i;
+
+    for (i = 0; i < MAX_FRONTIER_PARTY_SIZE; i++)
+    {
+        u16 monId = gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1;
+        if (monId < PARTY_SIZE)
+            SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gPlayerParty[i]);
     }
 }
 
