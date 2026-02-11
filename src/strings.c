@@ -608,6 +608,7 @@ const u8 gText_B3F[] = _("B3F");
 const u8 gText_B4F[] = _("B4F");
 const u8 gText_Rooftop[] = _("ROOFTOP");
 const u8 gText_NowOn[] = _("Now on:");
+const u8 gText_BP[] = _("BP");
 const u8 gText_LinkedGamePlay[] = _("LINKED GAME PLAY");
 const u8 gText_DirectCorner[] = _("DIRECT CORNER");
 const u8 gText_UnionRoom[] = _("UNION ROOM");

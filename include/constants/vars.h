@@ -191,13 +191,13 @@
 #define VAR_MAP_SCENE_MT_MOON_B2F                                              0x408B
 
 
-#define VAR_BRAVO_TRAINER_BATTLE_TOWER_ON 0x408C
-#define VAR_HAS_ENTERED_BATTLE_FRONTIER   0x408D
-#define VAR_FRONTIER_MANIAC_FACILITY      0x408E
-#define VAR_FRONTIER_GAMBLER_CHALLENGE    0x408F
-#define VAR_0x4090                 0x4090
-#define VAR_0x4091                 0x4091
-#define VAR_0x4092                 0x4092
+#define VAR_BRAVO_TRAINER_BATTLE_TOWER_ON   0x408C
+#define VAR_HAS_ENTERED_BATTLE_FRONTIER     0x408D
+#define VAR_FRONTIER_MANIAC_FACILITY        0x408E
+#define VAR_FRONTIER_GAMBLER_CHALLENGE      0x408F
+#define VAR_FRONTIER_GAMBLER_STATE          0x4090
+#define VAR_FRONTIER_GAMBLER_SET_CHALLENGE  0x4091
+#define VAR_FRONTIER_GAMBLER_AMOUNT_BET     0x4092
 #define VAR_0x4093                 0x4093
 #define VAR_0x4094                 0x4094
 #define VAR_0x4095                 0x4095
@@ -256,7 +256,7 @@
 #define VAR_0x40CB                 0x40CB
 #define VAR_0x40CC                 0x40CC
 #define VAR_0x40CD                 0x40CD
-#define VAR_0x40CE                 0x40CE
+#define VAR_FRONTIER_BATTLE_MODE   0x40CE
 #define VAR_FRONTIER_FACILITY      0x40CF
 #define VAR_0x40D0                 0x40D0
 #define VAR_0x40D1                 0x40D1

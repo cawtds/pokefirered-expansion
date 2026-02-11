@@ -456,4 +456,12 @@ gSpecials::
 	def_special RemoveRecordsWindow
 	def_special BufferVarsForIVRater
 	def_special ShowFrontierManiacMessage
+	def_special ShowFrontierGamblerLookingMessage
+	def_special ShowFrontierGamblerGoMessage
+	def_special ShowBattlePointsWindow
+	def_special UpdateBattlePointsWindow
+	def_special CloseBattlePointsWindow
+	def_special GiveFrontierBattlePoints
+	def_special GetFrontierBattlePoints
+	def_special TakeFrontierBattlePoints
 gSpecialsEnd::

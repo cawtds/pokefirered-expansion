@@ -796,7 +796,7 @@
 // Unused?
 #define FLAG_MET_BATTLE_FRONTIER_BREEDER                 0x300
 #define FLAG_MET_BATTLE_FRONTIER_MANIAC                  0x301
-#define FLAG_0x302               0x302
+#define FLAG_MET_BATTLE_FRONTIER_GAMBLER                 0x302
 #define FLAG_0x303               0x303
 #define FLAG_0x304               0x304
 #define FLAG_0x305               0x305

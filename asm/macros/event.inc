@@ -56,16 +56,15 @@
 	@ Callstd ids
 	STD_OBTAIN_ITEM = 0
 	STD_FIND_ITEM = 1
-
 	MSGBOX_NPC = 2
 	MSGBOX_SIGN = 3
 	MSGBOX_DEFAULT = 4
 	MSGBOX_YESNO = 5
 	MSGBOX_AUTOCLOSE = 6
-
 	STD_OBTAIN_DECORATION = 7
 	STD_PUT_ITEM_AWAY = 8
 	STD_RECEIVED_ITEM = 9
+	MSGBOX_GETPOINTS = 10
 
 	@ Calls the script in gStdScripts at index function.
 	.macro callstd function:req

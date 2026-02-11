@@ -75,6 +75,7 @@
 #define MULTICHOICE_TRAINER_TOWER_MODE                         64
 #define MULTI_FRONTIER_RULES                                   65
 #define MULTI_FRONTIER_PASS_INFO                               66
+#define MULTI_FRONTIER_GAMBLER_BET                             67
 
 
 #define MULTICHOICE_NONE                                      255

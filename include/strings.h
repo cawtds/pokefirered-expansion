@@ -1707,4 +1707,43 @@ extern const u8 BattleFrontier_Lounge2_Text_PyramidKingIsThere[];
 extern const u8 BattleFrontier_Lounge2_Text_PyramidKingSilverMons[];
 extern const u8 BattleFrontier_Lounge2_Text_PyramidKingGoldMons[];
 
+// Battle Frontier Nature Girl
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlAttackHighAttackLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlAttackHighDefenseLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlAttackHighSupportLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlDefenseHighAttackLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlDefenseHighDefenseLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlDefenseHighSupportLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlSupportHighAttackLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlSupportHighDefenseLow[];
+extern const u8 BattleFrontier_Lounge5_Text_NatureGirlSupportHighSupportLow[];
+
+// Battle Frontier Gambler
+extern const u8 BattleFrontier_Lounge3_Text_ChallengeBattleTowerSingle[];
+extern const u8 BattleFrontier_Lounge3_Text_ChallengeBattleTowerDouble[];
+extern const u8 BattleFrontier_Lounge3_Text_ChallengeBattleTowerMulti[];
+extern const u8 BattleFrontier_Lounge3_Text_ChallengeBattleDomeSingle[];
+extern const u8 BattleFrontier_Lounge3_Text_ChallengeBattleDomeDouble[];
+extern const u8 BattleFrontier_Lounge3_Text_ChallengeBattleFactorySingle[];
+extern const u8 BattleFrontier_Lounge3_Text_ChallengeBattleFactoryDouble[];
+extern const u8 BattleFrontier_Lounge3_Text_ChallengeBattlePalaceSingle[];
+extern const u8 BattleFrontier_Lounge3_Text_ChallengeBattlePalaceDouble[];
+extern const u8 BattleFrontier_Lounge3_Text_ChallengeBattleArena[];
+extern const u8 BattleFrontier_Lounge3_Text_ChallengeBattlePike[];
+extern const u8 BattleFrontier_Lounge3_Text_ChallengeBattlePyramid[];
+extern const u8 BattleFrontier_Lounge3_Text_GetToBattleTowerSingle[];
+extern const u8 BattleFrontier_Lounge3_Text_GetToBattleTowerDouble[];
+extern const u8 BattleFrontier_Lounge3_Text_GetToBattleTowerMulti[];
+extern const u8 BattleFrontier_Lounge3_Text_GetToBattleDomeSingle[];
+extern const u8 BattleFrontier_Lounge3_Text_GetToBattleDomeDouble[];
+extern const u8 BattleFrontier_Lounge3_Text_GetToBattleFactorySingle[];
+extern const u8 BattleFrontier_Lounge3_Text_GetToBattleFactoryDouble[];
+extern const u8 BattleFrontier_Lounge3_Text_GetToBattlePalaceSingle[];
+extern const u8 BattleFrontier_Lounge3_Text_GetToBattlePalaceDouble[];
+extern const u8 BattleFrontier_Lounge3_Text_GetToBattleArena[];
+extern const u8 BattleFrontier_Lounge3_Text_GetToBattlePike[];
+extern const u8 BattleFrontier_Lounge3_Text_GetToBattlePyramid[];
+
+extern const u8 gText_BP[];
+
 #endif //GUARD_STRINGS_H

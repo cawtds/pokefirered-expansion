@@ -571,6 +571,14 @@ static const struct MenuAction sMultichoiceList_FrontierPassInfo[] =
     {gText_Exit},
 };
 
+static const struct MenuAction sMultichoiceList_FrontierGamblerBet[] =
+{
+    {COMPOUND_STRING("  5BP")},
+    {COMPOUND_STRING("10BP")},
+    {COMPOUND_STRING("15BP")},
+    {gText_Exit},
+};
+
 static const struct MenuAction sMultichoiceList_Exit[] = {
     { gOtherText_Exit }
 };
@@ -643,6 +651,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] = {
     [MULTICHOICE_TRAINER_TOWER_MODE]                         = MULTICHOICE(sMultichoiceList_TrainerTowerMode),
     [MULTI_FRONTIER_RULES]                                   = MULTICHOICE(sMultichoiceList_FrontierRules),
     [MULTI_FRONTIER_PASS_INFO]                               = MULTICHOICE(sMultichoiceList_FrontierPassInfo),
+    [MULTI_FRONTIER_GAMBLER_BET]                             = MULTICHOICE(sMultichoiceList_FrontierGamblerBet),
 };
 
 // From Cool to Berries goes unused
