@@ -192,7 +192,7 @@
 
 
 #define VAR_BRAVO_TRAINER_BATTLE_TOWER_ON 0x408C
-#define VAR_0x408D                 0x408D
+#define VAR_HAS_ENTERED_BATTLE_FRONTIER   0x408D
 #define VAR_0x408E                 0x408E
 #define VAR_0x408F                 0x408F
 #define VAR_0x4090                 0x4090

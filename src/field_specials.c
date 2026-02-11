@@ -1195,7 +1195,24 @@ static void Task_AnimateElevatorWindowView(u8 taskId)
     data[1]++;
 }
 
-void ListMenu(void)
+// Scrollable Multichoice task data defines
+#define tMaxItemsOnScreen    data[0]
+#define tNumItems            data[1]
+#define tLeft                data[2]
+#define tTop                 data[3]
+#define tWidth               data[4]
+#define tHeight              data[5]
+#define tKeepOpenAfterSelect data[6]
+#define tScrollOffset        data[7]
+#define tSelectedRow         data[8]
+#define tScrollMultiId       data[11]
+#define tScrollArrowId       data[12]
+#define tWindowId            data[13]
+#define tListTaskId          data[14]
+#define tTaskId              data[15]
+// data[9] and [10] unused
+
+void ShowScrollableMultichoice(void)
 {
     u8 taskId;
     struct Task *task;
@@ -1279,6 +1296,16 @@ void ListMenu(void)
         task->data[6] = 0;
         task->data[15] = taskId;
         break;
+    case SCROLL_MULTI_BF_RECEPTIONIST:
+        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN - 1;
+        task->tNumItems = 8;
+        task->tLeft = 1;
+        task->tTop = 1;
+        task->tWidth = 9;
+        task->tHeight = 10;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
+        break;
     case 99:
         break;
     default:
@@ -1287,6 +1314,22 @@ void ListMenu(void)
         break;
     }
 }
+
+// Undefine Scrollable Multichoice task data macros
+#undef tMaxItemsOnScreen
+#undef tNumItems
+#undef tLeft
+#undef tTop
+#undef tWidth
+#undef tHeight
+#undef tKeepOpenAfterSelect
+#undef tScrollOffset
+#undef tSelectedRow
+#undef tScrollMultiId
+#undef tScrollArrowId
+#undef tWindowId
+#undef tListTaskId
+#undef tTaskId
 
 static const u8 *const sListMenuLabels[][12] = {
     [LISTMENU_BADGES] =
@@ -1359,7 +1402,20 @@ static const u8 *const sListMenuLabels[][12] = {
         gText_Rooftop,
         gText_B1F,
         gOtherText_Exit,
-    }
+    },
+    [SCROLL_MULTI_BF_RECEPTIONIST] =
+    {
+        gText_BattleTower2,
+        gText_BattleDome,
+        gText_BattlePalace,
+        gText_BattleArena,
+        gText_BattleFactory,
+        gText_BattlePike,
+        gText_BattlePyramid,
+        gText_RankingHall,
+        gText_ExchangeService,
+        gText_Exit
+    },
 };
 
 static void Task_CreateScriptListMenu(u8 taskId)

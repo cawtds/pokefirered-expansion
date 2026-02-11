@@ -1471,3 +1471,5 @@ const u8 gText_BattleFactory[] = _("BATTLE FACTORY");
 const u8 gText_BattleArena[] = _("BATTLE ARENA");
 const u8 gText_BattlePike[] = _("BATTLE PIKE");
 const u8 gText_BattlePyramid[] = _("BATTLE PYRAMID");
+const u8 gText_RankingHall[] = _("RANKING HALL");
+const u8 gText_ExchangeService[] = _("EXCHANGE SERVICE");

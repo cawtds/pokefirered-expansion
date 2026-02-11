@@ -621,7 +621,7 @@ static const struct SpritePalette sFlyTargetIconsSpritePalette =
 // static const mapsec_u16_t sRedOutlineFlyDestinations[][2] =
 // {
 //     {
-//         FLAG_LANDMARK_BATTLE_FRONTIER,
+//         FLAG_WORLD_MAP_BATTLE_FRONTIER,
 //         MAPSEC_BATTLE_FRONTIER
 //     },
 //     {
@@ -1459,8 +1459,8 @@ static u8 GetMapsecType(mapsec_u16_t mapSecId)
     //     return FlagGet(FLAG_VISITED_SOOTOPOLIS_CITY) ? MAPSECTYPE_CITY_CANFLY : MAPSECTYPE_CITY_CANTFLY;
     // case MAPSEC_EVER_GRANDE_CITY:
     //     return FlagGet(FLAG_VISITED_EVER_GRANDE_CITY) ? MAPSECTYPE_CITY_CANFLY : MAPSECTYPE_CITY_CANTFLY;
-    // case MAPSEC_BATTLE_FRONTIER:
-    //     return FlagGet(FLAG_LANDMARK_BATTLE_FRONTIER) ? MAPSECTYPE_BATTLE_FRONTIER : MAPSECTYPE_NONE;
+    case MAPSEC_BATTLE_FRONTIER:
+        return FlagGet(FLAG_WORLD_MAP_BATTLE_FRONTIER) ? MAPSECTYPE_BATTLE_FRONTIER : MAPSECTYPE_NONE;
     // case MAPSEC_SOUTHERN_ISLAND:
     //     return FlagGet(FLAG_LANDMARK_SOUTHERN_ISLAND) ? MAPSECTYPE_ROUTE : MAPSECTYPE_NONE;
     case MAPSEC_PALLET_TOWN:

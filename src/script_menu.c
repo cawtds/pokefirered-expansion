@@ -553,6 +553,24 @@ static const struct MenuAction sMultichoiceList_TrainerTowerMode[] = {
     { gOtherText_Exit }
 };
 
+static const struct MenuAction sMultichoiceList_FrontierRules[] =
+{
+    {COMPOUND_STRING("TWO STYLES")},
+    {COMPOUND_STRING("LV. 50")},
+    {COMPOUND_STRING("OPEN LEVEL")},
+    {COMPOUND_STRING("{PKMN} TYPE & NO.")},
+    {COMPOUND_STRING("HOLD ITEMS")},
+    {gText_Exit},
+};
+
+static const struct MenuAction sMultichoiceList_FrontierPassInfo[] =
+{
+    {COMPOUND_STRING("SYMBOLS")},
+    {COMPOUND_STRING("RECORD")},
+    {COMPOUND_STRING("BATTLE PTS")},
+    {gText_Exit},
+};
+
 static const struct MenuAction sMultichoiceList_Exit[] = {
     { gOtherText_Exit }
 };
@@ -623,6 +641,8 @@ static const struct MultichoiceListStruct sMultichoiceLists[] = {
     [MULTI_SSTIDAL_BATTLE_FRONTIER]                          = MULTICHOICE(sMultichoiceList_62),
     [MULTICHOICE_JOIN_OR_LEAD]                               = MULTICHOICE(sMultichoiceList_JoinOrLead),
     [MULTICHOICE_TRAINER_TOWER_MODE]                         = MULTICHOICE(sMultichoiceList_TrainerTowerMode),
+    [MULTI_FRONTIER_RULES]                                   = MULTICHOICE(sMultichoiceList_FrontierRules),
+    [MULTI_FRONTIER_PASS_INFO]                               = MULTICHOICE(sMultichoiceList_FrontierPassInfo),
 };
 
 // From Cool to Berries goes unused

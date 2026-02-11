@@ -344,7 +344,7 @@ gSpecials::
 	def_special SetPostgameFlags
 	def_special StartMarowakBattle
 	def_special ForcePlayerOntoBike
-	def_special ListMenu
+	def_special ShowScrollableMultichoice
 	def_special ReturnToListMenu
 	def_special DoPicboxCancel
 	def_special SetVermilionTrashCans

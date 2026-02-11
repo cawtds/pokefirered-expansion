@@ -73,16 +73,26 @@
 #define MULTI_SSTIDAL_BATTLE_FRONTIER                          62
 #define MULTICHOICE_JOIN_OR_LEAD                               63
 #define MULTICHOICE_TRAINER_TOWER_MODE                         64
+#define MULTI_FRONTIER_RULES                                   65
+#define MULTI_FRONTIER_PASS_INFO                               66
+
 
 #define MULTICHOICE_NONE                                      255
 
-#define LISTMENU_BADGES                    0
-#define LISTMENU_SILPHCO_FLOORS            1
-#define LISTMENU_ROCKET_HIDEOUT_FLOORS     2
-#define LISTMENU_DEPT_STORE_FLOORS         3
-#define LISTMENU_WIRELESS_LECTURE_HEADERS  4
-#define LISTMENU_BERRY_POWDER              5
-#define LISTMENU_TRAINER_TOWER_FLOORS      6
+enum ScrollMulti
+{
+    LISTMENU_BADGES,
+    LISTMENU_SILPHCO_FLOORS,
+    LISTMENU_ROCKET_HIDEOUT_FLOORS,
+    LISTMENU_DEPT_STORE_FLOORS,
+    LISTMENU_WIRELESS_LECTURE_HEADERS,
+    LISTMENU_BERRY_POWDER,
+    LISTMENU_TRAINER_TOWER_FLOORS,
+    SCROLL_MULTI_BF_RECEPTIONIST,
+};
+
+#define MAX_SCROLL_MULTI_ON_SCREEN 6
+#define MAX_SCROLL_MULTI_LENGTH 16
 
 // Std String Ids
 #define STDSTRING_COOL              0
