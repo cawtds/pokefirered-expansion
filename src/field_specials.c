@@ -45,6 +45,7 @@
 #include "constants/moves.h"
 #include "constants/menu.h"
 #include "constants/event_objects.h"
+#include "constants/battle_frontier.h"
 #include "constants/metatile_labels.h"
 
 static EWRAM_DATA u8 sElevatorCurrentFloorWindowId = 0;
@@ -2792,4 +2793,165 @@ void BufferVarsForIVRater(void)
             }
         }
     }
+}
+
+void UpdateFrontierManiac(u16 daysSince)
+{
+    u16 *var = GetVarPointer(VAR_FRONTIER_MANIAC_FACILITY);
+    *var += daysSince;
+    *var %= FRONTIER_MANIAC_FACILITY_COUNT;
+}
+
+void ShowFrontierManiacMessage(void)
+{
+    static const u8 *const sFrontierManiacMessages[][FRONTIER_MANIAC_MESSAGE_COUNT] =
+    {
+        [FRONTIER_MANIAC_TOWER_SINGLES] =
+        {
+            BattleFrontier_Lounge2_Text_SalonMaidenIsThere,
+            BattleFrontier_Lounge2_Text_SalonMaidenSilverMons,
+            BattleFrontier_Lounge2_Text_SalonMaidenGoldMons
+        },
+        [FRONTIER_MANIAC_TOWER_DOUBLES] =
+        {
+            BattleFrontier_Lounge2_Text_DoubleBattleAdvice1,
+            BattleFrontier_Lounge2_Text_DoubleBattleAdvice2,
+            BattleFrontier_Lounge2_Text_DoubleBattleAdvice3
+        },
+        [FRONTIER_MANIAC_TOWER_MULTIS] =
+        {
+            BattleFrontier_Lounge2_Text_MultiBattleAdvice,
+            BattleFrontier_Lounge2_Text_MultiBattleAdvice,
+            BattleFrontier_Lounge2_Text_MultiBattleAdvice
+        },
+        [FRONTIER_MANIAC_TOWER_LINK] =
+        {
+            BattleFrontier_Lounge2_Text_LinkMultiBattleAdvice,
+            BattleFrontier_Lounge2_Text_LinkMultiBattleAdvice,
+            BattleFrontier_Lounge2_Text_LinkMultiBattleAdvice
+        },
+        [FRONTIER_MANIAC_DOME] =
+        {
+            BattleFrontier_Lounge2_Text_DomeAceIsThere,
+            BattleFrontier_Lounge2_Text_DomeAceSilverMons,
+            BattleFrontier_Lounge2_Text_DomeAceGoldMons
+        },
+        [FRONTIER_MANIAC_FACTORY] =
+        {
+            BattleFrontier_Lounge2_Text_FactoryHeadIsThere,
+            BattleFrontier_Lounge2_Text_FactoryHeadSilverMons,
+            BattleFrontier_Lounge2_Text_FactoryHeadGoldMons
+        },
+        [FRONTIER_MANIAC_PALACE] =
+        {
+            BattleFrontier_Lounge2_Text_PalaceMavenIsThere,
+            BattleFrontier_Lounge2_Text_PalaceMavenSilverMons,
+            BattleFrontier_Lounge2_Text_PalaceMavenGoldMons
+        },
+        [FRONTIER_MANIAC_ARENA] =
+        {
+            BattleFrontier_Lounge2_Text_ArenaTycoonIsThere,
+            BattleFrontier_Lounge2_Text_ArenaTycoonSilverMons,
+            BattleFrontier_Lounge2_Text_ArenaTycoonGoldMons
+        },
+        [FRONTIER_MANIAC_PIKE] =
+        {
+            BattleFrontier_Lounge2_Text_PikeQueenIsThere,
+            BattleFrontier_Lounge2_Text_PikeQueenSilverMons,
+            BattleFrontier_Lounge2_Text_PikeQueenGoldMons
+        },
+        [FRONTIER_MANIAC_PYRAMID] =
+        {
+            BattleFrontier_Lounge2_Text_PyramidKingIsThere,
+            BattleFrontier_Lounge2_Text_PyramidKingSilverMons,
+            BattleFrontier_Lounge2_Text_PyramidKingGoldMons
+        },
+    };
+
+    static const u8 sFrontierManiacStreakThresholds[][FRONTIER_MANIAC_MESSAGE_COUNT - 1] =
+    {
+        [FRONTIER_MANIAC_TOWER_SINGLES] = { 21, 56 },
+        [FRONTIER_MANIAC_TOWER_DOUBLES] = { 21, 35 },
+        [FRONTIER_MANIAC_TOWER_MULTIS]  = { 255, 255 },
+        [FRONTIER_MANIAC_TOWER_LINK]    = { 255, 255 },
+        [FRONTIER_MANIAC_DOME]          = { 2, 4 },
+        [FRONTIER_MANIAC_FACTORY]       = { 7, 21 },
+        [FRONTIER_MANIAC_PALACE]        = { 7, 21 },
+        [FRONTIER_MANIAC_ARENA]         = { 14, 28 },
+        [FRONTIER_MANIAC_PIKE]          = { 13, 112 }, //BUG: 112 (0x70) is probably a mistake; the Pike Queen is battled twice well before that
+        [FRONTIER_MANIAC_PYRAMID]       = { 7, 56 }
+    };
+
+    u8 i;
+    u16 winStreak = 0;
+    u16 facility = VarGet(VAR_FRONTIER_MANIAC_FACILITY);
+
+    switch (facility)
+    {
+    case FRONTIER_MANIAC_TOWER_SINGLES:
+    case FRONTIER_MANIAC_TOWER_DOUBLES:
+    case FRONTIER_MANIAC_TOWER_MULTIS:
+    case FRONTIER_MANIAC_TOWER_LINK:
+        if (gSaveBlock2Ptr->frontier.towerWinStreaks[facility][FRONTIER_LVL_50]
+            >= gSaveBlock2Ptr->frontier.towerWinStreaks[facility][FRONTIER_LVL_OPEN])
+            winStreak = gSaveBlock2Ptr->frontier.towerWinStreaks[facility][FRONTIER_LVL_50];
+        else
+            winStreak = gSaveBlock2Ptr->frontier.towerWinStreaks[facility][FRONTIER_LVL_OPEN];
+        break;
+    case FRONTIER_MANIAC_DOME:
+        if (gSaveBlock2Ptr->frontier.domeWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50]
+            >= gSaveBlock2Ptr->frontier.domeWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_OPEN])
+            winStreak = gSaveBlock2Ptr->frontier.domeWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
+        else
+            winStreak = gSaveBlock2Ptr->frontier.domeWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_OPEN];
+        break;
+    case FRONTIER_MANIAC_FACTORY:
+        if (gSaveBlock2Ptr->frontier.factoryWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50]
+            >= gSaveBlock2Ptr->frontier.factoryWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_OPEN])
+            winStreak = gSaveBlock2Ptr->frontier.factoryWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
+        else
+            winStreak = gSaveBlock2Ptr->frontier.factoryWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_OPEN];
+        break;
+    case FRONTIER_MANIAC_PALACE:
+        if (gSaveBlock2Ptr->frontier.palaceWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50]
+            >= gSaveBlock2Ptr->frontier.palaceWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_OPEN])
+            winStreak = gSaveBlock2Ptr->frontier.palaceWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_50];
+        else
+            winStreak = gSaveBlock2Ptr->frontier.palaceWinStreaks[FRONTIER_MODE_SINGLES][FRONTIER_LVL_OPEN];
+        break;
+    case FRONTIER_MANIAC_ARENA:
+        if (gSaveBlock2Ptr->frontier.arenaWinStreaks[FRONTIER_LVL_50]
+            >= gSaveBlock2Ptr->frontier.arenaWinStreaks[FRONTIER_LVL_OPEN])
+            winStreak = gSaveBlock2Ptr->frontier.arenaWinStreaks[FRONTIER_LVL_50];
+        else
+            winStreak = gSaveBlock2Ptr->frontier.arenaWinStreaks[FRONTIER_LVL_OPEN];
+        break;
+    case FRONTIER_MANIAC_PIKE:
+        if (gSaveBlock2Ptr->frontier.pikeWinStreaks[FRONTIER_LVL_50]
+            >= gSaveBlock2Ptr->frontier.pikeWinStreaks[FRONTIER_LVL_OPEN])
+            winStreak = gSaveBlock2Ptr->frontier.pikeWinStreaks[FRONTIER_LVL_50];
+        else
+            winStreak = gSaveBlock2Ptr->frontier.pikeWinStreaks[FRONTIER_LVL_OPEN];
+        break;
+    case FRONTIER_MANIAC_PYRAMID:
+        if (gSaveBlock2Ptr->frontier.pyramidWinStreaks[FRONTIER_LVL_50]
+            >= gSaveBlock2Ptr->frontier.pyramidWinStreaks[FRONTIER_LVL_OPEN])
+            winStreak = gSaveBlock2Ptr->frontier.pyramidWinStreaks[FRONTIER_LVL_50];
+        else
+            winStreak = gSaveBlock2Ptr->frontier.pyramidWinStreaks[FRONTIER_LVL_OPEN];
+        break;
+    default:
+        return;
+    }
+
+    for (i = 0; i < FRONTIER_MANIAC_MESSAGE_COUNT - 1 && sFrontierManiacStreakThresholds[facility][i] < winStreak; i++);
+
+    ShowFieldMessage(sFrontierManiacMessages[facility][i]);
+}
+
+void UpdateFrontierGambler(u16 daysSince)
+{
+    u16 *var = GetVarPointer(VAR_FRONTIER_GAMBLER_CHALLENGE);
+    *var += daysSince;
+    *var %= FRONTIER_GAMBLER_CHALLENGE_COUNT;
 }

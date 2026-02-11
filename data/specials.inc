@@ -455,4 +455,5 @@ gSpecials::
 	def_special ScrollRankingHallRecordsWindow
 	def_special RemoveRecordsWindow
 	def_special BufferVarsForIVRater
+	def_special ShowFrontierManiacMessage
 gSpecialsEnd::

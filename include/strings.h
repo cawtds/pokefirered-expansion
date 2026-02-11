@@ -1679,4 +1679,32 @@ extern const u8 gText_BattlePyramid[];
 extern const u8 gText_RankingHall[];
 extern const u8 gText_ExchangeService[];
 
+// Battle Frontier Maniac
+extern const u8 BattleFrontier_Lounge2_Text_SalonMaidenIsThere[];
+extern const u8 BattleFrontier_Lounge2_Text_SalonMaidenSilverMons[];
+extern const u8 BattleFrontier_Lounge2_Text_SalonMaidenGoldMons[];
+extern const u8 BattleFrontier_Lounge2_Text_DoubleBattleAdvice1[];
+extern const u8 BattleFrontier_Lounge2_Text_DoubleBattleAdvice2[];
+extern const u8 BattleFrontier_Lounge2_Text_DoubleBattleAdvice3[];
+extern const u8 BattleFrontier_Lounge2_Text_MultiBattleAdvice[];
+extern const u8 BattleFrontier_Lounge2_Text_LinkMultiBattleAdvice[];
+extern const u8 BattleFrontier_Lounge2_Text_DomeAceIsThere[];
+extern const u8 BattleFrontier_Lounge2_Text_DomeAceSilverMons[];
+extern const u8 BattleFrontier_Lounge2_Text_DomeAceGoldMons[];
+extern const u8 BattleFrontier_Lounge2_Text_FactoryHeadIsThere[];
+extern const u8 BattleFrontier_Lounge2_Text_FactoryHeadSilverMons[];
+extern const u8 BattleFrontier_Lounge2_Text_FactoryHeadGoldMons[];
+extern const u8 BattleFrontier_Lounge2_Text_PalaceMavenIsThere[];
+extern const u8 BattleFrontier_Lounge2_Text_PalaceMavenSilverMons[];
+extern const u8 BattleFrontier_Lounge2_Text_PalaceMavenGoldMons[];
+extern const u8 BattleFrontier_Lounge2_Text_ArenaTycoonIsThere[];
+extern const u8 BattleFrontier_Lounge2_Text_ArenaTycoonSilverMons[];
+extern const u8 BattleFrontier_Lounge2_Text_ArenaTycoonGoldMons[];
+extern const u8 BattleFrontier_Lounge2_Text_PikeQueenIsThere[];
+extern const u8 BattleFrontier_Lounge2_Text_PikeQueenSilverMons[];
+extern const u8 BattleFrontier_Lounge2_Text_PikeQueenGoldMons[];
+extern const u8 BattleFrontier_Lounge2_Text_PyramidKingIsThere[];
+extern const u8 BattleFrontier_Lounge2_Text_PyramidKingSilverMons[];
+extern const u8 BattleFrontier_Lounge2_Text_PyramidKingGoldMons[];
+
 #endif //GUARD_STRINGS_H

@@ -193,8 +193,8 @@
 
 #define VAR_BRAVO_TRAINER_BATTLE_TOWER_ON 0x408C
 #define VAR_HAS_ENTERED_BATTLE_FRONTIER   0x408D
-#define VAR_0x408E                 0x408E
-#define VAR_0x408F                 0x408F
+#define VAR_FRONTIER_MANIAC_FACILITY      0x408E
+#define VAR_FRONTIER_GAMBLER_CHALLENGE    0x408F
 #define VAR_0x4090                 0x4090
 #define VAR_0x4091                 0x4091
 #define VAR_0x4092                 0x4092
