@@ -78,6 +78,10 @@
 #define MULTI_FRONTIER_GAMBLER_BET                             67
 #define MULTI_LEVEL_MODE                                       68
 #define MULTI_BATTLE_FACTORY_RULES                             69
+#define MULTI_GO_ON_RECORD_REST_RETIRE                         70
+#define MULTI_GO_ON_REST_RETIRE                                71
+#define MULTI_GO_ON_RECORD_RETIRE                              72
+#define MULTI_GO_ON_RETIRE                                     73
 
 
 #define MULTICHOICE_NONE                                      255

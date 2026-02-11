@@ -361,6 +361,7 @@
 
 // placeholders
 #define SE_SUDOWOODO_SHAKE  SE_USE_ITEM
+#define SE_POKENAV_CALL     SE_USE_ITEM
 #define MUS_B_TOWER         MUS_ROUTE1
 #define MUS_B_FRONTIER      MUS_ROUTE1
 #define MUS_B_ARENA         MUS_ROUTE1

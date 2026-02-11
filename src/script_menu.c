@@ -596,6 +596,34 @@ static const struct MenuAction sMultichoiceList_BattleFactoryRules[] =
     {gText_Exit},
 };
 
+static const struct MenuAction sMultichoiceList_GoOnRecordRestRetire[] =
+{
+    {gText_GoOn},
+    {gText_Record2},
+    {gText_Rest},
+    {gText_Retire},
+};
+
+static const struct MenuAction sMultichoiceList_GoOnRestRetire[] =
+{
+    {gText_GoOn},
+    {gText_Rest},
+    {gText_Retire},
+};
+
+static const struct MenuAction sMultichoiceList_GoOnRecordRetire[] =
+{
+    {gText_GoOn},
+    {gText_Record2},
+    {gText_Retire},
+};
+
+static const struct MenuAction sMultichoiceList_GoOnRetire[] =
+{
+    {gText_GoOn},
+    {gText_Retire},
+};
+
 
 static const struct MenuAction sMultichoiceList_Exit[] = {
     { gOtherText_Exit }
@@ -672,6 +700,10 @@ static const struct MultichoiceListStruct sMultichoiceLists[] = {
     [MULTI_FRONTIER_GAMBLER_BET]                             = MULTICHOICE(sMultichoiceList_FrontierGamblerBet),
     [MULTI_LEVEL_MODE]                                       = MULTICHOICE(sMultichoiceList_LevelMode),
     [MULTI_BATTLE_FACTORY_RULES]                             = MULTICHOICE(sMultichoiceList_BattleFactoryRules),
+    [MULTI_GO_ON_RECORD_REST_RETIRE]                         = MULTICHOICE(sMultichoiceList_GoOnRecordRestRetire),
+    [MULTI_GO_ON_REST_RETIRE]                                = MULTICHOICE(sMultichoiceList_GoOnRestRetire),
+    [MULTI_GO_ON_RECORD_RETIRE]                              = MULTICHOICE(sMultichoiceList_GoOnRecordRetire),
+    [MULTI_GO_ON_RETIRE]                                     = MULTICHOICE(sMultichoiceList_GoOnRetire),
 };
 
 // From Cool to Berries goes unused

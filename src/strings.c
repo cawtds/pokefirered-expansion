@@ -1508,3 +1508,7 @@ const u8 gText_BasicRules[] = _("BASIC RULES");
 const u8 gText_SwapPartners[] = _("SWAP: PARTNER");
 const u8 gText_SwapNumber[] = _("SWAP: NUMBER");
 const u8 gText_SwapNotes[] = _("SWAP: NOTES");
+const u8 gText_GoOn[] = _("GO ON");
+const u8 gText_Record2[] = _("RECORD");
+const u8 gText_Rest[] = _("REST");
+const u8 gText_Retire[] = _("RETIRE");

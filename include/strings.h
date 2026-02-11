@@ -1827,5 +1827,9 @@ extern const u8 gText_BasicRules[];
 extern const u8 gText_SwapPartners[];
 extern const u8 gText_SwapNumber[];
 extern const u8 gText_SwapNotes[];
+extern const u8 gText_GoOn[];
+extern const u8 gText_Record2[];
+extern const u8 gText_Rest[];
+extern const u8 gText_Retire[];
 
 #endif //GUARD_STRINGS_H
