@@ -1649,4 +1649,33 @@ extern const u8 gText_DexEmptyString[];
 extern const u8 gText_DexSearchDontSpecify[];
 extern const u8 gText_DexSearchTypeNone[];
 
+extern const u8 gText_123Dot[][3];
+// Frontier util.
+extern const u8 gText_FacilitySingle[];
+extern const u8 gText_FacilityDouble[];
+extern const u8 gText_FacilityMulti[];
+extern const u8 gText_FacilityLink[];
+extern const u8 gText_Facility[];
+
+extern const u8 gText_RecordsLv50[];
+extern const u8 gText_RecordsOpenLevel[];
+extern const u8 gText_FrontierFacilityWinStreak[];
+extern const u8 gText_FrontierFacilityClearStreak[];
+extern const u8 gText_FrontierFacilityRoomsCleared[];
+extern const u8 gText_FrontierFacilityKOsStreak[];
+extern const u8 gText_FrontierFacilityFloorsCleared[];
+extern const u8 gText_FrontierFacilityTotalCaughtSpeciesBanned[];
+extern const u8 gText_FrontierFacilityIncluding[];
+extern const u8 gText_FrontierFacilityAreInelegible[];
+
+extern const u8 gText_BattleTower2[];
+extern const u8 gText_BattleDome[];
+extern const u8 gText_BattlePalace[];
+extern const u8 gText_BattleArena[];
+extern const u8 gText_BattleFactory[];
+extern const u8 gText_BattlePike[];
+extern const u8 gText_BattlePyramid[];
+extern const u8 gText_RankingHall[];
+extern const u8 gText_ExchangeService[];
+
 #endif //GUARD_STRINGS_H

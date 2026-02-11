@@ -1444,3 +1444,30 @@ const u8 gText_DexSortSmallestDescription[] = _("Owned POKéMON are listed from 
 const u8 gText_DexEmptyString[] = _("");
 const u8 gText_DexSearchDontSpecify[] = _("DON'T SPECIFY.");
 const u8 gText_DexSearchTypeNone[] = _("NONE");
+
+// Frontier util.
+ALIGNED(4) const u8 gText_FacilitySingle[] = _("{STR_VAR_1} SINGLE");
+ALIGNED(4) const u8 gText_FacilityDouble[] = _("{STR_VAR_1} DOUBLE");
+ALIGNED(4) const u8 gText_FacilityMulti[] = _("{STR_VAR_1} MULTI");
+ALIGNED(4) const u8 gText_FacilityLink[] = _("{STR_VAR_1} LINK");
+ALIGNED(4) const u8 gText_Facility[] = _("{STR_VAR_1}");
+
+ALIGNED(4) const u8 gText_RecordsLv50[] = _("LV. 50");
+ALIGNED(4) const u8 gText_RecordsOpenLevel[] = _("OPEN LEVEL");
+ALIGNED(4) const u8 gText_FrontierFacilityWinStreak[] = _("Win streak: {STR_VAR_2}");
+ALIGNED(4) const u8 gText_FrontierFacilityClearStreak[] = _("Clear streak: {STR_VAR_2}");
+ALIGNED(4) const u8 gText_FrontierFacilityRoomsCleared[] = _("Rooms cleared: {STR_VAR_2}");
+ALIGNED(4) const u8 gText_FrontierFacilityKOsStreak[] = _("KOs in a row: {STR_VAR_2}");
+ALIGNED(4) const u8 gText_FrontierFacilityFloorsCleared[] = _("Floors cleared: {STR_VAR_2}");
+ALIGNED(4) const u8 gText_123Dot[][3] = {_("1."), _("2."), _("3.")};
+const u8 gText_FrontierFacilityTotalCaughtSpeciesBanned[] = _(" and {STR_VAR_2} of the POKéMON species\nyou caught are inelegible");
+const u8 gText_FrontierFacilityIncluding[] = _(".\pThese include ");
+const u8 gText_FrontierFacilityAreInelegible[] = _(" are inelegible");
+
+const u8 gText_BattleTower2[] = _("BATTLE TOWER");
+const u8 gText_BattleDome[] = _("BATTLE DOME");
+const u8 gText_BattlePalace[] = _("BATTLE PALACE");
+const u8 gText_BattleFactory[] = _("BATTLE FACTORY");
+const u8 gText_BattleArena[] = _("BATTLE ARENA");
+const u8 gText_BattlePike[] = _("BATTLE PIKE");
+const u8 gText_BattlePyramid[] = _("BATTLE PYRAMID");

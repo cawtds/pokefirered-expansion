@@ -274,6 +274,24 @@ struct NPCFollower
     u8 battlePartner; // If you have more than 255 total battle partners defined, change this to a u16
 };
 
+#define LINK_B_RECORDS_COUNT 5
+
+struct LinkBattleRecord
+{
+    u8 name[PLAYER_NAME_LENGTH + 1];
+    u16 trainerId;
+    u16 wins;
+    u16 losses;
+    u16 draws;
+};
+
+struct LinkBattleRecords
+{
+    struct LinkBattleRecord entries[LINK_B_RECORDS_COUNT];
+    u8 languages[LINK_B_RECORDS_COUNT];
+};
+
+#include "global.berry.h"
 #include "constants/items.h"
 #define ITEM_FLAGS_COUNT ((ITEMS_COUNT / 8) + ((ITEMS_COUNT % 8) ? 1 : 0))
 
@@ -291,6 +309,10 @@ struct SaveBlock3
 #if USE_DEXNAV_SEARCH_LEVELS == TRUE
     u8 dexNavSearchLevels[NUM_SPECIES];
 #endif
+#if FREE_LINK_BATTLE_RECORDS == FALSE
+    struct LinkBattleRecords linkBattleRecords;
+#endif //FREE_LINK_BATTLE_RECORDS
+    struct BerryTree berryTrees[BERRY_TREES_COUNT];
     u8 dexNavChain;
 };
 
@@ -349,23 +371,6 @@ struct BerryCrush
     u32 unk;
 };
 
-#define LINK_B_RECORDS_COUNT 5
-
-struct LinkBattleRecord
-{
-    u8 name[PLAYER_NAME_LENGTH + 1];
-    u16 trainerId;
-    u16 wins;
-    u16 losses;
-    u16 draws;
-};
-
-struct LinkBattleRecords
-{
-    struct LinkBattleRecord entries[LINK_B_RECORDS_COUNT];
-    u8 languages[LINK_B_RECORDS_COUNT];
-};
-
 struct RecordMixingGiftData
 {
     u8 unk0;
@@ -382,7 +387,6 @@ struct RecordMixingGift
 
 #include "constants/game_stat.h"
 #include "global.fieldmap.h"
-#include "global.berry.h"
 #include "pokemon.h"
 
 struct BattleTowerEReaderTrainer
@@ -543,6 +547,51 @@ struct BattleFrontier
     /*0xEFC*/ struct DomeMonData domePlayerPartyData[FRONTIER_PARTY_SIZE];
 };
 
+struct ApprenticeQuestion
+{
+    u8 questionId:2;
+    u8 monId:2;
+    u8 moveSlot:2;
+    u8 suggestedChange:2; // TRUE if told to use held item or second move, FALSE if told to use no item or first move
+    //u8 padding;
+    u16 data; // used both as an itemId and a move
+};
+
+struct PlayersApprentice
+{
+    /*0xB0*/ u8 id;
+    /*0xB1*/ u8 lvlMode:2;  //0: Unassigned, 1: Lv 50, 2: Open Lv
+    /*0xB1*/ u8 questionsAnswered:4;
+    /*0xB1*/ u8 leadMonId:2;
+    /*0xB2*/ u8 party:3;
+             u8 saveId:2;
+             //u8 padding1:3;
+    /*0xB3*/ u8 unused;
+    /*0xB4*/ u8 speciesIds[MULTI_PARTY_SIZE];
+    /*0xB7*/ //u8 padding2;
+    /*0xB8*/ struct ApprenticeQuestion questions[APPRENTICE_MAX_QUESTIONS];
+};
+
+struct RankingHall1P
+{
+    u8 id[TRAINER_ID_LENGTH];
+    u16 winStreak;
+    u8 name[PLAYER_NAME_LENGTH + 1];
+    u8 language;
+    //u8 padding;
+};
+
+struct RankingHall2P
+{
+    u8 id1[TRAINER_ID_LENGTH];
+    u8 id2[TRAINER_ID_LENGTH];
+    u16 winStreak;
+    u8 name1[PLAYER_NAME_LENGTH + 1];
+    u8 name2[PLAYER_NAME_LENGTH + 1];
+    u8 language;
+    //u8 padding;
+};
+
 struct SaveBlock2
 {
     /*0x000*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
@@ -567,17 +616,17 @@ struct SaveBlock2
     /*0x0AC*/ bool8 unkFlag1; // Set TRUE, never read
     /*0x0AD*/ bool8 unkFlag2; // Set FALSE, never read
     /*0x898*/ u16 mapView[0x100];
-#if FREE_LINK_BATTLE_RECORDS == FALSE
-    /*0xA98*/ struct LinkBattleRecords linkBattleRecords;
-#endif //FREE_LINK_BATTLE_RECORDS
     /*0xAF0*/ struct BerryCrush berryCrush;
 #if FREE_POKEMON_JUMP == FALSE
     /*0xB00*/ struct PokemonJumpRecords pokeJump;
 #endif //FREE_POKEMON_JUMP
     /*0xB10*/ struct BerryPickingResults berryPick;
-    /*0x169C*/ struct BerryTree berryTrees[BERRY_TREES_COUNT]; // moved to SaveBlock2 due to QuestLogScene taking up SaveBlock1
+#if FREE_RECORD_MIXING_HALL_RECORDS == FALSE
+    /*0x21C*/ struct RankingHall1P hallRecords1P[HALL_FACILITIES_COUNT][FRONTIER_LVL_MODE_COUNT][HALL_RECORDS_COUNT]; // From record mixing.
+    /*0x57C*/ struct RankingHall2P hallRecords2P[FRONTIER_LVL_MODE_COUNT][HALL_RECORDS_COUNT]; // From record mixing.
+#endif //FREE_RECORD_MIXING_HALL_RECORDS
     struct BattleFrontier frontier;
-    /*0x???*/ u8 filler_90[268];
+    // /*0x???*/ u8 filler_90[268];
 }; // size: 0xF24
 
 extern struct SaveBlock2 *gSaveBlock2Ptr;
@@ -669,81 +718,6 @@ struct RamScript
     struct RamScriptData data;
 };
 
-// Leftover from R/S
-struct DewfordTrend
-{
-    u16 trendiness:7;
-    u16 maxTrendiness:7;
-    u16 gainingTrendiness:1;
-    u16 rand;
-    u16 words[2];
-}; /*size = 0x8*/
-
-struct MauvilleManCommon
-{
-    u8 id;
-};
-
-struct MauvilleManBard
-{
-    /*0x00*/ u8 id;
-    /*0x02*/ u16 songLyrics[BARD_SONG_LENGTH];
-    /*0x0E*/ u16 temporaryLyrics[BARD_SONG_LENGTH];
-    /*0x1A*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
-    /*0x22*/ u8 filler_2DB6[0x3];
-    /*0x25*/ u8 playerTrainerId[TRAINER_ID_LENGTH];
-    /*0x29*/ bool8 hasChangedSong;
-    /*0x2A*/ u8 language;
-}; /*size = 0x2C*/
-
-struct MauvilleManStoryteller
-{
-    u8 id;
-    bool8 alreadyRecorded;
-    u8 filler2[2];
-    u8 gameStatIDs[NUM_STORYTELLER_TALES];
-    u8 trainerNames[NUM_STORYTELLER_TALES][PLAYER_NAME_LENGTH];
-    u8 statValues[NUM_STORYTELLER_TALES][4];
-    u8 language[NUM_STORYTELLER_TALES];
-};
-
-struct MauvilleManGiddy
-{
-    /*0x00*/ u8 id;
-    /*0x01*/ u8 taleCounter;
-    /*0x02*/ u8 questionNum;
-    /*0x04*/ u16 randomWords[GIDDY_MAX_TALES];
-    /*0x18*/ u8 questionList[GIDDY_MAX_QUESTIONS];
-    /*0x20*/ u8 language;
-}; /*size = 0x2C*/
-
-struct MauvilleManHipster
-{
-    u8 id;
-    bool8 alreadySpoken;
-    u8 language;
-};
-
-struct MauvilleOldManTrader
-{
-    u8 id;
-    u8 decorIds[NUM_TRADER_ITEMS];
-    u8 playerNames[NUM_TRADER_ITEMS][11];
-    u8 alreadyTraded;
-    u8 language[NUM_TRADER_ITEMS];
-};
-
-typedef union OldMan
-{
-    struct MauvilleManCommon common;
-    struct MauvilleManBard bard;
-    struct MauvilleManGiddy giddy;
-    struct MauvilleManHipster hipster;
-    struct MauvilleOldManTrader trader;
-    struct MauvilleManStoryteller storyteller;
-    u8 filler[0x40];
-} OldMan;
-
 struct Mail
 {
     /*0x00*/ u16 words[MAIL_WORDS_COUNT];
@@ -829,7 +803,7 @@ struct QuestLogObjectEvent
     /*0x0f*/ u8 previousMetatileBehavior;
     /*0x10*/ u8 directionSequenceIndex;
     /*0x11*/ u8 animId;
-};
+} __attribute__((packed));
 
 // This represents all the data needed to display a single scene for the "Quest Log" when the player resumes playing.
 //
@@ -1025,8 +999,6 @@ struct SaveBlock1
     /*0x2CC4*/ u16 easyChatBattleLost[EASY_CHAT_BATTLE_WORDS_COUNT];
     /*0x2CD0*/ struct Mail mail[MAIL_COUNT];
     /*0x2F10*/ u8 additionalPhrases[NUM_ADDITIONAL_PHRASE_BYTES];
-    /*0x2F18*/ OldMan oldMan; // unused
-    /*0x2F54*/ struct DewfordTrend dewfordTrends[5]; // unused
     /*0x2F80*/ struct DayCare daycare;
     /*0x309C*/ u8 giftRibbons[GIFT_RIBBONS_COUNT];
     /*0x30A7*/ struct ExternalEventData externalEventData;
@@ -1055,7 +1027,7 @@ struct SaveBlock1
     /*0x3D34*/ u32 towerChallengeId;
     /*0x3D38*/ struct TrainerTower trainerTower[NUM_TOWER_CHALLENGE_TYPES];
 #endif //FREE_TRAINER_HILL
-    /*0x3D24*/ u8 unusedSB1[0x1C];
+    // /*0x3D24*/ u8 unusedSB1[0x1C];
 }; // size: 0x3D68
 
 struct MapPosition

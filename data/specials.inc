@@ -451,4 +451,7 @@ gSpecials::
 	def_special TryPrepareSecondApproachingTrainer
 	def_special SetHiddenNature
 	def_special SetAbility
+	def_special ShowRankingHallRecordsWindow
+	def_special ScrollRankingHallRecordsWindow
+	def_special RemoveRecordsWindow
 gSpecialsEnd::
