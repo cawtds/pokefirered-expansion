@@ -454,4 +454,5 @@ gSpecials::
 	def_special ShowRankingHallRecordsWindow
 	def_special ScrollRankingHallRecordsWindow
 	def_special RemoveRecordsWindow
+	def_special BufferVarsForIVRater
 gSpecialsEnd::

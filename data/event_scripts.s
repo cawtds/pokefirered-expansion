@@ -14,6 +14,7 @@
 #include "constants/layouts.h"
 #include "constants/maps.h"
 #include "constants/metatile_labels.h"
+#include "constants/party_menu.h"
 #include "constants/pokemon.h"
 #include "constants/moves.h"
 #include "constants/songs.h"

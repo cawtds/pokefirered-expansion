@@ -2754,3 +2754,42 @@ void TrySkyBattle(void)
     }
     gSpecialVar_Result = FALSE;
 }
+
+void BufferVarsForIVRater(void)
+{
+    u32 i;
+    u32 ivStorage[NUM_STATS];
+
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();;
+
+    for (i = 0; i < NUM_STATS; i++)
+    {
+       ivStorage[i] = GetBoxMonData(boxmon, MON_DATA_HP_IV + i);
+    }
+
+    gSpecialVar_0x8005 = 0;
+
+    for (i = 0; i < NUM_STATS; i++)
+        gSpecialVar_0x8005 += ivStorage[i];
+
+    gSpecialVar_0x8006 = 0;
+    gSpecialVar_0x8007 = ivStorage[STAT_HP];
+
+    for (i = 1; i < NUM_STATS; i++)
+    {
+        if (ivStorage[gSpecialVar_0x8006] < ivStorage[i])
+        {
+            gSpecialVar_0x8006 = i;
+            gSpecialVar_0x8007 = ivStorage[i];
+        }
+        else if (ivStorage[gSpecialVar_0x8006] == ivStorage[i])
+        {
+            u16 randomNumber = Random();
+            if (randomNumber & 1)
+            {
+                gSpecialVar_0x8006 = i;
+                gSpecialVar_0x8007 = ivStorage[i];
+            }
+        }
+    }
+}

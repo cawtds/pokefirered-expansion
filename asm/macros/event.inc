@@ -2290,6 +2290,11 @@
 	.2byte \rematchId
 	.endm
 
+	.macro chooseboxmon selectionType=SELECT_PC_MON_NORMAL
+	callnative ChooseBoxMon
+	.byte \selectionType
+	.endm
+
 @ Follower NPCs
 
 	@ Sets an existing NPC up to follow the player.
