@@ -23,6 +23,7 @@
 #include "field_weather.h"
 #include "event_object_movement.h"
 #include "item.h"
+#include "item_icon.h"
 #include "random.h"
 #include "mail.h"
 #include "help_system.h"
@@ -49,11 +50,15 @@
 #include "constants/battle_frontier.h"
 #include "constants/metatile_labels.h"
 
-static EWRAM_DATA u8 sElevatorCurrentFloorWindowId = 0;
+#define TAG_ITEM_ICON 5500
+
+static EWRAM_DATA u8 sTutorMoveAndElevatorWindowId = 0;
 static EWRAM_DATA u16 sElevatorScroll = 0;
 static EWRAM_DATA u16 sElevatorCursorPos = 0;
 static EWRAM_DATA struct ListMenuItem * sListMenuItems = NULL;
+static EWRAM_DATA u8 sScrollableMultichoice_ItemSpriteId = 0;
 static EWRAM_DATA u8 sBattlePointsWindowId = 0;
+static EWRAM_DATA u8 sFrontierExchangeCorner_ItemIconWindowId = 0;
 static EWRAM_DATA u8 sPCBoxToSendMon = 0;
 static EWRAM_DATA u8 sBrailleTextCursorSpriteID = 0;
 
@@ -88,6 +93,11 @@ static void Task_DoDeoxysTriangleInteraction(u8 taskId);
 static void MoveDeoxysObject(u8 num);
 static void Task_WaitDeoxysFieldEffect(u8 taskId);
 static void Task_WingFlapSound(u8 taskId);
+static void ShowBattleFrontierTutorMoveDescription(enum ScrollMulti, u16);
+static void ShowBattleFrontierTutorWindow(enum ScrollMulti, u16);
+static void ShowFrontierExchangeCornerItemIcon(enum Item);
+static void FillFrontierExchangeCornerWindowAndItemIcon(enum ScrollMulti, u16);
+static void HideFrontierExchangeCornerItemIcon(enum ScrollMulti);
 
 static u8 *const sStringVarPtrs[] = {
     gStringVar1,
@@ -1136,21 +1146,21 @@ void DrawElevatorCurrentFloorWindow(void)
     if (QL_AvoidDisplay(QL_DestroyAbortedDisplay) == TRUE)
         return;
 
-    sElevatorCurrentFloorWindowId = AddWindow(&sElevatorCurrentFloorWindowTemplate);
-    LoadStdWindowGfx(sElevatorCurrentFloorWindowId, 0x21D, BG_PLTT_ID(13));
-    DrawStdFrameWithCustomTileAndPalette(sElevatorCurrentFloorWindowId, FALSE, 0x21D, 13);
-    AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, FONT_NORMAL, gText_NowOn, 0, 2, 0xFF, NULL);
+    sTutorMoveAndElevatorWindowId = AddWindow(&sElevatorCurrentFloorWindowTemplate);
+    LoadStdWindowGfx(sTutorMoveAndElevatorWindowId, 0x21D, BG_PLTT_ID(13));
+    DrawStdFrameWithCustomTileAndPalette(sTutorMoveAndElevatorWindowId, FALSE, 0x21D, 13);
+    AddTextPrinterParameterized(sTutorMoveAndElevatorWindowId, FONT_NORMAL, gText_NowOn, 0, 2, 0xFF, NULL);
     floorname = sFloorNamePointers[gSpecialVar_0x8005];
     strwidth = GetStringWidth(FONT_NORMAL, floorname, 0);
-    AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, FONT_NORMAL, floorname, 56 - strwidth, 16, 0xFF, NULL);
-    PutWindowTilemap(sElevatorCurrentFloorWindowId);
-    CopyWindowToVram(sElevatorCurrentFloorWindowId, COPYWIN_FULL);
+    AddTextPrinterParameterized(sTutorMoveAndElevatorWindowId, FONT_NORMAL, floorname, 56 - strwidth, 16, 0xFF, NULL);
+    PutWindowTilemap(sTutorMoveAndElevatorWindowId);
+    CopyWindowToVram(sTutorMoveAndElevatorWindowId, COPYWIN_FULL);
 }
 
 void CloseElevatorCurrentFloorWindow(void)
 {
-    ClearStdWindowAndFrameToTransparent(sElevatorCurrentFloorWindowId, TRUE);
-    RemoveWindow(sElevatorCurrentFloorWindowId);
+    ClearStdWindowAndFrameToTransparent(sTutorMoveAndElevatorWindowId, TRUE);
+    RemoveWindow(sTutorMoveAndElevatorWindowId);
 }
 
 static void AnimateElevatorWindowView(u16 nfloors, u8 direction)
@@ -1225,7 +1235,9 @@ void ShowScrollableMultichoice(void)
 
     taskId = CreateTask(Task_CreateScriptListMenu, 8);
     task = &gTasks[taskId];
-    switch (gSpecialVar_0x8004)
+    task->tScrollMultiId = gSpecialVar_0x8004;
+
+    switch ((enum ScrollMulti) gSpecialVar_0x8004)
     {
     case LISTMENU_BADGES:
         task->data[0] = 4;
@@ -1309,7 +1321,60 @@ void ShowScrollableMultichoice(void)
         task->tKeepOpenAfterSelect = FALSE;
         task->tTaskId = taskId;
         break;
-    case 99:
+    case SCROLL_MULTI_BF_MOVE_TUTOR_1:
+    case SCROLL_MULTI_BF_MOVE_TUTOR_2:
+        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
+        task->tNumItems = 11;
+        task->tLeft = 15;
+        task->tTop = 1;
+        task->tWidth = 14;
+        task->tHeight = 12;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
+        break;
+    case SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_1:
+        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
+        task->tNumItems = 1;
+        // task->tNumItems = 11;
+        task->tLeft = 14;
+        task->tTop = 1;
+        task->tWidth = 15;
+        task->tHeight = 12;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
+        break;
+    case SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_2:
+        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
+        task->tNumItems = 1;
+        // task->tNumItems = 6;
+        task->tLeft = 14;
+        task->tTop = 1;
+        task->tWidth = 15;
+        task->tHeight = 12;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
+        break;
+    case SCROLL_MULTI_BF_EXCHANGE_CORNER_VITAMIN_VENDOR:
+        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
+        task->tNumItems = 7;
+        task->tLeft = 14;
+        task->tTop = 1;
+        task->tWidth = 15;
+        task->tHeight = 12;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
+        break;
+    case SCROLL_MULTI_BF_EXCHANGE_CORNER_HOLD_ITEM_VENDOR:
+        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
+        task->tNumItems = 10;
+        task->tLeft = 14;
+        task->tTop = 1;
+        task->tWidth = 15;
+        task->tHeight = 12;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
+        break;
+    case SCROLL_MULTI_NONE:
         break;
     default:
         gSpecialVar_Result = 0x7F;
@@ -1317,22 +1382,6 @@ void ShowScrollableMultichoice(void)
         break;
     }
 }
-
-// Undefine Scrollable Multichoice task data macros
-#undef tMaxItemsOnScreen
-#undef tNumItems
-#undef tLeft
-#undef tTop
-#undef tWidth
-#undef tHeight
-#undef tKeepOpenAfterSelect
-#undef tScrollOffset
-#undef tSelectedRow
-#undef tScrollMultiId
-#undef tScrollArrowId
-#undef tWindowId
-#undef tListTaskId
-#undef tTaskId
 
 static const u8 *const sListMenuLabels[][12] = {
     [LISTMENU_BADGES] =
@@ -1419,6 +1468,80 @@ static const u8 *const sListMenuLabels[][12] = {
         gText_ExchangeService,
         gText_Exit
     },
+    [SCROLL_MULTI_BF_MOVE_TUTOR_1] =
+    {
+        COMPOUND_STRING("SOFTBOILED{CLEAR_TO 0x4E}16BP"),
+        COMPOUND_STRING("SEISMIC TOSS{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("DREAM EATER{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("MEGA PUNCH{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("MEGA KICK{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("BODY SLAM{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("ROCK SLIDE{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("COUNTER{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("THUNDER WAVE{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("SWORDS DANCE{CLEAR_TO 0x4E}48BP"),
+        gText_Exit
+    },
+    [SCROLL_MULTI_BF_MOVE_TUTOR_2] =
+    {
+        COMPOUND_STRING("DEFENSE CURL{CLEAR_TO 0x4E}16BP"),
+        COMPOUND_STRING("SNORE{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("MUD-SLAP{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("SWIFT{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("ICY WIND{CLEAR_TO 0x4E}24BP"),
+        COMPOUND_STRING("ENDURE{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("PSYCH UP{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("ICE PUNCH{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("THUNDERPUNCH{CLEAR_TO 0x4E}48BP"),
+        COMPOUND_STRING("FIRE PUNCH{CLEAR_TO 0x4E}48BP"),
+        gText_Exit
+    },
+    [SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_1] =
+    {
+        // COMPOUND_STRING("KISS POSTER{CLEAR_TO 0x5E}16BP"),
+        // COMPOUND_STRING("KISS CUSHION{CLEAR_TO 0x5E}32BP"),
+        // COMPOUND_STRING("SMOOCHUM DOLL{CLEAR_TO 0x5E}32BP"),
+        // COMPOUND_STRING("TOGEPI DOLL{CLEAR_TO 0x5E}48BP"),
+        // COMPOUND_STRING("MEOWTH DOLL{CLEAR_TO 0x5E}48BP"),
+        // COMPOUND_STRING("CLEFAIRY DOLL{CLEAR_TO 0x5E}48BP"),
+        // COMPOUND_STRING("DITTO DOLL{CLEAR_TO 0x5E}48BP"),
+        // COMPOUND_STRING("CYNDAQUIL DOLL{CLEAR_TO 0x5E}80BP"),
+        // COMPOUND_STRING("CHIKORITA DOLL{CLEAR_TO 0x5E}80BP"),
+        // COMPOUND_STRING("TOTODILE DOLL{CLEAR_TO 0x5E}80BP"),
+        gText_Exit
+    },
+    [SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_2] =
+    {
+        // COMPOUND_STRING("LAPRAS DOLL{CLEAR_TO 0x58}128BP"),
+        // COMPOUND_STRING("SNORLAX DOLL{CLEAR_TO 0x58}128BP"),
+        // COMPOUND_STRING("VENUSAUR DOLL{CLEAR_TO 0x58}256BP"),
+        // COMPOUND_STRING("CHARIZARD DOLL{CLEAR_TO 0x58}256BP"),
+        // COMPOUND_STRING("BLASTOISE DOLL{CLEAR_TO 0x58}256BP"),
+        gText_Exit
+    },
+    [SCROLL_MULTI_BF_EXCHANGE_CORNER_VITAMIN_VENDOR] =
+    {
+        COMPOUND_STRING("PROTEIN{CLEAR_TO 0x64}1BP"),
+        COMPOUND_STRING("CALCIUM{CLEAR_TO 0x64}1BP"),
+        COMPOUND_STRING("IRON{CLEAR_TO 0x64}1BP"),
+        COMPOUND_STRING("ZINC{CLEAR_TO 0x64}1BP"),
+        COMPOUND_STRING("CARBOS{CLEAR_TO 0x64}1BP"),
+        COMPOUND_STRING("HP UP{CLEAR_TO 0x64}1BP"),
+        gText_Exit
+    },
+    [SCROLL_MULTI_BF_EXCHANGE_CORNER_HOLD_ITEM_VENDOR] =
+    {
+        COMPOUND_STRING("LEFTOVERS{CLEAR_TO 0x5E}48BP"),
+        COMPOUND_STRING("WHITE HERB{CLEAR_TO 0x5E}48BP"),
+        COMPOUND_STRING("QUICK CLAW{CLEAR_TO 0x5E}48BP"),
+        COMPOUND_STRING("MENTAL HERB{CLEAR_TO 0x5E}48BP"),
+        COMPOUND_STRING("BRIGHTPOWDER{CLEAR_TO 0x5E}64BP"),
+        COMPOUND_STRING("CHOICE BAND{CLEAR_TO 0x5E}64BP"),
+        COMPOUND_STRING("KING'S ROCK{CLEAR_TO 0x5E}64BP"),
+        COMPOUND_STRING("FOCUS BAND{CLEAR_TO 0x5E}64BP"),
+        COMPOUND_STRING("SCOPE LENS{CLEAR_TO 0x5E}64BP"),
+        gText_Exit
+    },
 };
 
 static void Task_CreateScriptListMenu(u8 taskId)
@@ -1434,6 +1557,8 @@ static void Task_CreateScriptListMenu(u8 taskId)
         gScrollableMultichoice_ScrollOffset = sElevatorScroll;
     else
         gScrollableMultichoice_ScrollOffset = 0;
+    FillFrontierExchangeCornerWindowAndItemIcon(task->tScrollMultiId, 0);
+    ShowBattleFrontierTutorWindow(task->tScrollMultiId, 0);
     sListMenuItems = AllocZeroed(task->data[1] * sizeof(struct ListMenuItem));
     CreateScriptListMenu();
     mwidth = 0;
@@ -1448,7 +1573,7 @@ static void Task_CreateScriptListMenu(u8 taskId)
     task->data[4] = (mwidth + 9) / 8 + 1;
     if (task->data[2] + task->data[4] > 29)
         task->data[2] = 29 - task->data[4];
-    template = CreateWindowTemplate(0, task->data[2], task->data[3], task->data[4], task->data[5], 15, 0x038);
+    template = CreateWindowTemplate(0, task->data[2], task->data[3], task->data[4], task->data[5], 15, 0x64);
     task->data[13] = windowId = AddWindow(&template);
     SetStandardWindowBorderStyle(task->data[13], 0);
     gScrollableMultichoice_ListMenuTemplate.totalItems = task->data[1];
@@ -1489,11 +1614,16 @@ static void ScriptListMenuMoveCursorFunction(s32 nothing, bool8 is, struct ListM
     struct Task *task;
     PlaySE(SE_SELECT);
     taskId = FindTaskIdByFunc(Task_ListMenuHandleInput);
-    if (taskId != 0xFF)
+    if (taskId != TASK_NONE)
     {
+        u16 selection;
         task = &gTasks[taskId];
         ListMenuGetScrollAndRow(task->data[14], &sFieldSpecialsListMenuScrollBuffer, NULL);
         gScrollableMultichoice_ScrollOffset = sFieldSpecialsListMenuScrollBuffer;
+        ListMenuGetCurrentItemArrayId(task->tListTaskId, &selection);
+        HideFrontierExchangeCornerItemIcon(task->tScrollMultiId);
+        FillFrontierExchangeCornerWindowAndItemIcon(task->tScrollMultiId, selection);
+        ShowBattleFrontierTutorMoveDescription(task->tScrollMultiId, selection);
     }
 }
 
@@ -1602,6 +1732,22 @@ static void Task_ListMenuRemoveScrollIndicatorArrowPair(u8 taskId)
     if (task->data[0] != task->data[1])
         RemoveScrollIndicatorArrowPair(task->data[12]);
 }
+
+// Undefine Scrollable Multichoice task data macros
+#undef tMaxItemsOnScreen
+#undef tNumItems
+#undef tLeft
+#undef tTop
+#undef tWidth
+#undef tHeight
+#undef tKeepOpenAfterSelect
+#undef tScrollOffset
+#undef tSelectedRow
+#undef tScrollMultiId
+#undef tScrollArrowId
+#undef tWindowId
+#undef tListTaskId
+#undef tTaskId
 
 void ForcePlayerToStartSurfing(void)
 {
@@ -3101,5 +3247,189 @@ void GiveFrontierBattlePoints(void)
 u16 GetFrontierBattlePoints(void)
 {
     return gSaveBlock2Ptr->frontier.battlePoints;
+}
+
+void ShowFrontierExchangeCornerItemIconWindow(void)
+{
+    static const struct WindowTemplate sFrontierExchangeCorner_ItemIconWindowTemplate =
+    {
+        .bg = 0,
+        .tilemapLeft = 2,
+        .tilemapTop = 9,
+        .width = 4,
+        .height = 4,
+        .paletteNum = 15,
+        .baseBlock = 20,
+    };
+
+    sFrontierExchangeCorner_ItemIconWindowId = AddWindow(&sFrontierExchangeCorner_ItemIconWindowTemplate);
+    SetStandardWindowBorderStyle(sFrontierExchangeCorner_ItemIconWindowId, FALSE);
+    CopyWindowToVram(sFrontierExchangeCorner_ItemIconWindowId, COPYWIN_GFX);
+}
+
+void CloseFrontierExchangeCornerItemIconWindow(void)
+{
+    ClearStdWindowAndFrameToTransparent(sFrontierExchangeCorner_ItemIconWindowId, TRUE);
+    RemoveWindow(sFrontierExchangeCorner_ItemIconWindowId);
+}
+
+static void FillFrontierExchangeCornerWindowAndItemIcon(enum ScrollMulti menu, u16 selection)
+{
+    #include "data/battle_frontier/battle_frontier_exchange_corner.h"
+
+    if (menu >= SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_1 && menu <= SCROLL_MULTI_BF_EXCHANGE_CORNER_HOLD_ITEM_VENDOR)
+    {
+        FillWindowPixelRect(0, PIXEL_FILL(1), 0, 0, 216, 32);
+        switch (menu)
+        {
+        case SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_1:
+            AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_Decor1Descriptions[selection], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+            if (sFrontierExchangeCorner_Decor1[selection] == ITEM_LIST_END)
+            {
+                ShowFrontierExchangeCornerItemIcon(sFrontierExchangeCorner_Decor1[selection]);
+            }
+            else
+            {
+                FreeSpriteTilesByTag(TAG_ITEM_ICON);
+                FreeSpritePaletteByTag(TAG_ITEM_ICON);
+                // sScrollableMultichoice_ItemSpriteId = AddDecorationIconObject(sFrontierExchangeCorner_Decor1[selection], 33, 88, 0, TAG_ITEM_ICON, TAG_ITEM_ICON);
+            }
+            break;
+        case SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_2:
+            AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_Decor2Descriptions[selection], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+            if (sFrontierExchangeCorner_Decor2[selection] == ITEM_LIST_END)
+            {
+                ShowFrontierExchangeCornerItemIcon(sFrontierExchangeCorner_Decor2[selection]);
+            }
+            else
+            {
+                FreeSpriteTilesByTag(TAG_ITEM_ICON);
+                FreeSpritePaletteByTag(TAG_ITEM_ICON);
+                // sScrollableMultichoice_ItemSpriteId = AddDecorationIconObject(sFrontierExchangeCorner_Decor2[selection], 33, 88, 0, TAG_ITEM_ICON, TAG_ITEM_ICON);
+            }
+            break;
+        case SCROLL_MULTI_BF_EXCHANGE_CORNER_VITAMIN_VENDOR:
+            AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_VitaminsDescriptions[selection], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+            ShowFrontierExchangeCornerItemIcon(sFrontierExchangeCorner_Vitamins[selection]);
+            break;
+        case SCROLL_MULTI_BF_EXCHANGE_CORNER_HOLD_ITEM_VENDOR:
+            AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_HoldItemsDescriptions[selection], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+            ShowFrontierExchangeCornerItemIcon(sFrontierExchangeCorner_HoldItems[selection]);
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+static void ShowFrontierExchangeCornerItemIcon(enum Item item)
+{
+    FreeSpriteTilesByTag(TAG_ITEM_ICON);
+    FreeSpritePaletteByTag(TAG_ITEM_ICON);
+    sScrollableMultichoice_ItemSpriteId = AddItemIconSprite(TAG_ITEM_ICON, TAG_ITEM_ICON, item);
+
+    if (sScrollableMultichoice_ItemSpriteId != MAX_SPRITES)
+    {
+        gSprites[sScrollableMultichoice_ItemSpriteId].oam.priority = 0;
+        gSprites[sScrollableMultichoice_ItemSpriteId].x = 36;
+        gSprites[sScrollableMultichoice_ItemSpriteId].y = 92;
+    }
+}
+
+static void HideFrontierExchangeCornerItemIcon(enum ScrollMulti menu)
+{
+    if (sScrollableMultichoice_ItemSpriteId != MAX_SPRITES)
+    {
+        switch (menu)
+        {
+        case SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_1:
+        case SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_2:
+        case SCROLL_MULTI_BF_EXCHANGE_CORNER_VITAMIN_VENDOR:
+        case SCROLL_MULTI_BF_EXCHANGE_CORNER_HOLD_ITEM_VENDOR:
+            // This makes sure deleting the icon will not clear palettes in use by object events
+            FieldEffectFreeGraphicsResources(&gSprites[sScrollableMultichoice_ItemSpriteId]);
+            break;
+        default:
+            break;
+        }
+        sScrollableMultichoice_ItemSpriteId = MAX_SPRITES;
+    }
+}
+
+void BufferBattleFrontierTutorMoveName(void)
+{
+    StringCopy(gStringVar1, GetMoveName(gSpecialVar_0x8005));
+}
+
+static void ShowBattleFrontierTutorWindow(enum ScrollMulti menu, u16 selection)
+{
+    static const struct WindowTemplate sBattleFrontierTutor_WindowTemplate =
+    {
+        .bg = 0,
+        .tilemapLeft = 1,
+        .tilemapTop = 7,
+        .width = 12,
+        .height = 6,
+        .paletteNum = 15,
+        .baseBlock = 28,
+    };
+
+    if (menu == SCROLL_MULTI_BF_MOVE_TUTOR_1 || menu == SCROLL_MULTI_BF_MOVE_TUTOR_2)
+    {
+        if (gSpecialVar_0x8006 == 0)
+        {
+            sTutorMoveAndElevatorWindowId = AddWindow(&sBattleFrontierTutor_WindowTemplate);
+            SetStandardWindowBorderStyle(sTutorMoveAndElevatorWindowId, FALSE);
+        }
+        ShowBattleFrontierTutorMoveDescription(menu, selection);
+    }
+}
+
+static void ShowBattleFrontierTutorMoveDescription(enum ScrollMulti menu, u16 selection)
+{
+    static const u8 *const sBattleFrontier_TutorMoveDescriptions1[] =
+    {
+        BattleFrontier_Lounge7_Text_SoftboiledDesc,
+        BattleFrontier_Lounge7_Text_SeismicTossDesc,
+        BattleFrontier_Lounge7_Text_DreamEaterDesc,
+        BattleFrontier_Lounge7_Text_MegaPunchDesc,
+        BattleFrontier_Lounge7_Text_MegaKickDesc,
+        BattleFrontier_Lounge7_Text_BodySlamDesc,
+        BattleFrontier_Lounge7_Text_RockSlideDesc,
+        BattleFrontier_Lounge7_Text_CounterDesc,
+        BattleFrontier_Lounge7_Text_ThunderWaveDesc,
+        BattleFrontier_Lounge7_Text_SwordsDanceDesc,
+        gText_Exit,
+    };
+
+    static const u8 *const sBattleFrontier_TutorMoveDescriptions2[] =
+    {
+        BattleFrontier_Lounge7_Text_DefenseCurlDesc,
+        BattleFrontier_Lounge7_Text_SnoreDesc,
+        BattleFrontier_Lounge7_Text_MudSlapDesc,
+        BattleFrontier_Lounge7_Text_SwiftDesc,
+        BattleFrontier_Lounge7_Text_IcyWindDesc,
+        BattleFrontier_Lounge7_Text_EndureDesc,
+        BattleFrontier_Lounge7_Text_PsychUpDesc,
+        BattleFrontier_Lounge7_Text_IcePunchDesc,
+        BattleFrontier_Lounge7_Text_ThunderPunchDesc,
+        BattleFrontier_Lounge7_Text_FirePunchDesc,
+        gText_Exit,
+    };
+
+    if (menu == SCROLL_MULTI_BF_MOVE_TUTOR_1 || menu == SCROLL_MULTI_BF_MOVE_TUTOR_2)
+    {
+        FillWindowPixelRect(sTutorMoveAndElevatorWindowId, PIXEL_FILL(1), 0, 0, 96, 48);
+        if (menu == SCROLL_MULTI_BF_MOVE_TUTOR_2)
+            AddTextPrinterParameterized(sTutorMoveAndElevatorWindowId, FONT_NORMAL, sBattleFrontier_TutorMoveDescriptions2[selection], 0, 1, 0, NULL);
+        else
+            AddTextPrinterParameterized(sTutorMoveAndElevatorWindowId, FONT_NORMAL, sBattleFrontier_TutorMoveDescriptions1[selection], 0, 1, 0, NULL);
+    }
+}
+
+void CloseBattleFrontierTutorWindow(void)
+{
+    ClearStdWindowAndFrameToTransparent(sTutorMoveAndElevatorWindowId, TRUE);
+    RemoveWindow(sTutorMoveAndElevatorWindowId);
 }
 

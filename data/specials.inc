@@ -465,4 +465,6 @@ gSpecials::
 	def_special GetFrontierBattlePoints
 	def_special TakeFrontierBattlePoints
 	def_special ShowNatureGirlMessage
+	def_special BufferBattleFrontierTutorMoveName
+	def_special CloseBattleFrontierTutorWindow
 gSpecialsEnd::

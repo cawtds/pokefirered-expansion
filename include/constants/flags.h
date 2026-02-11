@@ -798,8 +798,8 @@
 #define FLAG_MET_BATTLE_FRONTIER_MANIAC                  0x301
 #define FLAG_MET_BATTLE_FRONTIER_GAMBLER                 0x302
 #define FLAG_BATTLE_FRONTIER_TRADE_DONE                  0x303
-#define FLAG_0x304               0x304
-#define FLAG_0x305               0x305
+#define FLAG_MET_FRONTIER_BEAUTY_MOVE_TUTOR              0x304
+#define FLAG_MET_FRONTIER_SWIMMER_MOVE_TUTOR             0x305
 #define FLAG_0x306               0x306
 #define FLAG_0x307               0x307
 #define FLAG_0x308               0x308
