@@ -800,11 +800,11 @@
 #define FLAG_BATTLE_FRONTIER_TRADE_DONE                  0x303
 #define FLAG_MET_FRONTIER_BEAUTY_MOVE_TUTOR              0x304
 #define FLAG_MET_FRONTIER_SWIMMER_MOVE_TUTOR             0x305
-#define FLAG_0x306               0x306
-#define FLAG_0x307               0x307
-#define FLAG_0x308               0x308
-#define FLAG_0x309               0x309
-#define FLAG_0x30A               0x30A
+#define FLAG_SCOTT_GIVES_BATTLE_POINTS                   0x306
+#define FLAG_COLLECTED_ALL_SILVER_SYMBOLS                0x307
+#define FLAG_COLLECTED_ALL_GOLD_SYMBOLS                  0x308
+#define FLAG_RECEIVED_SILVER_SHIELD                      0x309
+#define FLAG_RECEIVED_GOLD_SHIELD                        0x30A
 #define FLAG_0x30B               0x30B
 #define FLAG_0x30C               0x30C
 #define FLAG_0x30D               0x30D

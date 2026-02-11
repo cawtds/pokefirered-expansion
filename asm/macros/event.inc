@@ -1984,6 +1984,12 @@
 	callstd STD_PUT_ITEM_AWAY
 	.endm
 
+	@ Equivalent to giveitem but for a single decoration.
+	.macro givedecoration decoration:req
+	setorcopyvar VAR_0x8000, \decoration
+	callstd STD_OBTAIN_DECORATION
+	.endm
+
 	@ Prints the provided message after playing the fanfare music (can only be MUS_LEVEL_UP or MUS_OBTAIN_KEY_ITEM).
 	@ It then prints the message shown by using putitemaway.
 	.macro msgreceiveditem msg:req, item:req, amount=1, fanfare=MUS_LEVEL_UP
@@ -2386,6 +2392,27 @@
 	.macro setspeaker name:req
 	callnative SetSpeaker
 	.4byte \name
+	.endm
+
+	.macro setmultitrainerbattle trainer_a:req, lose_text_a:req, trainer_b:req, lose_text_b:req, partnerId:req
+	callnative SetMultiTrainerBattle
+	.2byte \trainer_a
+	.4byte \lose_text_a
+	.2byte \trainer_b
+	.4byte \lose_text_b
+	.2byte \partnerId
+	.endm
+
+	@ facility version of `trainerbattle` macro. Used in Battle Pyramid and Trainer Hill
+	.macro facilitytrainerbattle facility:req
+	callnative FacilityTrainerBattle
+	.byte \facility
+	.endm
+
+	@ immediately starts a battle of the given facility
+	.macro dofacilitytrainerbattle facility:req
+	callnative DoFacilityTrainerBattle
+	.byte \facility
 	.endm
 
 	.macro ingame_trade tradeId:req wantTradeMsg:req, declineTradeJump:req, wrongMonJump:req, tradeCompleteMsg:req

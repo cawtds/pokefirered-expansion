@@ -467,4 +467,6 @@ gSpecials::
 	def_special ShowNatureGirlMessage
 	def_special BufferBattleFrontierTutorMoveName
 	def_special CloseBattleFrontierTutorWindow
+	def_special CallFrontierUtilFunc
+	def_special CallBattleTowerFunc
 gSpecialsEnd::

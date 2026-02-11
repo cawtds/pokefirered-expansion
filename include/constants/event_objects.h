@@ -212,7 +212,14 @@
 #define OBJ_EVENT_GFX_SUDOWOODO             OBJ_EVENT_GFX_STEVEN
 
 #define OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL OBJ_EVENT_GFX_RED_NORMAL
-#define OBJ_EVENT_GFX_BRANDON              OBJ_EVENT_GFX_RED_NORMAL
+#define OBJ_EVENT_GFX_BRANDON              OBJ_EVENT_GFX_STEVEN
+
+#define OBJ_EVENT_GFX_ANABEL               OBJ_EVENT_GFX_STEVEN
+#define OBJ_EVENT_GFX_TUCKER               OBJ_EVENT_GFX_STEVEN
+#define OBJ_EVENT_GFX_SPENSER              OBJ_EVENT_GFX_STEVEN
+#define OBJ_EVENT_GFX_GRETA                OBJ_EVENT_GFX_STEVEN
+#define OBJ_EVENT_GFX_NOLAND               OBJ_EVENT_GFX_STEVEN
+#define OBJ_EVENT_GFX_LUCY                 OBJ_EVENT_GFX_STEVEN
 
 // These are dynamic object gfx ids.
 // They correspond with the values of the VAR_OBJ_GFX_ID_X vars.
