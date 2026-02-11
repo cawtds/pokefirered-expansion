@@ -579,12 +579,30 @@ static const struct MenuAction sMultichoiceList_FrontierGamblerBet[] =
     {gText_Exit},
 };
 
+static const struct MenuAction sMultichoiceList_LevelMode[] =
+{
+    {gText_Lv50},
+    {gText_OpenLevel},
+    {gText_Exit},
+};
+
+static const struct MenuAction sMultichoiceList_BattleFactoryRules[] =
+{
+    {gText_BasicRules},
+    {gText_SwapPartners},
+    {gText_SwapNumber},
+    {gText_SwapNotes},
+    {COMPOUND_STRING("OPEN LEVEL")},
+    {gText_Exit},
+};
+
+
 static const struct MenuAction sMultichoiceList_Exit[] = {
     { gOtherText_Exit }
 };
 
 static const struct MultichoiceListStruct sMultichoiceLists[] = {
-    [MULTICHOICE_YES_NO]                                     = MULTICHOICE(sMultichoiceList_YesNo),
+    [MULTI_YESNO]                                            = MULTICHOICE(sMultichoiceList_YesNo),
     [MULTICHOICE_EEVEELUTIONS]                               = MULTICHOICE(sMultichoiceList_Eeveelutions),
     [MULTICHOICE_TRAINER_CARD_ICON_TINT]                     = MULTICHOICE(sMultichoiceList_TrainerCardIconTint),
     [MULTICHOICE_HOF_QUIT]                                   = MULTICHOICE(sMultichoiceList_HOF_Quit),
@@ -603,7 +621,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] = {
     [MULTICHOICE_YES_NO_INFO]                                = MULTICHOICE(sMultichoiceList_YesNoInfo),
     [MULTICHOICE_SINGLE_DOUBLE_MULTI_INFO_EXIT]              = MULTICHOICE(sMultichoiceList_SingleDoubleMultiInfoExit),
     [MULTICHOICE_YES_NO_INFO_2]                              = MULTICHOICE(sMultichoiceList_YesNoInfo2),
-    [MULTICHOICE_CHALLENGE_INFO_EXIT]                        = MULTICHOICE(sMultichoiceList_ChallengeInfoExit),
+    [MULTI_CHALLENGEINFO]                                    = MULTICHOICE(sMultichoiceList_ChallengeInfoExit),
     [MULTICHOICE_ROOFTOP_B1F]                                = MULTICHOICE(sMultichoiceList_RooftopB1F),
     [MULTICHOICE_HELIX]                                      = MULTICHOICE(sMultichoiceList_Helix),
     [MULTICHOICE_DOME]                                       = MULTICHOICE(sMultichoiceList_Dome),
@@ -652,6 +670,8 @@ static const struct MultichoiceListStruct sMultichoiceLists[] = {
     [MULTI_FRONTIER_RULES]                                   = MULTICHOICE(sMultichoiceList_FrontierRules),
     [MULTI_FRONTIER_PASS_INFO]                               = MULTICHOICE(sMultichoiceList_FrontierPassInfo),
     [MULTI_FRONTIER_GAMBLER_BET]                             = MULTICHOICE(sMultichoiceList_FrontierGamblerBet),
+    [MULTI_LEVEL_MODE]                                       = MULTICHOICE(sMultichoiceList_LevelMode),
+    [MULTI_BATTLE_FACTORY_RULES]                             = MULTICHOICE(sMultichoiceList_BattleFactoryRules),
 };
 
 // From Cool to Berries goes unused

@@ -1088,6 +1088,6 @@
 #define EC_INDEX(word) ((word) & 0x1FF)
 #define EC_WORD(groupId, index) ((((groupId) & 0x7F) << 9) | ((index) & 0x1FF))
 
-#define EC_WORD_UNDEFINED (0xFFFF)
+#define EC_EMPTY_WORD (0xFFFF)
 
 #endif  // GUARD_CONSTANTS_EASY_CHAT_H

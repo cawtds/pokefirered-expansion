@@ -21,6 +21,7 @@
 #include "constants/rgb.h"
 #include "constants/easy_chat.h"
 #include "constants/items.h"
+#include "constants/moves.h"
 #include "config/save.h"
 
 // Prevent cross-jump optimization.
@@ -371,6 +372,31 @@ struct BerryCrush
     u32 unk;
 };
 
+struct ApprenticeMon
+{
+    u16 species;
+    enum Move moves[MAX_MON_MOVES];
+    enum Item item;
+};
+
+// This is for past players Apprentices or Apprentices received via Record Mix.
+// For the current Apprentice, see struct PlayersApprentice
+struct Apprentice
+{
+    u8 id:5;
+    u8 lvlMode:2;
+    //u8 padding1:1;
+    u8 numQuestions;
+    u8 number;
+    //u8 padding2;
+    struct ApprenticeMon party[MULTI_PARTY_SIZE];
+    u16 speechWon[EASY_CHAT_BATTLE_WORDS_COUNT];
+    u8 playerId[TRAINER_ID_LENGTH];
+    u8 playerName[PLAYER_NAME_LENGTH];
+    u8 language;
+    u32 checksum;
+};
+
 struct RecordMixingGiftData
 {
     u8 unk0;
@@ -392,7 +418,7 @@ struct RecordMixingGift
 struct BattleTowerEReaderTrainer
 {
     /*0x4A0 0x3F0 0x00*/ u8 unk0;
-    /*0x4A1 0x3F1 0x01*/ u8 trainerClass;
+    /*0x4A1 0x3F1 0x01*/ u8 facilityClass;
     /*0x4A2 0x3F2 0x02*/ u16 winStreak;
     /*0x4A4 0x3F4 0x04*/ u8 name[8];
     /*0x4AC 0x3FC 0x0C*/ u8 trainerId[4];
@@ -1027,6 +1053,7 @@ struct SaveBlock1
     /*0x3D34*/ u32 towerChallengeId;
     /*0x3D38*/ struct TrainerTower trainerTower[NUM_TOWER_CHALLENGE_TYPES];
 #endif //FREE_TRAINER_HILL
+    struct Apprentice apprentices[APPRENTICE_COUNT];
     // /*0x3D24*/ u8 unusedSB1[0x1C];
 }; // size: 0x3D68
 

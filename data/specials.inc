@@ -469,4 +469,5 @@ gSpecials::
 	def_special CloseBattleFrontierTutorWindow
 	def_special CallFrontierUtilFunc
 	def_special CallBattleTowerFunc
+	def_special CallBattleFactoryFunction
 gSpecialsEnd::

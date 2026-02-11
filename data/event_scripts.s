@@ -2,6 +2,8 @@
 #include "config/battle.h"
 #include "constants/global.h"
 #include "constants/flags.h"
+#include "constants/battle_dome.h"
+#include "constants/battle_factory.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_special.h"
 #include "constants/battle_tower.h"

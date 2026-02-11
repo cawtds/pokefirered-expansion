@@ -181,7 +181,7 @@ BattleFrontier_BattleDomeLobby_EventScript_SaveBeforeChallenge::
 	@special LoadPlayerParty
 	@closemessage
 	@delay 2
-	@call Common_EventScript_SaveGame
+	@call EventScript_AskSaveGame
 	@setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	@goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleDomeLobby_EventScript_CancelChallengeSaveFailed
 	@dome_inittrainers

@@ -153,7 +153,7 @@ void SetEReaderTrainerGfxId(void)
 u8 GetEreaderTrainerFrontSpriteId(void)
 {
 #if FREE_BATTLE_TOWER_E_READER == FALSE
-    return gFacilityClassToPicIndex[gSaveBlock2Ptr->frontier.ereaderTrainer.trainerClass];
+    return gFacilityClassToPicIndex[gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass];
 #else
     return 0;
 #endif //FREE_BATTLE_TOWER_E_READER
@@ -162,7 +162,7 @@ u8 GetEreaderTrainerFrontSpriteId(void)
 u8 GetEreaderTrainerClassId(void)
 {
 #if FREE_BATTLE_TOWER_E_READER == FALSE
-    return gFacilityClassToTrainerClass[gSaveBlock2Ptr->frontier.ereaderTrainer.trainerClass];
+    return gFacilityClassToTrainerClass[gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass];
 #else
     return 0;
 #endif //FREE_BATTLE_TOWER_E_READER

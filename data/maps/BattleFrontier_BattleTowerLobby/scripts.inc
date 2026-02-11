@@ -217,7 +217,7 @@ BattleFrontier_BattleTowerLobby_EventScript_SaveBeforeSinglesChallenge::
 	@special LoadPlayerParty
 	@closemessage
 	@delay 2
-	@call Common_EventScript_SaveGame
+	@call EventScript_AskSaveGame
 	@setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	@goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleTowerLobby_EventScript_CancelChallengeSaveFailed
 	@incrementgamestat GAME_STAT_ENTERED_BATTLE_TOWER
@@ -281,7 +281,7 @@ BattleFrontier_BattleTowerLobby_EventScript_SaveBeforeDoublesChallenge::
 	@special LoadPlayerParty
 	@closemessage
 	@delay 2
-	@call Common_EventScript_SaveGame
+	@call EventScript_AskSaveGame
 	@setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	@goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleTowerLobby_EventScript_CancelChallengeSaveFailed
 	@incrementgamestat GAME_STAT_ENTERED_BATTLE_TOWER
@@ -346,7 +346,7 @@ BattleFrontier_BattleTowerLobby_EventScript_SaveBeforeMultisChallenge::
 	@special LoadPlayerParty
 	@closemessage
 	@delay 2
-	@call Common_EventScript_SaveGame
+	@call EventScript_AskSaveGame
 	@setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	@goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleTowerLobby_EventScript_CancelChallengeSaveFailed
 	@incrementgamestat GAME_STAT_ENTERED_BATTLE_TOWER
@@ -417,7 +417,7 @@ BattleFrontier_BattleTowerLobby_EventScript_SaveBeforeLinkMultisChallenge::
 #ifndef BUGFIX
 	@tower_save 0
 #endif
-	@call Common_EventScript_SaveGame
+	@call EventScript_AskSaveGame
 	@setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	@goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleTowerLobby_EventScript_CancelChallengeSaveFailed
 @ GAME_STAT_ENTERED_BATTLE_TOWER should not be incremented here, for two reasons:

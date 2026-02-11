@@ -1,6 +1,6 @@
 #include "global.h"
 #include "malloc.h"
-// #include "apprentice.h"
+#include "apprentice.h"
 #include "battle.h"
 #include "battle_ai_util.h"
 #include "battle_anim.h"
@@ -22,7 +22,7 @@
 #include "field_weather.h"
 #include "fishing.h"
 #include "follower_npc.h"
-// #include "frontier_util.h"
+#include "frontier_util.h"
 #include "graphics.h"
 #include "item.h"
 #include "link.h"
@@ -52,7 +52,7 @@
 // #include "trainer_hill.h"
 #include "util.h"
 #include "constants/abilities.h"
-// #include "constants/battle_frontier.h"
+#include "constants/battle_frontier.h"
 #include "constants/battle_move_effects.h"
 #include "constants/battle_partner.h"
 #include "constants/battle_script_commands.h"
@@ -1615,11 +1615,11 @@ void CreateBattleTowerMon_HandleLevel(struct Pokemon *mon, struct BattleTowerPok
     u8 language;
     u8 value;
 
-    // if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_50)
-    //     level = GetFrontierEnemyMonLevel(gSaveBlock2Ptr->frontier.lvlMode);
-    // else if (lvl50)
-    //     level = FRONTIER_MAX_LEVEL_50;
-    // else
+    if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_50)
+        level = GetFrontierEnemyMonLevel(gSaveBlock2Ptr->frontier.lvlMode);
+    else if (lvl50)
+        level = FRONTIER_MAX_LEVEL_50;
+    else
         level = src->level;
 
     CreateMon(mon, src->species, level, src->personality, OTID_STRUCT_PRESET(src->otId));
@@ -1669,34 +1669,34 @@ void CreateBattleTowerMon_HandleLevel(struct Pokemon *mon, struct BattleTowerPok
     CalculateMonStats(mon);
 }
 
-// void CreateApprenticeMon(struct Pokemon *mon, const struct Apprentice *src, u8 monId)
-// {
-//     s32 i;
-//     u16 evAmount;
-//     u8 language;
-//     u32 otId = gApprentices[src->id].otId;
-//     u32 personality = ((gApprentices[src->id].otId >> 8) | ((gApprentices[src->id].otId & 0xFF) << 8))
-//                     + src->party[monId].species + src->number;
+void CreateApprenticeMon(struct Pokemon *mon, const struct Apprentice *src, u8 monId)
+{
+    s32 i;
+    u16 evAmount;
+    u8 language;
+    u32 otId = gApprentices[src->id].otId;
+    u32 personality = ((gApprentices[src->id].otId >> 8) | ((gApprentices[src->id].otId & 0xFF) << 8))
+                    + src->party[monId].species + src->number;
 
-//     CreateMonWithIVs(mon,
-//               src->party[monId].species,
-//               GetFrontierEnemyMonLevel(src->lvlMode - 1),
-//               personality,
-//               OTID_STRUCT_PRESET(otId),
-//               MAX_PER_STAT_IVS);
-//     SetMonData(mon, MON_DATA_HELD_ITEM, &src->party[monId].item);
-//     for (i = 0; i < MAX_MON_MOVES; i++)
-//         SetMonMoveSlot(mon, src->party[monId].moves[i], i);
+    CreateMonWithIVs(mon,
+              src->party[monId].species,
+              GetFrontierEnemyMonLevel(src->lvlMode - 1),
+              personality,
+              OTID_STRUCT_PRESET(otId),
+              MAX_PER_STAT_IVS);
+    SetMonData(mon, MON_DATA_HELD_ITEM, &src->party[monId].item);
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        SetMonMoveSlot(mon, src->party[monId].moves[i], i);
 
-//     evAmount = MAX_TOTAL_EVS / NUM_STATS;
-//     for (i = 0; i < NUM_STATS; i++)
-//         SetMonData(mon, MON_DATA_HP_EV + i, &evAmount);
+    evAmount = MAX_TOTAL_EVS / NUM_STATS;
+    for (i = 0; i < NUM_STATS; i++)
+        SetMonData(mon, MON_DATA_HP_EV + i, &evAmount);
 
-//     language = src->language;
-//     SetMonData(mon, MON_DATA_LANGUAGE, &language);
-//     SetMonData(mon, MON_DATA_OT_NAME, GetApprenticeNameInLanguage(src->id, language));
-//     CalculateMonStats(mon);
-// }
+    language = src->language;
+    SetMonData(mon, MON_DATA_LANGUAGE, &language);
+    SetMonData(mon, MON_DATA_OT_NAME, GetApprenticeNameInLanguage(src->id, language));
+    CalculateMonStats(mon);
+}
 
 void ConvertPokemonToBattleTowerPokemon(struct Pokemon *mon, struct BattleTowerPokemon *dest)
 {

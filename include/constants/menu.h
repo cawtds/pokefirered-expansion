@@ -8,7 +8,7 @@
 
 #define MULTI_B_PRESSED  127
 
-#define MULTICHOICE_YES_NO                                      0
+#define MULTI_YESNO                                             0
 #define MULTICHOICE_EEVEELUTIONS                                1
 #define MULTICHOICE_TRAINER_CARD_ICON_TINT                      2
 #define MULTICHOICE_HOF_QUIT                                    3
@@ -27,7 +27,7 @@
 #define MULTICHOICE_YES_NO_INFO                                16
 #define MULTICHOICE_SINGLE_DOUBLE_MULTI_INFO_EXIT              17
 #define MULTICHOICE_YES_NO_INFO_2                              18
-#define MULTICHOICE_CHALLENGE_INFO_EXIT                        19
+#define MULTI_CHALLENGEINFO                                    19
 #define MULTICHOICE_ROOFTOP_B1F                                20
 #define MULTICHOICE_HELIX                                      21
 #define MULTICHOICE_DOME                                       22
@@ -76,6 +76,8 @@
 #define MULTI_FRONTIER_RULES                                   65
 #define MULTI_FRONTIER_PASS_INFO                               66
 #define MULTI_FRONTIER_GAMBLER_BET                             67
+#define MULTI_LEVEL_MODE                                       68
+#define MULTI_BATTLE_FACTORY_RULES                             69
 
 
 #define MULTICHOICE_NONE                                      255

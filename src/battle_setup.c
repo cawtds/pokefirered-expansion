@@ -40,7 +40,7 @@
 #include "data.h"
 #include "vs_seeker.h"
 #include "item.h"
-// #include "constants/battle_frontier.h"
+#include "constants/battle_frontier.h"
 #include "constants/battle_setup.h"
 #include "constants/event_objects.h"
 #include "constants/game_stat.h"
@@ -709,6 +709,12 @@ u8 GetTrainerBattleTransition(void)
         return sBattleTransitionTable_Trainer[transitionType][1];
 }
 
+// TODO: transitions
+u8 GetSpecialBattleTransition(s32 id)
+{
+    return B_TRANSITION_POKEBALLS_TRAIL;
+}
+
 u8 BattleSetup_GetBattleTowerBattleTransition(void)
 {
     u8 enemyLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
@@ -868,6 +874,39 @@ const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data)
             SetMapVarsToTrainerA();
         }
         return EventScript_TryDoNormalTrainerBattle;
+    }
+}
+
+const u8* BattleSetup_ConfigureFacilityTrainerBattle(u8 facility, const u8* scriptEndPtr)
+{
+    sTrainerBattleEndScript = (u8*)scriptEndPtr;
+
+    switch (facility)
+    {
+    // case FACILITY_BATTLE_PYRAMID:
+    //     if (gApproachingTrainerId == 0)
+    //     {
+    //         SetMapVarsToTrainerA();
+    //         TRAINER_BATTLE_PARAM.opponentA = LocalIdToPyramidTrainerId(gSpecialVar_LastTalked);
+    //     }
+    //     else
+    //     {
+    //         TRAINER_BATTLE_PARAM.opponentB = LocalIdToPyramidTrainerId(gSpecialVar_LastTalked);
+    //     }
+    //     return EventScript_TryDoNormalTrainerBattle;
+    // case FACILITY_BATTLE_TRAINER_HILL:
+    //     if (gApproachingTrainerId == 0)
+    //     {
+    //         SetMapVarsToTrainerA();
+    //         TRAINER_BATTLE_PARAM.opponentA = LocalIdToHillTrainerId(gSpecialVar_LastTalked);
+    //     }
+    //     else
+    //     {
+    //         TRAINER_BATTLE_PARAM.opponentB = LocalIdToHillTrainerId(gSpecialVar_LastTalked);
+    //     }
+    //     return EventScript_TryDoNormalTrainerBattle;
+    default:
+        return sTrainerBattleEndScript;
     }
 }
 
