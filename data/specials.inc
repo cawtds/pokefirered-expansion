@@ -464,4 +464,5 @@ gSpecials::
 	def_special GiveFrontierBattlePoints
 	def_special GetFrontierBattlePoints
 	def_special TakeFrontierBattlePoints
+	def_special ShowNatureGirlMessage
 gSpecialsEnd::

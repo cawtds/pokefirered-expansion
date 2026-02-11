@@ -2951,6 +2951,18 @@ void ShowFrontierManiacMessage(void)
     ShowFieldMessage(sFrontierManiacMessages[facility][i]);
 }
 
+void ShowNatureGirlMessage(void)
+{
+    u32 nature;
+    u32 personality;
+
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
+
+    personality = GetBoxMonData(boxmon, MON_DATA_PERSONALITY);
+    nature = GetNatureFromPersonality(personality);
+    ShowFieldMessage(gNaturesInfo[nature].natureGirlMessage);
+}
+
 void UpdateFrontierGambler(u16 daysSince)
 {
     u16 *var = GetVarPointer(VAR_FRONTIER_GAMBLER_CHALLENGE);
