@@ -50,6 +50,11 @@ enum
     TILE_TERRAIN_WATERFALL,
 };
 
+// Rows of metatiles do not actually have a strict width.
+// This constant is used for calculations for finding the next row of metatiles
+// for constructing large tiles, such as the Battle Pike's curtain tile.
+#define METATILE_ROW_WIDTH 8
+
 // Identifiers for the hidden item data stored in BgEvent's u32 hiddenItem
 enum
 {

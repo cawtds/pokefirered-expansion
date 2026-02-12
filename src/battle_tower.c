@@ -26,10 +26,6 @@ static void ValidateApprenticesChecksums(void);
 #define FACILITY_CLASS_TUBER_F          FACILITY_CLASS_AROMA_LADY
 #define FACILITY_CLASS_PKMN_BREEDER_F   FACILITY_CLASS_AROMA_LADY
 
-#define OBJ_EVENT_GFX_TUBER_M               OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_POKEFAN_M             OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_CYCLING_TRIATHLETE_M  OBJ_EVENT_GFX_HIKER
-
 #include "data/battle_frontier/battle_frontier_trainer_mons.h"
 #include "data/battle_frontier/battle_frontier_trainers.h"
 #include "data/battle_frontier/battle_frontier_mons.h"

@@ -670,6 +670,23 @@ static const struct MenuAction sMultichoiceList_BattlePalaceRules[] =
     {gText_Exit},
 };
 
+static const struct MenuAction sMultichoiceList_BattlePyramidRules[] =
+{
+    {COMPOUND_STRING("PYRAMID: POKéMON")},
+    {COMPOUND_STRING("PYRAMID: TRAINERS")},
+    {COMPOUND_STRING("PYRAMID: MAZE")},
+    {COMPOUND_STRING("BATTLE BAG")},
+    {gText_Exit},
+};
+
+static const struct MenuAction sMultichoiceList_BattlePikeRules[] =
+{
+    {COMPOUND_STRING("POKéNAV AND BAG")},
+    {COMPOUND_STRING("HELD ITEMS")},
+    {COMPOUND_STRING("POKéMON ORDER")},
+    {gText_Exit},
+};
+
 
 static const struct MenuAction sMultichoiceList_Exit[] = {
     { gOtherText_Exit }
@@ -755,6 +772,8 @@ static const struct MultichoiceListStruct sMultichoiceLists[] = {
     [MULTI_TOURNEY_WITH_RECORD]                                 = MULTICHOICE(sMultichoiceList_TourneyWithRecord),
     [MULTI_TOURNEY_NO_RECORD]                                   = MULTICHOICE(sMultichoiceList_TourneyNoRecord),
     [MULTI_BATTLE_PALACE_RULES]                                 = MULTICHOICE(sMultichoiceList_BattlePalaceRules),
+    [MULTI_BATTLE_PYRAMID_RULES]                                = MULTICHOICE(sMultichoiceList_BattlePyramidRules),
+    [MULTI_BATTLE_PIKE_RULES]                                   = MULTICHOICE(sMultichoiceList_BattlePikeRules),
 };
 
 // From Cool to Berries goes unused

@@ -98,6 +98,7 @@ static void ShowBattleFrontierTutorWindow(enum ScrollMulti, u16);
 static void ShowFrontierExchangeCornerItemIcon(enum Item);
 static void FillFrontierExchangeCornerWindowAndItemIcon(enum ScrollMulti, u16);
 static void HideFrontierExchangeCornerItemIcon(enum ScrollMulti);
+static void Task_CloseBattlePikeCurtain(u8);
 
 static u8 *const sStringVarPtrs[] = {
     gStringVar1,
@@ -3439,3 +3440,48 @@ void OffsetCameraForBattle(void)
     SetCameraPanning(8, 0);
 }
 
+#define CURTAIN_HEIGHT 4
+#define CURTAIN_WIDTH 3
+#define tFrameTimer   data
+#define tCurrentFrame data[3]
+
+void CloseBattlePikeCurtain(void)
+{
+    u8 taskId = CreateTask(Task_CloseBattlePikeCurtain, 8);
+    gTasks[taskId].tFrameTimer[0] = 4;
+    gTasks[taskId].tFrameTimer[1] = 4;
+    gTasks[taskId].tFrameTimer[2] = 4;
+    gTasks[taskId].tCurrentFrame = 0;
+}
+
+static void Task_CloseBattlePikeCurtain(u8 taskId)
+{
+    u8 x, y;
+    s16 *data = gTasks[taskId].data;
+
+    tFrameTimer[tCurrentFrame]--;
+    if (tFrameTimer[tCurrentFrame] == 0)
+    {
+        for (y = 0; y < CURTAIN_HEIGHT; y++)
+        {
+            for (x = 0; x < CURTAIN_WIDTH; x++)
+            {
+                MapGridSetMetatileIdAt(gSaveBlock1Ptr->pos.x + x + MAP_OFFSET - 1,
+                                       gSaveBlock1Ptr->pos.y + y + MAP_OFFSET - 3,
+                                       (x + METATILE_BattlePike_CurtainFrames_Start) + (y * METATILE_ROW_WIDTH) + (tCurrentFrame * CURTAIN_HEIGHT * METATILE_ROW_WIDTH));
+            }
+        }
+        DrawWholeMapView();
+        tCurrentFrame++;
+        if (tCurrentFrame == 3)
+        {
+            DestroyTask(taskId);
+            ScriptContext_Enable();
+        }
+    }
+}
+
+#undef CURTAIN_HEIGHT
+#undef CURTAIN_WIDTH
+#undef tFrameTimer
+#undef tCurrentFrame

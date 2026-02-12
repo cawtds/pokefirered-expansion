@@ -472,8 +472,10 @@ gSpecials::
 	def_special CallBattleDomeFunction
 	def_special CallBattleFactoryFunction
 	def_special CallBattlePalaceFunction
+	def_special CallBattlePikeFunction
 	def_special CallBattleTowerFunc
 	def_special ChoosePartyForBattleFrontier
 	def_special OffsetCameraForBattle
 	def_special DoDomeConfetti
+	def_special CloseBattlePikeCurtain
 gSpecialsEnd::
