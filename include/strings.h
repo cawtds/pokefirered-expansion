@@ -1890,4 +1890,11 @@ extern const u8 gText_Skill[];
 extern const u8 gText_Body[];
 extern const u8 gText_Judgment[];
 
+extern const u8 gText_BattleTrainers[];
+extern const u8 gText_BattleBasics[];
+extern const u8 gText_PokemonNature[];
+extern const u8 gText_PokemonMoves[];
+extern const u8 gText_Underpowered[];
+extern const u8 gText_WhenInDanger[];
+
 #endif //GUARD_STRINGS_H

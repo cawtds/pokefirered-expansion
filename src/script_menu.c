@@ -660,6 +660,16 @@ static const struct MenuAction sMultichoiceList_TourneyNoRecord[] =
     {gText_Retire},
 };
 
+static const struct MenuAction sMultichoiceList_BattlePalaceRules[] =
+{
+    {gText_BattleBasics},
+    {gText_PokemonNature},
+    {gText_PokemonMoves},
+    {gText_Underpowered},
+    {gText_WhenInDanger},
+    {gText_Exit},
+};
+
 
 static const struct MenuAction sMultichoiceList_Exit[] = {
     { gOtherText_Exit }
@@ -744,6 +754,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] = {
     [MULTI_BATTLE_DOME_RULES]                                   = MULTICHOICE(sMultichoiceList_BattleDomeRules),
     [MULTI_TOURNEY_WITH_RECORD]                                 = MULTICHOICE(sMultichoiceList_TourneyWithRecord),
     [MULTI_TOURNEY_NO_RECORD]                                   = MULTICHOICE(sMultichoiceList_TourneyNoRecord),
+    [MULTI_BATTLE_PALACE_RULES]                                 = MULTICHOICE(sMultichoiceList_BattlePalaceRules),
 };
 
 // From Cool to Berries goes unused

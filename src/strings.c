@@ -1515,6 +1515,14 @@ const u8 gText_Record2[] = _("RECORD");
 const u8 gText_Rest[] = _("REST");
 const u8 gText_Retire[] = _("RETIRE");
 
+const u8 gText_BattleBasics[] = _("BATTLE BASICS");
+const u8 gText_PokemonNature[] = _("POKéMON NATURE");
+const u8 gText_PokemonMoves[] = _("POKéMON MOVES");
+const u8 gText_Underpowered[] = _("UNDERPOWERED");
+const u8 gText_WhenInDanger[] = _("WHEN IN DANGER");
+const u8 gText_BattlePokemon[] = _("BATTLE POKéMON");
+const u8 gText_BattleTrainers[] = _("BATTLE TRAINERS");
+
 const u8 gText_Opponent[] = _("OPPONENT");
 const u8 gText_Tourney_Tree[] = _("TOURNEY TREE");
 const u8 gText_ReadyToStart[] = _("READY TO START");
