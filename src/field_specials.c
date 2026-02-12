@@ -3433,3 +3433,9 @@ void CloseBattleFrontierTutorWindow(void)
     RemoveWindow(sTutorMoveAndElevatorWindowId);
 }
 
+void OffsetCameraForBattle(void)
+{
+    SetCameraPanningCallback(NULL);
+    SetCameraPanning(8, 0);
+}
+

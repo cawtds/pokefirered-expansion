@@ -473,4 +473,5 @@ gSpecials::
 	def_special CallBattleFactoryFunction
 	def_special CallBattlePalaceFunction
 	def_special ChoosePartyForBattleFrontier
+	def_special OffsetCameraForBattle
 gSpecialsEnd::

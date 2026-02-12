@@ -884,6 +884,7 @@ static void GetFrontierData(void)
     if (hasSymbol == 2)
         hasSymbol = 1;
 
+    DebugPrintfLevel(MGBA_LOG_ERROR, "special var = %u", gSpecialVar_0x8005);
     switch (gSpecialVar_0x8005)
     {
     case FRONTIER_DATA_CHALLENGE_STATUS:
@@ -909,6 +910,7 @@ static void GetFrontierData(void)
         gSpecialVar_Result = gSaveBlock2Ptr->frontier.battledBrainFlags & gFrontierBrainInfo[facility].battledBit[hasSymbol];
         break;
     }
+    DebugPrintfLevel(MGBA_LOG_ERROR, "result var = %u", gSpecialVar_Result);
 }
 
 static void SetFrontierData(void)

@@ -1,10 +1,21 @@
 #include "global.h"
 #include "apprentice.h"
-
+#include "constants/characters.h"
 
 
 #include "data/battle_frontier/apprentice.h"
 
+
+void ResetApprenticeStruct(struct Apprentice *apprentice)
+{
+    u8 i;
+
+    for (i = 0; i < ARRAY_COUNT(apprentice->speechWon); i++)
+        apprentice->speechWon[i] = EC_EMPTY_WORD;
+
+    apprentice->playerName[0] = EOS;
+    apprentice->id = NUM_APPRENTICES;
+}
 
 const u8 *GetApprenticeNameInLanguage(u32 apprenticeId, u8 language)
 {

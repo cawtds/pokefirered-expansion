@@ -1,7 +1,12 @@
 #include "global.h"
+#include "apprentice.h"
+#include "battle_setup.h"
 #include "battle_tower.h"
 #include "event_data.h"
+#include "frontier_util.h"
 #include "pokeball.h"
+#include "random.h"
+#include "constants/apprentice.h"
 #include "constants/battle_tower.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_frontier_mons.h"
@@ -10,6 +15,8 @@
 
 // This file's functions.
 static void GetTowerData(void);
+static void SetNextTowerOpponent(void);
+static void ValidateApprenticesChecksums(void);
 
 // placeholders
 #define FACILITY_CLASS_TUBER_M          FACILITY_CLASS_RUIN_MANIAC
@@ -148,7 +155,7 @@ static void (* const sBattleTowerFuncs[])(void) =
     // [BATTLE_TOWER_FUNC_INIT]                = InitTowerChallenge,
     [BATTLE_TOWER_FUNC_GET_DATA]            = GetTowerData,
     // [BATTLE_TOWER_FUNC_SET_DATA]            = SetTowerData,
-    // [BATTLE_TOWER_FUNC_SET_OPPONENT]        = SetNextTowerOpponent,
+    [BATTLE_TOWER_FUNC_SET_OPPONENT]        = SetNextTowerOpponent,
     // [BATTLE_TOWER_FUNC_SET_BATTLE_WON]      = SetTowerBattleWon,
     // [BATTLE_TOWER_FUNC_GIVE_RIBBONS]        = AwardBattleTowerRibbons,
     // [BATTLE_TOWER_FUNC_SAVE]                = SaveTowerChallenge,
@@ -169,6 +176,29 @@ static const u32 sWinStreakFlags[][2] =
     {STREAK_TOWER_DOUBLES_50,     STREAK_TOWER_DOUBLES_OPEN},
     {STREAK_TOWER_MULTIS_50,      STREAK_TOWER_MULTIS_OPEN},
     {STREAK_TOWER_LINK_MULTIS_50, STREAK_TOWER_LINK_MULTIS_OPEN},
+};
+
+static const u32 sWinStreakMasks[][2] =
+{
+    {~(STREAK_TOWER_SINGLES_50),     ~(STREAK_TOWER_SINGLES_OPEN)},
+    {~(STREAK_TOWER_DOUBLES_50),     ~(STREAK_TOWER_DOUBLES_OPEN)},
+    {~(STREAK_TOWER_MULTIS_50),      ~(STREAK_TOWER_MULTIS_OPEN)},
+    {~(STREAK_TOWER_LINK_MULTIS_50), ~(STREAK_TOWER_LINK_MULTIS_OPEN)},
+};
+
+// The challenge number at which an Apprentice can appear, depending on how many of their questions were answered
+static const u8 sApprenticeChallengeThreshold[MAX_APPRENTICE_QUESTIONS] =
+{
+    1, 2, 3, 4, 5, 8, 9, 10, 11, 12
+};
+
+// Unclear why this was duplicated
+static const u8 sBattleTowerPartySizes2[] =
+{
+    [FRONTIER_MODE_SINGLES]     = FRONTIER_PARTY_SIZE,
+    [FRONTIER_MODE_DOUBLES]     = FRONTIER_DOUBLES_PARTY_SIZE,
+    [FRONTIER_MODE_MULTIS]      = FRONTIER_MULTI_PARTY_SIZE,
+    [FRONTIER_MODE_LINK_MULTIS] = FRONTIER_MULTI_PARTY_SIZE,
 };
 
 // code
@@ -198,6 +228,127 @@ static void GetTowerData(void)
     }
 }
 
+static bool8 ChooseSpecialBattleTowerTrainer(void)
+{
+    s32 i, j, validMons;
+    s32 trainerIds[9];
+    s32 idsCount = 0;
+    s32 winStreak = 0;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
+
+    if (VarGet(VAR_FRONTIER_FACILITY) != FRONTIER_FACILITY_TOWER)
+        return FALSE;
+
+    winStreak = GetCurrentBattleTowerWinStreak(lvlMode, battleMode);
+    for (i = 0; i < BATTLE_TOWER_RECORD_COUNT; i++)
+    {
+        u32 *record = (u32 *)(&gSaveBlock2Ptr->frontier.towerRecords[i]);
+        u32 recordHasData = 0;
+        u32 checksum = 0;
+        for (j = 0; j < (sizeof(struct EmeraldBattleTowerRecord) - 4) / 4; j++) // - 4, because of the last field being the checksum itself.
+        {
+            recordHasData |= record[j];
+            checksum += record[j];
+        }
+        validMons = 0;
+        for (j = 0; j < MAX_FRONTIER_PARTY_SIZE; j++)
+        {
+            if (gSaveBlock2Ptr->frontier.towerRecords[i].party[j].species != SPECIES_NONE
+                && gSaveBlock2Ptr->frontier.towerRecords[i].party[j].level <= GetFrontierEnemyMonLevel(lvlMode))
+                validMons++;
+        }
+
+        if (validMons >= sBattleTowerPartySizes2[battleMode]
+            && gSaveBlock2Ptr->frontier.towerRecords[i].winStreak == winStreak
+            && gSaveBlock2Ptr->frontier.towerRecords[i].lvlMode == lvlMode
+            && recordHasData
+            && gSaveBlock2Ptr->frontier.towerRecords[i].checksum == checksum)
+        {
+            trainerIds[idsCount] = i + TRAINER_RECORD_MIXING_FRIEND;
+            idsCount++;
+        }
+    }
+
+    if (battleMode == FRONTIER_MODE_SINGLES)
+    {
+        ValidateApprenticesChecksums();
+        for (i = 0; i < APPRENTICE_COUNT; i++)
+        {
+            if (gSaveBlock1Ptr->apprentices[i].lvlMode != 0
+                && sApprenticeChallengeThreshold[gSaveBlock1Ptr->apprentices[i].numQuestions] == winStreak
+                && gSaveBlock1Ptr->apprentices[i].lvlMode - 1 == lvlMode)
+            {
+                trainerIds[idsCount] = i + TRAINER_RECORD_MIXING_APPRENTICE;
+                idsCount++;
+            }
+        }
+    }
+
+    if (idsCount != 0)
+    {
+        TRAINER_BATTLE_PARAM.opponentA = trainerIds[Random() % idsCount];
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+
+static void SetNextTowerOpponent(void)
+{
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    if (lvlMode == FRONTIER_LVL_TENT)
+    {
+        // SetNextBattleTentOpponent();
+    }
+    else
+    {
+        u16 id;
+        u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
+        u16 winStreak = GetCurrentFacilityWinStreak();
+        u32 challengeNum = winStreak / FRONTIER_STAGES_PER_CHALLENGE;
+        SetFacilityPtrsGetLevel();
+
+        if (battleMode == FRONTIER_MODE_MULTIS || battleMode == FRONTIER_MODE_LINK_MULTIS)
+        {
+            id = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
+            TRAINER_BATTLE_PARAM.opponentA = gSaveBlock2Ptr->frontier.trainerIds[id * 2];
+            TRAINER_BATTLE_PARAM.opponentB = gSaveBlock2Ptr->frontier.trainerIds[id * 2 + 1];
+            SetBattleFacilityTrainerGfxId(TRAINER_BATTLE_PARAM.opponentA, 0);
+            SetBattleFacilityTrainerGfxId(TRAINER_BATTLE_PARAM.opponentB, 1);
+        }
+        else if (ChooseSpecialBattleTowerTrainer())
+        {
+            SetBattleFacilityTrainerGfxId(TRAINER_BATTLE_PARAM.opponentA, 0);
+            gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum] = TRAINER_BATTLE_PARAM.opponentA;
+        }
+        else
+        {
+            s32 i;
+            while (1)
+            {
+                id = GetRandomScaledFrontierTrainerId(challengeNum, gSaveBlock2Ptr->frontier.curChallengeBattleNum);
+
+                // Ensure trainer wasn't previously fought in this challenge.
+                for (i = 0; i < gSaveBlock2Ptr->frontier.curChallengeBattleNum; i++)
+                {
+                    if (gSaveBlock2Ptr->frontier.trainerIds[i] == id)
+                        break;
+                }
+                if (i == gSaveBlock2Ptr->frontier.curChallengeBattleNum)
+                    break;
+            }
+
+            TRAINER_BATTLE_PARAM.opponentA = id;
+            SetBattleFacilityTrainerGfxId(TRAINER_BATTLE_PARAM.opponentA, 0);
+            if (gSaveBlock2Ptr->frontier.curChallengeBattleNum + 1 < FRONTIER_STAGES_PER_CHALLENGE)
+                gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum] = TRAINER_BATTLE_PARAM.opponentA;
+        }
+    }
+}
+
 u16 GetCurrentBattleTowerWinStreak(enum FrontierLevelMode lvlMode, u8 battleMode)
 {
     u16 winStreak = gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode];
@@ -206,4 +357,28 @@ u16 GetCurrentBattleTowerWinStreak(enum FrontierLevelMode lvlMode, u8 battleMode
         return MAX_STREAK;
     else
         return winStreak;
+}
+
+static void ClearApprentice(struct Apprentice *apprentice)
+{
+    s32 i;
+
+    for (i = 0; i < sizeof(struct Apprentice) / sizeof(u32); i++)
+        ((u32 *)apprentice)[i] = 0;
+    ResetApprenticeStruct(apprentice);
+}
+
+static void ValidateApprenticesChecksums(void)
+{
+    s32 i, j;
+
+    for (i = 0; i < APPRENTICE_COUNT; i++)
+    {
+        u32 *data = (u32 *) &gSaveBlock1Ptr->apprentices[i];
+        u32 checksum = 0;
+        for (j = 0; j < offsetof(struct Apprentice, checksum) / sizeof(u32); j++)
+            checksum += data[j];
+        if (gSaveBlock1Ptr->apprentices[i].checksum != checksum)
+            ClearApprentice(&gSaveBlock1Ptr->apprentices[i]);
+    }
 }
