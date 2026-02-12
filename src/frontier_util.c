@@ -1,39 +1,48 @@
 #include "global.h"
-#include "apprentice.h"
-#include "battle.h"
-#include "battle_dome.h"
-#include "battle_frontier.h"
-#include "battle_records.h"
-#include "battle_setup.h"
-#include "battle_special.h"
-#include "battle_tower.h"
+#include "frontier_util.h"
 #include "easy_chat.h"
 #include "event_data.h"
-#include "field_specials.h"
-#include "frontier_util.h"
-#include "international_string_util.h"
-#include "list_menu.h"
-#include "load_save.h"
-#include "malloc.h"
-#include "menu.h"
-#include "move.h"
+#include "battle_setup.h"
 #include "overworld.h"
-#include "party_menu.h"
-#include "pokedex_screen.h"
 #include "random.h"
-#include "recorded_battle.h"
-#include "record_mixing.h"
-#include "save.h"
+#include "battle_frontier.h"
+#include "battle_special.h"
+#include "battle_tower.h"
+#include "field_specials.h"
+#include "battle.h"
 #include "script_pokemon_util.h"
-#include "string_util.h"
-#include "strings.h"
+#include "main.h"
 #include "window.h"
+#include "menu.h"
+#include "text.h"
+#include "battle_records.h"
+#include "international_string_util.h"
+#include "string_util.h"
+#include "new_game.h"
+#include "link.h"
+// #include "tv.h"
+#include "apprentice.h"
+#include "pokedex.h"
+#include "recorded_battle.h"
+#include "data.h"
+#include "record_mixing.h"
+#include "strings.h"
+#include "malloc.h"
+#include "save.h"
+#include "load_save.h"
+#include "battle_dome.h"
 #include "constants/battle_frontier.h"
+#include "constants/battle_frontier_mons.h"
 #include "constants/battle_move_effects.h"
 #include "constants/battle_pike.h"
-#include "constants/event_objects.h"
-#include "constants/battle_frontier_mons.h"
 #include "constants/frontier_util.h"
+#include "constants/trainers.h"
+#include "constants/game_stat.h"
+#include "constants/moves.h"
+#include "constants/items.h"
+#include "constants/event_objects.h"
+#include "party_menu.h"
+#include "list_menu.h"
 
 struct FrontierBrainMon
 {
@@ -87,6 +96,7 @@ static void ShowPikeResultsWindow(void);
 static void ShowFactoryResultsWindow(u8);
 static void ShowArenaResultsWindow(void);
 static void ShowPyramidResultsWindow(void);
+static void CopyFrontierBrainText(bool8 playerWonText);
 static u16 *MakeCaughtBannesSpeciesList(u32 totalBannedSpecies);
 static void PrintBannedSpeciesName(u8 windowId, u32 itemId, u8 y);
 static void Task_BannedSpeciesWindowInput(u8 taskId);
@@ -725,6 +735,17 @@ static const struct WindowTemplate sFrontierResultsWindowTemplate =
     .baseBlock = 1
 };
 
+static const struct WindowTemplate sLinkContestResultsWindowTemplate =
+{
+    .bg = 0,
+    .tilemapLeft = 2,
+    .tilemapTop = 2,
+    .width = 26,
+    .height = 15,
+    .paletteNum = 15,
+    .baseBlock = 1
+};
+
 static const struct WindowTemplate sRankingHallRecordsWindowTemplate =
 {
     .bg = 0,
@@ -734,6 +755,20 @@ static const struct WindowTemplate sRankingHallRecordsWindowTemplate =
     .height = 17,
     .paletteNum = 15,
     .baseBlock = 1
+};
+
+static const u8 *const sRecordsWindowChallengeTexts[][2] =
+{
+    [RANKING_HALL_TOWER_SINGLES] = {gText_BattleTower2,  gText_FacilitySingle},
+    [RANKING_HALL_TOWER_DOUBLES] = {gText_BattleTower2,  gText_FacilityDouble},
+    [RANKING_HALL_TOWER_MULTIS]  = {gText_BattleTower2,  gText_FacilityMulti},
+    [RANKING_HALL_DOME]          = {gText_BattleDome,    gText_FacilitySingle},
+    [RANKING_HALL_PALACE]        = {gText_BattlePalace,  gText_FacilitySingle},
+    [RANKING_HALL_ARENA]         = {gText_BattleArena,   gText_Facility},
+    [RANKING_HALL_FACTORY]       = {gText_BattleFactory, gText_FacilitySingle},
+    [RANKING_HALL_PIKE]          = {gText_BattlePike,    gText_Facility},
+    [RANKING_HALL_PYRAMID]       = {gText_BattlePyramid, gText_Facility},
+    [RANKING_HALL_TOWER_LINK]    = {gText_BattleTower2,  gText_FacilityLink},
 };
 
 static const u8 *const sLevelModeText[] =
@@ -754,20 +789,6 @@ static const u8 *const sHallFacilityToRecordsText[] =
     [RANKING_HALL_PIKE]          = gText_FrontierFacilityRoomsCleared,
     [RANKING_HALL_PYRAMID]       = gText_FrontierFacilityFloorsCleared,
     [RANKING_HALL_TOWER_LINK]    = gText_FrontierFacilityWinStreak,
-};
-
-static const u8 *const sRecordsWindowChallengeTexts[][2] =
-{
-    [RANKING_HALL_TOWER_SINGLES] = {gText_BattleTower2,  gText_FacilitySingle},
-    [RANKING_HALL_TOWER_DOUBLES] = {gText_BattleTower2,  gText_FacilityDouble},
-    [RANKING_HALL_TOWER_MULTIS]  = {gText_BattleTower2,  gText_FacilityMulti},
-    [RANKING_HALL_DOME]          = {gText_BattleDome,    gText_FacilitySingle},
-    [RANKING_HALL_PALACE]        = {gText_BattlePalace,  gText_FacilitySingle},
-    [RANKING_HALL_ARENA]         = {gText_BattleArena,   gText_Facility},
-    [RANKING_HALL_FACTORY]       = {gText_BattleFactory, gText_FacilitySingle},
-    [RANKING_HALL_PIKE]          = {gText_BattlePike,    gText_Facility},
-    [RANKING_HALL_PYRAMID]       = {gText_BattlePyramid, gText_Facility},
-    [RANKING_HALL_TOWER_LINK]    = {gText_BattleTower2,  gText_FacilityLink},
 };
 
 // Trainer ID ranges for possible frontier trainers to encounter on particular challenges
@@ -795,6 +816,7 @@ static const u16 sFrontierTrainerIdRangesHard[][2] =
     {FRONTIER_TRAINER_LEON,    FRONTIER_TRAINER_RAUL},   // 220 - 239
     {FRONTIER_TRAINER_JAXON,   FRONTIER_TRAINER_GRETEL}, // 200 - 299
 };
+
 #define BANNED_SPECIES_SHOWN 6
 
 static const struct ListMenuTemplate sCaughtBannedSpeciesListTemplate =
@@ -1006,9 +1028,6 @@ static void ShowFacilityResultsWindow(void)
     case FRONTIER_FACILITY_PYRAMID:
         ShowPyramidResultsWindow();
         break;
-    // case FACILITY_LINK_CONTEST:
-    //     ShowLinkContestResultsWindow();
-    //     break;
     }
 }
 
@@ -1588,226 +1607,123 @@ u8 GetFrontierBrainStatus(void)
     return status;
 }
 
-static void Fill1PRecords(struct RankingHall1P *dst, s32 hallFacilityId, s32 lvlMode)
+void CopyFrontierTrainerText(u8 whichText, u16 trainerId)
 {
-#if FREE_RECORD_MIXING_HALL_RECORDS == FALSE
-    s32 i, j;
-    struct RankingHall1P record1P[HALL_RECORDS_COUNT + 1];
-    struct PlayerHallRecords *playerHallRecords = AllocZeroed(sizeof(struct PlayerHallRecords));
-    GetPlayerHallRecords(playerHallRecords);
-
-    for (i = 0; i < HALL_RECORDS_COUNT; i++)
-        record1P[i] = gSaveBlock2Ptr->hallRecords1P[hallFacilityId][lvlMode][i];
-
-    record1P[HALL_RECORDS_COUNT] = playerHallRecords->onePlayer[hallFacilityId][lvlMode];
-
-    for (i = 0; i < HALL_RECORDS_COUNT; i++)
+    switch (whichText)
     {
-        s32 highestWinStreak = 0;
-        s32 highestId = 0;
-        for (j = 0; j < HALL_RECORDS_COUNT + 1; j++)
-        {
-            if (record1P[j].winStreak > highestWinStreak)
-            {
-                highestId = j;
-                highestWinStreak = record1P[j].winStreak;
-            }
-        }
-        if (record1P[HALL_RECORDS_COUNT].winStreak >= highestWinStreak)
-            highestId = HALL_RECORDS_COUNT;
-
-        dst[i] = record1P[highestId];
-        record1P[highestId].winStreak = 0;
-    }
-
-    Free(playerHallRecords);
-#endif //FREE_RECORD_MIXING_HALL_RECORDS
-}
-
-static void Fill2PRecords(struct RankingHall2P *dst, s32 lvlMode)
-{
-#if FREE_RECORD_MIXING_HALL_RECORDS == FALSE
-    s32 i, j;
-    struct RankingHall2P record2P[HALL_RECORDS_COUNT + 1];
-    struct PlayerHallRecords *playerHallRecords = AllocZeroed(sizeof(struct PlayerHallRecords));
-    GetPlayerHallRecords(playerHallRecords);
-
-    for (i = 0; i < HALL_RECORDS_COUNT; i++)
-        record2P[i] = gSaveBlock2Ptr->hallRecords2P[lvlMode][i];
-
-    record2P[HALL_RECORDS_COUNT] = playerHallRecords->twoPlayers[lvlMode];
-
-    for (i = 0; i < HALL_RECORDS_COUNT; i++)
-    {
-        s32 highestWinStreak = 0;
-        s32 highestId = 0;
-        for (j = 0; j < HALL_RECORDS_COUNT; j++)
-        {
-            if (record2P[j].winStreak > highestWinStreak)
-            {
-                highestId = j;
-                highestWinStreak = record2P[j].winStreak;
-            }
-        }
-        if (record2P[HALL_RECORDS_COUNT].winStreak >= highestWinStreak)
-            highestId = HALL_RECORDS_COUNT;
-
-        dst[i] = record2P[highestId];
-        record2P[highestId].winStreak = 0;
-    }
-
-    Free(playerHallRecords);
-#endif //FREE_RECORD_MIXING_HALL_RECORDS
-}
-
-// Battle Frontier Ranking Hall records.
-static void Print1PRecord(s32 position, s32 x, s32 y, struct RankingHall1P *hallRecord, s32 hallFacilityId)
-{
-    u8 text[32];
-    u16 winStreak;
-
-    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gText_123Dot[position], x * 8, (8 * (y + 5 * position)) + 1, TEXT_SKIP_DRAW, NULL);
-    hallRecord->name[PLAYER_NAME_LENGTH] = EOS;
-    if (hallRecord->winStreak)
-    {
-        TVShowConvertInternationalString(text, hallRecord->name, hallRecord->language);
-        AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, text, (x + 2) * 8, (8 * (y + 5 * position)) + 1, TEXT_SKIP_DRAW, NULL);
-        winStreak = hallRecord->winStreak;
-        if (winStreak > MAX_STREAK)
-            winStreak = MAX_STREAK;
-        ConvertIntToDecimalStringN(gStringVar2, winStreak, STR_CONV_MODE_RIGHT_ALIGN, 4);
-        StringExpandPlaceholders(gStringVar4, sHallFacilityToRecordsText[hallFacilityId]);
-        AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, GetStringRightAlignXOffset(FONT_NORMAL, sHallFacilityToRecordsText[hallFacilityId], 0xC8), (8 * (y + 5 * position)) + 1, TEXT_SKIP_DRAW, NULL);
-    }
-}
-
-static void Print2PRecord(s32 position, s32 x, s32 y, struct RankingHall2P *hallRecord)
-{
-    u8 text[32];
-    u16 winStreak;
-
-    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gText_123Dot[position], x * 8, (8 * (y + 5 * position)) + 1, TEXT_SKIP_DRAW, NULL);
-    if (hallRecord->winStreak)
-    {
-        hallRecord->name1[PLAYER_NAME_LENGTH] = EOS;
-        hallRecord->name2[PLAYER_NAME_LENGTH] = EOS;
-        TVShowConvertInternationalString(text, hallRecord->name1, hallRecord->language);
-        AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, text, (x + 2) * 8, (8 * (y + 5 * position - 1)) + 1, TEXT_SKIP_DRAW, NULL);
-        if (IsStringJapanese(hallRecord->name2))
-            TVShowConvertInternationalString(text, hallRecord->name2, LANGUAGE_JAPANESE);
+    case FRONTIER_BEFORE_TEXT:
+    #if FREE_BATTLE_TOWER_E_READER == FALSE
+        if (trainerId == TRAINER_EREADER)
+            FrontierSpeechToString(gSaveBlock2Ptr->frontier.ereaderTrainer.greeting);
+        else if (trainerId == TRAINER_FRONTIER_BRAIN)
+    #else
+        if (trainerId == TRAINER_FRONTIER_BRAIN)
+    #endif //FREE_BATTLE_TOWER_E_READER
+            CopyFrontierBrainText(FALSE);
+        else if (trainerId < FRONTIER_TRAINERS_COUNT)
+            FrontierSpeechToString(gFacilityTrainers[trainerId].speechBefore);
+        else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
+            FrontierSpeechToString(gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].greeting);
         else
-            StringCopy(text, hallRecord->name2);
-        AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, text, (x + 4) * 8, (8 * (y + 5 * position + 1)) + 1, TEXT_SKIP_DRAW, NULL);
-
-        winStreak = hallRecord->winStreak;
-        if (winStreak > MAX_STREAK)
-            winStreak = MAX_STREAK;
-        ConvertIntToDecimalStringN(gStringVar2, winStreak, STR_CONV_MODE_RIGHT_ALIGN, 4);
-        StringExpandPlaceholders(gStringVar4, sHallFacilityToRecordsText[RANKING_HALL_TOWER_LINK]);
-        AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, GetStringRightAlignXOffset(FONT_NORMAL, sHallFacilityToRecordsText[RANKING_HALL_TOWER_LINK], 0xC8), (8 * (y + 5 * position)) + 1, TEXT_SKIP_DRAW, NULL);
+            BufferApprenticeChallengeText(trainerId - TRAINER_RECORD_MIXING_APPRENTICE);
+        break;
+    case FRONTIER_PLAYER_LOST_TEXT:
+    #if FREE_BATTLE_TOWER_E_READER == FALSE
+        if (trainerId == TRAINER_EREADER)
+        {
+            FrontierSpeechToString(gSaveBlock2Ptr->frontier.ereaderTrainer.farewellPlayerLost);
+        }
+        else if (trainerId == TRAINER_FRONTIER_BRAIN)
+    #else
+        if (trainerId == TRAINER_FRONTIER_BRAIN)
+    #endif //FREE_BATTLE_TOWER_E_READER
+        {
+            CopyFrontierBrainText(FALSE);
+        }
+        else if (trainerId < FRONTIER_TRAINERS_COUNT)
+        {
+            FrontierSpeechToString(gFacilityTrainers[trainerId].speechWin);
+        }
+        else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
+        {
+            if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+                FrontierSpeechToString(GetRecordedBattleEasyChatSpeech());
+            else
+                FrontierSpeechToString(gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].speechWon);
+        }
+        else
+        {
+            if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+                FrontierSpeechToString(GetRecordedBattleEasyChatSpeech());
+            else
+                FrontierSpeechToString(gSaveBlock1Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE].speechWon);
+        }
+        break;
+    case FRONTIER_PLAYER_WON_TEXT:
+        if (trainerId == TRAINER_EREADER)
+        {
+        #if FREE_BATTLE_TOWER_E_READER == FALSE
+            FrontierSpeechToString(gSaveBlock2Ptr->frontier.ereaderTrainer.farewellPlayerWon);
+        #endif //FREE_BATTLE_TOWER_E_READER
+        }
+        else if (trainerId == TRAINER_FRONTIER_BRAIN)
+        {
+            CopyFrontierBrainText(TRUE);
+        }
+        else if (trainerId < FRONTIER_TRAINERS_COUNT)
+        {
+            FrontierSpeechToString(gFacilityTrainers[trainerId].speechLose);
+        }
+        else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
+        {
+            if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+                FrontierSpeechToString(GetRecordedBattleEasyChatSpeech());
+            else
+                FrontierSpeechToString(gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].speechLost);
+        }
+        else
+        {
+            if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+            {
+                trainerId = GetRecordedBattleApprenticeId();
+                FrontierSpeechToString(gApprentices[trainerId].speechLost);
+            }
+            else
+            {
+                trainerId = gSaveBlock1Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE].id;
+                FrontierSpeechToString(gApprentices[trainerId].speechLost);
+            }
+        }
+        break;
     }
 }
 
-static void PrintHallRecords(s32 hallFacilityId, s32 lvlMode)
+void ResetWinStreaks(void)
 {
-    s32 i;
-    s32 x;
-    struct RankingHall1P records1P[HALL_RECORDS_COUNT];
-    struct RankingHall2P records2P[HALL_RECORDS_COUNT];
+    s32 battleMode, lvlMode;
 
-    StringCopy(gStringVar1, sRecordsWindowChallengeTexts[hallFacilityId][0]);
-    StringExpandPlaceholders(gStringVar4, sRecordsWindowChallengeTexts[hallFacilityId][1]);
-    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, 0, 1, TEXT_SKIP_DRAW, NULL);
-    x = GetStringRightAlignXOffset(FONT_NORMAL, sLevelModeText[lvlMode], DISPLAY_WIDTH - 32);
-    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, sLevelModeText[lvlMode], x, 1, TEXT_SKIP_DRAW, NULL);
-    if (hallFacilityId == RANKING_HALL_TOWER_LINK)
+    gSaveBlock2Ptr->frontier.winStreakActiveFlags = 0;
+    for (battleMode = 0; battleMode < FRONTIER_MODE_COUNT; battleMode++)
     {
-        gSaveBlock2Ptr->frontier.opponentNames[0][PLAYER_NAME_LENGTH] = EOS;
-        gSaveBlock2Ptr->frontier.opponentNames[1][PLAYER_NAME_LENGTH] = EOS;
-        Fill2PRecords(records2P, lvlMode);
-        for (i = 0; i < HALL_RECORDS_COUNT; i++)
-            Print2PRecord(i, 1, 4, &records2P[i]);
+        for (lvlMode = 0; lvlMode < FRONTIER_LVL_TENT; lvlMode++)
+        {
+            gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode] = 0;
+            if (battleMode < FRONTIER_MODE_MULTIS)
+            {
+                gSaveBlock2Ptr->frontier.domeWinStreaks[battleMode][lvlMode] = 0;
+                gSaveBlock2Ptr->frontier.palaceWinStreaks[battleMode][lvlMode] = 0;
+                gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] = 0;
+            }
+            if (battleMode == FRONTIER_MODE_SINGLES)
+            {
+                gSaveBlock2Ptr->frontier.arenaWinStreaks[lvlMode] = 0;
+                gSaveBlock2Ptr->frontier.pikeWinStreaks[lvlMode] = 0;
+                gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] = 0;
+            }
+        }
     }
-    else
-    {
-        Fill1PRecords(records1P, hallFacilityId, lvlMode);
-        for (i = 0; i < HALL_RECORDS_COUNT; i++)
-            Print1PRecord(i, 1, 4, &records1P[i], hallFacilityId);
-    }
-}
-
-void ShowRankingHallRecordsWindow(void)
-{
-    gRecordsWindowId = AddWindow(&sRankingHallRecordsWindowTemplate);
-    DrawStdWindowFrame(gRecordsWindowId, FALSE);
-    FillWindowPixelBuffer(gRecordsWindowId, PIXEL_FILL(1));
-    PrintHallRecords(gSpecialVar_0x8005, FRONTIER_LVL_50);
-    PutWindowTilemap(gRecordsWindowId);
-    CopyWindowToVram(gRecordsWindowId, COPYWIN_FULL);
-}
-
-void ScrollRankingHallRecordsWindow(void)
-{
-    FillWindowPixelBuffer(gRecordsWindowId, PIXEL_FILL(1));
-    PrintHallRecords(gSpecialVar_0x8005, FRONTIER_LVL_OPEN);
-    CopyWindowToVram(gRecordsWindowId, COPYWIN_GFX);
-}
-
-void SaveGameFrontier(void)
-{
-    s32 i;
-    struct Pokemon *monsParty = AllocZeroed(sizeof(struct Pokemon) * PARTY_SIZE);
-
-    for (i = 0; i < PARTY_SIZE; i++)
-        monsParty[i] = gPlayerParty[i];
-
-    i = gPlayerPartyCount;
-    LoadPlayerParty();
-    SetContinueGameWarpStatusToDynamicWarp();
-    TrySavingData(SAVE_LINK);
-    ClearContinueGameWarpStatus2();
-    gPlayerPartyCount = i;
-
-    for (i = 0; i < PARTY_SIZE; i++)
-        gPlayerParty[i] = monsParty[i];
-
-    Free(monsParty);
-}
-
-// Frontier Brain functions.
-enum TrainerPicID GetFrontierBrainTrainerPicIndex(void)
-{
-    s32 facility;
-
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
-        facility = GetRecordedBattleFrontierFacility();
-    else
-        facility = VarGet(VAR_FRONTIER_FACILITY);
-
-    return GetTrainerPicFromId(gFrontierBrainInfo[facility].trainerId);
-}
-
-enum TrainerClassID GetFrontierBrainTrainerClass(void)
-{
-    s32 facility;
-
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
-        facility = GetRecordedBattleFrontierFacility();
-    else
-        facility = VarGet(VAR_FRONTIER_FACILITY);
-
-    return GetTrainerClassFromId(gFrontierBrainInfo[facility].trainerId);
-}
-
-void ClearEnemyPartyAfterChallenge()
-{
-    // We zero out the Enemy's party here when the player either wins or loses the challenge since we
-    // can't do it the usual way in FreeResetData_ReturnToOvOrDoEvolutions() in battle_main.c due to the
-    // way facilities like the Battle Factory and the Slateport Battle Tent work
-    if (gSpecialVar_0x8005 == 0)
-    {
-        ZeroEnemyPartyMons();
-    }
+    if (gSaveBlock2Ptr->frontier.challengeStatus != 0)
+        gSaveBlock2Ptr->frontier.challengeStatus = CHALLENGE_STATUS_SAVING;
 }
 
 u32 GetCurrentFacilityWinStreak(void)
@@ -2234,6 +2150,477 @@ static void SetFacilityBrainObjectEvent(void)
     SetFrontierBrainObjEventGfx(VarGet(VAR_FRONTIER_FACILITY));
 }
 
+// Battle Frontier Ranking Hall records.
+static void Print1PRecord(s32 position, s32 x, s32 y, struct RankingHall1P *hallRecord, s32 hallFacilityId)
+{
+    u8 text[32];
+    u16 winStreak;
+
+    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gText_123Dot[position], x * 8, (8 * (y + 5 * position)) + 1, TEXT_SKIP_DRAW, NULL);
+    hallRecord->name[PLAYER_NAME_LENGTH] = EOS;
+    if (hallRecord->winStreak)
+    {
+        TVShowConvertInternationalString(text, hallRecord->name, hallRecord->language);
+        AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, text, (x + 2) * 8, (8 * (y + 5 * position)) + 1, TEXT_SKIP_DRAW, NULL);
+        winStreak = hallRecord->winStreak;
+        if (winStreak > MAX_STREAK)
+            winStreak = MAX_STREAK;
+        ConvertIntToDecimalStringN(gStringVar2, winStreak, STR_CONV_MODE_RIGHT_ALIGN, 4);
+        StringExpandPlaceholders(gStringVar4, sHallFacilityToRecordsText[hallFacilityId]);
+        AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, GetStringRightAlignXOffset(FONT_NORMAL, sHallFacilityToRecordsText[hallFacilityId], 0xC8), (8 * (y + 5 * position)) + 1, TEXT_SKIP_DRAW, NULL);
+    }
+}
+
+static void Print2PRecord(s32 position, s32 x, s32 y, struct RankingHall2P *hallRecord)
+{
+    u8 text[32];
+    u16 winStreak;
+
+    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gText_123Dot[position], x * 8, (8 * (y + 5 * position)) + 1, TEXT_SKIP_DRAW, NULL);
+    if (hallRecord->winStreak)
+    {
+        hallRecord->name1[PLAYER_NAME_LENGTH] = EOS;
+        hallRecord->name2[PLAYER_NAME_LENGTH] = EOS;
+        TVShowConvertInternationalString(text, hallRecord->name1, hallRecord->language);
+        AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, text, (x + 2) * 8, (8 * (y + 5 * position - 1)) + 1, TEXT_SKIP_DRAW, NULL);
+        if (IsStringJapanese(hallRecord->name2))
+            TVShowConvertInternationalString(text, hallRecord->name2, LANGUAGE_JAPANESE);
+        else
+            StringCopy(text, hallRecord->name2);
+        AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, text, (x + 4) * 8, (8 * (y + 5 * position + 1)) + 1, TEXT_SKIP_DRAW, NULL);
+
+        winStreak = hallRecord->winStreak;
+        if (winStreak > MAX_STREAK)
+            winStreak = MAX_STREAK;
+        ConvertIntToDecimalStringN(gStringVar2, winStreak, STR_CONV_MODE_RIGHT_ALIGN, 4);
+        StringExpandPlaceholders(gStringVar4, sHallFacilityToRecordsText[RANKING_HALL_TOWER_LINK]);
+        AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, GetStringRightAlignXOffset(FONT_NORMAL, sHallFacilityToRecordsText[RANKING_HALL_TOWER_LINK], 0xC8), (8 * (y + 5 * position)) + 1, TEXT_SKIP_DRAW, NULL);
+    }
+}
+
+static void Fill1PRecords(struct RankingHall1P *dst, s32 hallFacilityId, s32 lvlMode)
+{
+#if FREE_RECORD_MIXING_HALL_RECORDS == FALSE
+    s32 i, j;
+    struct RankingHall1P record1P[HALL_RECORDS_COUNT + 1];
+    struct PlayerHallRecords *playerHallRecords = AllocZeroed(sizeof(struct PlayerHallRecords));
+    GetPlayerHallRecords(playerHallRecords);
+
+    for (i = 0; i < HALL_RECORDS_COUNT; i++)
+        record1P[i] = gSaveBlock2Ptr->hallRecords1P[hallFacilityId][lvlMode][i];
+
+    record1P[HALL_RECORDS_COUNT] = playerHallRecords->onePlayer[hallFacilityId][lvlMode];
+
+    for (i = 0; i < HALL_RECORDS_COUNT; i++)
+    {
+        s32 highestWinStreak = 0;
+        s32 highestId = 0;
+        for (j = 0; j < HALL_RECORDS_COUNT + 1; j++)
+        {
+            if (record1P[j].winStreak > highestWinStreak)
+            {
+                highestId = j;
+                highestWinStreak = record1P[j].winStreak;
+            }
+        }
+        if (record1P[HALL_RECORDS_COUNT].winStreak >= highestWinStreak)
+            highestId = HALL_RECORDS_COUNT;
+
+        dst[i] = record1P[highestId];
+        record1P[highestId].winStreak = 0;
+    }
+
+    Free(playerHallRecords);
+#endif //FREE_RECORD_MIXING_HALL_RECORDS
+}
+
+static void Fill2PRecords(struct RankingHall2P *dst, s32 lvlMode)
+{
+#if FREE_RECORD_MIXING_HALL_RECORDS == FALSE
+    s32 i, j;
+    struct RankingHall2P record2P[HALL_RECORDS_COUNT + 1];
+    struct PlayerHallRecords *playerHallRecords = AllocZeroed(sizeof(struct PlayerHallRecords));
+    GetPlayerHallRecords(playerHallRecords);
+
+    for (i = 0; i < HALL_RECORDS_COUNT; i++)
+        record2P[i] = gSaveBlock2Ptr->hallRecords2P[lvlMode][i];
+
+    record2P[HALL_RECORDS_COUNT] = playerHallRecords->twoPlayers[lvlMode];
+
+    for (i = 0; i < HALL_RECORDS_COUNT; i++)
+    {
+        s32 highestWinStreak = 0;
+        s32 highestId = 0;
+        for (j = 0; j < HALL_RECORDS_COUNT; j++)
+        {
+            if (record2P[j].winStreak > highestWinStreak)
+            {
+                highestId = j;
+                highestWinStreak = record2P[j].winStreak;
+            }
+        }
+        if (record2P[HALL_RECORDS_COUNT].winStreak >= highestWinStreak)
+            highestId = HALL_RECORDS_COUNT;
+
+        dst[i] = record2P[highestId];
+        record2P[highestId].winStreak = 0;
+    }
+
+    Free(playerHallRecords);
+#endif //FREE_RECORD_MIXING_HALL_RECORDS
+}
+
+static void PrintHallRecords(s32 hallFacilityId, s32 lvlMode)
+{
+    s32 i;
+    s32 x;
+    struct RankingHall1P records1P[HALL_RECORDS_COUNT];
+    struct RankingHall2P records2P[HALL_RECORDS_COUNT];
+
+    StringCopy(gStringVar1, sRecordsWindowChallengeTexts[hallFacilityId][0]);
+    StringExpandPlaceholders(gStringVar4, sRecordsWindowChallengeTexts[hallFacilityId][1]);
+    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, 0, 1, TEXT_SKIP_DRAW, NULL);
+    x = GetStringRightAlignXOffset(FONT_NORMAL, sLevelModeText[lvlMode], DISPLAY_WIDTH - 32);
+    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, sLevelModeText[lvlMode], x, 1, TEXT_SKIP_DRAW, NULL);
+    if (hallFacilityId == RANKING_HALL_TOWER_LINK)
+    {
+        gSaveBlock2Ptr->frontier.opponentNames[0][PLAYER_NAME_LENGTH] = EOS;
+        gSaveBlock2Ptr->frontier.opponentNames[1][PLAYER_NAME_LENGTH] = EOS;
+        Fill2PRecords(records2P, lvlMode);
+        for (i = 0; i < HALL_RECORDS_COUNT; i++)
+            Print2PRecord(i, 1, 4, &records2P[i]);
+    }
+    else
+    {
+        Fill1PRecords(records1P, hallFacilityId, lvlMode);
+        for (i = 0; i < HALL_RECORDS_COUNT; i++)
+            Print1PRecord(i, 1, 4, &records1P[i], hallFacilityId);
+    }
+}
+
+void ShowRankingHallRecordsWindow(void)
+{
+    gRecordsWindowId = AddWindow(&sRankingHallRecordsWindowTemplate);
+    DrawStdWindowFrame(gRecordsWindowId, FALSE);
+    FillWindowPixelBuffer(gRecordsWindowId, PIXEL_FILL(1));
+    PrintHallRecords(gSpecialVar_0x8005, FRONTIER_LVL_50);
+    PutWindowTilemap(gRecordsWindowId);
+    CopyWindowToVram(gRecordsWindowId, COPYWIN_FULL);
+}
+
+void ScrollRankingHallRecordsWindow(void)
+{
+    FillWindowPixelBuffer(gRecordsWindowId, PIXEL_FILL(1));
+    PrintHallRecords(gSpecialVar_0x8005, FRONTIER_LVL_OPEN);
+    CopyWindowToVram(gRecordsWindowId, COPYWIN_GFX);
+}
+
+void ClearRankingHallRecords(void)
+{
+#if FREE_RECORD_MIXING_HALL_RECORDS == FALSE
+    s32 i, j, k;
+
+    // UB: Passing 0 as a pointer instead of a pointer holding a value of 0.
+#ifdef UBFIX
+    u8 emptyId[TRAINER_ID_LENGTH] = {0};
+    #define ZERO emptyId
+#else
+    #define ZERO 0
+#endif
+
+    for (i = 0; i < HALL_FACILITIES_COUNT; i++)
+    {
+        for (j = 0; j < FRONTIER_LVL_MODE_COUNT; j++)
+        {
+            for (k = 0; k < HALL_RECORDS_COUNT; k++)
+            {
+                CopyTrainerId(gSaveBlock2Ptr->hallRecords1P[i][j][k].id, ZERO);
+                gSaveBlock2Ptr->hallRecords1P[i][j][k].name[0] = EOS;
+                gSaveBlock2Ptr->hallRecords1P[i][j][k].winStreak = 0;
+            }
+        }
+    }
+
+    for (j = 0; j < FRONTIER_LVL_MODE_COUNT; j++)
+    {
+        for (k = 0; k < HALL_RECORDS_COUNT; k++)
+        {
+            CopyTrainerId(gSaveBlock2Ptr->hallRecords2P[j][k].id1, ZERO);
+            CopyTrainerId(gSaveBlock2Ptr->hallRecords2P[j][k].id2, ZERO);
+            gSaveBlock2Ptr->hallRecords2P[j][k].name1[0] = EOS;
+            gSaveBlock2Ptr->hallRecords2P[j][k].name2[0] = EOS;
+            gSaveBlock2Ptr->hallRecords2P[j][k].winStreak = 0;
+        }
+    }
+#endif //FREE_RECORD_MIXING_HALL_RECORDS
+}
+
+void SaveGameFrontier(void)
+{
+    s32 i;
+    struct Pokemon *monsParty = AllocZeroed(sizeof(struct Pokemon) * PARTY_SIZE);
+
+    for (i = 0; i < PARTY_SIZE; i++)
+        monsParty[i] = gPlayerParty[i];
+
+    i = gPlayerPartyCount;
+    LoadPlayerParty();
+    SetContinueGameWarpStatusToDynamicWarp();
+    TrySavingData(SAVE_LINK);
+    ClearContinueGameWarpStatus2();
+    gPlayerPartyCount = i;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+        gPlayerParty[i] = monsParty[i];
+
+    Free(monsParty);
+}
+
+// Frontier Brain functions.
+enum TrainerPicID GetFrontierBrainTrainerPicIndex(void)
+{
+    s32 facility;
+
+    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+        facility = GetRecordedBattleFrontierFacility();
+    else
+        facility = VarGet(VAR_FRONTIER_FACILITY);
+
+    return GetTrainerPicFromId(gFrontierBrainInfo[facility].trainerId);
+}
+
+enum TrainerClassID GetFrontierBrainTrainerClass(void)
+{
+    s32 facility;
+
+    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+        facility = GetRecordedBattleFrontierFacility();
+    else
+        facility = VarGet(VAR_FRONTIER_FACILITY);
+
+    return GetTrainerClassFromId(gFrontierBrainInfo[facility].trainerId);
+}
+
+void CopyFrontierBrainTrainerName(u8 *dst)
+{
+    s32 i;
+    s32 facility;
+    const u8 *trainerName;
+
+    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+        facility = GetRecordedBattleFrontierFacility();
+    else
+        facility = VarGet(VAR_FRONTIER_FACILITY);
+
+    trainerName = GetTrainerNameFromId(gFrontierBrainInfo[facility].trainerId);
+    for (i = 0; i < PLAYER_NAME_LENGTH; i++)
+        dst[i] = trainerName[i];
+
+    dst[i] = EOS;
+}
+
+bool8 IsFrontierBrainFemale(void)
+{
+    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
+    return gFrontierBrainInfo[facility].isFemale;
+}
+
+void SetFrontierBrainObjEventGfx_2(void)
+{
+    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
+    VarSet(VAR_OBJ_GFX_ID_0, gFrontierBrainInfo[facility].objEventGfx);
+}
+
+#define FRONTIER_BRAIN_OTID 61226
+
+void CreateFrontierBrainPokemon(void)
+{
+    s32 i, j;
+    s32 selectedMonBits;
+    s32 monPartyId;
+    s32 monLevel = 0;
+    u8 friendship;
+    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
+    s32 symbol = GetFronterBrainSymbol();
+
+    if (facility == FRONTIER_FACILITY_DOME)
+        selectedMonBits = GetDomeTrainerSelectedMons(TrainerIdToDomeTournamentId(TRAINER_FRONTIER_BRAIN));
+    else
+        selectedMonBits = (1 << FRONTIER_PARTY_SIZE) - 1; // all 3 mons selected
+
+    ZeroEnemyPartyMons();
+    monPartyId = 0;
+    monLevel = SetFacilityPtrsGetLevel();
+    for (i = 0; i < FRONTIER_PARTY_SIZE; selectedMonBits >>= 1, i++)
+    {
+        if (!(selectedMonBits & 1))
+            continue;
+
+        u32 personality = GetMonPersonality(sFrontierBrainsMons[facility][symbol][i].species,
+                                            MON_GENDER_RANDOM,
+                                            sFrontierBrainsMons[facility][symbol][i].nature,
+                                            RANDOM_UNOWN_LETTER);
+        CreateMonWithIVs(&gEnemyParty[monPartyId],
+                  sFrontierBrainsMons[facility][symbol][i].species,
+                  monLevel,
+                  personality,
+                  OTID_STRUCT_PRESET(FRONTIER_BRAIN_OTID),
+                  sFrontierBrainsMons[facility][symbol][i].fixedIV);
+        SetMonData(&gEnemyParty[monPartyId], MON_DATA_HELD_ITEM, &sFrontierBrainsMons[facility][symbol][i].heldItem);
+        for (j = 0; j < NUM_STATS; j++)
+            SetMonData(&gEnemyParty[monPartyId], MON_DATA_HP_EV + j, &sFrontierBrainsMons[facility][symbol][i].evs[j]);
+        friendship = MAX_FRIENDSHIP;
+        for (j = 0; j < MAX_MON_MOVES; j++)
+        {
+            SetMonMoveSlot(&gEnemyParty[monPartyId], sFrontierBrainsMons[facility][symbol][i].moves[j], j);
+            if (GetMoveEffect(sFrontierBrainsMons[facility][symbol][i].moves[j]) == EFFECT_FRUSTRATION)
+                friendship = 0;
+        }
+        SetMonData(&gEnemyParty[monPartyId], MON_DATA_FRIENDSHIP, &friendship);
+        CalculateMonStats(&gEnemyParty[monPartyId]);
+        monPartyId++;
+    }
+}
+
+u16 GetFrontierBrainMonSpecies(u8 monId)
+{
+    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
+    s32 symbol = GetFronterBrainSymbol();
+
+    return sFrontierBrainsMons[facility][symbol][monId].species;
+}
+
+void SetFrontierBrainObjEventGfx(u8 facility)
+{
+    TRAINER_BATTLE_PARAM.opponentA = TRAINER_FRONTIER_BRAIN;
+    VarSet(VAR_OBJ_GFX_ID_0, gFrontierBrainInfo[facility].objEventGfx);
+}
+
+u16 GetFrontierBrainMonMove(u8 monId, u8 moveSlotId)
+{
+    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
+    s32 symbol = GetFronterBrainSymbol();
+
+    return sFrontierBrainsMons[facility][symbol][monId].moves[moveSlotId];
+}
+
+u8 GetFrontierBrainMonNature(u8 monId)
+{
+    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
+    s32 symbol = GetFronterBrainSymbol();
+
+    return sFrontierBrainsMons[facility][symbol][monId].nature;
+}
+
+u8 GetFrontierBrainMonEvs(u8 monId, u8 evStatId)
+{
+    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
+    s32 symbol = GetFronterBrainSymbol();
+
+    return sFrontierBrainsMons[facility][symbol][monId].evs[evStatId];
+}
+
+s32 GetFronterBrainSymbol(void)
+{
+    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
+    s32 symbol = GetPlayerSymbolCountForFacility(facility);
+
+    if (symbol == 2)
+    {
+        u16 winStreak = GetCurrentFacilityWinStreak();
+        if (winStreak + gFrontierBrainInfo[facility].streakAppearances[3] == gFrontierBrainInfo[facility].streakAppearances[0])
+            symbol = 0;
+        else if (winStreak + gFrontierBrainInfo[facility].streakAppearances[3] == gFrontierBrainInfo[facility].streakAppearances[1])
+            symbol = 1;
+        else if (winStreak + gFrontierBrainInfo[facility].streakAppearances[3] > gFrontierBrainInfo[facility].streakAppearances[1]
+                 && (winStreak + gFrontierBrainInfo[facility].streakAppearances[3] - gFrontierBrainInfo[facility].streakAppearances[1]) % gFrontierBrainInfo[facility].streakAppearances[2] == 0)
+            symbol = 1;
+    }
+    return symbol;
+}
+
+// Called for intro speech as well despite the fact that its handled in the map scripts files instead
+static void CopyFrontierBrainText(bool8 playerWonText)
+{
+    s32 facility;
+    s32 symbol;
+
+    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+    {
+        facility = GetRecordedBattleFrontierFacility();
+        symbol = GetRecordedBattleFronterBrainSymbol();
+    }
+    else
+    {
+        facility = VarGet(VAR_FRONTIER_FACILITY);
+        symbol = GetFronterBrainSymbol();
+    }
+
+    switch (playerWonText)
+    {
+    case FALSE:
+        StringCopy(gStringVar4, gFrontierBrainInfo[facility].wonTexts[symbol]);
+        break;
+    case TRUE:
+        StringCopy(gStringVar4, gFrontierBrainInfo[facility].lostTexts[symbol]);
+        break;
+    }
+}
+
+void ClearEnemyPartyAfterChallenge()
+{
+    // We zero out the Enemy's party here when the player either wins or loses the challenge since we
+    // can't do it the usual way in FreeResetData_ReturnToOvOrDoEvolutions() in battle_main.c due to the
+    // way facilities like the Battle Factory and the Slateport Battle Tent work
+    if (gSpecialVar_0x8005 == 0)
+    {
+        ZeroEnemyPartyMons();
+    }
+}
+
+bool8 IsFrontierTrainerFemale(u16 trainerId)
+{
+    u32 i;
+    u8 facilityClass;
+
+    SetFacilityPtrsGetLevel();
+    if (trainerId == TRAINER_EREADER)
+    {
+    #if FREE_BATTLE_TOWER_E_READER == FALSE
+        facilityClass = gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass;
+    #else
+        facilityClass = 0;
+    #endif //FREE_BATTLE_TOWER_E_READER
+    }
+    else if (trainerId == TRAINER_FRONTIER_BRAIN)
+    {
+        return IsFrontierBrainFemale();
+    }
+    else if (trainerId < FRONTIER_TRAINERS_COUNT)
+    {
+        facilityClass = gFacilityTrainers[trainerId].facilityClass;
+    }
+    else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
+    {
+        facilityClass = gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].facilityClass;
+    }
+    else
+    {
+        facilityClass = gApprentices[gSaveBlock1Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE].id].facilityClass;
+    }
+
+    // Search female classes.
+    for (i = 0; i < ARRAY_COUNT(gTowerFemaleFacilityClasses); i++)
+    {
+        if (gTowerFemaleFacilityClasses[i] == facilityClass)
+            break;
+    }
+    if (i != ARRAY_COUNT(gTowerFemaleFacilityClasses))
+        return TRUE;
+    else
+        return FALSE;
+}
+
 // Frontier Trainer parties are roughly scaled in difficulty with higher trainer IDs, so scale IVs as well
 // Duplicated in Battle Dome as GetDomeTrainerMonIvs
 u8 GetFrontierTrainerFixedIvs(u16 trainerId)
@@ -2259,6 +2646,7 @@ u8 GetFrontierTrainerFixedIvs(u16 trainerId)
 
     return fixedIv;
 }
+
 
 u16 GetRandomScaledFrontierTrainerId(u8 challengeNum, u8 battleNum)
 {
@@ -2286,6 +2674,35 @@ u16 GetRandomScaledFrontierTrainerId(u8 challengeNum, u8 battleNum)
     }
 
     return trainerId;
+}
+
+static void UNUSED GetRandomScaledFrontierTrainerIdRange(u8 challengeNum, u8 battleNum, u16 *trainerIdPtr, u8 *rangePtr)
+{
+    u16 trainerId, range;
+
+    if (challengeNum <= 7)
+    {
+        if (battleNum == FRONTIER_STAGES_PER_CHALLENGE - 1)
+        {
+            // The last battle in each challenge has a jump in difficulty, pulls from a table with higher ranges
+            range = (sFrontierTrainerIdRangesHard[challengeNum][1] - sFrontierTrainerIdRangesHard[challengeNum][0]) + 1;
+            trainerId = sFrontierTrainerIdRangesHard[challengeNum][0];
+        }
+        else
+        {
+            range = (sFrontierTrainerIdRanges[challengeNum][1] - sFrontierTrainerIdRanges[challengeNum][0]) + 1;
+            trainerId = sFrontierTrainerIdRanges[challengeNum][0];
+        }
+    }
+    else
+    {
+        // After challenge 7, trainer IDs always come from the last, hardest range, which is the same for both trainer ID tables
+        range = (sFrontierTrainerIdRanges[7][1] - sFrontierTrainerIdRanges[7][0]) + 1;
+        trainerId = sFrontierTrainerIdRanges[7][0];
+    }
+
+    *trainerIdPtr = trainerId;
+    *rangePtr = range;
 }
 
 void SetBattleFacilityTrainerGfxId(u16 trainerId, u8 tempVarId)
@@ -2383,6 +2800,7 @@ void SetBattleFacilityTrainerGfxId(u16 trainerId, u8 tempVarId)
         return;
     }
 }
+
 u16 GetBattleFacilityTrainerGfxId(u16 trainerId)
 {
     u32 i;
@@ -2563,144 +2981,6 @@ u8 GetFrontierTrainerFacilityClass(u16 trainerId)
     return facilityClass;
 }
 
-void CopyFrontierBrainTrainerName(u8 *dst)
-{
-    s32 i;
-    s32 facility;
-    const u8 *trainerName;
-
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
-        facility = GetRecordedBattleFrontierFacility();
-    else
-        facility = VarGet(VAR_FRONTIER_FACILITY);
-
-    trainerName = GetTrainerNameFromId(gFrontierBrainInfo[facility].trainerId);
-    for (i = 0; i < PLAYER_NAME_LENGTH; i++)
-        dst[i] = trainerName[i];
-
-    dst[i] = EOS;
-}
-
-bool8 IsFrontierBrainFemale(void)
-{
-    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
-    return gFrontierBrainInfo[facility].isFemale;
-}
-
-void SetFrontierBrainObjEventGfx_2(void)
-{
-    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
-    VarSet(VAR_OBJ_GFX_ID_0, gFrontierBrainInfo[facility].objEventGfx);
-}
-
-#define FRONTIER_BRAIN_OTID 61226
-
-void CreateFrontierBrainPokemon(void)
-{
-    s32 i, j;
-    s32 selectedMonBits;
-    s32 monPartyId;
-    s32 monLevel = 0;
-    u8 friendship;
-    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
-    s32 symbol = GetFronterBrainSymbol();
-
-    if (facility == FRONTIER_FACILITY_DOME)
-        selectedMonBits = GetDomeTrainerSelectedMons(TrainerIdToDomeTournamentId(TRAINER_FRONTIER_BRAIN));
-    else
-        selectedMonBits = (1 << FRONTIER_PARTY_SIZE) - 1; // all 3 mons selected
-
-    ZeroEnemyPartyMons();
-    monPartyId = 0;
-    monLevel = SetFacilityPtrsGetLevel();
-    for (i = 0; i < FRONTIER_PARTY_SIZE; selectedMonBits >>= 1, i++)
-    {
-        if (!(selectedMonBits & 1))
-            continue;
-
-        u32 personality = GetMonPersonality(sFrontierBrainsMons[facility][symbol][i].species,
-                                            MON_GENDER_RANDOM,
-                                            sFrontierBrainsMons[facility][symbol][i].nature,
-                                            RANDOM_UNOWN_LETTER);
-        CreateMonWithIVs(&gEnemyParty[monPartyId],
-                  sFrontierBrainsMons[facility][symbol][i].species,
-                  monLevel,
-                  personality,
-                  OTID_STRUCT_PRESET(FRONTIER_BRAIN_OTID),
-                  sFrontierBrainsMons[facility][symbol][i].fixedIV);
-        SetMonData(&gEnemyParty[monPartyId], MON_DATA_HELD_ITEM, &sFrontierBrainsMons[facility][symbol][i].heldItem);
-        for (j = 0; j < NUM_STATS; j++)
-            SetMonData(&gEnemyParty[monPartyId], MON_DATA_HP_EV + j, &sFrontierBrainsMons[facility][symbol][i].evs[j]);
-        friendship = MAX_FRIENDSHIP;
-        for (j = 0; j < MAX_MON_MOVES; j++)
-        {
-            SetMonMoveSlot(&gEnemyParty[monPartyId], sFrontierBrainsMons[facility][symbol][i].moves[j], j);
-            if (GetMoveEffect(sFrontierBrainsMons[facility][symbol][i].moves[j]) == EFFECT_FRUSTRATION)
-                friendship = 0;
-        }
-        SetMonData(&gEnemyParty[monPartyId], MON_DATA_FRIENDSHIP, &friendship);
-        CalculateMonStats(&gEnemyParty[monPartyId]);
-        monPartyId++;
-    }
-}
-
-u16 GetFrontierBrainMonSpecies(u8 monId)
-{
-    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
-    s32 symbol = GetFronterBrainSymbol();
-
-    return sFrontierBrainsMons[facility][symbol][monId].species;
-}
-
-void SetFrontierBrainObjEventGfx(u8 facility)
-{
-    TRAINER_BATTLE_PARAM.opponentA = TRAINER_FRONTIER_BRAIN;
-    VarSet(VAR_OBJ_GFX_ID_0, gFrontierBrainInfo[facility].objEventGfx);
-}
-
-u16 GetFrontierBrainMonMove(u8 monId, u8 moveSlotId)
-{
-    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
-    s32 symbol = GetFronterBrainSymbol();
-
-    return sFrontierBrainsMons[facility][symbol][monId].moves[moveSlotId];
-}
-
-u8 GetFrontierBrainMonNature(u8 monId)
-{
-    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
-    s32 symbol = GetFronterBrainSymbol();
-
-    return sFrontierBrainsMons[facility][symbol][monId].nature;
-}
-
-u8 GetFrontierBrainMonEvs(u8 monId, u8 evStatId)
-{
-    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
-    s32 symbol = GetFronterBrainSymbol();
-
-    return sFrontierBrainsMons[facility][symbol][monId].evs[evStatId];
-}
-
-s32 GetFronterBrainSymbol(void)
-{
-    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
-    s32 symbol = GetPlayerSymbolCountForFacility(facility);
-
-    if (symbol == 2)
-    {
-        u16 winStreak = GetCurrentFacilityWinStreak();
-        if (winStreak + gFrontierBrainInfo[facility].streakAppearances[3] == gFrontierBrainInfo[facility].streakAppearances[0])
-            symbol = 0;
-        else if (winStreak + gFrontierBrainInfo[facility].streakAppearances[3] == gFrontierBrainInfo[facility].streakAppearances[1])
-            symbol = 1;
-        else if (winStreak + gFrontierBrainInfo[facility].streakAppearances[3] > gFrontierBrainInfo[facility].streakAppearances[1]
-                 && (winStreak + gFrontierBrainInfo[facility].streakAppearances[3] - gFrontierBrainInfo[facility].streakAppearances[1]) % gFrontierBrainInfo[facility].streakAppearances[2] == 0)
-            symbol = 1;
-    }
-    return symbol;
-}
-
 void GetFrontierTrainerName(u8 *dst, u16 trainerId)
 {
     s32 i = 0;
@@ -2858,6 +3138,40 @@ s32 GetHighestLevelInPlayerParty(void)
     }
 
     return highestLevel;
+}
+
+u16 FacilityClassToGraphicsId(u8 facilityClass)
+{
+    u16 trainerObjectGfxId;
+    u8 i;
+
+    // Search male classes.
+    for (i = 0; i < ARRAY_COUNT(gTowerMaleFacilityClasses); i++)
+    {
+        if (gTowerMaleFacilityClasses[i] == facilityClass)
+            break;
+    }
+    if (i != ARRAY_COUNT(gTowerMaleFacilityClasses))
+    {
+        trainerObjectGfxId = gTowerMaleTrainerGfxIds[i];
+        return trainerObjectGfxId;
+    }
+
+    // Search female classes.
+    for (i = 0; i < ARRAY_COUNT(gTowerFemaleFacilityClasses); i++)
+    {
+        if (gTowerFemaleFacilityClasses[i] == facilityClass)
+            break;
+    }
+    if (i != ARRAY_COUNT(gTowerFemaleFacilityClasses))
+    {
+        trainerObjectGfxId = gTowerFemaleTrainerGfxIds[i];
+        return trainerObjectGfxId;
+    }
+    else
+    {
+        return OBJ_EVENT_GFX_BOY_1;
+    }
 }
 
 #define tWindowId     data[0]

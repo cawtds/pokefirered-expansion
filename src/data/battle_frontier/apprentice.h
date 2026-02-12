@@ -1,3 +1,19 @@
+extern const u8 gText_ApprenticeChallenge0[];
+extern const u8 gText_ApprenticeChallenge1[];
+extern const u8 gText_ApprenticeChallenge2[];
+extern const u8 gText_ApprenticeChallenge3[];
+extern const u8 gText_ApprenticeChallenge4[];
+extern const u8 gText_ApprenticeChallenge5[];
+extern const u8 gText_ApprenticeChallenge6[];
+extern const u8 gText_ApprenticeChallenge7[];
+extern const u8 gText_ApprenticeChallenge8[];
+extern const u8 gText_ApprenticeChallenge9[];
+extern const u8 gText_ApprenticeChallenge10[];
+extern const u8 gText_ApprenticeChallenge11[];
+extern const u8 gText_ApprenticeChallenge12[];
+extern const u8 gText_ApprenticeChallenge13[];
+extern const u8 gText_ApprenticeChallenge14[];
+extern const u8 gText_ApprenticeChallenge15[];
 
 const struct ApprenticeTrainer gApprentices[NUM_APPRENTICES] =
 {
@@ -129,4 +145,24 @@ const struct ApprenticeTrainer gApprentices[NUM_APPRENTICES] =
         .id = 15,
         .speechLost = {EC_WORD_THIS, EC_WORD_HAS, EC_WORD_TO, EC_WORD_BE, EC_WORD_A, EC_WORD_LIE},
     },
+};
+
+static const u8 *const sApprenticeChallengeTexts[NUM_APPRENTICES] =
+{
+    gText_ApprenticeChallenge0,
+    gText_ApprenticeChallenge1,
+    gText_ApprenticeChallenge2,
+    gText_ApprenticeChallenge3,
+    gText_ApprenticeChallenge4,
+    gText_ApprenticeChallenge5,
+    gText_ApprenticeChallenge6,
+    gText_ApprenticeChallenge7,
+    gText_ApprenticeChallenge8,
+    gText_ApprenticeChallenge9,
+    gText_ApprenticeChallenge10,
+    gText_ApprenticeChallenge11,
+    gText_ApprenticeChallenge12,
+    gText_ApprenticeChallenge13,
+    gText_ApprenticeChallenge14,
+    gText_ApprenticeChallenge15,
 };

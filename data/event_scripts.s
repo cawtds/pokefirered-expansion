@@ -1433,3 +1433,4 @@ Text_TestMsg::
 	.include "data/text/pokedude.inc"
 	.include "data/scripts/follower.inc"
 	.include "data/scripts/dexnav.inc"
+	.include "data/text/apprentice.inc"

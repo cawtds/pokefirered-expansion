@@ -68,6 +68,7 @@ void RecordedBattle_RecordAllBattlerData(u8 *data);
 void SetPartiesFromRecordedSave(struct RecordedBattleSave *src);
 void SetVariablesForRecordedBattle(struct RecordedBattleSave *);
 u8 GetRecordedBattleFrontierFacility(void);
+u8 GetRecordedBattleFronterBrainSymbol(void);
 void RecordedBattle_SaveParties(void);
 void RecordedBattle_ClearFrontierPassFlag(void);
 void RecordedBattle_SetFrontierPassFlagFromHword(u16 flags);
