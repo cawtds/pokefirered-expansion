@@ -20,6 +20,7 @@
 #include "test_runner.h"
 #include "trainer_tower.h"
 #include "constants/abilities.h"
+#include "constants/battle_dome.h"
 #include "constants/battle_string_ids.h"
 #include "constants/moves.h"
 #include "constants/items.h"
@@ -204,10 +205,13 @@ static const u8 sText_SpaceIs[] = _(" is");
 static const u8 sText_ApostropheS[] = _("'s");
 const u8 gText_BattleTourney[] = _("BATTLE TOURNEY");
 
-static const u8 sText_Round1[] = _("Round 1");
-static const u8 sText_Round2[] = _("Round 2");
-static const u8 sText_Semifinal[] = _("Semifinal");
-static const u8 sText_Final[] = _("Final");
+const u8 *const gRoundsStringTable[DOME_ROUNDS_COUNT] =
+{
+    [DOME_ROUND1]    = COMPOUND_STRING("Round 1"),
+    [DOME_ROUND2]    = COMPOUND_STRING("Round 2"),
+    [DOME_SEMIFINAL] = COMPOUND_STRING("Semifinal"),
+    [DOME_FINAL]     = COMPOUND_STRING("Final"),
+};
 
 const u8 gText_TheGreatNewHope[] = _("The great new hope!\p");
 const u8 gText_WillChampionshipDreamComeTrue[] = _("Will the championship dream come true?!\p");

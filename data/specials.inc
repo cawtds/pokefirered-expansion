@@ -469,9 +469,10 @@ gSpecials::
 	def_special CloseBattleFrontierTutorWindow
 	def_special CallFrontierUtilFunc
 	def_special CallBattleArenaFunction
-	def_special CallBattleTowerFunc
+	def_special CallBattleDomeFunction
 	def_special CallBattleFactoryFunction
 	def_special CallBattlePalaceFunction
+	def_special CallBattleTowerFunc
 	def_special ChoosePartyForBattleFrontier
 	def_special OffsetCameraForBattle
 gSpecialsEnd::

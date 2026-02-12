@@ -2003,3 +2003,17 @@ const u16 gFrontierFactoryMenu_Tilemap[] = INCBIN_U16("graphics/battle_frontier/
 
 const u32 gBattleArenaJudgmentSymbolsGfx[] = INCBIN_U32("graphics/battle_frontier/arena_judgment_symbols.4bpp.smol");
 const u16 gBattleArenaJudgmentSymbolsPalette[] = INCBIN_U16("graphics/battle_frontier/arena_judgment_symbols.gbapal");
+
+// Battle Dome
+const u32 gDomeTourneyTree_Gfx[] = INCBIN_U32("graphics/battle_frontier/tourney_tree.4bpp.smol");
+const u32 gDomeTourneyLine_Gfx[] = INCBIN_U32("graphics/battle_frontier/tourney_line.4bpp.smol"); // the red glow mask for the tourney advancement lines
+const u32 gDomeTourneyTree_Tilemap[] = INCBIN_U32("graphics/battle_frontier/tourney_tree.bin.smolTM");
+const u32 gDomeTourneyLineDown_Tilemap[] = INCBIN_U32("graphics/battle_frontier/tourney_line_down_map.bin.smolTM");
+const u32 gDomeTourneyLineUp_Tilemap[] = INCBIN_U32("graphics/battle_frontier/tourney_line_up_map.bin.smolTM");
+const u32 gDomeTourneyInfoCard_Gfx[] = INCBIN_U32("graphics/battle_frontier/tourney_info_card.4bpp.smol");
+const u32 gDomeTourneyInfoCard_Tilemap[] = INCBIN_U32("graphics/battle_frontier/tourney_info_card_tilemap.bin.smolTM");
+const u32 gDomeTourneyInfoCardBg_Tilemap[] = INCBIN_U32("graphics/battle_frontier/tourney_info_card_bg.bin.smolTM");
+const u32 gDomeTourneyTreeButtons_Gfx[] = INCBIN_U32("graphics/battle_frontier/tourney_buttons.4bpp.smol"); // exit/cancel and Poké Ball buttons
+const u16 gDomeTourneyTree_Pal[] = INCBIN_U16("graphics/battle_frontier/tourney_tree.gbapal");
+const u16 gDomeTourneyTreeButtons_Pal[] = INCBIN_U16("graphics/battle_frontier/tourney_buttons.gbapal");
+const u16 gDomeTourneyMatchCardBg_Pal[] = INCBIN_U16("graphics/battle_frontier/tourney_match_card_bg.gbapal");
