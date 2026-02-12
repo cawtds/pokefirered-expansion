@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle_debug.h"
 #include "battle_pike.h"
+#include "battle_pyramid.h"
 #include "battle_setup.h"
 #include "event_data.h"
 #include "event_scripts.h"
@@ -649,22 +650,22 @@ bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetatileBehavior)
             BattleSetup_StartBattlePikeWildBattle();
             return TRUE;
         }
-        // if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
-        // {
-        //     headerId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
-        //     GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_WATER, &season, &timeOfDay);
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
+        {
+            headerId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
+            GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_WATER, &season, &timeOfDay);
 
-        //     if (previousMetatileBehavior != curMetatileBehavior && !AllowWildCheckOnNewMetatile())
-        //         return FALSE;
-        //     else if (WildEncounterCheck(gBattlePyramidWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo->encounterRate, FALSE) != TRUE)
-        //         return FALSE;
-        //     else if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE) != TRUE)
-        //         return FALSE;
+            if (previousMetatileBehavior != curMetatileBehavior && !AllowWildCheckOnNewMetatile())
+                return FALSE;
+            else if (WildEncounterCheck(gBattlePyramidWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo->encounterRate, FALSE) != TRUE)
+                return FALSE;
+            else if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE) != TRUE)
+                return FALSE;
 
-        //     GenerateBattlePyramidWildMon();
-        //     BattleSetup_StartWildBattle();
-        //     return TRUE;
-        // }
+            GenerateBattlePyramidWildMon();
+            BattleSetup_StartWildBattle();
+            return TRUE;
+        }
         return FALSE;
     }
 
