@@ -1836,6 +1836,10 @@ extern const u8 gText_Record2[];
 extern const u8 gText_Rest[];
 extern const u8 gText_Retire[];
 
+extern const u8 gText_Opponent[];
+extern const u8 gText_Tourney_Tree[];
+extern const u8 gText_ReadyToStart[];
+
 // Frontier records
 extern const u8 gText_WinStreak[];
 extern const u8 gText_Record[];

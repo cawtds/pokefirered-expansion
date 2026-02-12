@@ -84,6 +84,8 @@
 #define MULTI_GO_ON_RETIRE                                     73
 #define MULTI_BATTLE_ARENA_RULES                               74
 #define MULTI_BATTLE_DOME_RULES                                75
+#define MULTI_TOURNEY_WITH_RECORD                              76
+#define MULTI_TOURNEY_NO_RECORD                                77
 
 
 #define MULTICHOICE_NONE                                      255

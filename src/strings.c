@@ -1517,6 +1517,10 @@ const u8 gText_Record2[] = _("RECORD");
 const u8 gText_Rest[] = _("REST");
 const u8 gText_Retire[] = _("RETIRE");
 
+const u8 gText_Opponent[] = _("OPPONENT");
+const u8 gText_Tourney_Tree[] = _("TOURNEY TREE");
+const u8 gText_ReadyToStart[] = _("READY TO START");
+
 const u8 gText_SingleBattleRoomResults[] = _("{PLAYER}'s Single Battle Room Results");
 const u8 gText_DoubleBattleRoomResults[] = _("{PLAYER}'s Double Battle Room Results");
 const u8 gText_MultiBattleRoomResults[] = _("{PLAYER}'s Multi Battle Room Results");
