@@ -467,6 +467,7 @@ gSpecials::
 	def_special ShowNatureGirlMessage
 	def_special BufferBattleFrontierTutorMoveName
 	def_special CloseBattleFrontierTutorWindow
+	def_special CallApprenticeFunction
 	def_special CallFrontierUtilFunc
 	def_special CallBattleArenaFunction
 	def_special CallBattleDomeFunction
@@ -485,4 +486,9 @@ gSpecials::
 	def_special ChooseItemsToTossFromPyramidBag
 	def_special GetBattlePyramidHint
 	def_special ShowMapNamePopup
+	def_special TryHideBattleTowerReporter
+	def_special SaveForBattleTowerLink
+	def_special TrySetBattleTowerLinkType
+	def_special InterviewBefore
+	def_special InterviewAfter
 gSpecialsEnd::

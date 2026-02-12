@@ -1053,6 +1053,7 @@ struct SaveBlock1
     /*0x3D34*/ u32 towerChallengeId;
     /*0x3D38*/ struct TrainerTower trainerTower[NUM_TOWER_CHALLENGE_TYPES];
 #endif //FREE_TRAINER_HILL
+    struct PlayersApprentice playerApprentice;
     struct Apprentice apprentices[APPRENTICE_COUNT];
     // /*0x3D24*/ u8 unusedSB1[0x1C];
 }; // size: 0x3D68

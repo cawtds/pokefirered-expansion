@@ -694,6 +694,36 @@ static const struct MenuAction sMultichoiceList_FrontierItemChoose[] =
     {gText_Exit},
 };
 
+static const struct MenuAction sMultichoiceList_BattleTowerRules[] =
+{
+    {COMPOUND_STRING("TOWER INFO")},
+    {COMPOUND_STRING("BATTLE {PKMN}")},
+    {COMPOUND_STRING("BATTLE SALON")},
+    {COMPOUND_STRING("MULTI-LINK")},
+    {gText_Exit},
+};
+
+static const struct MenuAction sMultichoiceList_BattleTowerFeelings[] =
+{
+    {COMPOUND_STRING("I'll battle now!")},
+    {COMPOUND_STRING("I won!")},
+    {COMPOUND_STRING("I lost!")},
+    {COMPOUND_STRING("I won't tell.")},
+};
+
+static const struct MenuAction sMultichoiceList_LinkLeader[] =
+{
+    {COMPOUND_STRING("JOIN GROUP")},
+    {COMPOUND_STRING("BECOME LEADER")},
+    {gText_Exit},
+};
+
+static const struct MenuAction sMultichoiceList_Satisfaction[] =
+{
+    {COMPOUND_STRING("Satisfied")},
+    {COMPOUND_STRING("Dissatisfied")},
+};
+
 static const struct MenuAction sMultichoiceList_Exit[] = {
     { gOtherText_Exit }
 };
@@ -781,6 +811,10 @@ static const struct MultichoiceListStruct sMultichoiceLists[] = {
     [MULTI_BATTLE_PYRAMID_RULES]                                = MULTICHOICE(sMultichoiceList_BattlePyramidRules),
     [MULTI_BATTLE_PIKE_RULES]                                   = MULTICHOICE(sMultichoiceList_BattlePikeRules),
     [MULTI_FRONTIER_ITEM_CHOOSE]                                = MULTICHOICE(sMultichoiceList_FrontierItemChoose),
+    [MULTI_BATTLE_TOWER_RULES]                                  = MULTICHOICE(sMultichoiceList_BattleTowerRules),
+    [MULTI_BATTLE_TOWER_FEELINGS]                               = MULTICHOICE(sMultichoiceList_BattleTowerFeelings),
+    [MULTI_LINK_LEADER]                                         = MULTICHOICE(sMultichoiceList_LinkLeader),
+    [MULTI_SATISFACTION]                                        = MULTICHOICE(sMultichoiceList_Satisfaction),
 };
 
 // From Cool to Berries goes unused

@@ -10,6 +10,7 @@
 #define EASY_CHAT_TYPE_BARD_SONG               6
 #define EASY_CHAT_TYPE_INTERVIEW               7
 #define EASY_CHAT_TYPE_TRENDY_PHRASE           9
+#define EASY_CHAT_TYPE_BATTLE_TOWER_INTERVIEW  12
 #define EASY_CHAT_TYPE_QUESTIONNAIRE           14
 
 #define EC_GROUP_POKEMON_2      0x0

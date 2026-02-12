@@ -1,10 +1,12 @@
 #include "global.h"
 #include "gflib.h"
+#include "apprentice.h"
 #include "battle.h"
 #include "battle_controllers.h"
 #include "battle_main.h"
 #include "berry_pouch.h"
 #include "decompress.h"
+#include "event_data.h"
 #include "event_scripts.h"
 #include "event_object_movement.h"
 #include "field_player_avatar.h"
@@ -160,6 +162,7 @@ static void SellItem(u8 taskId);
 static void WaitAfterItemSell(u8 taskId);
 static void TryDepositItem(u8 taskId);
 static void Task_ChooseHowManyToDeposit(u8 taskId);
+static void CB2_ApprenticeExitBagMenu(void);
 static void UpdatePocketItemLists(void);
 static void InitPocketListPositions(void);
 static void InitPocketScrollPositions(void);
@@ -3063,3 +3066,15 @@ static s32 CompareItemsByIndex(enum Pocket pocketId, struct ItemSlot item1, stru
     return 0; // Cannot have multiple stacks of indexed items
 }
 
+void ApprenticeOpenBagMenu(void)
+{
+    GoToBagMenu(ITEMMENULOCATION_APPRENTICE, POCKETS_COUNT, CB2_ApprenticeExitBagMenu);
+    gSpecialVar_0x8005 = ITEM_NONE;
+    gSpecialVar_Result = FALSE;
+}
+
+static void CB2_ApprenticeExitBagMenu(void)
+{
+    gFieldCallback = Apprentice_ScriptContext_Enable;
+    SetMainCallback2(CB2_ReturnToField);
+}

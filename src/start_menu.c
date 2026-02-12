@@ -135,7 +135,7 @@ static u8 SaveDialogCB_ReturnError(void);
 static void CB2_WhileSavingAfterLinkBattle(void);
 static void task50_after_link_battle_save(u8 taskId);
 static void ShowSaveInfoWindow(void);
-static void CloseSaveStatsWindow(void);
+static void RemoveSaveInfoWindow(void);
 static void HideStartMenuDebug(void);
 static void InitBattlePyramidRetire(void);
 static u8 BattlePyramidConfirmRetireCallback(void);
@@ -659,7 +659,7 @@ static bool8 StartCB_HandleInput(void)
         DestroyTimeWindow();
         if (DEBUG_OVERWORLD_MENU != TRUE)
             DestroyHelpMessageWindow_();
-        CloseStartMenu();
+        HideStartMenuWindow();
         return TRUE;
     }
     return FALSE;
@@ -772,7 +772,7 @@ static bool8 StartMenuExitCallback(void)
     DestroyTimeWindow();
     if (DEBUG_OVERWORLD_MENU != TRUE)
         DestroyHelpMessageWindow_();
-    CloseStartMenu();
+    HideStartMenuWindow();
     return TRUE;
 }
 
@@ -796,7 +796,7 @@ static bool8 StartMenuSafariZoneRetireCallback(void)
     DestroyTimeWindow();
     if (DEBUG_OVERWORLD_MENU != TRUE)
         DestroyHelpMessageWindow_();
-    CloseStartMenu();
+    HideStartMenuWindow();
     SafariZoneRetirePrompt();
     return TRUE;
 }
@@ -980,7 +980,7 @@ static void HideSaveMessageWindow(void)
 
 static void CloseSaveStatsWindow_(void)
 {
-    CloseSaveStatsWindow();
+    RemoveSaveInfoWindow();
 }
 
 static void SetSaveDialogDelayTo60Frames(void)
@@ -1355,13 +1355,33 @@ static void ShowSaveInfoWindow(void)
     CopyWindowToVram(sSaveStatsWindowId, COPYWIN_GFX);
 }
 
-static void CloseSaveStatsWindow(void)
+static void RemoveSaveInfoWindow(void)
 {
     ClearStdWindowAndFrame(sSaveStatsWindowId, FALSE);
     RemoveWindow(sSaveStatsWindowId);
 }
 
-void CloseStartMenu(void)
+static void Task_WaitForBattleTowerLinkSave(u8 taskId)
+{
+    if (!FuncIsActiveTask(Task_LinkFullSave))
+    {
+        DestroyTask(taskId);
+        ScriptContext_Enable();
+    }
+}
+
+#define tInBattleTower data[2]
+
+void SaveForBattleTowerLink(void)
+{
+    u8 taskId = CreateTask(Task_LinkFullSave, 5);
+    gTasks[taskId].tInBattleTower = TRUE;
+    gTasks[CreateTask(Task_WaitForBattleTowerLinkSave, 6)].data[1] = taskId;
+}
+
+#undef tInBattleTower
+
+void HideStartMenuWindow(void)
 {
     PlaySE(SE_SELECT);
     ClearStdWindowAndFrame(GetStartMenuWindowId(), TRUE);

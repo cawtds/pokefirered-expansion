@@ -205,7 +205,7 @@
 #define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_ALT_1   0x0BB
 #define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_ALT_2   0x0BC
 #define FLAG_HIDE_BATTLE_FRONTIER_RECEPTION_GATE_SCOTT      0x0BD
-#define FLAG_0x0BE               0x0BE
+#define FLAG_CANCEL_BATTLE_ROOM_CHALLENGE                   0x0BE
 #define FLAG_0x0BF               0x0BF
 #define FLAG_0x0C0               0x0C0
 #define FLAG_0x0C1               0x0C1
@@ -805,7 +805,7 @@
 #define FLAG_COLLECTED_ALL_GOLD_SYMBOLS                  0x308
 #define FLAG_RECEIVED_SILVER_SHIELD                      0x309
 #define FLAG_RECEIVED_GOLD_SHIELD                        0x30A
-#define FLAG_0x30B               0x30B
+#define FLAG_CHOSEN_MULTI_BATTLE_NPC_PARTNER             0x30B
 #define FLAG_0x30C               0x30C
 #define FLAG_0x30D               0x30D
 #define FLAG_0x30E               0x30E
@@ -941,7 +941,7 @@
 
 #define DAILY_FLAGS_START                           (FLAG_0x38F + (8 - FLAG_0x38F % 8))
 
-#define FLAG_0x390               0x390
+#define FLAG_DAILY_APPRENTICE_LEAVES               0x390
 #define FLAG_0x391               0x391
 #define FLAG_0x392               0x392
 #define FLAG_0x393               0x393

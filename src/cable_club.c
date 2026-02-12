@@ -990,3 +990,9 @@ void Task_WaitForLinkPlayerConnection(u8 taskId)
 }
 
 #undef tTimer
+
+void TrySetBattleTowerLinkType(void)
+{
+    if (gWirelessCommType == 0)
+        gLinkType = LINKTYPE_BATTLE_TOWER;
+}

@@ -9,7 +9,7 @@ void SetUpReturnToStartMenu(void);
 void ShowStartMenu(void);
 void Field_AskSaveTheGame(void);
 void CB2_SetUpSaveAfterLinkBattle(void);
-void CloseStartMenu(void);
+void HideStartMenuWindow(void);
 void ShowBattlePyramidStartMenu(void);
 
 #endif // GUARD_START_MENU_H

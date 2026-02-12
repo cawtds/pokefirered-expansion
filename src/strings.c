@@ -1584,3 +1584,6 @@ const u8 gText_Floor5[] = _("Floor 5");
 const u8 gText_Floor6[] = _("Floor 6");
 const u8 gText_Floor7[] = _("Floor 7");
 const u8 gText_Peak[] = _("Peak");
+
+const u8 gText_Give[] = _("Give");
+const u8 gText_NoNeed[] = _("No need");

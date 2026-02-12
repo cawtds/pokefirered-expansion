@@ -1,12 +1,11 @@
 #ifndef GUARD_CONSTANTS_MENU_H
 #define GUARD_CONSTANTS_MENU_H
 
+#define MULTI_B_PRESSED  127
 #define SCR_MENU_CANCEL 127
 #define SCR_MENU_UNSET  255
 
 #define MAX_MULTICHOICE_WIDTH 28
-
-#define MULTI_B_PRESSED  127
 
 #define MULTI_YESNO                                             0
 #define MULTICHOICE_EEVEELUTIONS                                1
@@ -90,6 +89,10 @@
 #define MULTI_BATTLE_PYRAMID_RULES                             79
 #define MULTI_BATTLE_PIKE_RULES                                80
 #define MULTI_FRONTIER_ITEM_CHOOSE                             81
+#define MULTI_BATTLE_TOWER_RULES                               82
+#define MULTI_BATTLE_TOWER_FEELINGS                            83
+#define MULTI_LINK_LEADER                                      84
+#define MULTI_SATISFACTION                                     85
 
 
 #define MULTICHOICE_NONE                                      255
