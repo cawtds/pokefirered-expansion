@@ -361,8 +361,8 @@
 #define METATILE_BattlePike_Curtain_Stage3_Tile6  0x33c
 
 // gTileset_BattlePyramid
-#define METATILE_BattlePyramid_Exit   0x28E
-#define METATILE_BattlePyramid_Floor  0x28D
+#define METATILE_BattlePyramid_Exit   0x2E8
+#define METATILE_BattlePyramid_Floor  0x2E7
 
 // Other
 #define METATILE_Fallarbor_AshGrass                      0x20A

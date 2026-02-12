@@ -841,7 +841,6 @@ static const u8 sPickupPercentages[PICKUP_ITEMS_PER_ROUND] = {30, 40, 50, 60, 70
 // code
 void CallBattlePyramidFunction(void)
 {
-    DebugPrintfLevel(MGBA_LOG_ERROR, "func = %u", gSpecialVar_0x8004);
     sBattlePyramidFunctions[gSpecialVar_0x8004]();
 }
 

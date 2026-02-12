@@ -423,6 +423,10 @@ bool8 AddBagItem(u16 itemId, u16 count)
     if (pocket >= POCKETS_COUNT)
         return FALSE;
 
+    // check Battle Pyramid Bag
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || FlagGet(FLAG_STORING_ITEMS_IN_PYRAMID_BAG) == TRUE)
+        return AddPyramidBagItem(itemId, count);
+
     if (pocket == POCKET_TM_HM && !CheckBagHasItem(ITEM_TM_CASE, 1))
     {
         idx = BagPocketGetFirstEmptySlot(POCKET_KEY_ITEMS);
