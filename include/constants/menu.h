@@ -89,6 +89,7 @@
 #define MULTI_BATTLE_PALACE_RULES                              78
 #define MULTI_BATTLE_PYRAMID_RULES                             79
 #define MULTI_BATTLE_PIKE_RULES                                80
+#define MULTI_FRONTIER_ITEM_CHOOSE                             81
 
 
 #define MULTICHOICE_NONE                                      255

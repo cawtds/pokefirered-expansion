@@ -473,9 +473,15 @@ gSpecials::
 	def_special CallBattleFactoryFunction
 	def_special CallBattlePalaceFunction
 	def_special CallBattlePikeFunction
+	def_special CallBattlePyramidFunction
 	def_special CallBattleTowerFunc
 	def_special ChoosePartyForBattleFrontier
 	def_special OffsetCameraForBattle
 	def_special DoDomeConfetti
 	def_special CloseBattlePikeCurtain
+	def_special DoBattlePyramidMonsHaveHeldItem
+	def_special BattlePyramidChooseMonHeldItems
+	def_special TryStoreHeldItemsInPyramidBag
+	def_special ChooseItemsToTossFromPyramidBag
+	def_special GetBattlePyramidHint
 gSpecialsEnd::

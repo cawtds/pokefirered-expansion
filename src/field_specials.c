@@ -40,6 +40,7 @@
 #include "tilesets.h"
 #include "wallclock.h"
 #include "dynamic_placeholder_text_util.h"
+#include "constants/battle_pyramid.h"
 #include "constants/songs.h"
 #include "constants/items.h"
 #include "constants/maps.h"
@@ -3485,3 +3486,10 @@ static void Task_CloseBattlePikeCurtain(u8 taskId)
 #undef CURTAIN_WIDTH
 #undef tFrameTimer
 #undef tCurrentFrame
+
+void GetBattlePyramidHint(void)
+{
+    // gSpecialVar_0x8004 here is expected to be the current Battle Pyramid win streak.
+    gSpecialVar_Result = gSpecialVar_0x8004 / FRONTIER_STAGES_PER_CHALLENGE;
+    gSpecialVar_Result -= (gSpecialVar_Result / TOTAL_PYRAMID_ROUNDS) * TOTAL_PYRAMID_ROUNDS;
+}

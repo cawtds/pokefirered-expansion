@@ -152,7 +152,7 @@ static void Task_ItemUse_CloseMessageBoxAndReturnToField(u8 taskId)
 {
     ClearDialogWindowAndFrame(0, 1);
     DestroyTask(taskId);
-    ClearPlayerHeldMovementAndUnfreezeObjectEvents();
+    ScriptUnfreezeObjectEvents();
     UnlockPlayerFieldControls();
 }
 
@@ -274,7 +274,7 @@ static void ItemUseOnFieldCB_Bicycle(u8 taskId)
     GetOnOffBike(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE);
 
     FollowerNPC_HandleBike();
-    ClearPlayerHeldMovementAndUnfreezeObjectEvents();
+    ScriptUnfreezeObjectEvents();
     UnlockPlayerFieldControls();
     DestroyTask(taskId);
 }

@@ -194,6 +194,7 @@ const u8 gText_MenuSave[] = _("SAVE");
 const u8 gText_MenuOption[] = _("OPTION");
 const u8 gText_MenuExit[] = _("EXIT");
 const u8 gText_MenuRetire[] = _("RETIRE");
+const u8 gText_MenuRest[] = _("REST");
 const u8 gText_MenuDexNav[] = _("DEXNAV");
 const u8 gText_MenuSafariStats[] = _("{STR_VAR_1}/{STR_VAR_2}\nBALLS  {STR_VAR_3}");
 const u8 gText_MenuTime[] = _("Time: {STR_VAR_1}:{STR_VAR_2}");
@@ -368,6 +369,7 @@ const u8 gText_PokemonCantBeSame[] = _("{PKMN} can't be the same.");
 const u8 gText_NoIdenticalHoldItems[] = _("No same hold items!");
 const u8 gText_CurrentIsTooFast[] = _("The current is much too fast!");
 const u8 gText_DoWhatWithMail[] = _("Do what with the MAIL?");
+const u8 gText_AlreadyHoldingOne[] = _("{STR_VAR_1} is already holding\none {STR_VAR_2}.");
 const u8 gText_ChoosePokemonCancel[] = _("Choose POKéMON or CANCEL.");
 const u8 gText_ChoosePokemonConfirm[] = _("Choose POKéMON and confirm.");
 const u8 gText_EnjoyCycling[] = _("Let's enjoy cycling!");
@@ -1385,6 +1387,8 @@ const u8 gText_ChangeForm[] = _("Change form");
 const u8 gText_ChangeAbility[] = _("Change Ability");
 
 const u8 gText_PkmnTransformed[] = _("{STR_VAR_1} transformed!{PAUSE_UNTIL_PRESS}");
+const u8 gText_ThrowAwayItem[] = _("Throw away this\n{STR_VAR_1}?");
+const u8 gText_ItemThrownAway[] = _("The {STR_VAR_1}\nwas thrown away.{PAUSE_UNTIL_PRESS}");
 const u8 gText_WhichAppliance[] = _("Order which\nappliance?");
 const u8 gText_NextFusionMon[] = _("Choose {PKMN} to fuse with.");
 
@@ -1570,3 +1574,13 @@ const u8 *const gPyramidBagMenu_ReturnToStrings[] =
 };
 
 const u8 gText_ReturnToVar1[] = _("Return to\n{STR_VAR_1}.");
+
+const u8 gText_BattlePyramidFloor[] = _("Battle Pyramid\n{STR_VAR_1}");
+const u8 gText_Floor1[] = _("Floor 1");
+const u8 gText_Floor2[] = _("Floor 2");
+const u8 gText_Floor3[] = _("Floor 3");
+const u8 gText_Floor4[] = _("Floor 4");
+const u8 gText_Floor5[] = _("Floor 5");
+const u8 gText_Floor6[] = _("Floor 6");
+const u8 gText_Floor7[] = _("Floor 7");
+const u8 gText_Peak[] = _("Peak");

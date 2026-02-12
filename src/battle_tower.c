@@ -19,12 +19,6 @@ static void SetNextTowerOpponent(void);
 static void GetOpponentIntroSpeech(void);
 static void ValidateApprenticesChecksums(void);
 
-// placeholders
-#define FACILITY_CLASS_TUBER_M          FACILITY_CLASS_RUIN_MANIAC
-#define FACILITY_CLASS_PKMN_BREEDER_M   FACILITY_CLASS_RUIN_MANIAC
-
-#define FACILITY_CLASS_TUBER_F          FACILITY_CLASS_AROMA_LADY
-#define FACILITY_CLASS_PKMN_BREEDER_F   FACILITY_CLASS_AROMA_LADY
 
 #include "data/battle_frontier/battle_frontier_trainer_mons.h"
 #include "data/battle_frontier/battle_frontier_trainers.h"

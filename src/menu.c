@@ -397,9 +397,9 @@ void DisplayYesNoMenuDefaultYes(void)
     CreateYesNoMenuAtPos(&sYesNo_WindowTemplate, FONT_NORMAL, 0, 2, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM, 0);
 }
 
-void DisplayYesNoMenuWithDefault(void)
+void DisplayYesNoMenuWithDefault(u8 initialCursorPos)
 {
-    CreateYesNoMenuAtPos(&sYesNo_WindowTemplate, FONT_NORMAL, 0, 2, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM, 1);
+    CreateYesNoMenuAtPos(&sYesNo_WindowTemplate, FONT_NORMAL, 0, 2, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM, initialCursorPos);
 }
 
 u8 AddStartMenuWindow(u8 height)

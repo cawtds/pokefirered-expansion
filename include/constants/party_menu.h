@@ -33,6 +33,7 @@
 #define PARTY_MENU_TYPE_UNION_ROOM_TRADE          9  // trading board
 #define PARTY_MENU_TYPE_SPIN_TRADE                10 // Unused beta for Gen IV's Spin Trade
 #define PARTY_MENU_TYPE_MINIGAME                  11
+#define PARTY_MENU_TYPE_STORE_PYRAMID_HELD_ITEMS  12
 
 #define PARTY_ACTION_CHOOSE_MON         0
 #define PARTY_ACTION_SEND_OUT           1
@@ -79,10 +80,11 @@
 #define PARTY_MSG_BOOST_PP_WHICH_MOVE       23
 #define PARTY_MSG_DO_WHAT_WITH_ITEM         24
 #define PARTY_MSG_DO_WHAT_WITH_MAIL         25
-#define PARTY_MSG_WHICH_APPLIANCE           26
-#define PARTY_MSG_CHOOSE_SECOND_FUSION      27
-#define PARTY_MSG_NO_POKEMON                28
-#define PARTY_MSG_CHOOSE_MON_FOR_BOX        29
+#define PARTY_MSG_ALREADY_HOLDING_ONE       26
+#define PARTY_MSG_WHICH_APPLIANCE           27
+#define PARTY_MSG_CHOOSE_SECOND_FUSION      28
+#define PARTY_MSG_NO_POKEMON                29
+#define PARTY_MSG_CHOOSE_MON_FOR_BOX        30
 
 #define PARTY_MSG_NONE                      127
 
@@ -97,6 +99,8 @@
 #define PARTYBOX_DESC_ABLE_2      7
 #define PARTYBOX_DESC_NOT_ABLE_2  8
 #define PARTYBOX_DESC_LEARNED     9
+#define PARTYBOX_DESC_HAVE        11
+#define PARTYBOX_DESC_DONT_HAVE   12
 
 #define SELECTWINDOW_ACTIONS        0
 #define SELECTWINDOW_ITEM           1

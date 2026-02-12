@@ -126,7 +126,7 @@ u8 AddStartMenuWindow(u8 height);
 void RemoveStartMenuWindow(void);
 u16 RunTextPrintersAndIsPrinter0Active(void);
 void AddTextPrinterForMessage_2(bool8 allowSkippingDelayWithButtonPress);
-void DisplayYesNoMenuWithDefault(void);
+void DisplayYesNoMenuWithDefault(u8 initialCursorPos);
 void AddTextPrinterWithCustomSpeedForMessage(bool8 allowSkippingDelayWithButtonPress, u8 speed);
 void LoadSignPostWindowFrameGfx(void);
 void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress);
