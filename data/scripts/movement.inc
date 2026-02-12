@@ -160,3 +160,7 @@ Common_Movement_WalkLeftFaster::
 Common_Movement_WalkInPlaceDown:
 	walk_in_place_down
 	step_end
+
+Common_Movement_WalkInPlaceLeft:
+	walk_in_place_left
+	step_end
