@@ -16,6 +16,7 @@
 // This file's functions.
 static void GetTowerData(void);
 static void SetNextTowerOpponent(void);
+static void GetOpponentIntroSpeech(void);
 static void ValidateApprenticesChecksums(void);
 
 // placeholders
@@ -159,7 +160,7 @@ static void (* const sBattleTowerFuncs[])(void) =
     // [BATTLE_TOWER_FUNC_SET_BATTLE_WON]      = SetTowerBattleWon,
     // [BATTLE_TOWER_FUNC_GIVE_RIBBONS]        = AwardBattleTowerRibbons,
     // [BATTLE_TOWER_FUNC_SAVE]                = SaveTowerChallenge,
-    // [BATTLE_TOWER_FUNC_GET_OPPONENT_INTRO]  = GetOpponentIntroSpeech,
+    [BATTLE_TOWER_FUNC_GET_OPPONENT_INTRO]  = GetOpponentIntroSpeech,
     // [BATTLE_TOWER_FUNC_NOP]                 = BattleTowerNop1,
     // [BATTLE_TOWER_FUNC_NOP2]                = BattleTowerNop2,
     // [BATTLE_TOWER_FUNC_LOAD_PARTNERS]       = LoadMultiPartnerCandidatesData,
@@ -347,6 +348,30 @@ static void SetNextTowerOpponent(void)
                 gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum] = TRAINER_BATTLE_PARAM.opponentA;
         }
     }
+}
+
+static void GetOpponentIntroSpeech(void)
+{
+    u16 trainerId;
+    SetFacilityPtrsGetLevel();
+
+    if (gSpecialVar_0x8005)
+        trainerId = TRAINER_BATTLE_PARAM.opponentB;
+    else
+        trainerId = TRAINER_BATTLE_PARAM.opponentA;
+
+#if FREE_BATTLE_TOWER_E_READER == FALSE
+    if (trainerId == TRAINER_EREADER)
+        FrontierSpeechToString(gSaveBlock2Ptr->frontier.ereaderTrainer.greeting);
+    else if (trainerId < FRONTIER_TRAINERS_COUNT)
+#else
+    if (trainerId < FRONTIER_TRAINERS_COUNT)
+#endif //FREE_BATTLE_TOWER_E_READER
+        FrontierSpeechToString(gFacilityTrainers[trainerId].speechBefore);
+    else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
+        FrontierSpeechToString(gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].greeting);
+    else
+        BufferApprenticeChallengeText(trainerId - TRAINER_RECORD_MIXING_APPRENTICE);
 }
 
 u16 GetCurrentBattleTowerWinStreak(enum FrontierLevelMode lvlMode, u8 battleMode)

@@ -70,20 +70,19 @@
 #define PARTY_MSG_NO_MON_FOR_BATTLE         14
 #define PARTY_MSG_CHOOSE_MON_2              15
 #define PARTY_MSG_NOT_ENOUGH_HP             16
-#define PARTY_MSG_THREE_MONS_ARE_NEEDED     17
-#define PARTY_MSG_TWO_MONS_ARE_NEEDED       18
-#define PARTY_MSG_MONS_CANT_BE_SAME         19
-#define PARTY_MSG_NO_SAME_HOLD_ITEMS        20
-#define PARTY_MSG_UNUSED                    21
-#define PARTY_MSG_DO_WHAT_WITH_MON          22
-#define PARTY_MSG_RESTORE_WHICH_MOVE        23
-#define PARTY_MSG_BOOST_PP_WHICH_MOVE       24
-#define PARTY_MSG_DO_WHAT_WITH_ITEM         25
-#define PARTY_MSG_DO_WHAT_WITH_MAIL         26
-#define PARTY_MSG_WHICH_APPLIANCE           27
-#define PARTY_MSG_CHOOSE_SECOND_FUSION      28
-#define PARTY_MSG_NO_POKEMON                29
-#define PARTY_MSG_CHOOSE_MON_FOR_BOX        30
+#define PARTY_MSG_X_MONS_ARE_NEEDED         17
+#define PARTY_MSG_MONS_CANT_BE_SAME         18
+#define PARTY_MSG_NO_SAME_HOLD_ITEMS        19
+#define PARTY_MSG_UNUSED                    20
+#define PARTY_MSG_DO_WHAT_WITH_MON          21
+#define PARTY_MSG_RESTORE_WHICH_MOVE        22
+#define PARTY_MSG_BOOST_PP_WHICH_MOVE       23
+#define PARTY_MSG_DO_WHAT_WITH_ITEM         24
+#define PARTY_MSG_DO_WHAT_WITH_MAIL         25
+#define PARTY_MSG_WHICH_APPLIANCE           26
+#define PARTY_MSG_CHOOSE_SECOND_FUSION      27
+#define PARTY_MSG_NO_POKEMON                28
+#define PARTY_MSG_CHOOSE_MON_FOR_BOX        29
 
 #define PARTY_MSG_NONE                      127
 

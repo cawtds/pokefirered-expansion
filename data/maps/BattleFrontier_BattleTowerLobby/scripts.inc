@@ -1429,7 +1429,7 @@ BattleFrontier_BattleTowerLobby_Text_AwardYouTheseBattlePoints:
 	@.string "we award you these Battle Point(s).$"
 
 BattleFrontier_Text_ObtainedXBattlePoints:
-	@.string "{PLAYER} obtained {STR_VAR_1} Battle Point(s).$"
+	.string "{PLAYER} obtained {STR_VAR_1} Battle Point(s).$"
 
 BattleFrontier_BattleTowerLobby_Text_RulesAreListed:
 	@.string "The BATTLE TOWER rules are listed.$"

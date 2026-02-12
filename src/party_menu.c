@@ -63,6 +63,7 @@
 #include "pokerus.h"
 #include "constants/abilities.h"
 #include "constants/battle.h"
+#include "constants/battle_frontier.h"
 #include "constants/easy_chat.h"
 #include "constants/field_effects.h"
 #include "constants/field_move.h"
@@ -370,6 +371,9 @@ static void Task_DisplayGaveMailFromBagMessage(u8 taskId);
 static void Task_HandleSwitchItemsFromBagYesNoInput(u8 taskId);
 static void Task_ValidateChosenMonsForBattle(u8 taskId);
 static bool8 HasPartySlotAlreadyBeenSelected(u8 slot);
+static u8 GetBattleEntryLevelCap(void);
+static u8 GetMaxBattleEntries(void);
+static u8 GetMinBattleEntries(void);
 static void Task_ContinueChoosingMonsForBattle(u8 taskId);
 static void BufferBattlePartyOrder(u8 *partyBattleOrder, u8 flankId);
 static void BufferBattlePartyOrderBySide(u8 *partyBattleOrder, u8 flankId, u8 battlerId);
@@ -971,26 +975,22 @@ static void DisplayPartyPokemonDataForChooseMultiple(u8 slot)
     u8 i;
     struct Pokemon *mon = &gPlayerParty[slot];
     u8 *order = gSelectedOrderFromParty;
-    u8 maxBattlers;
 
     if (!GetBattleEntryEligibility(mon))
-        DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_NOT_ABLE);
-    else
     {
-        if (gPartyMenu.chooseMonsBattleType == CHOOSE_MONS_FOR_UNION_ROOM_BATTLE)
-            maxBattlers = 2;
-        else
-            maxBattlers = 3;
-        for (i = 0; i < maxBattlers; ++i)
-        {
-            if (order[i] != 0 && (order[i] - 1) == slot)
-            {
-                DisplayPartyPokemonDescriptionData(slot, i + PARTYBOX_DESC_FIRST);
-                return;
-            }
-        }
-        DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_ABLE_3);
+        DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_NOT_ABLE);
+        return;
     }
+
+    for (i = 0; i < GetMaxBattleEntries(); ++i)
+    {
+        if (order[i] != 0 && (order[i] - 1) == slot)
+        {
+            DisplayPartyPokemonDescriptionData(slot, i + PARTYBOX_DESC_FIRST);
+            return;
+        }
+    }
+    DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_ABLE_3);
 }
 
 static void DisplayPartyPokemonDataForWirelessMinigame(u8 slot)
@@ -3966,20 +3966,10 @@ static void CursorCB_Enter(u8 taskId)
 {
     u8 maxBattlers;
     u8 i;
-    const u8 *str;
 
-    if (gPartyMenu.chooseMonsBattleType == CHOOSE_MONS_FOR_UNION_ROOM_BATTLE)
-    {
-        maxBattlers = 2;
-        str = gText_NoMoreThanTwoMayEnter;
-    }
-    else
-    {
-        maxBattlers = 3;
-        str = gText_NoMoreThanThreeMayEnter;
-    }
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
+    maxBattlers = GetMaxBattleEntries();
     for (i = 0; i < maxBattlers; ++i)
     {
         if (gSelectedOrderFromParty[i] == 0)
@@ -3994,8 +3984,10 @@ static void CursorCB_Enter(u8 taskId)
             return;
         }
     }
+    ConvertIntToDecimalStringN(gStringVar1, maxBattlers, STR_CONV_MODE_LEFT_ALIGN, 1);
+    StringExpandPlaceholders(gStringVar4, gText_NoMoreThanVar1Pkmn);
     PlaySE(SE_FAILURE);
-    DisplayPartyMenuMessage(str, TRUE);
+    DisplayPartyMenuMessage(gStringVar4, TRUE);
     gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
 }
 
@@ -6483,11 +6475,10 @@ static void TryGiveMailToSelectedMon(u8 taskId)
     gTasks[taskId].func = Task_UpdateHeldItemSpriteAndClosePartyMenu;
 }
 
-void InitChooseMonsForBattle(u8 chooseMonsBattleType)
+void InitChooseMonsForBattle(u8 unused)
 {
     ClearSelectedPartyOrder();
     InitPartyMenu(PARTY_MENU_TYPE_CHOOSE_MULTIPLE_MONS, PARTY_LAYOUT_SINGLE, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_CHOOSE_MON, Task_HandleChooseMonInput, gMain.savedCallback);
-    gPartyMenu.chooseMonsBattleType = chooseMonsBattleType;
     gPartyMenu.task = Task_ValidateChosenMonsForBattle;
 }
 
@@ -6508,34 +6499,68 @@ static u8 GetPartySlotEntryStatus(s8 slot)
 
 static bool8 GetBattleEntryEligibility(struct Pokemon *mon)
 {
-    if (GetMonData(mon, MON_DATA_IS_EGG))
-        return FALSE;
+    u32 species;
 
-    switch (gPartyMenu.chooseMonsBattleType)
+    if (GetMonData(mon, MON_DATA_IS_EGG)
+        || GetMonData(mon, MON_DATA_LEVEL) > GetBattleEntryLevelCap()
+        || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY)
+            && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY)
+            && GetMonData(mon, MON_DATA_HELD_ITEM) != ITEM_NONE))
     {
-    default:
-        if (GetMonData(mon, MON_DATA_LEVEL) > 30)
-            return FALSE;
-        break;
-    case CHOOSE_MONS_FOR_CABLE_CLUB_BATTLE:
-        if (GetMonData(mon, MON_DATA_HP) == 0)
-            return FALSE;
-        break;
+        return FALSE;
     }
-    return TRUE;
+
+    switch (VarGet(VAR_FRONTIER_FACILITY))
+    {
+    case FACILITY_MULTI_OR_EREADER:
+        if (GetMonData(mon, MON_DATA_HP) != 0)
+            return TRUE;
+        return FALSE;
+    case FACILITY_UNION_ROOM:
+        return TRUE;
+    default: // Battle Frontier
+        species = GetMonData(mon, MON_DATA_SPECIES);
+        if (gSpeciesInfo[species].isFrontierBanned)
+            return FALSE;
+        return TRUE;
+    }
 }
 
 static u8 CheckBattleEntriesAndGetMessage(void)
 {
+    u8 maxBattlers;
+    u8 i, j;
+    u8 facility;
+    struct Pokemon *party = gPlayerParty;
+    u8 minBattlers = GetMinBattleEntries();
     u8 *order = gSelectedOrderFromParty;
 
-    switch (gPartyMenu.chooseMonsBattleType)
+    if (order[minBattlers - 1] == 0)
     {
-    case CHOOSE_MONS_FOR_UNION_ROOM_BATTLE:
-        if (order[1] == 0)
-            return PARTY_MSG_TWO_MONS_ARE_NEEDED;
-        break;
+        if (minBattlers == 1)
+            return PARTY_MSG_NO_MON_FOR_BATTLE;
+        ConvertIntToDecimalStringN(gStringVar1, minBattlers, STR_CONV_MODE_LEFT_ALIGN, 1);
+        return PARTY_MSG_X_MONS_ARE_NEEDED;
     }
+
+    facility = VarGet(VAR_FRONTIER_FACILITY);
+    if (facility == FACILITY_UNION_ROOM || facility == FACILITY_MULTI_OR_EREADER)
+        return 0xFF;
+
+    maxBattlers = GetMaxBattleEntries();
+    for (i = 0; i < maxBattlers - 1; i++)
+    {
+        u16 species = GetMonData(&party[order[i] - 1], MON_DATA_SPECIES);
+        enum Item item = GetMonData(&party[order[i] - 1], MON_DATA_HELD_ITEM);
+        for (j = i + 1; j < maxBattlers; j++)
+        {
+            if (species == GetMonData(&party[order[j] - 1], MON_DATA_SPECIES))
+                return PARTY_MSG_MONS_CANT_BE_SAME;
+            if (item != ITEM_NONE && item == GetMonData(&party[order[j] - 1], MON_DATA_HELD_ITEM))
+                return PARTY_MSG_NO_SAME_HOLD_ITEMS;
+        }
+    }
+
     return 0xFF;
 }
 
@@ -6582,6 +6607,47 @@ static void Task_ContinueChoosingMonsForBattle(u8 taskId)
         PlaySE(SE_SELECT);
         DisplayPartyMenuStdMessage(PARTY_MSG_CHOOSE_MON);
         gTasks[taskId].func = Task_HandleChooseMonInput;
+    }
+}
+
+static u8 GetMaxBattleEntries(void)
+{
+    switch (VarGet(VAR_FRONTIER_FACILITY))
+    {
+    case FACILITY_MULTI_OR_EREADER:
+        return MULTI_PARTY_SIZE;
+    case FACILITY_UNION_ROOM:
+        return UNION_ROOM_PARTY_SIZE;
+    default: // Battle Frontier
+        return gSpecialVar_0x8005;
+    }
+}
+
+static u8 GetMinBattleEntries(void)
+{
+    switch (VarGet(VAR_FRONTIER_FACILITY))
+    {
+    case FACILITY_MULTI_OR_EREADER:
+        return 1;
+    case FACILITY_UNION_ROOM:
+        return UNION_ROOM_PARTY_SIZE;
+    default: // Battle Frontier
+        return gSpecialVar_0x8005;
+    }
+}
+
+static u8 GetBattleEntryLevelCap(void)
+{
+    switch (VarGet(VAR_FRONTIER_FACILITY))
+    {
+    case FACILITY_MULTI_OR_EREADER:
+        return MAX_LEVEL;
+    case FACILITY_UNION_ROOM:
+        return UNION_ROOM_MAX_LEVEL;
+    default: // Battle Frontier
+        if (gSpecialVar_0x8004 == FRONTIER_LVL_50)
+            return FRONTIER_MAX_LEVEL_50;
+        return FRONTIER_MAX_LEVEL_OPEN;
     }
 }
 

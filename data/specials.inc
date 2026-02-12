@@ -475,4 +475,5 @@ gSpecials::
 	def_special CallBattleTowerFunc
 	def_special ChoosePartyForBattleFrontier
 	def_special OffsetCameraForBattle
+	def_special DoDomeConfetti
 gSpecialsEnd::
