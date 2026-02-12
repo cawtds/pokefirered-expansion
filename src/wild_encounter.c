@@ -298,6 +298,9 @@ void GetSeasonAndTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area,
     *season = OW_SEASON_FALLBACK;
     *timeOfDay = OW_TIME_OF_DAY_FALLBACK;
 
+    if (InBattlePike() || CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
+        return;
+
     if (OW_SEASON_ENCOUNTERS)
         *season = gLoadedSeason;
     if (OW_TIME_OF_DAY_ENCOUNTERS)
@@ -464,7 +467,9 @@ static bool8 WildEncounterCheck(u32 encounterRate, bool8 ignoreAbility)
     {
         u32 ability = GetMonAbility(&gPlayerParty[0]);
 
-        if (ability == ABILITY_STENCH)
+        if (ability == ABILITY_STENCH && gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
+            encounterRate = encounterRate * 3 / 4;
+        else if (ability == ABILITY_STENCH)
             encounterRate /= 2;
         else if (ability == ABILITY_ILLUMINATE)
             encounterRate *= 2;
@@ -709,7 +714,33 @@ bool8 SweetScentWildEncounter(void)
     headerId = GetCurrentMapWildMonHeaderId();
 
     if (headerId == HEADER_NONE)
+    {
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS)
+        {
+            headerId = GetBattlePikeWildMonHeaderId();
+            GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_LAND, &season, &timeOfDay);
+
+            if (TryGenerateWildMon(gBattlePikeWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
+                return FALSE;
+
+            TryGenerateBattlePikeWildMon(FALSE);
+            BattleSetup_StartBattlePikeWildBattle();
+            return TRUE;
+        }
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
+        {
+            headerId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
+            GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_LAND, &season, &timeOfDay);
+
+            if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
+                return FALSE;
+
+            GenerateBattlePyramidWildMon();
+            BattleSetup_StartWildBattle();
+            return TRUE;
+        }
         return FALSE;
+    }
 
     if (MapGridGetMetatileAttributeAt(x, y, METATILE_ATTRIBUTE_ENCOUNTER_TYPE) == TILE_ENCOUNTER_LAND)
     {
@@ -1119,7 +1150,8 @@ static bool8 HandleWildEncounterCooldown(u32 currMetatileAttrs)
 
 bool8 TryStandardWildEncounter(u32 currMetatileAttrs)
 {
-    if (!HandleWildEncounterCooldown(currMetatileAttrs))
+    u16 headerId = GetCurrentMapWildMonHeaderId();
+    if (headerId != HEADER_NONE && !HandleWildEncounterCooldown(currMetatileAttrs))
     {
         sWildEncounterData.prevMetatileBehavior = ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR);
         return FALSE;

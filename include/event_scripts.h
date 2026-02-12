@@ -842,8 +842,9 @@ extern const u8 EventScript_TryDoDoubleTrainerBattle[];
 extern const u8 EventScript_TryDoNormalTrainerBattle[];
 extern const u8 EventScript_TryDoDoubleRematchBattle[];
 extern const u8 EventScript_TryDoRematchBattle[];
-extern const u8 EventScript_DoTrainerBattleFromApproach[];
+extern const u8 EventScript_StartTrainerApproach[];
 extern const u8 EventScript_TestSignpostMsg[];
+extern const u8 EventScript_ObjectApproachPlayer[];
 
 extern const u8 BerryTreeScript[];
 extern const u8 BerryTree_EventScript_ItemUsePlantBerry[];

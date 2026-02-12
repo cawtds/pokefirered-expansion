@@ -916,7 +916,7 @@ void ConfigureAndSetUpOneTrainerBattle(u8 trainerObjEventId, const u8 *trainerSc
     gSpecialVar_LastTalked = gObjectEvents[trainerObjEventId].localId;
     TrainerBattleLoadArgs(trainerScript + 1);
     BattleSetup_ConfigureTrainerBattle(trainerScript + 1);
-    ScriptContext_SetupScript(EventScript_DoTrainerBattleFromApproach);
+    ScriptContext_SetupScript(EventScript_StartTrainerApproach);
     LockPlayerFieldControls();
 }
 
@@ -935,7 +935,7 @@ void ConfigureTwoTrainersBattle(u8 trainerObjEventId, const u8 *trainerScript)
 
 void SetUpTwoTrainersBattle(void)
 {
-    ScriptContext_SetupScript(EventScript_DoTrainerBattleFromApproach);
+    ScriptContext_SetupScript(EventScript_StartTrainerApproach);
     LockPlayerFieldControls();
 }
 

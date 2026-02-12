@@ -70,7 +70,7 @@ gSpecials::
 	def_special ShowTrainerIntroSpeech
 	def_special ShowTrainerCantBattleSpeech
 	def_special Script_HasTrainerBeenFought
-	def_special EndTrainerApproach
+	def_special DoTrainerApproach
 	def_special PlayTrainerEncounterMusic
 	def_special ShouldTryRematchBattle
 	def_special IsTrainerReadyForRematch
