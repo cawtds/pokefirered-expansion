@@ -2538,7 +2538,6 @@ u16 GetTradeSpecies(void)
     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
         return SPECIES_NONE;
     u32 species = GetBoxMonData(boxmon, MON_DATA_SPECIES);
-    DebugPrintfLevel(MGBA_LOG_ERROR, "species = %u", species);
     return species;
 }
 
