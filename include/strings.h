@@ -88,9 +88,9 @@ extern const u8 gText_Coins[];
 extern const u8 gText_EggNickname[];
 extern const u8 gText_MenuPokemon[];
 
-extern const u8 gOtherText_Use[];
-extern const u8 gOtherText_Toss[];
-extern const u8 gOtherText_Give[];
+extern const u8 gMenuText_Use[];
+extern const u8 gMenuText_Toss[];
+extern const u8 gMenuText_Give[];
 extern const u8 gOtherText_Exit[];
 extern const u8 gText_ThreeHyphens[];
 extern const u8 gText_SevenHyphens[];
@@ -463,8 +463,8 @@ extern const u8 *const gPocketNamesStringsTable[];
 // berry_pouch
 extern const u8 gText_Var1CantBeHeldHere[];
 extern const u8 gText_TossHowManyVar1s[];
-extern const u8 gText_ThrewAwayStrVar2StrVar1s[];
-extern const u8 gText_ThrowAwayStrVar2OfThisItemQM[];
+extern const u8 gText_ThrewAwayVar2Var1s[];
+extern const u8 gText_ConfirmTossItems[];
 extern const u8 gText_BerryPouch[];
 extern const u8 gText_TheBerryPouchWillBePutAway[];
 
@@ -1896,5 +1896,8 @@ extern const u8 gText_PokemonNature[];
 extern const u8 gText_PokemonMoves[];
 extern const u8 gText_Underpowered[];
 extern const u8 gText_WhenInDanger[];
+
+extern const u8 *const gPyramidBagMenu_ReturnToStrings[];
+extern const u8 gText_ReturnToVar1[];
 
 #endif //GUARD_STRINGS_H

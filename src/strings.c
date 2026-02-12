@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle_pyramid_bag.h"
 #include "strings.h"
 #include "constants/item.h"
 
@@ -132,10 +133,10 @@ const u8 gSaveStatName_Badges[] = _("BADGES");
 const u8 gSaveStatName_Pokedex[] = _("POKéDEX");
 const u8 gSaveStatName_Time[] = _("TIME");
 const u8 gText_FlyToWhere[] = _("どこへ とびますか?");
-const u8 gOtherText_Use[] = _("USE");
-const u8 gOtherText_Toss[] = _("TOSS");
+const u8 gMenuText_Use[] = _("USE");
+const u8 gMenuText_Toss[] = _("TOSS");
 const u8 gOtherText_Register[] = _("REGISTER");
-const u8 gOtherText_Give[] = _("GIVE");
+const u8 gMenuText_Give[] = _("GIVE");
 const u8 gMenuText_Confirm[] = _("けってい");
 const u8 gOtherText_Walk[] = _("WALK");
 const u8 gFameCheckerText_Cancel[] = _("CANCEL");
@@ -213,8 +214,8 @@ const u8 gText_MoveVar1Where[] = _("Where should the {STR_VAR_1}\nbe placed?");
 const u8 gText_Var1CantBeHeld[] = _("The {STR_VAR_1} can't be held.");
 const u8 gText_Var1CantBeHeldHere[] = _("The {STR_VAR_1} can't be held\nhere.");
 const u8 gText_TossHowManyVar1s[] = _("Toss out how many\n{STR_VAR_1}(s)?");
-const u8 gText_ThrewAwayStrVar2StrVar1s[] = _("Threw away {STR_VAR_2}\n{STR_VAR_1}(s).");
-const u8 gText_ThrowAwayStrVar2OfThisItemQM[] = _("Throw away {STR_VAR_2} of\nthis item?");
+const u8 gText_ThrewAwayVar2Var1s[] = _("Threw away {STR_VAR_2}\n{STR_VAR_1}(s).");
+const u8 gText_ConfirmTossItems[] = _("Throw away {STR_VAR_2} of\nthis item?");
 const u8 gText_OakForbidsUseOfItemHere[] = _("OAK: {PLAYER}!\nThis isn't the time to use that!{PAUSE_UNTIL_PRESS}");
 const u8 gText_CantDismountBike[] = _("You can't dismount your BIKE here.{PAUSE_UNTIL_PRESS}");
 const u8 gText_ItemfinderResponding[] = _("Huh?\nThe ITEMFINDER's responding!\pThere's an item buried around here!{PAUSE_UNTIL_PRESS}");
@@ -1555,3 +1556,17 @@ const u8 gText_TimesCleared[] = _("Times cleared:{CLEAR 0x05}{STR_VAR_1}");
 const u8 gText_KOsInARow[] = _("KOs in a row: {STR_VAR_1}");
 const u8 gText_TimesVar1[] = _("Times: {STR_VAR_1}");
 const u8 gText_FloorsCleared[] = _("Floors cleared: {STR_VAR_1}");
+
+const u8 gText_TheField[] = _("the field");
+const u8 gText_TheBattle[] = _("the battle");
+const u8 gText_ThePokemonList[] = _("the POKéMON LIST");
+
+const u8 *const gPyramidBagMenu_ReturnToStrings[] =
+{
+    [PYRAMIDBAG_LOC_FIELD]       = gText_TheField,
+    [PYRAMIDBAG_LOC_BATTLE]      = gText_TheBattle,
+    [PYRAMIDBAG_LOC_PARTY]       = gText_ThePokemonList,
+    [PYRAMIDBAG_LOC_CHOOSE_TOSS] = gText_TheField
+};
+
+const u8 gText_ReturnToVar1[] = _("Return to\n{STR_VAR_1}.");

@@ -6533,4 +6533,10 @@ extern const u16 gTilesetAnims_BattleDomePals0_3[];
 extern const u32 gBattleArenaJudgmentSymbolsGfx[];
 extern const u16 gBattleArenaJudgmentSymbolsPalette[];
 
+extern const u32 gBattlePyramidBag_Gfx[];
+extern const u16 gBattlePyramidBag_Pal[];
+extern const u32 gBattlePyramidBagTilemap[];
+extern const u16 gBattlePyramidBagInterface_Pal[];
+extern const u16 gBattlePyramidFloor_Pal[][16];
+
 #endif //GUARD_GRAPHICS_H

@@ -1027,7 +1027,7 @@ static struct
     [CURSOR_OPTION_SWITCH]                               = {gText_Switch2,                     CursorCB_Switch          },
     [CURSOR_OPTION_CANCEL1]                              = {gFameCheckerText_Cancel,           CursorCB_Cancel1         },
     [CURSOR_OPTION_ITEM]                                 = {gText_Item,                        CursorCB_Item            },
-    [CURSOR_OPTION_GIVE]                                 = {gOtherText_Give,                   CursorCB_Give            },
+    [CURSOR_OPTION_GIVE]                                 = {gMenuText_Give,                   CursorCB_Give            },
     [CURSOR_OPTION_TAKE_ITEM]                            = {gText_Take,                        CursorCB_TakeItem        },
     [CURSOR_OPTION_MAIL]                                 = {gText_Mail,                        CursorCB_Mail            },
     [CURSOR_OPTION_TAKE_MAIL]                            = {gText_Take2,                       CursorCB_TakeMail        },

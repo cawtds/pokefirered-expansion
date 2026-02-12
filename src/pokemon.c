@@ -6,8 +6,8 @@
 #include "battle_anim.h"
 #include "battle_controllers.h"
 #include "battle_message.h"
-// #include "battle_pike.h"
-// #include "battle_pyramid.h"
+#include "battle_pike.h"
+#include "battle_pyramid.h"
 #include "battle_setup.h"
 #include "battle_z_move.h"
 #include "caps.h"
@@ -1432,10 +1432,10 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u32 personal
         {
             isShiny = TRUE;
         }
-        // else if (P_ONLY_OBTAINABLE_SHINIES && (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || (B_FLAG_NO_CATCHING != 0 && FlagGet(B_FLAG_NO_CATCHING))))
-        // {
-        //     isShiny = FALSE;
-        // }
+        else if (P_ONLY_OBTAINABLE_SHINIES && (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || (B_FLAG_NO_CATCHING != 0 && FlagGet(B_FLAG_NO_CATCHING))))
+        {
+            isShiny = FALSE;
+        }
         else if (P_NO_SHINIES_WITHOUT_POKEBALLS && !HasAtLeastOnePokeBall())
         {
             isShiny = FALSE;
@@ -6736,8 +6736,8 @@ bool8 ShouldSkipFriendshipChange(void)
 {
     if (gMain.inBattle && gBattleTypeFlags & (BATTLE_TYPE_FRONTIER))
         return TRUE;
-    // if (!gMain.inBattle && (InBattlePike() || CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE))
-    //     return TRUE;
+    if (!gMain.inBattle && (InBattlePike() || CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE))
+        return TRUE;
     return FALSE;
 }
 
