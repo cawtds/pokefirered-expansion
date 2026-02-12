@@ -185,8 +185,8 @@ BattleFrontier_BattleTowerBattleRoom_EventScript_ReadyFor7thOpponent::
 	@return
 
 BattleFrontier_EventScript_IncrementWinStreak::
-	@frontier_incrementstreak
-	@return
+	frontier_incrementstreak
+	return
 
 BattleFrontier_BattleTowerBattleRoom_EventScript_SecondAttendantEnter::
 	@applymovement LOCALID_TOWER_BATTLE_ATTENDANT_2, BattleFrontier_BattleTowerBattleRoom_Movement_SecondAttendantEnter
@@ -309,8 +309,8 @@ BattleFrontier_BattleTowerBattleRoom_EventScript_EndTowerBattle::
 	@return
 
 BattleFrontier_EventScript_SetBrainObjectGfx::
-	@frontier_setbrainobj
-	@return
+	frontier_setbrainobj
+	return
 
 BattleFrontier_BattleTowerBattleRoom_Movement_PlayerEnter:
 	@walk_up
