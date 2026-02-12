@@ -764,8 +764,8 @@ BattleFrontier_BattleTowerLobby_EventScript_GetLinkMultisPartySize::
 	@return
 
 BattleFrontier_EventScript_GetLvlMode::
-	@frontier_get FRONTIER_DATA_LVL_MODE
-	@return
+	frontier_get FRONTIER_DATA_LVL_MODE
+	return
 
 BattleFrontier_BattleTowerLobby_EventScript_TryCableLink::
 	@setvar VAR_0x8004, USING_BATTLE_TOWER

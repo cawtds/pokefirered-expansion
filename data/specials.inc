@@ -470,4 +470,5 @@ gSpecials::
 	def_special CallFrontierUtilFunc
 	def_special CallBattleTowerFunc
 	def_special CallBattleFactoryFunction
+	def_special CallBattlePalaceFunction
 gSpecialsEnd::

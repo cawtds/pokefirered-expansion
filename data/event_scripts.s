@@ -5,6 +5,7 @@
 #include "constants/battle_dome.h"
 #include "constants/battle_factory.h"
 #include "constants/battle_frontier.h"
+#include "constants/battle_palace.h"
 #include "constants/battle_special.h"
 #include "constants/battle_tower.h"
 #include "constants/berry.h"

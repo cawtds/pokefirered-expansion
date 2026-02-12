@@ -1,9 +1,11 @@
 #include "global.h"
 #include "apprentice.h"
+#include "battle.h"
 #include "battle_dome.h"
 #include "battle_frontier.h"
 #include "battle_records.h"
 #include "battle_tower.h"
+#include "easy_chat.h"
 #include "event_data.h"
 #include "field_specials.h"
 #include "frontier_util.h"
@@ -16,6 +18,7 @@
 #include "random.h"
 #include "record_mixing.h"
 #include "save.h"
+#include "script_pokemon_util.h"
 #include "string_util.h"
 #include "strings.h"
 #include "window.h"
@@ -47,8 +50,13 @@ struct FrontierBrain
 
 // This file's functions.
 static void GetChallengeStatus(void);
+static void GetFrontierData(void);
 static void SetFrontierData(void);
+static void SetSelectedPartyOrder(void);
+static void DoSoftReset_(void);
+static void SetFrontierTrainers(void);
 static void SaveSelectedParty(void);
+static void Script_GetFrontierBrainStatus(void);
 
 // battledBit: Flags to change the conversation when the Frontier Brain is encountered for a battle
 // First bit is has battled them before and not won yet, second bit is has battled them and won (obtained a Symbol)
@@ -681,15 +689,15 @@ static const struct WindowTemplate sRankingHallRecordsWindowTemplate =
 static void (*const sFrontierUtilFuncs[])(void) =
 {
     [FRONTIER_UTIL_FUNC_GET_STATUS]            = GetChallengeStatus,
-    // [FRONTIER_UTIL_FUNC_GET_DATA]              = GetFrontierData,
+    [FRONTIER_UTIL_FUNC_GET_DATA]              = GetFrontierData,
     [FRONTIER_UTIL_FUNC_SET_DATA]              = SetFrontierData,
-    // [FRONTIER_UTIL_FUNC_SET_PARTY_ORDER]       = SetSelectedPartyOrder,
-    // [FRONTIER_UTIL_FUNC_SOFT_RESET]            = DoSoftReset_,
-    // [FRONTIER_UTIL_FUNC_SET_TRAINERS]          = SetFrontierTrainers,
+    [FRONTIER_UTIL_FUNC_SET_PARTY_ORDER]       = SetSelectedPartyOrder,
+    [FRONTIER_UTIL_FUNC_SOFT_RESET]            = DoSoftReset_,
+    [FRONTIER_UTIL_FUNC_SET_TRAINERS]          = SetFrontierTrainers,
     [FRONTIER_UTIL_FUNC_SAVE_PARTY]            = SaveSelectedParty,
     // [FRONTIER_UTIL_FUNC_RESULTS_WINDOW]        = ShowFacilityResultsWindow,
     // [FRONTIER_UTIL_FUNC_CHECK_AIR_TV_SHOW]     = CheckPutFrontierTVShowOnAir,
-    // [FRONTIER_UTIL_FUNC_GET_BRAIN_STATUS]      = Script_GetFrontierBrainStatus,
+    [FRONTIER_UTIL_FUNC_GET_BRAIN_STATUS]      = Script_GetFrontierBrainStatus,
     // [FRONTIER_UTIL_FUNC_IS_BRAIN]              = IsTrainerFrontierBrain,
     // [FRONTIER_UTIL_FUNC_GIVE_BATTLE_POINTS]    = GiveBattlePoints,
     // [FRONTIER_UTIL_FUNC_GET_FACILITY_SYMBOLS]  = GetFacilitySymbolCount,
@@ -737,6 +745,40 @@ static void GetChallengeStatus(void)
     }
 }
 
+static void GetFrontierData(void)
+{
+    u8 facility = VarGet(VAR_FRONTIER_FACILITY);
+    u8 hasSymbol = GetPlayerSymbolCountForFacility(facility);
+    if (hasSymbol == 2)
+        hasSymbol = 1;
+
+    switch (gSpecialVar_0x8005)
+    {
+    case FRONTIER_DATA_CHALLENGE_STATUS:
+        gSpecialVar_Result = gSaveBlock2Ptr->frontier.challengeStatus;
+        break;
+    case FRONTIER_DATA_LVL_MODE:
+        gSpecialVar_Result = gSaveBlock2Ptr->frontier.lvlMode;
+        break;
+    case FRONTIER_DATA_BATTLE_NUM:
+        gSpecialVar_Result = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
+        break;
+    case FRONTIER_DATA_PAUSED:
+        gSpecialVar_Result = gSaveBlock2Ptr->frontier.challengePaused;
+        break;
+    case FRONTIER_DATA_BATTLE_OUTCOME:
+        gSpecialVar_Result = gBattleOutcome;
+        gBattleOutcome = 0;
+        break;
+    case FRONTIER_DATA_RECORD_DISABLED:
+        gSpecialVar_Result = gSaveBlock2Ptr->frontier.disableRecordBattle;
+        break;
+    case FRONTIER_DATA_HEARD_BRAIN_SPEECH:
+        gSpecialVar_Result = gSaveBlock2Ptr->frontier.battledBrainFlags & gFrontierBrainInfo[facility].battledBit[hasSymbol];
+        break;
+    }
+}
+
 static void SetFrontierData(void)
 {
     s32 i;
@@ -772,6 +814,26 @@ static void SetFrontierData(void)
     }
 }
 
+static void SetSelectedPartyOrder(void)
+{
+    s32 i;
+
+    ClearSelectedPartyOrder();
+    for (i = 0; i < gSpecialVar_0x8005; i++)
+        gSelectedOrderFromParty[i] = gSaveBlock2Ptr->frontier.selectedPartyMons[i];
+    ReducePlayerPartyToSelectedMons();
+}
+
+static void DoSoftReset_(void)
+{
+    DoSoftReset();
+}
+
+static void SetFrontierTrainers(void)
+{
+    gFacilityTrainers = gBattleFrontierTrainers;
+}
+
 static void SaveSelectedParty(void)
 {
     u8 i;
@@ -782,6 +844,51 @@ static void SaveSelectedParty(void)
         if (monId < PARTY_SIZE)
             SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gPlayerParty[i]);
     }
+}
+
+static void Script_GetFrontierBrainStatus(void)
+{
+    VarGet(VAR_FRONTIER_FACILITY); // Unused return value.
+    gSpecialVar_Result = GetFrontierBrainStatus();
+}
+
+u8 GetFrontierBrainStatus(void)
+{
+    s32 status = FRONTIER_BRAIN_NOT_READY;
+    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
+    s32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
+    u16 winStreakNoModifier = GetCurrentFacilityWinStreak();
+    s32 winStreak = winStreakNoModifier + gFrontierBrainInfo[facility].streakAppearances[3];
+    s32 symbolsCount;
+
+    if (battleMode != FRONTIER_MODE_SINGLES)
+        return FRONTIER_BRAIN_NOT_READY;
+
+    symbolsCount = GetPlayerSymbolCountForFacility(facility);
+    switch (symbolsCount)
+    {
+    // Missing a symbol
+    case 0:
+    case 1:
+        if (winStreak == gFrontierBrainInfo[facility].streakAppearances[symbolsCount])
+            status = symbolsCount + 1; // FRONTIER_BRAIN_SILVER and FRONTIER_BRAIN_GOLD
+        break;
+    // Already received both symbols
+    case 2:
+    default:
+        // Silver streak is reached
+        if (winStreak == gFrontierBrainInfo[facility].streakAppearances[0])
+            status = FRONTIER_BRAIN_STREAK;
+        // Gold streak is reached
+        else if (winStreak == gFrontierBrainInfo[facility].streakAppearances[1])
+            status = FRONTIER_BRAIN_STREAK_LONG;
+        // Some increment of the gold streak is reached
+        else if (winStreak > gFrontierBrainInfo[facility].streakAppearances[1] && (winStreak - gFrontierBrainInfo[facility].streakAppearances[1]) % gFrontierBrainInfo[facility].streakAppearances[2] == 0)
+            status = FRONTIER_BRAIN_STREAK_LONG;
+        break;
+    }
+
+    return status;
 }
 
 u8 GetPlayerSymbolCountForFacility(u8 facility)
@@ -1238,6 +1345,23 @@ s32 GetFronterBrainSymbol(void)
             symbol = 1;
     }
     return symbol;
+}
+
+void FrontierSpeechToString(const u16 *words)
+{
+    ConvertEasyChatWordsToString(gStringVar4, words, 3, 2);
+    if (GetStringWidth(FONT_NORMAL, gStringVar4, -1) > 204u)
+    {
+        s32 i = 0;
+
+        ConvertEasyChatWordsToString(gStringVar4, words, 2, 3);
+        while (gStringVar4[i++] != CHAR_NEWLINE)
+            ;
+        while (gStringVar4[i] != CHAR_NEWLINE)
+            i++;
+
+        gStringVar4[i] = CHAR_PROMPT_SCROLL;
+    }
 }
 
 u8 SetFacilityPtrsGetLevel(void)
