@@ -1823,6 +1823,10 @@ extern const u8 gText_PkmnForSwap[];
 extern const u8 gText_SamePkmnInPartyAlready[];
 extern const u8 gText_Cancel3[];
 
+extern const u8 gText_BattleRules[];
+extern const u8 gText_JudgeMind[];
+extern const u8 gText_JudgeSkill[];
+extern const u8 gText_JudgeBody[];
 extern const u8 gText_BasicRules[];
 extern const u8 gText_SwapPartners[];
 extern const u8 gText_SwapNumber[];
@@ -1875,5 +1879,13 @@ extern const u8 gText_Space2[];
 extern const u8 gText_Are[];
 extern const u8 gText_Are2[];
 extern const u8 gText_123Dot[][3];
+
+extern const u8 gText_PlayerMon1Name[];
+extern const u8 gText_OpponentMon1Name[];
+extern const u8 gText_Vs[];
+extern const u8 gText_Mind[];
+extern const u8 gText_Skill[];
+extern const u8 gText_Body[];
+extern const u8 gText_Judgment[];
 
 #endif //GUARD_STRINGS_H

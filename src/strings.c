@@ -1504,6 +1504,10 @@ const u8 gText_SamePkmnInPartyAlready[] = _("Same {PKMN} in party already.");
 
 const u8 gText_Lv50[] = _("LV. 50");
 const u8 gText_OpenLevel[] = _("OPEN LEVEL");
+const u8 gText_BattleRules[] = _("BATTLE RULES");
+const u8 gText_JudgeMind[] = _("JUDGE: MIND");
+const u8 gText_JudgeSkill[] = _("JUDGE: SKILL");
+const u8 gText_JudgeBody[] = _("JUDGE: BODY");
 const u8 gText_BasicRules[] = _("BASIC RULES");
 const u8 gText_SwapPartners[] = _("SWAP: PARTNER");
 const u8 gText_SwapNumber[] = _("SWAP: NUMBER");

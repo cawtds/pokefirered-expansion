@@ -12,6 +12,7 @@
 #include "field_specials.h"
 #include "frontier_util.h"
 #include "international_string_util.h"
+#include "list_menu.h"
 #include "load_save.h"
 #include "malloc.h"
 #include "menu.h"
@@ -85,6 +86,9 @@ static void ShowPikeResultsWindow(void);
 static void ShowFactoryResultsWindow(u8);
 static void ShowArenaResultsWindow(void);
 static void ShowPyramidResultsWindow(void);
+static u16 *MakeCaughtBannesSpeciesList(u32 totalBannedSpecies);
+static void PrintBannedSpeciesName(u8 windowId, u32 itemId, u8 y);
+static void Task_BannedSpeciesWindowInput(u8 taskId);
 
 // battledBit: Flags to change the conversation when the Frontier Brain is encountered for a battle
 // First bit is has battled them before and not won yet, second bit is has battled them and won (obtained a Symbol)
@@ -643,60 +647,6 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
     },
 };
 
-static const u8 *const sHallFacilityToRecordsText[] =
-{
-    [RANKING_HALL_TOWER_SINGLES] = gText_FrontierFacilityWinStreak,
-    [RANKING_HALL_TOWER_DOUBLES] = gText_FrontierFacilityWinStreak,
-    [RANKING_HALL_TOWER_MULTIS]  = gText_FrontierFacilityWinStreak,
-    [RANKING_HALL_DOME]          = gText_FrontierFacilityClearStreak,
-    [RANKING_HALL_PALACE]        = gText_FrontierFacilityWinStreak,
-    [RANKING_HALL_ARENA]         = gText_FrontierFacilityKOsStreak,
-    [RANKING_HALL_FACTORY]       = gText_FrontierFacilityWinStreak,
-    [RANKING_HALL_PIKE]          = gText_FrontierFacilityRoomsCleared,
-    [RANKING_HALL_PYRAMID]       = gText_FrontierFacilityFloorsCleared,
-    [RANKING_HALL_TOWER_LINK]    = gText_FrontierFacilityWinStreak,
-};
-
-static const u8 *const sRecordsWindowChallengeTexts[][2] =
-{
-    [RANKING_HALL_TOWER_SINGLES] = {gText_BattleTower2,  gText_FacilitySingle},
-    [RANKING_HALL_TOWER_DOUBLES] = {gText_BattleTower2,  gText_FacilityDouble},
-    [RANKING_HALL_TOWER_MULTIS]  = {gText_BattleTower2,  gText_FacilityMulti},
-    [RANKING_HALL_DOME]          = {gText_BattleDome,    gText_FacilitySingle},
-    [RANKING_HALL_PALACE]        = {gText_BattlePalace,  gText_FacilitySingle},
-    [RANKING_HALL_ARENA]         = {gText_BattleArena,   gText_Facility},
-    [RANKING_HALL_FACTORY]       = {gText_BattleFactory, gText_FacilitySingle},
-    [RANKING_HALL_PIKE]          = {gText_BattlePike,    gText_Facility},
-    [RANKING_HALL_PYRAMID]       = {gText_BattlePyramid, gText_Facility},
-    [RANKING_HALL_TOWER_LINK]    = {gText_BattleTower2,  gText_FacilityLink},
-};
-
-// Trainer ID ranges for possible frontier trainers to encounter on particular challenges
-// Trainers are scaled by difficulty, so higher trainer IDs have better teams
-static const u16 sFrontierTrainerIdRanges[][2] =
-{
-    {FRONTIER_TRAINER_BRADY,   FRONTIER_TRAINER_JILL},   //   0 -  99
-    {FRONTIER_TRAINER_TREVIN,  FRONTIER_TRAINER_CHLOE},  //  80 - 119
-    {FRONTIER_TRAINER_ERIK,    FRONTIER_TRAINER_SOFIA},  // 100 - 139
-    {FRONTIER_TRAINER_NORTON,  FRONTIER_TRAINER_JAZLYN}, // 120 - 159
-    {FRONTIER_TRAINER_BRADEN,  FRONTIER_TRAINER_ALISON}, // 140 - 179
-    {FRONTIER_TRAINER_ZACHERY, FRONTIER_TRAINER_LAMAR},  // 160 - 199
-    {FRONTIER_TRAINER_HANK,    FRONTIER_TRAINER_TESS},   // 180 - 219
-    {FRONTIER_TRAINER_JAXON,   FRONTIER_TRAINER_GRETEL}, // 200 - 299
-};
-
-static const u16 sFrontierTrainerIdRangesHard[][2] =
-{
-    {FRONTIER_TRAINER_ERIK,    FRONTIER_TRAINER_CHLOE},  // 100 - 119
-    {FRONTIER_TRAINER_NORTON,  FRONTIER_TRAINER_SOFIA},  // 120 - 139
-    {FRONTIER_TRAINER_BRADEN,  FRONTIER_TRAINER_JAZLYN}, // 140 - 159
-    {FRONTIER_TRAINER_ZACHERY, FRONTIER_TRAINER_ALISON}, // 160 - 179
-    {FRONTIER_TRAINER_HANK,    FRONTIER_TRAINER_LAMAR},  // 180 - 199
-    {FRONTIER_TRAINER_JAXON,   FRONTIER_TRAINER_TESS},   // 200 - 219
-    {FRONTIER_TRAINER_LEON,    FRONTIER_TRAINER_RAUL},   // 220 - 239
-    {FRONTIER_TRAINER_JAXON,   FRONTIER_TRAINER_GRETEL}, // 200 - 299
-};
-
 static const u8 sBattlePointAwards[NUM_FRONTIER_FACILITIES][FRONTIER_MODE_COUNT][30] =
 {
     /* facility, mode, tier */
@@ -789,6 +739,110 @@ static const u8 *const sLevelModeText[] =
 {
     [FRONTIER_LVL_50]   = gText_RecordsLv50,
     [FRONTIER_LVL_OPEN] = gText_RecordsOpenLevel,
+};
+
+static const u8 *const sHallFacilityToRecordsText[] =
+{
+    [RANKING_HALL_TOWER_SINGLES] = gText_FrontierFacilityWinStreak,
+    [RANKING_HALL_TOWER_DOUBLES] = gText_FrontierFacilityWinStreak,
+    [RANKING_HALL_TOWER_MULTIS]  = gText_FrontierFacilityWinStreak,
+    [RANKING_HALL_DOME]          = gText_FrontierFacilityClearStreak,
+    [RANKING_HALL_PALACE]        = gText_FrontierFacilityWinStreak,
+    [RANKING_HALL_ARENA]         = gText_FrontierFacilityKOsStreak,
+    [RANKING_HALL_FACTORY]       = gText_FrontierFacilityWinStreak,
+    [RANKING_HALL_PIKE]          = gText_FrontierFacilityRoomsCleared,
+    [RANKING_HALL_PYRAMID]       = gText_FrontierFacilityFloorsCleared,
+    [RANKING_HALL_TOWER_LINK]    = gText_FrontierFacilityWinStreak,
+};
+
+static const u8 *const sRecordsWindowChallengeTexts[][2] =
+{
+    [RANKING_HALL_TOWER_SINGLES] = {gText_BattleTower2,  gText_FacilitySingle},
+    [RANKING_HALL_TOWER_DOUBLES] = {gText_BattleTower2,  gText_FacilityDouble},
+    [RANKING_HALL_TOWER_MULTIS]  = {gText_BattleTower2,  gText_FacilityMulti},
+    [RANKING_HALL_DOME]          = {gText_BattleDome,    gText_FacilitySingle},
+    [RANKING_HALL_PALACE]        = {gText_BattlePalace,  gText_FacilitySingle},
+    [RANKING_HALL_ARENA]         = {gText_BattleArena,   gText_Facility},
+    [RANKING_HALL_FACTORY]       = {gText_BattleFactory, gText_FacilitySingle},
+    [RANKING_HALL_PIKE]          = {gText_BattlePike,    gText_Facility},
+    [RANKING_HALL_PYRAMID]       = {gText_BattlePyramid, gText_Facility},
+    [RANKING_HALL_TOWER_LINK]    = {gText_BattleTower2,  gText_FacilityLink},
+};
+
+// Trainer ID ranges for possible frontier trainers to encounter on particular challenges
+// Trainers are scaled by difficulty, so higher trainer IDs have better teams
+static const u16 sFrontierTrainerIdRanges[][2] =
+{
+    {FRONTIER_TRAINER_BRADY,   FRONTIER_TRAINER_JILL},   //   0 -  99
+    {FRONTIER_TRAINER_TREVIN,  FRONTIER_TRAINER_CHLOE},  //  80 - 119
+    {FRONTIER_TRAINER_ERIK,    FRONTIER_TRAINER_SOFIA},  // 100 - 139
+    {FRONTIER_TRAINER_NORTON,  FRONTIER_TRAINER_JAZLYN}, // 120 - 159
+    {FRONTIER_TRAINER_BRADEN,  FRONTIER_TRAINER_ALISON}, // 140 - 179
+    {FRONTIER_TRAINER_ZACHERY, FRONTIER_TRAINER_LAMAR},  // 160 - 199
+    {FRONTIER_TRAINER_HANK,    FRONTIER_TRAINER_TESS},   // 180 - 219
+    {FRONTIER_TRAINER_JAXON,   FRONTIER_TRAINER_GRETEL}, // 200 - 299
+};
+
+static const u16 sFrontierTrainerIdRangesHard[][2] =
+{
+    {FRONTIER_TRAINER_ERIK,    FRONTIER_TRAINER_CHLOE},  // 100 - 119
+    {FRONTIER_TRAINER_NORTON,  FRONTIER_TRAINER_SOFIA},  // 120 - 139
+    {FRONTIER_TRAINER_BRADEN,  FRONTIER_TRAINER_JAZLYN}, // 140 - 159
+    {FRONTIER_TRAINER_ZACHERY, FRONTIER_TRAINER_ALISON}, // 160 - 179
+    {FRONTIER_TRAINER_HANK,    FRONTIER_TRAINER_LAMAR},  // 180 - 199
+    {FRONTIER_TRAINER_JAXON,   FRONTIER_TRAINER_TESS},   // 200 - 219
+    {FRONTIER_TRAINER_LEON,    FRONTIER_TRAINER_RAUL},   // 220 - 239
+    {FRONTIER_TRAINER_JAXON,   FRONTIER_TRAINER_GRETEL}, // 200 - 299
+};
+#define BANNED_SPECIES_SHOWN 6
+
+static const struct ListMenuTemplate sCaughtBannedSpeciesListTemplate =
+{
+    .items = NULL,
+    .isDynamic = TRUE,
+    .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
+    .itemPrintFunc = PrintBannedSpeciesName,
+    .maxShowed = BANNED_SPECIES_SHOWN,
+    .header_X = 0,
+    .item_X = 8,
+    .cursor_X = 0,
+    .upText_Y = 1,
+    .cursorPal = 2,
+    .fillValue = 1,
+    .cursorShadowPal = 3,
+    .lettersSpacing = 1,
+    .itemVerticalPadding = 0,
+    .scrollMultiple = LIST_NO_MULTIPLE_SCROLL,
+    .fontId = FONT_NORMAL,
+    .cursorKind = 0
+};
+
+static const struct WindowTemplate sBannedSpeciesWindowTemplateMain =
+{
+    .bg = 0,
+    .tilemapLeft = 1,
+    .tilemapTop = 1,
+    .width = 12,
+    .height = 2 * BANNED_SPECIES_SHOWN,
+    .paletteNum = 15,
+    .baseBlock = 1,
+};
+
+#define TAG_LIST_ARROWS 5425
+
+static const struct ScrollArrowsTemplate sCaughtBannedSpeciesScrollArrowsTemplate =
+{
+    .firstArrowType = SCROLL_ARROW_UP,
+    .firstX = 56,
+    .firstY = 8,
+    .secondArrowType = SCROLL_ARROW_DOWN,
+    .secondX = 56,
+    .secondY = 104,
+    .fullyUpThreshold = 0,
+    .fullyDownThreshold = 0,
+    .tileTag = TAG_LIST_ARROWS,
+    .palTag = TAG_LIST_ARROWS,
+    .palNum = 0,
 };
 
 // code
@@ -2551,3 +2605,98 @@ s32 GetHighestLevelInPlayerParty(void)
 
     return highestLevel;
 }
+
+#define tWindowId     data[0]
+#define tMenuTaskId   data[1]
+#define tArrowTaskId  data[2]
+#define tScrollOffset data[3]
+#define tListPointerElemId 4
+
+static u16 *MakeCaughtBannesSpeciesList(u32 totalBannedSpecies)
+{
+    u32 count = 0;
+    u16 *list = AllocZeroed(sizeof(u16) * totalBannedSpecies);
+    for (u32 i = 0; i < NUM_SPECIES; i++)
+    {
+        u32 baseSpecies = GET_BASE_SPECIES_ID(i);
+        if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
+        {
+            if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
+            {
+                list[count] = i;
+                count++;
+            }
+        }
+    }
+    return list;
+}
+
+static void PrintBannedSpeciesName(u8 windowId, u32 itemId, u8 y)
+{
+    u8 colors[3] = {
+        sCaughtBannedSpeciesListTemplate.fillValue,
+        sCaughtBannedSpeciesListTemplate.cursorPal,
+        sCaughtBannedSpeciesListTemplate.cursorShadowPal
+    };
+    u16 *list = (u16 *) GetWordTaskArg(gSpecialVar_0x8006, tListPointerElemId);
+    AddTextPrinterParameterized4(windowId,
+                                 sCaughtBannedSpeciesListTemplate.fontId,
+                                 sCaughtBannedSpeciesListTemplate.item_X, y,
+                                 sCaughtBannedSpeciesListTemplate.lettersSpacing, 0, colors, TEXT_SKIP_DRAW,
+                                 GetSpeciesName(list[itemId]));
+}
+
+void ShowBattleFrontierCaughtBannedSpecies(void)
+{
+    u8 windowId;
+    struct ListMenuTemplate listTemplate = sCaughtBannedSpeciesListTemplate;
+    u32 totalCaughtBanned = gSpecialVar_0x8005;
+    listTemplate.totalItems = totalCaughtBanned;
+
+    // create window
+    LoadMessageBoxAndBorderGfx();
+    windowId = AddWindow(&sBannedSpeciesWindowTemplateMain);
+    DrawStdWindowFrame(windowId, FALSE);
+    listTemplate.windowId = windowId;
+
+    u16 *listItems = MakeCaughtBannesSpeciesList(totalCaughtBanned);
+    u32 inputTaskId = CreateTask(Task_BannedSpeciesWindowInput, 3);
+    gTasks[inputTaskId].tWindowId = windowId;
+    gSpecialVar_0x8006 = inputTaskId;
+    SetWordTaskArg(inputTaskId, tListPointerElemId, (u32)listItems);
+    u32 menuTaskId = ListMenuInit(&listTemplate, 0, 0);
+    gTasks[inputTaskId].tMenuTaskId = menuTaskId;
+    gTasks[inputTaskId].tArrowTaskId = TASK_NONE;
+    if (listTemplate.totalItems > listTemplate.maxShowed)
+    {
+        gTempScrollArrowTemplate = sCaughtBannedSpeciesScrollArrowsTemplate;
+        gTempScrollArrowTemplate.fullyDownThreshold = listTemplate.totalItems - listTemplate.maxShowed;
+        gTasks[inputTaskId].tArrowTaskId = AddScrollIndicatorArrowPair(&gTempScrollArrowTemplate, (u16 *)&gTasks[inputTaskId].tScrollOffset);
+    }
+
+    // draw everything
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+}
+
+static void Task_BannedSpeciesWindowInput(u8 taskId)
+{
+    ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
+    ListMenuGetScrollAndRow(gTasks[taskId].tMenuTaskId, (u16 *)&gTasks[taskId].tScrollOffset, NULL);
+    if (JOY_NEW(B_BUTTON))
+    {
+        ScriptContext_Enable();
+        if (gTasks[taskId].tArrowTaskId < TASK_NONE)
+            RemoveScrollIndicatorArrowPair(gTasks[taskId].tArrowTaskId);
+        Free((struct ListItem *)(GetWordTaskArg(taskId, tListPointerElemId)));
+        DestroyListMenuTask(gTasks[taskId].tMenuTaskId, NULL, NULL);
+        ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+        RemoveWindow(gTasks[taskId].tWindowId);
+        DestroyTask(taskId);
+    }
+}
+
+#undef tWindowId
+#undef tMenuTaskId
+#undef tArrowTaskId
+#undef tScrollOffset
+#undef tListPointerElemId

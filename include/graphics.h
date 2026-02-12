@@ -6512,4 +6512,7 @@ extern const u16 gFrontierFactoryMenu_Gfx[34 * TILE_SIZE_4BPP / 2];
 extern const u16 gFrontierFactoryMenu_Tilemap[];
 extern const u16 gFrontierFactoryMenu_Pal[];
 
+extern const u32 gBattleArenaJudgmentSymbolsGfx[];
+extern const u16 gBattleArenaJudgmentSymbolsPalette[];
+
 #endif //GUARD_GRAPHICS_H

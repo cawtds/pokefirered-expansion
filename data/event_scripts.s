@@ -2,6 +2,7 @@
 #include "config/battle.h"
 #include "constants/global.h"
 #include "constants/flags.h"
+#include "constants/battle_arena.h"
 #include "constants/battle_dome.h"
 #include "constants/battle_factory.h"
 #include "constants/battle_frontier.h"
@@ -577,6 +578,8 @@ gStdScriptsEnd::
 	.include "data/maps/BattleFrontier_Lounge9/scripts.inc"
 	.include "data/maps/ArtisanCave_B1F/scripts.inc"
 	.include "data/maps/ArtisanCave_1F/scripts.inc"
+
+	.include "data/scripts/battle_frontier.inc"
 	.include "data/scripts/battle_pike.inc"
 	.include "data/scripts/apprentice.inc"
 

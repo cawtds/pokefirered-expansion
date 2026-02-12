@@ -624,6 +624,15 @@ static const struct MenuAction sMultichoiceList_GoOnRetire[] =
     {gText_Retire},
 };
 
+static const struct MenuAction sMultichoiceList_BattleArenaRules[] =
+{
+    {gText_BattleRules},
+    {gText_JudgeMind},
+    {gText_JudgeSkill},
+    {gText_JudgeBody},
+    {gText_Exit},
+};
+
 
 static const struct MenuAction sMultichoiceList_Exit[] = {
     { gOtherText_Exit }
@@ -704,6 +713,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] = {
     [MULTI_GO_ON_REST_RETIRE]                                = MULTICHOICE(sMultichoiceList_GoOnRestRetire),
     [MULTI_GO_ON_RECORD_RETIRE]                              = MULTICHOICE(sMultichoiceList_GoOnRecordRetire),
     [MULTI_GO_ON_RETIRE]                                     = MULTICHOICE(sMultichoiceList_GoOnRetire),
+    [MULTI_BATTLE_ARENA_RULES]                               = MULTICHOICE(sMultichoiceList_BattleArenaRules),
 };
 
 // From Cool to Berries goes unused
