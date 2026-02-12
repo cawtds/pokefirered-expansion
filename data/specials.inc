@@ -484,4 +484,5 @@ gSpecials::
 	def_special TryStoreHeldItemsInPyramidBag
 	def_special ChooseItemsToTossFromPyramidBag
 	def_special GetBattlePyramidHint
+	def_special ShowMapNamePopup
 gSpecialsEnd::
