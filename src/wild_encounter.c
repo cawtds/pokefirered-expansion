@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle_debug.h"
+#include "battle_pike.h"
 #include "battle_setup.h"
 #include "event_data.h"
 #include "event_scripts.h"
@@ -22,6 +23,7 @@
 #include "constants/abilities.h"
 #include "constants/item.h"
 #include "constants/items.h"
+#include "constants/layouts.h"
 #include "constants/weather.h"
 
 #define MAX_ENCOUNTER_RATE 1600
@@ -447,7 +449,7 @@ static bool8 DoWildEncounterRateDiceRoll(u16 encounterRate)
     return FALSE;
 }
 
-static bool8 DoWildEncounterRateTest(u32 encounterRate, bool8 ignoreAbility)
+static bool8 WildEncounterCheck(u32 encounterRate, bool8 ignoreAbility)
 {
     encounterRate *= 16;
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
@@ -513,7 +515,7 @@ static u8 GetAbilityEncounterRateModType(void)
     return sWildEncounterData.abilityEffect;
 }
 
-static bool8 DoGlobalWildEncounterDiceRoll(void)
+static bool8 AllowWildCheckOnNewMetatile(void)
 {
     if ((Random() % 100) >= 60)
         return FALSE;
@@ -528,9 +530,9 @@ bool8 TryStandardWildLandEncounter(u16 headerId, u32 currMetatileAttrs, u16 prev
     GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_LAND, &season, &timeOfDay);
     if (gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo == NULL)
         return FALSE;
-    if (previousMetatileBehavior != ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR) && !DoGlobalWildEncounterDiceRoll())
+    if (previousMetatileBehavior != ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR) && !AllowWildCheckOnNewMetatile())
         return FALSE;
-    if (DoWildEncounterRateTest(gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo->encounterRate, FALSE) != TRUE)
+    if (WildEncounterCheck(gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo->encounterRate, FALSE) != TRUE)
     {
         AddToWildEncounterRateBuff(gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo->encounterRate);
         return FALSE;
@@ -575,9 +577,9 @@ bool8 TryStandardWildSurfEncounter(u16 headerId, u32 currMetatileAttrs, u16 prev
     GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_WATER, &season, &timeOfDay);
     if (gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].waterMonsInfo == NULL)
         return FALSE;
-    if (previousMetatileBehavior != ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR) && !DoGlobalWildEncounterDiceRoll())
+    if (previousMetatileBehavior != ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR) && !AllowWildCheckOnNewMetatile())
         return FALSE;
-    if (DoWildEncounterRateTest(gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].waterMonsInfo->encounterRate, FALSE) != TRUE)
+    if (WildEncounterCheck(gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].waterMonsInfo->encounterRate, FALSE) != TRUE)
     {
         AddToWildEncounterRateBuff(gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].waterMonsInfo->encounterRate);
         return FALSE;
@@ -626,7 +628,45 @@ bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetatileBehavior)
     headerId = GetCurrentMapWildMonHeaderId();
 
     if (headerId == HEADER_NONE)
+    {
+        enum Season season;
+        enum TimeOfDay timeOfDay;
+        u16 curMetatileBehavior = ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR);
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS)
+        {
+            headerId = GetBattlePikeWildMonHeaderId();
+            GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_WATER, &season, &timeOfDay);
+
+            if (previousMetatileBehavior != curMetatileBehavior && !AllowWildCheckOnNewMetatile())
+                return FALSE;
+            else if (WildEncounterCheck(gBattlePikeWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo->encounterRate, FALSE) != TRUE)
+                return FALSE;
+            else if (TryGenerateWildMon(gBattlePikeWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE) != TRUE)
+                return FALSE;
+            else if (!TryGenerateBattlePikeWildMon(TRUE))
+                return FALSE;
+
+            BattleSetup_StartBattlePikeWildBattle();
+            return TRUE;
+        }
+        // if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
+        // {
+        //     headerId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
+        //     GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_WATER, &season, &timeOfDay);
+
+        //     if (previousMetatileBehavior != curMetatileBehavior && !AllowWildCheckOnNewMetatile())
+        //         return FALSE;
+        //     else if (WildEncounterCheck(gBattlePyramidWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo->encounterRate, FALSE) != TRUE)
+        //         return FALSE;
+        //     else if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE) != TRUE)
+        //         return FALSE;
+
+        //     GenerateBattlePyramidWildMon();
+        //     BattleSetup_StartWildBattle();
+        //     return TRUE;
+        // }
         return FALSE;
+    }
 
     if (ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_ENCOUNTER_TYPE) == TILE_ENCOUNTER_LAND)
         return TryStandardWildLandEncounter(headerId, currMetatileAttrs, previousMetatileBehavior);
@@ -646,7 +686,7 @@ void RockSmashWildEncounter(void)
         gSpecialVar_Result = FALSE;
     else if (gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].rockSmashMonsInfo == NULL)
         gSpecialVar_Result = FALSE;
-    else if (DoWildEncounterRateTest(gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].rockSmashMonsInfo->encounterRate, TRUE) != TRUE)
+    else if (WildEncounterCheck(gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].rockSmashMonsInfo->encounterRate, TRUE) != TRUE)
         gSpecialVar_Result = FALSE;
     else if (TryGenerateWildMon(gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].rockSmashMonsInfo, WILD_AREA_ROCKS, WILD_CHECK_REPEL) == TRUE)
     {

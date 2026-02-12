@@ -62,7 +62,7 @@ enum {
 };
 
 // this file's functions
-// static void DoBattlePikeWildBattle(void);
+static void DoBattlePikeWildBattle(void);
 static void DoSafariBattle(void);
 static void DoGhostBattle(void);
 static void DoStandardWildBattle(bool32 isDouble);
@@ -222,10 +222,10 @@ void BattleSetup_StartDoubleWildBattle(void)
     DoStandardWildBattle(TRUE);
 }
 
-// void BattleSetup_StartBattlePikeWildBattle(void)
-// {
-//     DoBattlePikeWildBattle();
-// }
+void BattleSetup_StartBattlePikeWildBattle(void)
+{
+    DoBattlePikeWildBattle();
+}
 
 static void DoStandardWildBattle(bool32 isDouble)
 {
@@ -308,19 +308,19 @@ static void DoGhostBattle(void)
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
 }
 
-// static void DoBattlePikeWildBattle(void)
-// {
-//     LockPlayerFieldControls();
-//     FreezeObjectEvents();
-//     StopPlayerAvatar();
-//     gMain.savedCallback = CB2_EndWildBattle;
-//     gBattleTypeFlags = BATTLE_TYPE_PIKE;
-//     CreateBattleStartTask(GetWildBattleTransition(), 0);
-//     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
-//     IncrementGameStat(GAME_STAT_WILD_BATTLES);
-//     IncrementDailyWildBattles();
-//     TryUpdateGymLeaderRematchFromWild();
-// }
+static void DoBattlePikeWildBattle(void)
+{
+    LockPlayerFieldControls();
+    FreezeObjectEvents();
+    StopPlayerAvatar();
+    gMain.savedCallback = CB2_EndWildBattle;
+    gBattleTypeFlags = BATTLE_TYPE_PIKE;
+    CreateBattleStartTask(GetWildBattleTransition(), 0);
+    IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
+    IncrementGameStat(GAME_STAT_WILD_BATTLES);
+    // IncrementDailyWildBattles();
+    // TryUpdateGymLeaderRematchFromWild();
+}
 
 static void DoTrainerBattle(void)
 {
