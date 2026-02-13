@@ -496,4 +496,6 @@ gSpecials::
 	def_special SetBattleTowerLinkPlayerGfx
 	def_special LinkRetireStatusWithBattleTowerPartner
 	def_special BattleTowerReconnectLink
+	def_special ShowFrontierExchangeCornerItemIconWindow
+	def_special CloseFrontierExchangeCornerItemIconWindow
 gSpecialsEnd::
