@@ -3,6 +3,7 @@
 #include "quest_log.h"
 #include "list_menu.h"
 #include "load_save.h"
+#include "cable_club.h"
 #include "debug.h"
 #include "diploma.h"
 #include "script.h"
@@ -24,6 +25,7 @@
 #include "event_object_movement.h"
 #include "item.h"
 #include "item_icon.h"
+#include "link.h"
 #include "random.h"
 #include "mail.h"
 #include "help_system.h"
@@ -41,6 +43,7 @@
 #include "wallclock.h"
 #include "dynamic_placeholder_text_util.h"
 #include "constants/battle_pyramid.h"
+#include "constants/battle_tower.h"
 #include "constants/songs.h"
 #include "constants/items.h"
 #include "constants/maps.h"
@@ -67,6 +70,7 @@ static EWRAM_DATA u8 sBattlePointsWindowId = 0;
 static EWRAM_DATA u8 sFrontierExchangeCorner_ItemIconWindowId = 0;
 static EWRAM_DATA u8 sPCBoxToSendMon = 0;
 static EWRAM_DATA u8 sBrailleTextCursorSpriteID = 0;
+static EWRAM_DATA u32 sBattleTowerMultiBattleTypeFlags = 0;
 
 EWRAM_DATA u16 gScrollableMultichoice_ScrollOffset = 0;
 COMMON_DATA struct ListMenuTemplate gScrollableMultichoice_ListMenuTemplate = {0};
@@ -108,6 +112,7 @@ static void Task_CloseBattlePikeCurtain(u8);
 static void Task_MoveElevator(u8);
 static void MoveElevatorWindowLights(u16, bool8);
 static void Task_MoveElevatorWindowLights(u8);
+static void Task_LinkRetireStatusWithBattleTowerPartner(u8);
 
 static u8 *const sStringVarPtrs[] = {
     gStringVar1,
@@ -3311,6 +3316,166 @@ static void Task_MoveElevatorWindowLights(u8 taskId)
 #undef tTimer
 #undef tDescending
 #undef tTotalMoves
+
+void SetBattleTowerLinkPlayerGfx(void)
+{
+    u8 i;
+    for (i = 0; i < 2; i++)
+    {
+        if (gLinkPlayers[i].gender == MALE)
+            VarSet(VAR_OBJ_GFX_ID_F - i, OBJ_EVENT_GFX_RED_NORMAL);
+        else
+            VarSet(VAR_OBJ_GFX_ID_F - i, OBJ_EVENT_GFX_GREEN_NORMAL);
+    }
+}
+
+
+#define tState data[0]
+
+void BattleTowerReconnectLink(void)
+{
+    // Save battle type, restored at end
+    // of Task_LinkRetireStatusWithBattleTowerPartner
+    sBattleTowerMultiBattleTypeFlags = gBattleTypeFlags;
+    gBattleTypeFlags = 0;
+
+    if (!gReceivedRemoteLinkPlayers)
+        CreateTask(Task_ReconnectWithLinkPlayers, 5);
+}
+
+void LinkRetireStatusWithBattleTowerPartner(void)
+{
+    CreateTask(Task_LinkRetireStatusWithBattleTowerPartner, 5);
+}
+
+// Communicate with a Battle Tower link partner to tell them
+// whether or not the player chose to continue or retire,
+// and determine what the partner chose to do
+// gSpecialVar_0x8004: Player's choice
+// gSpecialVar_0x8005: Partner's choice (read from gBlockRecvBuffer[1][0])
+static void Task_LinkRetireStatusWithBattleTowerPartner(u8 taskId)
+{
+    switch (gTasks[taskId].tState)
+    {
+    case 0:
+        if (!FuncIsActiveTask(Task_ReconnectWithLinkPlayers))
+            gTasks[taskId].tState++;
+        break;
+    case 1:
+        if (IsLinkTaskFinished() == TRUE)
+        {
+            if (GetMultiplayerId() == 0)
+            {
+                // Player is link leader, skip sending data
+                gTasks[taskId].tState++;
+            }
+            else
+            {
+                // Send value of gSpecialVar_0x8004 to leader
+                // Will either be BATTLE_TOWER_LINK_CONTINUE or BATTLE_TOWER_LINK_RETIRE
+                SendBlock(BitmaskAllOtherLinkPlayers(), &gSpecialVar_0x8004, sizeof(gSpecialVar_0x8004));
+                gTasks[taskId].tState++;
+            }
+        }
+        break;
+    case 2:
+        if (GetBlockReceivedStatus() & 2)
+        {
+            if (GetMultiplayerId() == 0)
+            {
+                // Player is leader, read partner's choice
+                // and determine if play should continue
+                gSpecialVar_0x8005 = gBlockRecvBuffer[1][0];
+                ResetBlockReceivedFlag(1);
+
+                if (gSpecialVar_0x8004 == BATTLE_TOWER_LINK_RETIRE
+                 && gSpecialVar_0x8005 == BATTLE_TOWER_LINK_RETIRE)
+                    gSpecialVar_Result = BATTLE_TOWER_LINKSTAT_BOTH_RETIRE;
+                else if (gSpecialVar_0x8004 == BATTLE_TOWER_LINK_CONTINUE
+                      && gSpecialVar_0x8005 == BATTLE_TOWER_LINK_RETIRE)
+                    gSpecialVar_Result = BATTLE_TOWER_LINKSTAT_MEMBER_RETIRE;
+                else if (gSpecialVar_0x8004 == BATTLE_TOWER_LINK_RETIRE
+                      && gSpecialVar_0x8005 == BATTLE_TOWER_LINK_CONTINUE)
+                    gSpecialVar_Result = BATTLE_TOWER_LINKSTAT_LEADER_RETIRE;
+                else
+                    gSpecialVar_Result = BATTLE_TOWER_LINKSTAT_CONTINUE;
+            }
+            gTasks[taskId].tState++;
+        }
+        break;
+    case 3:
+        if (IsLinkTaskFinished() == TRUE)
+        {
+            if (GetMultiplayerId() != 0)
+            {
+                // Player is not link leader, wait for leader's response
+                gTasks[taskId].tState++;
+            }
+            else
+            {
+                // Send whether or not play should continue
+                SendBlock(BitmaskAllOtherLinkPlayers(), &gSpecialVar_Result, sizeof(gSpecialVar_Result));
+                gTasks[taskId].tState++;
+            }
+        }
+        break;
+    case 4:
+        if (GetBlockReceivedStatus() & 1)
+        {
+            if (GetMultiplayerId() != 0)
+            {
+                // Player is not link leader, read leader's response
+                gSpecialVar_Result = gBlockRecvBuffer[0][0];
+                ResetBlockReceivedFlag(0);
+                gTasks[taskId].tState++;
+            }
+            else
+            {
+                gTasks[taskId].tState++;
+            }
+        }
+        break;
+    case 5:
+        // Print message if partner chose to retire (and player didn't)
+        if (GetMultiplayerId() == 0)
+        {
+            if (gSpecialVar_Result == BATTLE_TOWER_LINKSTAT_MEMBER_RETIRE)
+                ShowFieldAutoScrollMessage(gText_YourPartnerHasRetired);
+        }
+        else
+        {
+            if (gSpecialVar_Result == BATTLE_TOWER_LINKSTAT_LEADER_RETIRE)
+                ShowFieldAutoScrollMessage(gText_YourPartnerHasRetired);
+        }
+        gTasks[taskId].tState++;
+        break;
+    case 6:
+        if (!IsTextPrinterActiveOnWindow(0))
+            gTasks[taskId].tState++;
+        break;
+    case 7:
+        if (IsLinkTaskFinished() == TRUE)
+        {
+            SetLinkStandbyCallback();
+            gTasks[taskId].tState++;
+        }
+        break;
+    case 8:
+        if (IsLinkTaskFinished() == TRUE)
+            gTasks[taskId].tState++;
+        break;
+    case 9:
+        if (gWirelessCommType == 0)
+            SetCloseLinkCallback();
+
+        gBattleTypeFlags = sBattleTowerMultiBattleTypeFlags;
+        ScriptContext_Enable();
+        DestroyTask(taskId);
+        break;
+    }
+}
+
+#undef tState
 
 void ShowNatureGirlMessage(void)
 {

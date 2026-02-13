@@ -493,4 +493,7 @@ gSpecials::
 	def_special InterviewAfter
 	def_special MoveElevator
 	def_special BufferBattleTowerElevatorFloors
+	def_special SetBattleTowerLinkPlayerGfx
+	def_special LinkRetireStatusWithBattleTowerPartner
+	def_special BattleTowerReconnectLink
 gSpecialsEnd::
