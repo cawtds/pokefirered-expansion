@@ -312,19 +312,19 @@
 #define METATILE_BattleFrontierOutsideEast_Door_Sliding     0x297
 
 // gTileset_BattleFrontierBuilding
-#define METATILE_BattleFrontierBuilding_Door_Elevator 0x289
-#define METATILE_BattleFrontierBuilding_Door_MultiCorridor 0x2E4
-#define METATILE_BattleFrontierBuilding_CorridorOpenDoor_Bottom  0x20F
-#define METATILE_BattleFrontierBuilding_CorridorOpenDoor_Top     0x207
-#define METATILE_BattleFrontierBuilding_Elevator_Bottom0         0x339
-#define METATILE_BattleFrontierBuilding_Elevator_Bottom1         0x33A
-#define METATILE_BattleFrontierBuilding_Elevator_Bottom2         0x33B
-#define METATILE_BattleFrontierBuilding_Elevator_Mid0            0x331
-#define METATILE_BattleFrontierBuilding_Elevator_Mid1            0x332
-#define METATILE_BattleFrontierBuilding_Elevator_Mid2            0x333
-#define METATILE_BattleFrontierBuilding_Elevator_Top0            0x329
-#define METATILE_BattleFrontierBuilding_Elevator_Top1            0x32A
-#define METATILE_BattleFrontierBuilding_Elevator_Top2            0x32B
+#define METATILE_BattleFrontierBuilding_Door_Elevator            0x294
+#define METATILE_BattleFrontierBuilding_Door_MultiCorridor       0x2EF
+#define METATILE_BattleFrontierBuilding_CorridorOpenDoor_Top     0x280
+#define METATILE_BattleFrontierBuilding_CorridorOpenDoor_Bottom  0x281
+#define METATILE_BattleFrontierBuilding_Elevator_Top0            0x282
+#define METATILE_BattleFrontierBuilding_Elevator_Top1            0x283
+#define METATILE_BattleFrontierBuilding_Elevator_Top2            0x284
+#define METATILE_BattleFrontierBuilding_Elevator_Mid0            0x285
+#define METATILE_BattleFrontierBuilding_Elevator_Mid1            0x286
+#define METATILE_BattleFrontierBuilding_Elevator_Mid2            0x287
+#define METATILE_BattleFrontierBuilding_Elevator_Bottom0         0x288
+#define METATILE_BattleFrontierBuilding_Elevator_Bottom1         0x289
+#define METATILE_BattleFrontierBuilding_Elevator_Bottom2         0x28A
 
 // gTileset_BattleArena
 #define METATILE_BattleArena_Door 0x291
