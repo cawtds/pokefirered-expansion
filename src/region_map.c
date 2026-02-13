@@ -520,7 +520,7 @@ ALIGNED(4) const u8 sTextColor_Red[]   = {TEXT_COLOR_TRANSPARENT, TEXT_DYNAMIC_C
 static const u8 *const sTextColorTable[] = {
     [MAPSECTYPE_VISITED - 2]     = sTextColor_Green,
     [MAPSECTYPE_NOT_VISITED - 2] = sTextColor_Red,
-    [MAPSECTYPE_BATTLE_FRONTIER - 2] = sTextColor_Green,
+    [MAPSECTYPE_BATTLE_FRONTIER - 2] = sTextColor_White,
 };
 
 static const u8 sSeviiMapsecs[3][30] = {
@@ -2989,7 +2989,7 @@ static u8 GetMapsecType(u8 mapsec)
     case MAPSEC_ROUTE_10_POKECENTER:
         return FlagGet(FLAG_WORLD_MAP_ROUTE10_POKEMON_CENTER_1F) ? MAPSECTYPE_VISITED : MAPSECTYPE_NOT_VISITED;
     case MAPSEC_BATTLE_FRONTIER:
-        return FlagGet(FLAG_WORLD_MAP_BATTLE_FRONTIER) ? MAPSECTYPE_BATTLE_FRONTIER : MAPSECTYPE_NONE;
+        return FlagGet(FLAG_WORLD_MAP_BATTLE_FRONTIER) ? MAPSECTYPE_VISITED : MAPSECTYPE_NOT_VISITED;
     case MAPSEC_NONE:
         return MAPSECTYPE_NONE;
     default:
@@ -3065,6 +3065,8 @@ static u8 GetDungeonMapsecType(u8 mapsec)
         return FlagGet(FLAG_WORLD_MAP_SEVEN_ISLAND_SEVAULT_CANYON_TANOBY_KEY) ? MAPSECTYPE_VISITED : MAPSECTYPE_NOT_VISITED;
     case MAPSEC_BIRTH_ISLAND_FRLG:
         return FlagGet(FLAG_WORLD_MAP_BIRTH_ISLAND_EXTERIOR) ? MAPSECTYPE_VISITED : MAPSECTYPE_NOT_VISITED;
+    case MAPSEC_ARTISAN_CAVE:
+        return FlagGet(FLAG_WORLD_ARTISAN_CAVE) ? MAPSECTYPE_VISITED : MAPSECTYPE_NOT_VISITED;
     default:
         return MAPSECTYPE_ROUTE;
     }
@@ -3562,6 +3564,7 @@ static void CreateFlyIcons(void)
                 {
                     if (GetMapsecType(GetSelectedMapSection(i, LAYER_MAP, y, x)) == MAPSECTYPE_VISITED)
                     {
+                        DebugPrintfLevel(MGBA_LOG_ERROR, "Creating fly icon for map %d, x %d, y %d", i, x, y);
                         CreateFlyIconSprite(i, numIcons, x, y, numIcons + 10, 10);
                         numIcons++;
                     }
