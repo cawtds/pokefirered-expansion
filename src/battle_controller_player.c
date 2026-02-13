@@ -2119,21 +2119,22 @@ static void PlayerHandleChooseAction(u32 battler)
     PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, battler, gBattlerPartyIndexes[battler]);
     BattleStringExpandPlaceholdersToDisplayedString(gText_WhatWillPkmnDo);
 
-    if (B_SHOW_PARTNER_TARGET && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && IsBattlerAlive(B_POSITION_PLAYER_RIGHT))
+    enum BattlerId partner = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
+    if (B_SHOW_PARTNER_TARGET && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && IsBattlerAlive(partner))
     {
         StringCopy(gStringVar1, COMPOUND_STRING("Partner will use:\n"));
-        enum Move move = GetChosenMoveFromPosition(B_POSITION_PLAYER_RIGHT);
+        enum Move move = GetBattlerChosenMove(partner);
         StringAppend(gStringVar1, GetMoveName(move));
-        enum MoveTarget moveTarget = GetBattlerMoveTargetType(B_POSITION_PLAYER_RIGHT, move);
+        enum MoveTarget moveTarget = GetBattlerMoveTargetType(partner, move);
         if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART)
         {
-            if (gAiBattleData->chosenTarget[B_POSITION_PLAYER_RIGHT] == B_POSITION_OPPONENT_LEFT)
+            if (gAiBattleData->chosenTarget[partner] == B_POSITION_OPPONENT_LEFT)
                 StringAppend(gStringVar1, COMPOUND_STRING(" -{UP_ARROW}"));
-            else if (gAiBattleData->chosenTarget[B_POSITION_PLAYER_RIGHT] == B_POSITION_OPPONENT_RIGHT)
+            else if (gAiBattleData->chosenTarget[partner] == B_POSITION_OPPONENT_RIGHT)
                 StringAppend(gStringVar1, COMPOUND_STRING(" {UP_ARROW}-"));
-            else if (gAiBattleData->chosenTarget[B_POSITION_PLAYER_RIGHT] == B_POSITION_PLAYER_LEFT)
+            else if (gAiBattleData->chosenTarget[partner] == B_POSITION_PLAYER_LEFT)
                 StringAppend(gStringVar1, COMPOUND_STRING(" {DOWN_ARROW}-"));
-            else if (gAiBattleData->chosenTarget[B_POSITION_PLAYER_RIGHT] == B_POSITION_PLAYER_RIGHT)
+            else if (gAiBattleData->chosenTarget[partner] == B_POSITION_PLAYER_RIGHT)
                 StringAppend(gStringVar1, COMPOUND_STRING(" -{DOWN_ARROW}"));
         }
         else if (moveTarget == TARGET_USER_AND_ALLY)
