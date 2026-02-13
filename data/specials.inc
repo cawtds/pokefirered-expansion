@@ -491,4 +491,6 @@ gSpecials::
 	def_special TrySetBattleTowerLinkType
 	def_special InterviewBefore
 	def_special InterviewAfter
+	def_special MoveElevator
+	def_special BufferBattleTowerElevatorFloors
 gSpecialsEnd::

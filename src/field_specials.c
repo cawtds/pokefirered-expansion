@@ -44,6 +44,7 @@
 #include "constants/songs.h"
 #include "constants/items.h"
 #include "constants/maps.h"
+#include "constants/metatile_labels.h"
 #include "constants/region_map_sections.h"
 #include "constants/moves.h"
 #include "constants/menu.h"
@@ -52,6 +53,10 @@
 #include "constants/metatile_labels.h"
 
 #define TAG_ITEM_ICON 5500
+
+#define ELEVATOR_WINDOW_WIDTH  3
+#define ELEVATOR_WINDOW_HEIGHT 3
+#define ELEVATOR_LIGHT_STAGES  3
 
 static EWRAM_DATA u8 sTutorMoveAndElevatorWindowId = 0;
 static EWRAM_DATA u16 sElevatorScroll = 0;
@@ -100,6 +105,9 @@ static void ShowFrontierExchangeCornerItemIcon(enum Item);
 static void FillFrontierExchangeCornerWindowAndItemIcon(enum ScrollMulti, u16);
 static void HideFrontierExchangeCornerItemIcon(enum ScrollMulti);
 static void Task_CloseBattlePikeCurtain(u8);
+static void Task_MoveElevator(u8);
+static void MoveElevatorWindowLights(u16, bool8);
+static void Task_MoveElevatorWindowLights(u8);
 
 static u8 *const sStringVarPtrs[] = {
     gStringVar1,
@@ -3098,6 +3106,211 @@ void ShowFrontierManiacMessage(void)
 
     ShowFieldMessage(sFrontierManiacMessages[facility][i]);
 }
+
+static const u16 sElevatorWindowTiles_Ascending[ELEVATOR_WINDOW_HEIGHT][ELEVATOR_LIGHT_STAGES] =
+{
+    {
+        METATILE_BattleFrontierBuilding_Elevator_Top0,
+        METATILE_BattleFrontierBuilding_Elevator_Top1,
+        METATILE_BattleFrontierBuilding_Elevator_Top2
+    },
+    {
+        METATILE_BattleFrontierBuilding_Elevator_Mid0,
+        METATILE_BattleFrontierBuilding_Elevator_Mid1,
+        METATILE_BattleFrontierBuilding_Elevator_Mid2
+    },
+    {
+        METATILE_BattleFrontierBuilding_Elevator_Bottom0,
+        METATILE_BattleFrontierBuilding_Elevator_Bottom1,
+        METATILE_BattleFrontierBuilding_Elevator_Bottom2
+    },
+};
+
+static const u16 sElevatorWindowTiles_Descending[ELEVATOR_WINDOW_HEIGHT][ELEVATOR_LIGHT_STAGES] =
+{
+    {
+        METATILE_BattleFrontierBuilding_Elevator_Top0,
+        METATILE_BattleFrontierBuilding_Elevator_Top2,
+        METATILE_BattleFrontierBuilding_Elevator_Top1
+    },
+    {
+        METATILE_BattleFrontierBuilding_Elevator_Mid0,
+        METATILE_BattleFrontierBuilding_Elevator_Mid2,
+        METATILE_BattleFrontierBuilding_Elevator_Mid1
+    },
+    {
+        METATILE_BattleFrontierBuilding_Elevator_Bottom0,
+        METATILE_BattleFrontierBuilding_Elevator_Bottom2,
+        METATILE_BattleFrontierBuilding_Elevator_Bottom1
+    },
+};
+
+// gSpecialVar_0x8005 and 0x8006 here are used by MoveElevator
+void BufferBattleTowerElevatorFloors(void)
+{
+    static const u16 sBattleTowerStreakThresholds[] = {
+        7, 14, 21, 28, 35, 49, 63, 77, 91, 0
+    };
+
+    u8 i;
+    u16 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+
+    if (battleMode == FRONTIER_MODE_MULTIS && !FlagGet(FLAG_CHOSEN_MULTI_BATTLE_NPC_PARTNER))
+    {
+        gSpecialVar_0x8005 = 5;
+        gSpecialVar_0x8006 = 4;
+        return;
+    }
+
+    for (i = 0; i < ARRAY_COUNT(sBattleTowerStreakThresholds) - 1; i++)
+    {
+        if (sBattleTowerStreakThresholds[i] > gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode])
+        {
+            gSpecialVar_0x8005 = 4;
+            gSpecialVar_0x8006 = i + 5;
+            return;
+        }
+    }
+
+    gSpecialVar_0x8005 = 4;
+    gSpecialVar_0x8006 = 12;
+}
+
+// Task data for Task_MoveElevator
+#define tTimer       data[1]
+#define tMoveCounter data[2]
+#define tVerticalPan data[4]
+#define tTotalMoves  data[5]
+#define tDescending  data[6]
+
+// The maximum considered difference between floors.
+// Elevator trips with a larger difference are treated the same
+// (i.e. traveling 9 floors and 200 floors would take the same amount of time).
+#define MAX_ELEVATOR_TRIP 9
+
+// gSpecialVar_0x8005 here is expected to be the current floor number, and
+// gSpecialVar_0x8006 is expected to be the destination floor number.
+void MoveElevator(void)
+{
+    static const u8 sElevatorTripLength[MAX_ELEVATOR_TRIP] = { 8, 16, 24, 32, 38, 46, 52, 56, 57 };
+
+    s16 *data = gTasks[CreateTask(Task_MoveElevator, 9)].data;
+    u16 floorDelta;
+
+    tTimer = 0;
+    tMoveCounter = 0;
+    tVerticalPan = 1;
+
+    if (gSpecialVar_0x8005 > gSpecialVar_0x8006)
+    {
+        floorDelta = gSpecialVar_0x8005 - gSpecialVar_0x8006;
+        tDescending = TRUE;
+    }
+    else
+    {
+        floorDelta = gSpecialVar_0x8006 - gSpecialVar_0x8005;
+        tDescending = FALSE;
+    }
+
+    if (floorDelta > MAX_ELEVATOR_TRIP - 1)
+        floorDelta = MAX_ELEVATOR_TRIP - 1;
+
+    tTotalMoves = sElevatorTripLength[floorDelta];
+
+    SetCameraPanningCallback(NULL);
+    MoveElevatorWindowLights(floorDelta, tDescending);
+    PlaySE(SE_ELEVATOR);
+}
+
+static void Task_MoveElevator(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    tTimer++;
+    if (tTimer % 3 == 0)
+    {
+        tTimer = 0;
+        tMoveCounter++;
+        tVerticalPan = -tVerticalPan;
+        SetCameraPanning(0, tVerticalPan);
+
+        if (tMoveCounter == tTotalMoves)
+        {
+            // Arrived at floor
+            PlaySE(SE_DING_DONG);
+            DestroyTask(taskId);
+            ScriptContext_Enable();
+            InstallCameraPanAheadCallback();
+        }
+    }
+}
+
+#undef tTimer
+#undef tMoveCounter
+#undef tVerticalPan
+#undef tTotalMoves
+#undef tDescending
+
+
+// Task data for Task_MoveElevatorWindowLights
+#define tMoveCounter data[0]
+#define tTimer       data[1]
+#define tDescending  data[2]
+#define tTotalMoves  data[3]
+
+static void MoveElevatorWindowLights(u16 floorDelta, bool8 descending)
+{
+    static const u8 sElevatorLightCycles[MAX_ELEVATOR_TRIP] = { 3, 6, 9, 12, 15, 18, 21, 24, 27 };
+
+    if (FuncIsActiveTask(Task_MoveElevatorWindowLights) != TRUE)
+    {
+        u8 taskId = CreateTask(Task_MoveElevatorWindowLights, 8);
+        gTasks[taskId].tMoveCounter = 0;
+        gTasks[taskId].tTimer = 0;
+        gTasks[taskId].tDescending = descending;
+        gTasks[taskId].tTotalMoves = sElevatorLightCycles[floorDelta];
+    }
+}
+
+static void Task_MoveElevatorWindowLights(u8 taskId)
+{
+    u8 x, y;
+    s16 *data = gTasks[taskId].data;
+
+    if (tTimer == 6)
+    {
+        tMoveCounter++;
+
+        if (!tDescending)
+        {
+            // Ascending
+            for (y = 0; y < ELEVATOR_WINDOW_HEIGHT; y++)
+            {
+                for (x = 0; x < ELEVATOR_WINDOW_WIDTH; x++)
+                    MapGridSetMetatileIdAt(x + MAP_OFFSET + 1, y + MAP_OFFSET, sElevatorWindowTiles_Ascending[y][tMoveCounter % ELEVATOR_LIGHT_STAGES] | MAPGRID_IMPASSABLE);
+            }
+        }
+        else
+        {
+            // Descending
+            for (y = 0; y < ELEVATOR_WINDOW_HEIGHT; y++)
+            {
+                for (x = 0; x < ELEVATOR_WINDOW_WIDTH; x++)
+                    MapGridSetMetatileIdAt(x + MAP_OFFSET + 1, y + MAP_OFFSET, sElevatorWindowTiles_Descending[y][tMoveCounter % ELEVATOR_LIGHT_STAGES] | MAPGRID_IMPASSABLE);
+            }
+        }
+        DrawWholeMapView();
+        tTimer = 0;
+        if (tMoveCounter == tTotalMoves)
+            DestroyTask(taskId);
+    }
+    tTimer++;
+}
+
+#undef tMoveCounter
+#undef tTimer
+#undef tDescending
+#undef tTotalMoves
 
 void ShowNatureGirlMessage(void)
 {
