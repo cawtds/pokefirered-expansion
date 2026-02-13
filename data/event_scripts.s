@@ -578,7 +578,6 @@ gStdScriptsEnd::
 	.include "data/maps/BattleFrontier_Lounge6/scripts.inc"
 	.include "data/maps/BattleFrontier_Lounge7/scripts.inc"
 	.include "data/maps/BattleFrontier_Lounge8/scripts.inc"
-	.include "data/maps/BattleFrontier_Lounge9/scripts.inc"
 	.include "data/maps/ArtisanCave_B1F/scripts.inc"
 	.include "data/maps/ArtisanCave_1F/scripts.inc"
 
