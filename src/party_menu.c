@@ -3994,7 +3994,7 @@ static void Task_HandleSendMailToPCYesNoInput(u8 taskId)
     switch (Menu_ProcessInputNoWrapClearOnChoose())
     {
     case 0: // Yes, send to PC
-        if (TakeMailFromMon2(&gPlayerParty[gPartyMenu.slotId]) != 0xFF)
+        if (TakeMailFromMonAndSave(&gPlayerParty[gPartyMenu.slotId]) != 0xFF)
         {
             DisplayPartyMenuMessage(gText_MailSentToPC, FALSE);
             gTasks[taskId].func = Task_UpdateHeldItemSprite;

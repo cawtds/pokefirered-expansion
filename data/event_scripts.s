@@ -1269,36 +1269,6 @@ EventScript_DelayedLookAround::
 	.include "data/scripts/pc_transfer.inc"
 	.include "data/scripts/berry_tree.inc"
 
-EventScript_GetInGameTradeSpeciesInfo::
-	copyvar VAR_0x8004, VAR_0x8008
-	specialvar VAR_RESULT, GetInGameTradeSpeciesInfo
-	copyvar VAR_0x8009, VAR_RESULT
-	return
-
-EventScript_ChooseMonForInGameTrade::
-	special ChoosePartyMon
-	waitstate
-	lock
-	faceplayer
-	copyvar VAR_0x800A, VAR_0x8004
-	return
-
-EventScript_GetInGameTradeSpecies::
-	copyvar VAR_0x8005, VAR_0x800A
-	specialvar VAR_RESULT, GetTradeSpecies
-	copyvar VAR_0x800B, VAR_RESULT
-	return
-
-EventScript_DoInGameTrade::
-	copyvar VAR_0x8004, VAR_0x8008
-	copyvar VAR_0x8005, VAR_0x800A
-	special CreateInGameTradePokemon
-	special DoInGameTradeScene
-	waitstate
-	lock
-	faceplayer
-	return
-
 EventScript_VsSeekerChargingDone::
 	special VsSeekerFreezeObjectsAfterChargeComplete
 	waitstate

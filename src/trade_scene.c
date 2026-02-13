@@ -1074,11 +1074,23 @@ static void TradeMons(u8 playerPartyIdx, u8 partnerPartyIdx)
     if (!GetMonData(playerMon, MON_DATA_IS_EGG))
         SetMonData(playerMon, MON_DATA_FRIENDSHIP, &friendship);
 
-    // Associate your partner's mail with the Pokemon they sent over.
     if (partnerMail != MAIL_NONE)
-        GiveMailToMon2(playerMon, &gLinkPartnerMail[partnerMail]);
+    {
+        if (playerPartyIdx == PC_MON_CHOSEN)
+        {
+            //TODO: add message explaining mail has been send to PC OR couldn't be saved
+            SaveMailToPC(&gLinkPartnerMail[partnerMail]);
+            TakeMailFromMon(playerMon);
+        }
+        else
+        {
+            GiveMailToMon2(playerMon, &gLinkPartnerMail[partnerMail]);
+        }
+    }
 
     UpdatePokedexForReceivedMon(playerPartyIdx);
+    if (playerPartyIdx == PC_MON_CHOSEN)
+        CopyMonToPC(playerMon);
     if (gReceivedRemoteLinkPlayers)
         TryEnableNationalDexFromLinkPartner();
 }
@@ -1244,7 +1256,7 @@ static void TradeBufferOTnameAndNicknames(void)
     }
     else
     {
-        inGameTrade = &sInGameTrades[gSpecialVar_0x8004];
+        inGameTrade = &sInGameTrades[gSpecialVar_0x8005];
         StringCopy(gStringVar1, inGameTrade->otName);
         StringCopy_Nickname(gStringVar3, inGameTrade->nickname);
         if(gSpecialVar_0x8004 == PC_MON_CHOSEN)
