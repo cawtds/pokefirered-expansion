@@ -14,7 +14,10 @@ void InitTilesetAnim_SilphCo(void);
 void InitTilesetAnim_MtEmber(void);
 
 void InitTilesetAnim_BattleFrontierOutside(void);
+void InitTilesetAnim_BattleFrontierInside(void);
 void InitTilesetAnim_BattleFrontierOutsideWest(void);
 void InitTilesetAnim_BattleFrontierOutsideEast(void);
+void InitTilesetAnim_BattleDome(void);
+void InitTilesetAnim_BattlePyramid(void);
 
 #endif // GUARD_TILESET_ANIMS_H
