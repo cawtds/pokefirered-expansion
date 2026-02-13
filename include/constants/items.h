@@ -1057,7 +1057,7 @@ enum __attribute__((packed)) Item
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations
 // Its icon is defined at ITEMS_COUNT as the "return to field" arrow
-#define ITEM_LIST_END 0xFFFF
+#define ITEM_LIST_END ITEM_FIELD_ARROW
 
 #if B_CONFUSE_BERRIES_HEAL >= GEN_8
     #define CONFUSE_BERRY_HEAL_FRACTION 3

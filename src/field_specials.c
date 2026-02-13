@@ -86,10 +86,10 @@ static void Task_ElevatorShake(u8 taskId);
 static void AnimateElevatorWindowView(u16 nfloors, bool8 direction);
 static void Task_AnimateElevatorWindowView(u8 taskId);
 static void Task_CreateScriptListMenu(u8 taskId);
-static void CreateScriptListMenu(void);
-static void ScriptListMenuMoveCursorFunction(s32 nothing, bool8 is, struct ListMenu * used);
-static void Task_ListMenuHandleInput(u8 taskId);
-static void Task_DestroyListMenu(u8 taskId);
+static void InitScrollableMultichoice(void);
+static void ScrollableMultichoice_MoveCursor(s32 nothing, bool8 is, struct ListMenu * used);
+static void ScrollableMultichoice_ProcessInput(u8 taskId);
+static void CloseScrollableMultichoice(u8 taskId);
 static void Task_SuspendListMenu(u8 taskId);
 static void Task_RedrawScrollArrowsAndWaitInput(u8 taskId);
 static void Task_CreateMenuRemoveScrollIndicatorArrowPair(u8 taskId);
@@ -1575,7 +1575,7 @@ static void Task_CreateScriptListMenu(u8 taskId)
     FillFrontierExchangeCornerWindowAndItemIcon(task->tScrollMultiId, 0);
     ShowBattleFrontierTutorWindow(task->tScrollMultiId, 0);
     sListMenuItems = AllocZeroed(task->data[1] * sizeof(struct ListMenuItem));
-    CreateScriptListMenu();
+    InitScrollableMultichoice();
     mwidth = 0;
     for (i = 0; i < task->data[1]; i++)
     {
@@ -1598,13 +1598,13 @@ static void Task_CreateScriptListMenu(u8 taskId)
     task->data[14] = ListMenuInit(&gScrollableMultichoice_ListMenuTemplate, task->data[7], task->data[8]);
     PutWindowTilemap(task->data[13]);
     CopyWindowToVram(task->data[13], COPYWIN_FULL);
-    gTasks[taskId].func = Task_ListMenuHandleInput;
+    gTasks[taskId].func = ScrollableMultichoice_ProcessInput;
 }
 
-static void CreateScriptListMenu(void)
+static void InitScrollableMultichoice(void)
 {
     gScrollableMultichoice_ListMenuTemplate.items = sListMenuItems;
-    gScrollableMultichoice_ListMenuTemplate.moveCursorFunc = ScriptListMenuMoveCursorFunction;
+    gScrollableMultichoice_ListMenuTemplate.moveCursorFunc = ScrollableMultichoice_MoveCursor;
     gScrollableMultichoice_ListMenuTemplate.itemPrintFunc = NULL;
     gScrollableMultichoice_ListMenuTemplate.totalItems = 1;
     gScrollableMultichoice_ListMenuTemplate.maxShowed = 1;
@@ -1623,12 +1623,12 @@ static void CreateScriptListMenu(void)
     gScrollableMultichoice_ListMenuTemplate.cursorKind = 0;
 }
 
-static void ScriptListMenuMoveCursorFunction(s32 nothing, bool8 is, struct ListMenu * used)
+static void ScrollableMultichoice_MoveCursor(s32 nothing, bool8 is, struct ListMenu * used)
 {
     u8 taskId;
     struct Task *task;
     PlaySE(SE_SELECT);
-    taskId = FindTaskIdByFunc(Task_ListMenuHandleInput);
+    taskId = FindTaskIdByFunc(ScrollableMultichoice_ProcessInput);
     if (taskId != TASK_NONE)
     {
         u16 selection;
@@ -1642,7 +1642,7 @@ static void ScriptListMenuMoveCursorFunction(s32 nothing, bool8 is, struct ListM
     }
 }
 
-static void Task_ListMenuHandleInput(u8 taskId)
+static void ScrollableMultichoice_ProcessInput(u8 taskId)
 {
     s32 input;
     struct Task *task;
@@ -1657,14 +1657,14 @@ static void Task_ListMenuHandleInput(u8 taskId)
     case -2:
         gSpecialVar_Result = 0x7F;
         PlaySE(SE_SELECT);
-        Task_DestroyListMenu(taskId);
+        CloseScrollableMultichoice(taskId);
         break;
     default:
         gSpecialVar_Result = input;
         PlaySE(SE_SELECT);
         if (task->data[6] == 0 || input == task->data[1] - 1)
         {
-            Task_DestroyListMenu(taskId);
+            CloseScrollableMultichoice(taskId);
         }
         else
         {
@@ -1676,9 +1676,11 @@ static void Task_ListMenuHandleInput(u8 taskId)
     }
 }
 
-static void Task_DestroyListMenu(u8 taskId)
+static void CloseScrollableMultichoice(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
+
+    HideFrontierExchangeCornerItemIcon(task->tScrollMultiId);
     Task_ListMenuRemoveScrollIndicatorArrowPair(taskId);
     DestroyListMenuTask(task->data[14], NULL, NULL);
     Free(sListMenuItems);
@@ -1717,7 +1719,7 @@ static void Task_RedrawScrollArrowsAndWaitInput(u8 taskId)
 {
     LockPlayerFieldControls();
     Task_CreateMenuRemoveScrollIndicatorArrowPair(taskId);
-    gTasks[taskId].func = Task_ListMenuHandleInput;
+    gTasks[taskId].func = ScrollableMultichoice_ProcessInput;
 }
 
 static void Task_CreateMenuRemoveScrollIndicatorArrowPair(u8 taskId)
