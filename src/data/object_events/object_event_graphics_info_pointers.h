@@ -23,6 +23,7 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SittingBoy;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Lass;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Woman1;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BattleGirl;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RichBoy;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Man;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Rocker;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_FatMan;
@@ -333,5 +334,6 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_SUDOWOODO] =                &gObjectEventGraphicsInfo_Sudowoodo,
     [OBJ_EVENT_GFX_WINGULL] =                  &gObjectEventGraphicsInfo_Wingull,
     [OBJ_EVENT_GFX_ZIGZAGOON_2] =              &gObjectEventGraphicsInfo_Zigzagoon,
+    [OBJ_EVENT_GFX_RICH_BOY] =                 &gObjectEventGraphicsInfo_RichBoy,
     [OBJ_EVENT_GFX_STEVEN] =                   &gObjectEventGraphicsInfo_Steven,
 };
