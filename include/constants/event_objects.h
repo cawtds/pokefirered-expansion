@@ -164,6 +164,7 @@
 
 #define NUM_OBJ_EVENT_GFX     158
 
+// TODO: remove placeholders
 #define OBJ_EVENT_GFX_MAN_3                 OBJ_EVENT_GFX_HIKER
 #define OBJ_EVENT_GFX_HEX_MANIAC            OBJ_EVENT_GFX_HIKER
 #define OBJ_EVENT_GFX_BLACK_BELT            OBJ_EVENT_GFX_HIKER
