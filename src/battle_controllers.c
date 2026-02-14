@@ -150,8 +150,6 @@ void SetUpBattleVars(void)
 
 void InitBattleControllers(void)
 {
-    s32 i;
-
     if (!(gBattleTypeFlags & BATTLE_TYPE_RECORDED))
         RecordedBattle_Init(B_RECORD_MODE_RECORDING);
     else

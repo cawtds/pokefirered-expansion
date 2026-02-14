@@ -6193,7 +6193,12 @@ u16 GetBattleBGM(void)
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
-        enum TrainerClassID trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
+        enum TrainerClassID trainerClass;
+
+        if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+            trainerClass = GetFrontierOpponentClass(TRAINER_BATTLE_PARAM.opponentA);
+        else
+            trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
 
         switch (trainerClass)
         {
@@ -6202,6 +6207,14 @@ u16 GetBattleBGM(void)
         case TRAINER_CLASS_LEADER:
         case TRAINER_CLASS_ELITE_FOUR:
             return MUS_VS_GYM_LEADER;
+        case TRAINER_CLASS_SALON_MAIDEN:
+        case TRAINER_CLASS_DOME_ACE:
+        case TRAINER_CLASS_PALACE_MAVEN:
+        case TRAINER_CLASS_ARENA_TYCOON:
+        case TRAINER_CLASS_FACTORY_HEAD:
+        case TRAINER_CLASS_PIKE_QUEEN:
+        case TRAINER_CLASS_PYRAMID_KING:
+            return MUS_VS_FRONTIER_BRAIN;
         case TRAINER_CLASS_BOSS:
         case TRAINER_CLASS_TEAM_ROCKET:
         case TRAINER_CLASS_COOLTRAINER:

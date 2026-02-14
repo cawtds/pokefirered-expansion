@@ -237,6 +237,7 @@ static void DrawCancelConfirmButtons(void);
 static u8 CreatePokeballButtonSprite(u8 x, u8 y);
 static u8 CreateSmallPokeballButtonSprite(u8 x, u8 y);
 static u8 GetPartyBoxPaletteFlags(u8 slot, u8 animNum);
+static bool8 PartyBoxPal_ParnterOrDisqualifiedInArena(u8);
 static void AnimateSelectedPartyIcon(u8 spriteId, u8 animNum);
 static void PartyMenuStartSpriteAnim(u8 spriteId, u8 animNum);
 static void Task_ClosePartyMenuAndSetCB2(u8 taskId);
@@ -1215,8 +1216,7 @@ static u8 GetPartyBoxPaletteFlags(u8 slot, u8 animNum)
         palFlags |= PARTY_PAL_SELECTED;
     if (GetMonData(&gPlayerParty[slot], MON_DATA_HP) == 0)
         palFlags |= PARTY_PAL_FAINTED;
-    if (gPartyMenu.layout == PARTY_LAYOUT_MULTI
-     && (slot == 1 || slot == 4 || slot == 5))
+    if (PartyBoxPal_ParnterOrDisqualifiedInArena(slot) == TRUE)
         palFlags |= PARTY_PAL_MULTI_ALT;
     if (gPartyMenu.action == PARTY_ACTION_SWITCHING)
         palFlags |= PARTY_PAL_SWITCHING;
@@ -1228,6 +1228,17 @@ static u8 GetPartyBoxPaletteFlags(u8 slot, u8 animNum)
     if (gPartyMenu.action == PARTY_ACTION_SOFTBOILED && slot == gPartyMenu.slotId )
         palFlags |= PARTY_PAL_TO_SOFTBOIL;
     return palFlags;
+}
+
+static bool8 PartyBoxPal_ParnterOrDisqualifiedInArena(u8 slot)
+{
+    if (gPartyMenu.layout == PARTY_LAYOUT_MULTI && (slot == 1 || slot == 4 || slot == 5))
+        return TRUE;
+
+    if (slot < MULTI_PARTY_SIZE && (gBattleTypeFlags & BATTLE_TYPE_ARENA) && gMain.inBattle && (gBattleStruct->arenaLostPlayerMons >> GetPartyIdFromBattleSlot(slot) & 1))
+        return TRUE;
+
+    return FALSE;
 }
 
 static void DrawCancelConfirmButtons(void)
@@ -6904,12 +6915,14 @@ void EnterPartyFromItemMenuInBattle(void)
 
 static u8 GetPartyMenuActionsTypeInBattle(struct Pokemon *mon)
 {
-    if (GetMonData(&gPlayerParty[1], MON_DATA_SPECIES) == SPECIES_NONE || GetMonData(mon, MON_DATA_IS_EGG))
-        return ACTIONS_SUMMARY_ONLY;
-    else if (gPartyMenu.action == PARTY_ACTION_SEND_OUT)
-        return ACTIONS_SEND_OUT;
-    else
-        return ACTIONS_SHIFT;
+    if (GetMonData(&gPlayerParty[1], MON_DATA_SPECIES) != SPECIES_NONE && GetMonData(mon, MON_DATA_IS_EGG) == FALSE)
+    {
+        if (gPartyMenu.action == PARTY_ACTION_SEND_OUT)
+            return ACTIONS_SEND_OUT;
+        if (!(gBattleTypeFlags & BATTLE_TYPE_ARENA))
+            return ACTIONS_SHIFT;
+    }
+    return ACTIONS_SUMMARY_ONLY;
 }
 
 static bool8 TrySwitchInPokemon(void)
