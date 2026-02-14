@@ -189,9 +189,16 @@
 #define OBJ_EVENT_GFX_RUNNING_TRIATHLETE_M  183
 #define OBJ_EVENT_GFX_SCHOOL_KID_M          184
 #define OBJ_EVENT_GFX_STEVEN                185
+#define OBJ_EVENT_GFX_SCOTT                 186
+#define OBJ_EVENT_GFX_ANABEL                187
+#define OBJ_EVENT_GFX_BRANDON               188
+#define OBJ_EVENT_GFX_GRETA                 189
+#define OBJ_EVENT_GFX_LUCY                  190
+#define OBJ_EVENT_GFX_NOLAND                191
+#define OBJ_EVENT_GFX_SPENSER               192
+#define OBJ_EVENT_GFX_TUCKER                193
 
-#define NUM_OBJ_EVENT_GFX     186
-
+#define NUM_OBJ_EVENT_GFX                   194
 
 // FRLG equivalents:
 #define OBJ_EVENT_GFX_TWIN                  OBJ_EVENT_GFX_LITTLE_GIRL
@@ -211,17 +218,6 @@
 #define OBJ_EVENT_GFX_WOMAN_4               OBJ_EVENT_GFX_WOMAN_3
 #define OBJ_EVENT_GFX_WOMAN_5               OBJ_EVENT_GFX_WOMAN_2
 #define OBJ_EVENT_GFX_TUBER_M               OBJ_EVENT_GFX_TUBER_M_LAND
-
-// TODO: remove placeholders
-
-#define OBJ_EVENT_GFX_SCOTT                OBJ_EVENT_GFX_STEVEN
-#define OBJ_EVENT_GFX_BRANDON              OBJ_EVENT_GFX_STEVEN
-#define OBJ_EVENT_GFX_ANABEL               OBJ_EVENT_GFX_STEVEN
-#define OBJ_EVENT_GFX_TUCKER               OBJ_EVENT_GFX_STEVEN
-#define OBJ_EVENT_GFX_SPENSER              OBJ_EVENT_GFX_STEVEN
-#define OBJ_EVENT_GFX_GRETA                OBJ_EVENT_GFX_STEVEN
-#define OBJ_EVENT_GFX_NOLAND               OBJ_EVENT_GFX_STEVEN
-#define OBJ_EVENT_GFX_LUCY                 OBJ_EVENT_GFX_STEVEN
 
 // These are dynamic object gfx ids.
 // They correspond with the values of the VAR_OBJ_GFX_ID_X vars.

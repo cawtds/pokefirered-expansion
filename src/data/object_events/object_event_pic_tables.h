@@ -2037,3 +2037,35 @@ static const struct SpriteFrameImage sPicTable_Ball_STRANGE[] = {
 static const struct SpriteFrameImage sPicTable_Steven[] = {
     overworld_ascending_frames(gObjectEventPic_Steven, 2, 4),
 };
+
+static const struct SpriteFrameImage sPicTable_Scott[] = {
+    overworld_ascending_frames(gObjectEventPic_Scott, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_Anabel[] = {
+    overworld_ascending_frames(gObjectEventPic_Anabel, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_Brandon[] = {
+    overworld_ascending_frames(gObjectEventPic_Brandon, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_Greta[] = {
+    overworld_ascending_frames(gObjectEventPic_Greta, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_Lucy[] = {
+    overworld_ascending_frames(gObjectEventPic_Lucy, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_Noland[] = {
+    overworld_ascending_frames(gObjectEventPic_Noland, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_Spenser[] = {
+    overworld_ascending_frames(gObjectEventPic_Spenser, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_Tucker[] = {
+    overworld_ascending_frames(gObjectEventPic_Tucker, 2, 4),
+};

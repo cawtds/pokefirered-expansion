@@ -182,6 +182,14 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RunningTria
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RunningTriathleteM;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SchoolKidM;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Steven;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Scott;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Anabel;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Brandon;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Greta;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Lucy;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Noland;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Spenser;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Tucker;
 // Begin pokemon event objects
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PokeBall;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Follower;
@@ -374,4 +382,12 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_RUNNING_TRIATHLETE_M] =     &gObjectEventGraphicsInfo_RunningTriathleteM,
     [OBJ_EVENT_GFX_SCHOOL_KID_M] =             &gObjectEventGraphicsInfo_SchoolKidM,
     [OBJ_EVENT_GFX_STEVEN] =                   &gObjectEventGraphicsInfo_Steven,
+    [OBJ_EVENT_GFX_SCOTT] =                    &gObjectEventGraphicsInfo_Scott,
+    [OBJ_EVENT_GFX_ANABEL] =                   &gObjectEventGraphicsInfo_Anabel,
+    [OBJ_EVENT_GFX_BRANDON] =                  &gObjectEventGraphicsInfo_Brandon,
+    [OBJ_EVENT_GFX_GRETA] =                    &gObjectEventGraphicsInfo_Greta,
+    [OBJ_EVENT_GFX_LUCY] =                     &gObjectEventGraphicsInfo_Lucy,
+    [OBJ_EVENT_GFX_NOLAND] =                   &gObjectEventGraphicsInfo_Noland,
+    [OBJ_EVENT_GFX_SPENSER] =                  &gObjectEventGraphicsInfo_Spenser,
+    [OBJ_EVENT_GFX_TUCKER] =                   &gObjectEventGraphicsInfo_Tucker,
 };
