@@ -156,22 +156,41 @@
 #define OBJ_EVENT_GFX_DEOXYS_N 150
 #define OBJ_EVENT_GFX_SS_ANNE 151
 #define OBJ_EVENT_GFX_POKE_BALL  152
-#define OBJ_EVENT_GFX_BERRY_TREE                  153
-#define OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES     154
-#define OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES      155
-#define OBJ_EVENT_GFX_OW_MON                     156
-#define OBJ_EVENT_GFX_AZUMARILL             157
-#define OBJ_EVENT_GFX_AZURILL               158
-#define OBJ_EVENT_GFX_DUSCLOPS              159
-#define OBJ_EVENT_GFX_KIRLIA                160
-#define OBJ_EVENT_GFX_SKITTY                161
-#define OBJ_EVENT_GFX_SUDOWOODO             162
-#define OBJ_EVENT_GFX_WINGULL               163
-#define OBJ_EVENT_GFX_ZIGZAGOON_2           164
-#define OBJ_EVENT_GFX_RICH_BOY              165
-#define OBJ_EVENT_GFX_STEVEN                166
+#define OBJ_EVENT_GFX_BERRY_TREE                153
+#define OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES   154
+#define OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES    155
+#define OBJ_EVENT_GFX_OW_MON                    156
+#define OBJ_EVENT_GFX_AZUMARILL                 157
+#define OBJ_EVENT_GFX_AZURILL                   158
+#define OBJ_EVENT_GFX_DUSCLOPS                  159
+#define OBJ_EVENT_GFX_KIRLIA                    160
+#define OBJ_EVENT_GFX_SKITTY                    161
+#define OBJ_EVENT_GFX_SUDOWOODO                 162
+#define OBJ_EVENT_GFX_WINGULL                   163
+#define OBJ_EVENT_GFX_ZIGZAGOON_2               164
+#define OBJ_EVENT_GFX_RICH_BOY                  165
+#define OBJ_EVENT_GFX_COOK                  166
+#define OBJ_EVENT_GFX_CYCLING_TRIATHLETE_F  167
+#define OBJ_EVENT_GFX_CYCLING_TRIATHLETE_M  168
+#define OBJ_EVENT_GFX_EXPERT_F              169
+#define OBJ_EVENT_GFX_EXPERT_M              170
+#define OBJ_EVENT_GFX_GIRL_1                171
+#define OBJ_EVENT_GFX_GIRL_2                172
+#define OBJ_EVENT_GFX_GIRL_3                173
+#define OBJ_EVENT_GFX_HEX_MANIAC            174
+#define OBJ_EVENT_GFX_MANIAC                175
+#define OBJ_EVENT_GFX_NINJA_BOY             176
+#define OBJ_EVENT_GFX_POKEFAN_F             177
+#define OBJ_EVENT_GFX_POKEFAN_M             178
+#define OBJ_EVENT_GFX_PSYCHIC_M             179
+#define OBJ_EVENT_GFX_REPORTER_F            180
+#define OBJ_EVENT_GFX_REPORTER_M            181
+#define OBJ_EVENT_GFX_RUNNING_TRIATHLETE_F  182
+#define OBJ_EVENT_GFX_RUNNING_TRIATHLETE_M  183
+#define OBJ_EVENT_GFX_SCHOOL_KID_M          184
+#define OBJ_EVENT_GFX_STEVEN                185
 
-#define NUM_OBJ_EVENT_GFX     167
+#define NUM_OBJ_EVENT_GFX     186
 
 
 // FRLG equivalents:
@@ -194,25 +213,6 @@
 #define OBJ_EVENT_GFX_TUBER_M               OBJ_EVENT_GFX_TUBER_M_LAND
 
 // TODO: remove placeholders
-#define OBJ_EVENT_GFX_COOK                  OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_CYCLING_TRIATHLETE_F  OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_CYCLING_TRIATHLETE_M  OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_EXPERT_F              OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_EXPERT_M              OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_GIRL_1                OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_GIRL_2                OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_GIRL_3                OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_HEX_MANIAC            OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_MANIAC                OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_NINJA_BOY             OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_POKEFAN_F             OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_POKEFAN_M             OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_PSYCHIC_M             OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_REPORTER_F            OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_REPORTER_M            OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_RUNNING_TRIATHLETE_F  OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_RUNNING_TRIATHLETE_M  OBJ_EVENT_GFX_HIKER
-#define OBJ_EVENT_GFX_SCHOOL_KID_M          OBJ_EVENT_GFX_HIKER
 
 #define OBJ_EVENT_GFX_SCOTT                OBJ_EVENT_GFX_STEVEN
 #define OBJ_EVENT_GFX_BRANDON              OBJ_EVENT_GFX_STEVEN
