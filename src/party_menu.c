@@ -5,6 +5,8 @@
 #include "battle_controllers.h"
 #include "battle_gfx_sfx_util.h"
 #include "battle_interface.h"
+#include "battle_pyramid_bag.h"
+#include "battle_pyramid.h"
 #include "berry_pouch.h"
 #include "data.h"
 #include "decompress.h"
@@ -3686,7 +3688,10 @@ static void CursorCB_Give(u8 taskId)
 
 void CB2_SelectBagItemToGive(void)
 {
-    GoToBagMenu(ITEMMENULOCATION_PARTY, POCKETS_COUNT_NO_CASES, CB2_GiveHoldItem);
+    if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
+        GoToBagMenu(ITEMMENULOCATION_PARTY, POCKETS_COUNT_NO_CASES, CB2_GiveHoldItem);
+    else
+        GoToBattlePyramidBagMenu(PYRAMIDBAG_LOC_PARTY, CB2_GiveHoldItem);
 }
 
 void CB2_GiveHoldItem(void)
@@ -4615,19 +4620,26 @@ void CB2_ShowPartyMenuForItemUse(void)
     }
     else
     {
-        switch (GetPocketByItemId(gSpecialVar_ItemId))
+        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
         {
-        default:
+            switch (GetPocketByItemId(gSpecialVar_ItemId))
+            {
+            default:
+                msgId = PARTY_MSG_USE_ON_WHICH_MON;
+                break;
+            case POCKET_TM_HM:
+                msgId = PARTY_MSG_TEACH_WHICH_MON;
+                callback = CB2_ReturnToTMCaseMenu;
+                break;
+            case POCKET_BERRIES:
+                msgId = PARTY_MSG_USE_ON_WHICH_MON;
+                callback = CB2_ReturnToBerryPouchMenu;
+                break;
+            }
+        }
+        else
+        {
             msgId = PARTY_MSG_USE_ON_WHICH_MON;
-            break;
-        case POCKET_TM_HM:
-            msgId = PARTY_MSG_TEACH_WHICH_MON;
-            callback = CB2_ReturnToTMCaseMenu;
-            break;
-        case POCKET_BERRIES:
-            msgId = PARTY_MSG_USE_ON_WHICH_MON;
-            callback = CB2_ReturnToBerryPouchMenu;
-            break;
         }
         task = Task_HandleChooseMonInput;
     }
@@ -4636,7 +4648,10 @@ void CB2_ShowPartyMenuForItemUse(void)
 
 static void CB2_ReturnToBagMenu(void)
 {
-    GoToBagMenu(ITEMMENULOCATION_LAST, POCKETS_COUNT_NO_CASES, NULL);
+    if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
+        GoToBagMenu(ITEMMENULOCATION_LAST, POCKETS_COUNT_NO_CASES, NULL);
+    else
+        GoToBattlePyramidBagMenu(PYRAMIDBAG_LOC_PREV, gPyramidBagMenuState.exitCallback);
 }
 
 static void CB2_ReturnToTMCaseMenu(void)
@@ -6416,17 +6431,24 @@ void CB2_ChooseMonToGiveItem(void)
 {
     MainCallback callback;
 
-    switch (GetPocketByItemId(gSpecialVar_ItemId))
+    if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
     {
-    default:
-        callback = CB2_ReturnToBagMenu;
-        break;
-    case POCKET_TM_HM:
-        callback = CB2_ReturnToTMCaseMenu;
-        break;
-    case POCKET_BERRIES:
-        callback = CB2_ReturnToBerryPouchMenu;
-        break;
+        switch (GetPocketByItemId(gSpecialVar_ItemId))
+        {
+        default:
+            callback = CB2_ReturnToBagMenu;
+            break;
+        case POCKET_TM_HM:
+            callback = CB2_ReturnToTMCaseMenu;
+            break;
+        case POCKET_BERRIES:
+            callback = CB2_ReturnToBerryPouchMenu;
+            break;
+        }
+    }
+    else
+    {
+        callback = CB2_ReturnToPyramidBagMenu;
     }
     InitPartyMenu(PARTY_MENU_TYPE_FIELD, PARTY_LAYOUT_SINGLE, PARTY_ACTION_GIVE_ITEM, FALSE, PARTY_MSG_GIVE_TO_WHICH_MON, Task_HandleChooseMonInput, callback);
     gPartyMenu.bagItem = gSpecialVar_ItemId;
@@ -6880,7 +6902,7 @@ void Pokedude_ChooseMonForInBattleItem(void)
     UpdatePartyToBattleOrder();
 }
 
-void EnterPartyFromItemMenuInBattle(void)
+void ChooseMonForInBattleItem(void)
 {
     if (!BtlCtrl_OakOldMan_TestState2Flag(FIRST_BATTLE_MSG_FLAG_PARTY_MENU) && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE))
     {
@@ -6897,7 +6919,9 @@ void EnterPartyFromItemMenuInBattle(void)
     {
         MainCallback callback;
 
-        if (GetPocketByItemId(gSpecialVar_ItemId) == POCKET_BERRIES)
+        if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
+            callback = CB2_BagMenuFromBattle;
+        else if (GetPocketByItemId(gSpecialVar_ItemId) == POCKET_BERRIES)
             callback = CB2_ReturnToBerryPouchMenu;
         else
             callback = CB2_BagMenuFromBattle;
