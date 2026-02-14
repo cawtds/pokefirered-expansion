@@ -95,6 +95,11 @@ bool32 BattlerIsLink(enum BattlerId battlerId)
          || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_OPPONENT);
 }
 
+bool32 BattlerIsOldMan(enum BattlerId battlerId)
+{
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_OAK_OLD_MAN);
+}
+
 bool32 BattlerHasAi(enum BattlerId battlerId)
 {
     switch (gBattlerBattleController[battlerId])

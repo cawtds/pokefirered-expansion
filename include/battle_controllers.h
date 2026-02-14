@@ -304,6 +304,7 @@ bool32 BattlerIsPartner(enum BattlerId battlerId);
 bool32 BattlerIsOpponent(enum BattlerId battlerId);
 bool32 BattlerIsRecorded(enum BattlerId battlerId);
 bool32 BattlerIsLink(enum BattlerId battlerId);
+bool32 BattlerIsOldMan(enum BattlerId battlerId);
 bool32 BattlerHasAi(enum BattlerId battlerId);
 
 // emitters

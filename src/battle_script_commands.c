@@ -1117,7 +1117,7 @@ static bool32 ShouldBypassAccuracyCheckFrlg(void)
         return TRUE;
     }
 
-    if (gBattleTypeFlags & BATTLE_TYPE_POKEDUDE);
+    if (gBattleTypeFlags & BATTLE_TYPE_POKEDUDE)
         return TRUE;
 
     return FALSE;
