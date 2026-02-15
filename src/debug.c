@@ -4048,8 +4048,8 @@ static void DebugAction_DestroyFollowerNPC(u8 taskId)
     X(MUS_OBTAIN_BERRY)         \
     X(MUS_EVOLUTION_INTRO)      \
     X(MUS_EVOLUTION)            \
-    X(MUS_RS_VS_GYM_LEADER)     \
-    X(MUS_RS_VS_TRAINER)        \
+    X(MUS_RSE_VS_GYM_LEADER)    \
+    X(MUS_RSE_VS_TRAINER)       \
     X(MUS_SCHOOL)               \
     X(MUS_SLOTS_JACKPOT)        \
     X(MUS_SLOTS_WIN)            \

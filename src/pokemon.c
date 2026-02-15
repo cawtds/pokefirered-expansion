@@ -6182,14 +6182,14 @@ u16 GetBattleBGM(void)
         case SPECIES_REGIGIGAS:
         case SPECIES_REGIELEKI:
         case SPECIES_REGIDRAGO:
-            return MUS_RS_VS_TRAINER;
+            return MUS_RSE_VS_TRAINER;
         default:
             return MUS_VS_WILD;
         }
     }
     else if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
     {
-        return MUS_RS_VS_TRAINER;
+        return MUS_RSE_VS_TRAINER;
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
