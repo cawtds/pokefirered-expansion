@@ -46,6 +46,7 @@ bool8 CameraMove(s32 x, s32 y);
 void CopyMapTilesetsToVram(struct MapLayout const * mapLayout);
 void LoadMapTilesetPalettes(struct MapLayout const * mapLayout);
 void InitMap(void);
+void InitBattlePyramidMap(bool8 setPlayerPosition);
 void CopySecondaryTilesetToVramUsingHeap(const struct MapLayout * mapLayout);
 void LoadSecondaryTilesetPalette(const struct MapLayout * mapLayout, bool8 skipFaded);
 void InitMapFromSavedGame(void);

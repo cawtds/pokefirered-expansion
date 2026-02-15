@@ -1,6 +1,7 @@
 #include "global.h"
 #include "gflib.h"
 #include "battle_anim.h"
+#include "battle_pyramid.h"
 #include "battle_util.h"
 #include "berry.h"
 #include "data.h"
@@ -1596,7 +1597,10 @@ u8 Unref_TryInitLocalObjectEvent(u8 localId)
     if (gMapHeader.events == NULL)
         return OBJECT_EVENTS_COUNT;
 
-    objectEventCount = gMapHeader.events->objectEventCount;
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
+        objectEventCount = GetNumBattlePyramidObjectEvents();
+    else
+        objectEventCount = gMapHeader.events->objectEventCount;
 
     for (i = 0; i < objectEventCount; i++)
     {
@@ -2729,7 +2733,10 @@ void TrySpawnObjectEvents(s16 cameraX, s16 cameraY)
         s16 top = gSaveBlock1Ptr->pos.y;
         s16 bottom = gSaveBlock1Ptr->pos.y + MAP_OFFSET_H + 2;
 
-        objectCount = gMapHeader.events->objectEventCount;
+        if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
+            objectCount = GetNumBattlePyramidObjectEvents();
+        else
+            objectCount = gMapHeader.events->objectEventCount;
 
         for (i = 0; i < objectCount; i++)
         {
