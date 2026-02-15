@@ -499,7 +499,7 @@ gSongTable::
 	song mus_title, MUSIC_PLAYER_BGM, 0
 	song mus_cinnabar, MUSIC_PLAYER_BGM, 0
 	song mus_lavender, MUSIC_PLAYER_BGM, 0
-	song mus_heal, MUSIC_PLAYER_BGM, 0
+	song mus_heal_unused, MUSIC_PLAYER_BGM, 0
 	song mus_cycling, MUSIC_PLAYER_BGM, 0
 	song mus_encounter_rocket, MUSIC_PLAYER_BGM, 0
 	song mus_encounter_girl, MUSIC_PLAYER_BGM, 0
