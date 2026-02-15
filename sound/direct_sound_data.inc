@@ -302,6 +302,31 @@ DirectSoundWaveData_sc88pro_accordion::
 DirectSoundWaveData_unused_sc55_tom::
 	.incbin "sound/direct_sound_samples/unused_sc55_tom.bin"
 
+	.align 2
+DirectSoundWaveData_unknown_koto_high::
+	.incbin "sound/direct_sound_samples/unknown_koto_high.bin"
+
+	.align 2
+DirectSoundWaveData_sd90_classical_shakuhachi::
+	.incbin "sound/direct_sound_samples/sd90_classical_shakuhachi.bin"
+
+	.align 2
+DirectSoundWaveData_unknown_koto_low::
+	.incbin "sound/direct_sound_samples/unknown_koto_low.bin"
+
+	.align 2
+DirectSoundWaveData_heart_of_asia_gamelan::
+	.incbin "sound/direct_sound_samples/heart_of_asia_gamelan.bin"
+
+	.align 2
+DirectSoundWaveData_unknown_female_voice::
+	.incbin "sound/direct_sound_samples/unknown_female_voice.bin"
+
+	.align 2
+DirectSoundWaveData_unused_unknown_male_voice::
+	.incbin "sound/direct_sound_samples/unused_unknown_male_voice.bin"
+
+
 .if P_CRIES_ENABLED == TRUE
 .if P_FAMILY_BULBASAUR == TRUE
 	.align 2

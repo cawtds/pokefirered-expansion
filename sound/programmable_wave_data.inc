@@ -30,3 +30,34 @@ ProgrammableWaveData_10::
 
 ProgrammableWaveData_11::
 	.incbin "sound/programmable_wave_samples/11.pcm"
+
+ProgrammableWaveData_12::
+	.incbin "sound/programmable_wave_samples/12.pcm"
+
+ProgrammableWaveData_13::
+	.incbin "sound/programmable_wave_samples/13.pcm"
+
+ProgrammableWaveData_14::
+	.incbin "sound/programmable_wave_samples/14.pcm"
+
+ProgrammableWaveData_15::
+	.incbin "sound/programmable_wave_samples/15.pcm"
+
+ProgrammableWaveData_16::
+	.incbin "sound/programmable_wave_samples/16.pcm"
+
+ProgrammableWaveData_21::
+	.incbin "sound/programmable_wave_samples/21.pcm"
+
+ProgrammableWaveData_22::
+	.incbin "sound/programmable_wave_samples/22.pcm"
+
+ProgrammableWaveData_23::
+	.incbin "sound/programmable_wave_samples/23.pcm"
+
+ProgrammableWaveData_24::
+	.incbin "sound/programmable_wave_samples/24.pcm"
+
+ProgrammableWaveData_25::
+	.incbin "sound/programmable_wave_samples/25.pcm"
+

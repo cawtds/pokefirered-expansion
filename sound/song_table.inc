@@ -1,3 +1,9 @@
+	.equiv MUSIC_PLAYER_BGM,0
+	.equiv MUSIC_PLAYER_SE1,1
+	.equiv MUSIC_PLAYER_SE2,2
+	.equiv MUSIC_PLAYER_SE3,3
+
+	.align 2
 gSongTable::
 	song mus_dummy, 0, 0
 	song se_use_item, 1, 1
@@ -255,6 +261,13 @@ gSongTable::
 	song se_deoxys_move, 1, 1
 	song se_poke_jump_success, 1, 1
 	song se_poke_jump_failure, 1, 1
+	song se_pokenav_call, MUSIC_PLAYER_SE1, 1
+	song se_pokenav_hang_up, MUSIC_PLAYER_SE1, 1
+	song se_arena_timeup1, MUSIC_PLAYER_SE1, 1
+	song se_arena_timeup2, MUSIC_PLAYER_SE1, 1
+	song se_pike_curtain_close, MUSIC_PLAYER_SE1, 1
+	song se_pike_curtain_open, MUSIC_PLAYER_SE1, 1
+	song se_sudowoodo_shake, MUSIC_PLAYER_SE1, 1
 	song mus_heal, 2, 2
 	song mus_level_up, 2, 2
 	song mus_obtain_item, 2, 2
@@ -346,6 +359,34 @@ gSongTable::
 	song mus_trainer_tower, 0, 0
 	song mus_slow_pallet, 0, 0
 	song mus_teachy_tv_menu, 0, 0
+	song mus_obtain_symbol, MUSIC_PLAYER_SE2, 2
+	song mus_obtain_b_points, MUSIC_PLAYER_SE2, 2
+	song mus_petalburg_woods, MUSIC_PLAYER_BGM, 0
+	song mus_lilycove_museum, MUSIC_PLAYER_BGM, 0
+	song mus_b_arena, MUSIC_PLAYER_BGM, 0
+	song mus_b_dome, MUSIC_PLAYER_BGM, 0
+	song mus_b_dome_lobby, MUSIC_PLAYER_BGM, 0
+	song mus_b_factory, MUSIC_PLAYER_BGM, 0
+	song mus_b_frontier, MUSIC_PLAYER_BGM, 0
+	song mus_b_palace, MUSIC_PLAYER_BGM, 0
+	song mus_b_pike, MUSIC_PLAYER_BGM, 0
+	song mus_b_pyramid, MUSIC_PLAYER_BGM, 0
+	song mus_b_pyramid_top, MUSIC_PLAYER_BGM, 0
+	song mus_b_tower, MUSIC_PLAYER_BGM, 0
+	song mus_b_tower_rs, MUSIC_PLAYER_BGM, 0
+	song mus_vs_aqua_magma, MUSIC_PLAYER_BGM, 0
+	song mus_vs_aqua_magma_leader, MUSIC_PLAYER_BGM, 0
+	song mus_vs_champion_rse, MUSIC_PLAYER_BGM, 0
+	song mus_vs_elite_four_rse, MUSIC_PLAYER_BGM, 0
+	song mus_vs_frontier_brain, MUSIC_PLAYER_BGM, 0
+	song mus_vs_gym_leader, MUSIC_PLAYER_BGM, 0
+	song mus_vs_kyogre_groudon, MUSIC_PLAYER_BGM, 0
+	song mus_vs_mew, MUSIC_PLAYER_BGM, 0
+	song mus_vs_rayquaza, MUSIC_PLAYER_BGM, 0
+	song mus_vs_regi, MUSIC_PLAYER_BGM, 0
+	song mus_vs_rival_rse, MUSIC_PLAYER_BGM, 0
+	song mus_vs_trainer_rse, MUSIC_PLAYER_BGM, 0
+	song mus_vs_wild_rse, MUSIC_PLAYER_BGM, 0
 
 dummy_song_header:
 	.byte 0, 0, 0, 0

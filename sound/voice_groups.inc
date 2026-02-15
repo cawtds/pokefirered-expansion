@@ -731,6 +731,33 @@ voicegroup012::
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
 	voice_keysplit voicegroup003, KeySplitTable1
 
+.include "sound/voicegroups/voicegroup018.inc"
+.include "sound/voicegroups/voicegroup020.inc"
+.include "sound/voicegroups/voicegroup031.inc"
+.include "sound/voicegroups/voicegroup035.inc"
+.include "sound/voicegroups/voicegroup103.inc"
+.include "sound/voicegroups/voicegroup104.inc"
+.include "sound/voicegroups/voicegroup106.inc"
+.include "sound/voicegroups/voicegroup107.inc"
+.include "sound/voicegroups/voicegroup108.inc"
+.include "sound/voicegroups/voicegroup110.inc"
+.include "sound/voicegroups/voicegroup111.inc"
+.include "sound/voicegroups/voicegroup112.inc"
+.include "sound/voicegroups/voicegroup113.inc"
+.include "sound/voicegroups/voicegroup114.inc"
+.include "sound/voicegroups/voicegroup115.inc"
+.include "sound/voicegroups/voicegroup116.inc"
+.include "sound/voicegroups/voicegroup117.inc"
+.include "sound/voicegroups/voicegroup118.inc"
+.include "sound/voicegroups/voicegroup119.inc"
+.include "sound/voicegroups/voicegroup120.inc"
+.include "sound/voicegroups/voicegroup121.inc"
+.include "sound/voicegroups/voicegroup122.inc"
+.include "sound/voicegroups/voicegroup123.inc"
+.include "sound/voicegroups/voicegroup124.inc"
+.include "sound/voicegroups/voicegroup125.inc"
+.include "sound/voicegroups/voicegroup126.inc"
+
 	.align 2
 voicegroup127::
 	voice_directsound 60, 0, DirectSoundWaveData_unknown_synth_snare, 255, 249, 103, 165
