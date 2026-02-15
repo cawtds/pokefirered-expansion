@@ -1,6 +1,7 @@
 #ifndef GUARD_BATTLE_SETUP_H
 #define GUARD_BATTLE_SETUP_H
 
+#include "battle_transition.h"
 #include "vs_seeker.h"
 /*
 the layout of the first byte can be confusing here
@@ -48,16 +49,17 @@ void BattleSetup_StartLatiBattle(void);
 void BattleSetup_StartLegendaryBattle(void);
 void StartGroudonKyogreBattle(void);
 void StartRegiBattle(void);
-u8 BattleSetup_GetEnvironmentId(void);
-u8 BattleSetup_GetBattleTowerBattleTransition(void);
-u8 GetWildBattleTransition(void);
-u8 GetTrainerBattleTransition(void);
-u8 GetSpecialBattleTransition(s32 id);
+enum BattleEnvironments BattleSetup_GetEnvironmentId(void);
+enum BattleTransition GetWildBattleTransition(void);
+enum BattleTransition GetTrainerBattleTransition(void);
+enum BattleTransition GetSpecialBattleTransition(enum BattleTransitionGroup id);
+void ChooseStarter(void);
 void ChooseStarter(void);
 void ResetTrainerOpponentIds(void);
 void SetMapVarsToTrainerA(void);
 void SetMapVarsToTrainerB(void);
 const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data);
+const u8* BattleSetup_ConfigureFacilityTrainerBattle(u8 facility, const u8* scriptEndPtr);
 void ConfigureAndSetUpOneTrainerBattle(u8 trainerObjEventId, const u8 *trainerScript);
 void ConfigureTwoTrainersBattle(u8 trainerObjEventId, const u8 *trainerScript);
 void SetUpTwoTrainersBattle(void);

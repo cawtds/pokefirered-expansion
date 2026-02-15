@@ -6507,4 +6507,49 @@ extern const u16 gPokedexSearchMenu_Pal[];
 extern const u32 gPokedexAreaScreenAreaUnknown_Gfx[];
 extern const u16 gPokedexAreaScreenAreaUnknown_Pal[];
 
+// Battle Factory Screen
+extern const u16 gFrontierFactoryMenu_Gfx[34 * TILE_SIZE_4BPP / 2];
+extern const u16 gFrontierFactoryMenu_Tilemap[];
+extern const u16 gFrontierFactoryMenu_Pal[];
+
+// Battle Dome
+extern const u32 gDomeTourneyInfoCard_Gfx[];
+extern const u32 gDomeTourneyInfoCard_Tilemap[];
+extern const u32 gDomeTourneyInfoCardBg_Tilemap[];
+extern const u16 gDomeTourneyTree_Pal[];
+extern const u16 gDomeTourneyTreeButtons_Pal[];
+extern const u16 gDomeTourneyMatchCardBg_Pal[];
+extern const u32 gDomeTourneyTree_Gfx[];
+extern const u32 gDomeTourneyLine_Gfx[];
+extern const u32 gDomeTourneyLineDown_Tilemap[];
+extern const u32 gDomeTourneyLineUp_Tilemap[];
+extern const u32 gDomeTourneyTree_Tilemap[];
+extern const u32 gDomeTourneyTreeButtons_Gfx[];
+extern const u16 gTilesetAnims_BattleDomePals0_0[];
+extern const u16 gTilesetAnims_BattleDomePals0_1[];
+extern const u16 gTilesetAnims_BattleDomePals0_2[];
+extern const u16 gTilesetAnims_BattleDomePals0_3[];
+
+extern const u32 gBattleArenaJudgmentSymbolsGfx[];
+extern const u16 gBattleArenaJudgmentSymbolsPalette[];
+
+extern const u32 gBattlePyramidBag_Gfx[];
+extern const u16 gBattlePyramidBag_Pal[];
+extern const u32 gBattlePyramidBagTilemap[];
+extern const u16 gBattlePyramidBagInterface_Pal[];
+extern const u16 gBattlePyramidFloor_Pal[][16];
+
+// Frontier Pass
+extern const u32 gFrontierPassBg_Gfx[];
+extern const u32 gFrontierPassBg_Tilemap[];
+extern const u16 gFrontierPassBg_Pal[][16];
+extern const u32 gFrontierPassMapAndCard_Gfx[];
+extern const u32 gFrontierPassCancelButton_Tilemap[];
+extern const u32 gFrontierPassCancelButtonHighlighted_Tilemap[];
+extern const u32 gFrontierPassMedals_Gfx[];
+extern const u16 gFrontierPassCursor_Pal[];
+extern const u16 gFrontierPassMedalsGold_Pal[];
+extern const u16 gFrontierPassMedalsSilver_Pal[];
+extern const u16 gFrontierPassMapCursor_Pal[];
+
 #endif //GUARD_GRAPHICS_H

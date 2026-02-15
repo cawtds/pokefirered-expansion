@@ -33,14 +33,17 @@
 
 #define NUM_VERSIONS 15
 
-#define LANGUAGE_JAPANESE 1
-#define LANGUAGE_ENGLISH  2
-#define LANGUAGE_FRENCH   3
-#define LANGUAGE_ITALIAN  4
-#define LANGUAGE_GERMAN   5
-#define LANGUAGE_KOREAN   6 // 6 goes unused but the theory is it was meant to be Korean
-#define LANGUAGE_SPANISH  7
-#define NUM_LANGUAGES     7
+enum Language
+{
+    LANGUAGE_JAPANESE = 1,
+    LANGUAGE_ENGLISH  = 2,
+    LANGUAGE_FRENCH   = 3,
+    LANGUAGE_ITALIAN  = 4,
+    LANGUAGE_GERMAN   = 5,
+    LANGUAGE_KOREAN   = 6, // 6 goes unused but the theory is it was meant to be Korean
+    LANGUAGE_SPANISH  = 7,
+    NUM_LANGUAGES
+};
 
 #define GAME_LANGUAGE (LANGUAGE_ENGLISH)
 
@@ -53,6 +56,7 @@
 #define MAX_FRONTIER_PARTY_SIZE    (max(FRONTIER_PARTY_SIZE,        \
                                     max(FRONTIER_DOUBLES_PARTY_SIZE,\
                                         FRONTIER_MULTI_PARTY_SIZE)))
+#define UNION_ROOM_PARTY_SIZE       2
 
 // capacities of various saveblock objects
 #define DAYCARE_MON_COUNT   2
@@ -67,10 +71,29 @@
 #define MAIL_COUNT         (PARTY_SIZE + 10)
 #define PC_MAIL_NUM(i)     (PARTY_SIZE + (i))
 #define DECOR_MAX_SECRET_BASE 16
+#define APPRENTICE_COUNT 4
+#define APPRENTICE_MAX_QUESTIONS 9
 #define MAX_REMATCH_ENTRIES 100
 #define UNION_ROOM_KB_ROW_COUNT 10
 #define GIFT_RIBBONS_COUNT 11
+#define PYRAMID_BAG_ITEMS_COUNT 10
 #define ROAMER_COUNT 1 // Number of maximum concurrent active roamers
+
+// Number of facilities for Ranking Hall.
+// 7 facilities for single mode + tower double mode + tower multi mode.
+// Excludes link modes. See RANKING_HALL_* in include/constants/battle_frontier.h
+#define HALL_FACILITIES_COUNT 9
+// Received via record mixing, 1 for each player other than yourself
+#define HALL_RECORDS_COUNT 3
+
+// Battle Frontier level modes.
+enum FrontierLevelMode
+{
+    FRONTIER_LVL_50,
+    FRONTIER_LVL_OPEN,
+    FRONTIER_LVL_TENT, // Special usage for indicating Battle Tent
+    FRONTIER_LVL_MODE_COUNT = FRONTIER_LVL_TENT,
+};
 
 // Contests
 #define CONTEST_CATEGORIES_COUNT  5
@@ -114,9 +137,12 @@
 
 #define NUM_TOWER_CHALLENGE_TYPES 4
 
-#define MALE   0
-#define FEMALE 1
-#define GENDER_COUNT 2
+enum Gender
+{
+    MALE,
+    FEMALE,
+    GENDER_COUNT,
+};
 
 #define BARD_SONG_LENGTH       6
 #define NUM_STORYTELLER_TALES  4

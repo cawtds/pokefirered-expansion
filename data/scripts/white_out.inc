@@ -36,7 +36,8 @@ EventScript_FieldPoison::
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special TryFieldPoisonWhiteOut
 	waitstate
-	goto_if_eq VAR_RESULT, TRUE, EventScript_FieldWhiteOut
+	goto_if_eq VAR_RESULT, FLDPSN_WHITEOUT, EventScript_FieldWhiteOut
+	goto_if_eq VAR_RESULT, FLDPSN_FRONTIER_WHITEOUT, EventScript_FrontierFieldWhiteOut
 	releaseall
 	end
 
@@ -58,6 +59,22 @@ EventScript_FieldWhiteOutHasMoney::
 	end
 
 EventScript_FieldWhiteOutFade::
+	special Script_FadeOutMapMusic
+	waitstate
+	fadescreen FADE_TO_BLACK
+	special SetCB2WhiteOut
+	waitstate
+	end
+
+EventScript_FrontierFieldWhiteOut::
+	message Text_WhitedOut
+	waitmessage
+	waitbuttonpress
+	pike_inchallenge
+	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattlePike_EventScript_Retire
+	pyramid_getlocation
+	goto_if_eq VAR_RESULT, PYRAMID_LOCATION_FLOOR, BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
+	goto_if_eq VAR_RESULT, PYRAMID_LOCATION_TOP, BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
 	special Script_FadeOutMapMusic
 	waitstate
 	fadescreen FADE_TO_BLACK

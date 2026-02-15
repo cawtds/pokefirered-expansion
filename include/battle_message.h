@@ -266,10 +266,14 @@ extern const u8 *const gBattleStringsTable[];
 extern const u8 *const gStatNamesTable[];
 extern const u8 *const gPokeblockWasTooXStringTable[];
 extern const u8 *const gRefereeStringsTable[];
+extern const u8 *const gRoundsStringTable[];
 extern const u8 *const gStatNamesTable2[];
 
 extern const u16 gMissStringIds[];
 
+// battle main
+extern const u8 gText_LinkStandby3[];
+extern const u8 BattleFrontier_BattleTowerBattleRoom_Text_RecordCouldntBeSaved[];
 extern const u8 gText_Sleep[];
 extern const u8 gText_Poison[];
 extern const u8 gText_Burn[];
@@ -296,5 +300,7 @@ extern const u8 gText_Draw[];
 
 extern const u16 gStatUpStringIds[];
 extern const u16 gStatDownStringIds[];
+
+extern const u8 gText_BattleTourney[];
 
 #endif // GUARD_BATTLE_MESSAGE_H

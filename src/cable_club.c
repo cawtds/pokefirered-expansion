@@ -644,9 +644,9 @@ static void Task_StartWiredCableClubBattle(u8 taskId)
         break;
     case 5:
         if (gLinkPlayers[0].trainerId & 1)
-            PlayMapChosenOrBattleBGM(MUS_RS_VS_GYM_LEADER);
+            PlayMapChosenOrBattleBGM(MUS_RSE_VS_GYM_LEADER);
         else
-            PlayMapChosenOrBattleBGM(MUS_RS_VS_TRAINER);
+            PlayMapChosenOrBattleBGM(MUS_RSE_VS_TRAINER);
         switch (gSpecialVar_0x8004)
         {
         case USING_SINGLE_BATTLE:
@@ -716,9 +716,9 @@ static void Task_StartWirelessCableClubBattle(u8 taskId)
         break;
     case 7:
         if (gLinkPlayers[0].trainerId & 1)
-            PlayMapChosenOrBattleBGM(MUS_RS_VS_GYM_LEADER);
+            PlayMapChosenOrBattleBGM(MUS_RSE_VS_GYM_LEADER);
         else
-            PlayMapChosenOrBattleBGM(MUS_RS_VS_TRAINER);
+            PlayMapChosenOrBattleBGM(MUS_RSE_VS_TRAINER);
         gLinkPlayers[0].linkType = LINKTYPE_BATTLE;
         switch (gSpecialVar_0x8004)
         {
@@ -990,3 +990,66 @@ void Task_WaitForLinkPlayerConnection(u8 taskId)
 }
 
 #undef tTimer
+
+
+#define tTimer data[1]
+
+// Confirm that all cabled link players are connected
+void Task_ReconnectWithLinkPlayers(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    switch (tState)
+    {
+    case 0:
+        if (gWirelessCommType != 0)
+        {
+            DestroyTask(taskId);
+        }
+        else
+        {
+            OpenLink();
+            CreateTask(Task_WaitForLinkPlayerConnection, 1);
+            tState++;
+        }
+        break;
+    case 1:
+        if (++tTimer > 11)
+        {
+            tTimer = 0;
+            tState++;
+        }
+        break;
+    case 2:
+        if (GetLinkPlayerCount_2() >= GetSavedPlayerCount())
+        {
+            if (IsLinkMaster())
+            {
+                if (++tTimer > 30)
+                {
+                    CheckShouldAdvanceLinkState();
+                    tState++;
+                }
+            }
+            else
+            {
+                tState++;
+            }
+        }
+        break;
+    case 3:
+        if (gReceivedRemoteLinkPlayers == TRUE && IsLinkPlayerDataExchangeComplete() == TRUE)
+        {
+            DestroyTask(taskId);
+        }
+        break;
+    }
+}
+
+#undef tTimer
+
+void TrySetBattleTowerLinkType(void)
+{
+    if (gWirelessCommType == 0)
+        gLinkType = LINKTYPE_BATTLE_TOWER;
+}

@@ -179,8 +179,10 @@ static const struct SinglesTrainerInfo sSingleBattleTrainerInfo[] = {
     {OBJ_EVENT_GFX_CHANNELER,      FACILITY_CLASS_CHANNELER,         FEMALE},
     {OBJ_EVENT_GFX_WOMAN_1,        FACILITY_CLASS_PSYCHIC_F,         FEMALE},
     {OBJ_EVENT_GFX_BATTLE_GIRL,    FACILITY_CLASS_CRUSH_GIRL,        FEMALE},
-    {OBJ_EVENT_GFX_TUBER_F,        FACILITY_CLASS_TUBER,             FEMALE},
-    {OBJ_EVENT_GFX_WOMAN_2,        FACILITY_CLASS_PKMN_BREEDER,      FEMALE},
+    {OBJ_EVENT_GFX_TUBER_F,        FACILITY_CLASS_TUBER_F,           FEMALE},
+    {OBJ_EVENT_GFX_TUBER_M_LAND,   FACILITY_CLASS_TUBER_M,             MALE},
+    {OBJ_EVENT_GFX_WOMAN_2,        FACILITY_CLASS_PKMN_BREEDER_F,    FEMALE},
+    {OBJ_EVENT_GFX_MAN,            FACILITY_CLASS_PKMN_BREEDER_M,      MALE},
     {OBJ_EVENT_GFX_CAMPER,         FACILITY_CLASS_PKMN_RANGER_M,       MALE},
     {OBJ_EVENT_GFX_PICNICKER,      FACILITY_CLASS_PKMN_RANGER_F,     FEMALE},
     {OBJ_EVENT_GFX_WOMAN_2,        FACILITY_CLASS_AROMA_LADY,        FEMALE},
@@ -660,7 +662,7 @@ static void BufferTowerOpponentSpeech(void)
     u16 trainerId = gSpecialVar_0x8006;
     u8 facilityClass;
     u8 challengeType = CURR_FLOOR.challengeType;
-    
+
     if (challengeType != CHALLENGE_TYPE_DOUBLE)
         facilityClass = CURR_FLOOR.trainers[trainerId].facilityClass;
     else
@@ -748,7 +750,7 @@ static void DoTrainerTowerBattle(void)
     BuildEnemyParty();
     CreateTask(Task_DoTrainerTowerBattle, 1);
     PlayMapChosenOrBattleBGM(0);
-    BattleTransition_StartOnField(BattleSetup_GetBattleTowerBattleTransition());
+    BattleTransition_StartOnField(GetSpecialBattleTransition(B_TRANSITION_GROUP_TRAINER_TOWER));
 }
 
 static void TrainerTowerGetChallengeType(void)
@@ -769,7 +771,7 @@ static void GetFloorAlreadyCleared(void)
 {
 #if FREE_TRAINER_HILL == FALSE
     u16 mapLayoutId = gMapHeader.mapLayoutId;
-    if (mapLayoutId - LAYOUT_TRAINER_TOWER_1F == TRAINER_TOWER.floorsCleared 
+    if (mapLayoutId - LAYOUT_TRAINER_TOWER_1F == TRAINER_TOWER.floorsCleared
      && mapLayoutId - LAYOUT_TRAINER_TOWER_LOBBY <= CURR_FLOOR.floorIdx)
         gSpecialVar_Result = FALSE;
     else
@@ -888,19 +890,19 @@ static void GetTrainerTowerChallengeStatus(void)
     if (TRAINER_TOWER.hasLost)
     {
         TRAINER_TOWER.hasLost = FALSE;
-        gSpecialVar_Result = CHALLENGE_STATUS_LOST;
+        gSpecialVar_Result = TT_CHALLENGE_STATUS_LOST;
     }
     else if (TRAINER_TOWER.unkA_4)
     {
         TRAINER_TOWER.unkA_4 = FALSE;
-        gSpecialVar_Result = CHALLENGE_STATUS_UNK;
+        gSpecialVar_Result = TT_CHALLENGE_STATUS_UNK;
     }
     else
     {
-        gSpecialVar_Result = CHALLENGE_STATUS_NORMAL;
+        gSpecialVar_Result = TT_CHALLENGE_STATUS_NORMAL;
     }
 #else
-    gSpecialVar_Result = CHALLENGE_STATUS_NORMAL;
+    gSpecialVar_Result = TT_CHALLENGE_STATUS_NORMAL;
 #endif //FREE_TRAINER_HILL
 }
 

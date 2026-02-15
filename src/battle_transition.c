@@ -157,7 +157,6 @@ static void Task_AngledWipes(u8 taskId);
 static void Task_Mugshot(u8 taskId);
 static void Task_Spiral(u8 taskId);
 static void Task_Intro(u8 taskId);
-static void Task_BattleTransition_Intro(u8 taskId);
 
 static void SpriteCB_MugshotTrainerPic(struct Sprite *sprite);
 static void SpriteCB_FldEffPokeballTrail(struct Sprite *sprite);
@@ -579,7 +578,7 @@ static const struct SpritePalette sSpritePalette_UnusedTrainer =
 static const u16 sBigPokeball_Tilemap[] = INCBIN_U16("graphics/battle_transitions/big_pokeball_tilemap.bin");
 static const u16 sMugshotsTilemap[] = INCBIN_U16("graphics/battle_transitions/vsbar_tilemap.bin");
 
-void BattleTransition_StartOnField(u8 transitionId)
+void BattleTransition_StartOnField(enum BattleTransition transitionId)
 {
     sTransitionData = AllocZeroed(sizeof(*sTransitionData));
     gMain.callback2 = CB2_OverworldBasic;
@@ -2737,7 +2736,7 @@ static bool8 IsIntroTaskDone(void)
         return FALSE;
 }
 
-static void Task_BattleTransition_Intro(u8 taskId)
+void Task_BattleTransition_Intro(u8 taskId)
 {
     while (sTransitionIntroFuncs[gTasks[taskId].tState](&gTasks[taskId]));
 }
