@@ -46,6 +46,22 @@ ProgrammableWaveData_15::
 ProgrammableWaveData_16::
 	.incbin "sound/programmable_wave_samples/16.pcm"
 
+@ Unused
+ProgrammableWaveData_17::
+	.incbin "sound/programmable_wave_samples/17.pcm"
+
+@ Unused
+ProgrammableWaveData_18::
+	.incbin "sound/programmable_wave_samples/18.pcm"
+
+@ Unused
+ProgrammableWaveData_19::
+	.incbin "sound/programmable_wave_samples/19.pcm"
+
+@ Unused
+ProgrammableWaveData_20::
+	.incbin "sound/programmable_wave_samples/20.pcm"
+
 ProgrammableWaveData_21::
 	.incbin "sound/programmable_wave_samples/21.pcm"
 
@@ -60,4 +76,3 @@ ProgrammableWaveData_24::
 
 ProgrammableWaveData_25::
 	.incbin "sound/programmable_wave_samples/25.pcm"
-
