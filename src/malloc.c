@@ -118,7 +118,7 @@ void FreeInternal(void *heapStart, void *pointer)
         struct MemBlock *head = (struct MemBlock *)heapStart;
         struct MemBlock *block = (struct MemBlock *)((u8 *)pointer - sizeof(struct MemBlock));
         assertf(block->magic == MALLOC_SYSTEM_ID, "block->magic not equal to MALLOC_SYSTEM_ID");
-        assertf(block->allocated == TRUE, "block already allocated");
+        assertf(block->allocated == TRUE, "freeing already freed block block");
         block->allocated = FALSE;
 
         // If the freed block isn't the last one, merge with the next block
