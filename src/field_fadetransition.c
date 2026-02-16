@@ -488,7 +488,7 @@ static void Task_WaitFadeAndCreateStartMenuTask(u8 taskId)
     }
 }
 
-void FadeTransition_FadeInOnReturnToStartMenu(void)
+void ReturnToFieldOpenStartMenu(void)
 {
     FadeInFromBlack();
     CreateTask(Task_WaitFadeAndCreateStartMenuTask, 80);
@@ -497,7 +497,7 @@ void FadeTransition_FadeInOnReturnToStartMenu(void)
 
 bool8 FieldCB_ReturnToFieldOpenStartMenu(void)
 {
-    SetUpReturnToStartMenu();
+    ShowReturnToFieldStartMenu();
     return FALSE;
 }
 

@@ -3830,7 +3830,7 @@ void SetPokemonSummaryScreenMode(u8 mode)
 
 static bool32 IsMultiBattlePartner(void)
 {
-    if (!IsUpdateLinkStateCBActive()
+    if (!IsOverworldLinkActive()
         && IsMultiBattle() == TRUE
         && gReceivedRemoteLinkPlayers == 1
         && (gLastViewedMonIndex >= 4 || gLastViewedMonIndex == 1))
@@ -5340,7 +5340,7 @@ static void PokeSum_SeekToNextMon(u8 taskId, s8 direction)
     }
     else
     {
-        if (IsUpdateLinkStateCBActive() == FALSE
+        if (IsOverworldLinkActive() == FALSE
             && gReceivedRemoteLinkPlayers == 1
             && IsMultiBattle() == TRUE)
             scrollResult = SeekToNextMonInMultiParty(direction);

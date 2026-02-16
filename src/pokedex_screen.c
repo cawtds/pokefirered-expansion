@@ -1506,7 +1506,10 @@ static u16 DexScreen_CountMonsInOrderedList(u8 orderIdx)
         u32 species;
         for (i = SPECIES_BULBASAUR; i < NUM_SPECIES; i++)
         {
-            species = SanitizeSpeciesId(i);
+            if (!IsSpeciesEnabled(i))
+                continue;
+            species = i;
+
             natDexNum = gSpeciesInfo[species].natDexNum;
             if (!natDexNum)
                 continue;
@@ -3334,7 +3337,7 @@ static bool32 DexScreen_MonHasCategoryEntry(u16 species)
     u16 i, j, k;
     u16 natDexNum = SpeciesToNationalPokedexNum(species);
 
-    for (i = 0; i < NELEMS(gDexCategories); i++)
+    for (i = 0; i < ARRAY_COUNT(gDexCategories); i++)
     {
         for (j = 0; j < gDexCategories[i].count; j++)
         {
@@ -3485,12 +3488,27 @@ void DexScreen_InputHandler_StartToCry(void)
 }
 
 #define tState         data[0]
-#define tSpecies        data[1]
+#define tSpecies       data[1]
 #define tPalTimer      data[2]
 #define tMonSpriteId   data[3]
 #define tIsShiny       data[13]
 #define tPersonalityLo 14
 #define tPersonalityHi 15
+
+u8 DexScreen_RegisterMonToPokedex(u16 species)
+{
+    DexScreen_GetSetPokedexFlag(species, FLAG_SET_SEEN, TRUE);
+    DexScreen_GetSetPokedexFlag(species, FLAG_SET_CAUGHT, TRUE);
+
+    if ((!IsNationalPokedexEnabled() && !IsSpeciesInKantoDex(species)) || !DexScreen_MonHasCategoryEntry(species))
+        return CreateTask(Task_DexScreen_RegisterNonKantoMonBeforeNationalDex, 0);
+
+    DexScreen_LoadResources();
+    gTasks[sPokedexScreenData->taskId].func = Task_DexScreen_RegisterMonToPokedex;
+    DexScreen_LookUpCategoryBySpecies(species);
+
+    return sPokedexScreenData->taskId;
+}
 
 u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality)
 {
@@ -3505,14 +3523,7 @@ u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality)
     }
     else
     {
-        if ((!IsNationalPokedexEnabled() && !IsSpeciesInKantoDex(species)) || !DexScreen_MonHasCategoryEntry(species))
-            return CreateTask(Task_DexScreen_RegisterNonKantoMonBeforeNationalDex, 0);
-
-        DexScreen_LoadResources();
-        gTasks[sPokedexScreenData->taskId].func = Task_DexScreen_RegisterMonToPokedex;
-        DexScreen_LookUpCategoryBySpecies(species);
-
-        return sPokedexScreenData->taskId;
+        return DexScreen_RegisterMonToPokedex(species);
     }
 
     gTasks[taskId].tState = 0;
