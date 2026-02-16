@@ -50,6 +50,7 @@
 #include "pokemon_summary_screen.h"
 // #include "pokenav.h"
 // #include "menu_specialized.h"
+#include "trainer_pokemon_sprites.h"
 #include "data.h"
 #include "generational_changes.h"
 #include "move.h"
@@ -70,6 +71,8 @@
 #include "battle_util.h"
 #include "constants/pokemon.h"
 #include "config/battle.h"
+#include "pokedex_emerald.h"
+#include "config/pokedex_plus_hgss.h"
 #include "data/battle_move_effects.h"
 #include "test/battle.h"
 #include "follower_npc.h"
@@ -11094,7 +11097,7 @@ static void Cmd_displaydexinfo(void)
     case 0:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
         ClearTemporarySpeciesSpriteData(caughtBattler, FALSE, FALSE);
-        BattleLoadMonSpriteGfx(mon, caughtBattler);
+        // BattleLoadMonSpriteGfx(mon, caughtBattler);
         gBattleCommunication[0]++;
         break;
     case 1:
@@ -11112,6 +11115,10 @@ static void Cmd_displaydexinfo(void)
             && gMain.callback2 == BattleMainCB2
             && !gTasks[gBattleCommunication[TASK_ID]].isActive)
         {
+            if (!POKEDEX_PLUS_HGSS && !POKEDEX_EMERALD)
+            {
+                CpuFill32(0, (void *)VRAM, VRAM_SIZE);
+            }
             SetVBlankCallback(VBlankCB_Battle);
             gBattleCommunication[0]++;
         }
@@ -11125,6 +11132,11 @@ static void Cmd_displaydexinfo(void)
     case 4:
         if (!IsDma3ManagerBusyWithBgCopy())
         {
+            if (!POKEDEX_PLUS_HGSS && !POKEDEX_EMERALD)
+            {
+                LoadSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndPersonality(species, GetMonData(mon, MON_DATA_IS_SHINY), GetMonData(mon, MON_DATA_PERSONALITY)), species);
+                Pokedex_CreateCaughtMonSprite(species, 120, 64);
+            }
             BeginNormalPaletteFade(PALETTES_BG, 0, 16, 0, RGB_BLACK);
             ShowBg(0);
             ShowBg(3);
