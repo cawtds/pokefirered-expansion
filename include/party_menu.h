@@ -92,7 +92,6 @@ void SwitchPartyMonSlots(u8 slot, u8 slot2);
 u8 GetPartyIdFromBattlePartyId(u8 battlePartyId);
 void ShowPartyMenuToShowcaseMultiBattleParty(void);
 void ChooseMonForDaycare(void);
-void ChoosePartyMonByMenuType(u8 menuType);
 void ItemUseCB_BattleChooseMove(u8 taskId, TaskFunc task);
 void ItemUseCB_FormChange(u8 taskId, TaskFunc task);
 void ItemUseCB_FormChange_ConsumedOnUse(u8 taskId, TaskFunc task);
@@ -102,5 +101,6 @@ void ItemUseCB_Fusion(u8 taskId, TaskFunc task);
 u32 Party_FirstMonWithMove(u16 moveId);
 void ChoosePartyMon(void);
 bool8 CB2_FadeFromPartyMenu(void);
+void ChooseMonForMoveRelearner(void);
 
 #endif // GUARD_PARTY_MENU_H

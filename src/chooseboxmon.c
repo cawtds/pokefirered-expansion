@@ -191,7 +191,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
     switch (state)
     {
     case MON_CAN_LEARN:
-        DayCare_GetBoxMonNickname(boxmon, gStringVar1);
+        GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         gSpecialVar_Result = FALSE;
         switch(CanMonLearnMove(boxmon))
@@ -213,7 +213,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         else
             return ASK_REPLACEMENT_1;
     case ASK_REPLACEMENT_1:
-        DayCare_GetBoxMonNickname(boxmon, gStringVar1);
+        GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         ui->printMessage(gText_PkmnNeedsToReplaceMove);
         return ASK_REPLACEMENT_2;
@@ -259,7 +259,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         else
             return FORGOT_MOVE_1;
     case LEARNED_MOVE_1:
-        DayCare_GetBoxMonNickname(boxmon, gStringVar1);
+        GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         ui->printMessage(gText_PkmnLearnedMove4);
         return LEARNED_MOVE_2;
@@ -268,7 +268,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         ui->playFanfare(MUS_LEVEL_UP);
         return LEARN_MOVE_END;
     case FORGOT_MOVE_1:
-        DayCare_GetBoxMonNickname(boxmon, gStringVar1);
+        GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(GetBoxMonData(boxmon, MON_DATA_MOVE1 + GetMoveSlotToReplace())));
         ui->printMessage(gText_12PoofForgotMove);
         return REPLACE_MOVE_1;
@@ -278,13 +278,13 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         u32 pp = GetMovePP(move);
         SetBoxMonData(boxmon, MON_DATA_MOVE1 + slot, &move);
         SetBoxMonData(boxmon, MON_DATA_PP1 + slot, &pp);
-        DayCare_GetBoxMonNickname(boxmon, gStringVar1);
+        GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         gSpecialVar_Result = TRUE;
         ui->printMessage(gText_PkmnLearnedMove4);
         return LEARN_MOVE_END;
     case DID_NOT_LEARN_1:
-        DayCare_GetBoxMonNickname(boxmon, gStringVar1);
+        GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         gSpecialVar_Result = FALSE;
         ui->printMessage(gText_MoveNotLearned);
