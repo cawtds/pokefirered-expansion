@@ -10,13 +10,14 @@ extern const struct CompressedSpriteSheet gSpriteSheet_MoveTypes;
 extern const struct CompressedSpriteSheet gSpriteSheet_CategoryIcons;
 extern const struct SpritePalette gSpritePal_CategoryIcons;
 extern const struct SpriteTemplate gSpriteTemplate_CategoryIcons;
+extern MainCallback gInitialSummaryScreenCallback;
 
 void ShowSelectMovePokemonSummaryScreen(struct Pokemon *mons, u8 monIndex, void (*callback)(void), u16 newMove);
 u8 GetMoveSlotToReplace(void);
 void SummaryScreen_SetUnknownTaskId(u8 a0);
 void SummaryScreen_DestroyUnknownTask(void);
 u8 GetLastViewedMonIndex(void);
-void ShowPokemonSummaryScreen(struct Pokemon * party, u8 cursorPos, u8 lastIdx, void (*callback)(void), u8 a4);
+void ShowPokemonSummaryScreen(void *mons, u8 cursorPos, u8 lastIdx, void (*callback)(void), u8 a4);
 void SetPokemonSummaryScreenMode(u8);
 void SummaryScreen_SetAnimDelayTaskId(u8 taskId);
 
@@ -30,6 +31,7 @@ enum PokemonSummaryScreenMode
     PSS_MODE_FORGET_MOVE,
     PSS_MODE_TRADE,
     PSS_MODE_BOX,
+    SUMMARY_MODE_RELEARNER_BATTLE, // returning from move relearner initiated from battle moves page
 };
 
 enum PokemonSummaryScreenPage
