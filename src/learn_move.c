@@ -129,14 +129,6 @@ struct RelearnType
     bool32 (*hasMoveToRelearn)(struct BoxPokemon*);
 };
 
-struct MoveTutorMoveInfoHeaders
-{
-    const u8 *text;
-    u8 left;
-    u8 right;
-    u8 index; // unused
-};
-
 struct LearnMoveGfxResources
 {
     u8 state;
@@ -151,7 +143,7 @@ struct LearnMoveGfxResources
     u8 listMenuTaskId;
     u8 bg1TilemapBuffer[BG_SCREEN_SIZE]; // 264
     u8 textColor[3]; // A64
-    u8 selectedIndex;
+    s32 selectedItemId;
     u16 listOffset;
     u16 listRow;
     u8 numToShowAtOnce;
@@ -194,48 +186,17 @@ static const struct RelearnType sRelearnTypes[MOVE_RELEARNER_COUNT] =
     [MOVE_RELEARNER_TUTOR_MOVES] = {HasRelearnerTutorMoves},
 };
 
-static const u16 sLearnMoveInterfaceSpritesPalette[] = INCBIN_U16("graphics/learn_move/interface_sprites.gbapal");
-static const u16 sLearnMoveInterfaceSpritesTiles[] = INCBIN_U16("graphics/learn_move/interface_sprites.4bpp");
+static const u16 sUI_Pal[] = INCBIN_U16("graphics/learn_move/interface_sprites.gbapal");
+static const u16 sUI_Tiles[] = INCBIN_U16("graphics/learn_move/interface_sprites.4bpp");
 
-static const u8 sMoveTutorMenuWindowFrameDimensions[][4] =
-{
-    { 0,  0, 19, 13},
-    {20,  0, 29, 13},
-    { 2, 14, 27, 19}
-};
-
-static const u8 sJPText_TatakauWaza[] = _("たたかうわざ");
-static const u8 sJPText_Taipu[] = _("タイプ/");
-static const u8 sJPText_PP[] = _("PP/");
-static const u8 sJPText_Iryoku[] = _("いりょく/");
-static const u8 sJPText_Meichuu[] = _("めいちゅう/");
-
-static const struct MoveTutorMoveInfoHeaders sMoveTutorMoveInfoHeaders[][5] =
-{
-    {
-        {sJPText_TatakauWaza,  7, 1, 0},
-        {sJPText_Taipu,        1, 4, 1},
-        {sJPText_Iryoku,      11, 4, 2},
-        {sJPText_PP,           2, 6, 3},
-        {sJPText_Meichuu,     10, 6, 4},
-    },
-    {
-        {NULL,        0, 0, 0},
-        {NULL,        0, 0, 0},
-        {NULL,        0, 0, 0},
-        {NULL,        0, 0, 0},
-        {NULL,        0, 0, 0},
-    },
-};
-
-static const struct SpriteSheet sSpriteSheet_ListMenuScrollIndicators = {
-    .data = sLearnMoveInterfaceSpritesTiles,
-    .size = 0x180,
+static const struct SpriteSheet sMoveRelearnerSpriteSheet = {
+    .data = sUI_Tiles,
+    .size = sizeof(sUI_Tiles),
     .tag = GFXTAG_UI,
 };
 
-static const struct SpritePalette sSpritePalette_ListMenuScrollIndicators = {
-    .data = sLearnMoveInterfaceSpritesPalette,
+static const struct SpritePalette sMoveRelearnerPalette = {
+    .data = sUI_Pal,
     .tag = PALTAG_UI,
 };
 
@@ -284,7 +245,7 @@ static const struct BgTemplate sMoveRelearnerMenuBackgroundTemplates[2] = {
     }
 };
 
-static const struct WindowTemplate sWindowTemplates[9] = {
+static const struct WindowTemplate sMoveRelearnerWindowTemplates[9] = {
     {
         .bg = 0,
         .tilemapLeft = 0,
@@ -426,12 +387,12 @@ static void InitMoveRelearnerWindows(void)
 {
     u32 i;
 
-    InitWindows(sWindowTemplates);
+    InitWindows(sMoveRelearnerWindowTemplates);
     DeactivateAllTextPrinters();
     LoadUserWindowBorderGfx(0, 1, BG_PLTT_ID(14));
     ListMenuLoadStdPalAt(BG_PLTT_ID(13), 1);
 
-    for (i = 0; i < ARRAY_COUNT(sWindowTemplates); i++)
+    for (i = 0; i < ARRAY_COUNT(sMoveRelearnerWindowTemplates); i++)
     {
         ClearWindowTilemap(i);
         FillWindowPixelBuffer(i, PIXEL_FILL(0));
@@ -463,6 +424,9 @@ void CB2_InitLearnMove(void)
     InitMoveRelearnerBackgroundLayers();
     InitMoveRelearnerWindows();
 
+    sMoveRelearnerStruct->listOffset = 0;
+    sMoveRelearnerStruct->listRow = 0;
+
     // if ((!P_ENABLE_MOVE_RELEARNERS
     // && !P_TM_MOVES_RELEARNER
     // && !FlagGet(P_FLAG_EGG_MOVES)
@@ -492,8 +456,8 @@ void CB2_InitLearnMove(void)
 
     CreateLearnableMovesList();
 
-    LoadSpriteSheet(&sSpriteSheet_ListMenuScrollIndicators);
-    LoadSpritePalette(&sSpritePalette_ListMenuScrollIndicators);
+    LoadSpriteSheet(&sMoveRelearnerSpriteSheet);
+    LoadSpritePalette(&sMoveRelearnerPalette);
     SpawnListMenuScrollIndicatorSprites();
 
     RunTasks();
@@ -517,8 +481,8 @@ static void CB2_InitLearnMoveReturnFromSelectMove(void)
     InitMoveRelearnerBackgroundLayers();
     InitMoveRelearnerWindows();
 
-    LoadSpriteSheet(&sSpriteSheet_ListMenuScrollIndicators);
-    LoadSpritePalette(&sSpritePalette_ListMenuScrollIndicators);
+    LoadSpriteSheet(&sMoveRelearnerSpriteSheet);
+    LoadSpritePalette(&sMoveRelearnerPalette);
     SpawnListMenuScrollIndicatorSprites();
 
     SetBackdropFromColor(RGB_BLACK);
@@ -908,7 +872,7 @@ static void HandleInput(void)
             break;
         default:
             PlaySE(SE_SELECT);
-            if (sMoveRelearnerStruct->selectedIndex != LIST_CANCEL)
+            if (sMoveRelearnerStruct->selectedItemId != LIST_CANCEL)
             {
                 sMoveRelearnerStruct->state = 8;
                 StringCopy(gStringVar2, GetMoveName(GetCurrentSelectedMove()));
@@ -947,30 +911,33 @@ static void MoveLearnerInitListMenu(void)
 static void PrintMoveInfo(u16 move)
 {
     u8 buffer[50];
-    BlitMenuInfoIcon(2, gMovesInfo[move].type + 1, 1, 4);
+    u16 power = GetMovePower(move);
+    u16 accuracy = GetMoveAccuracy(move);
 
-    if (gMovesInfo[move].power < 2)
+    BlitMenuInfoIcon(2, GetMoveType(move) + 1, 1, 4);
+
+    if (power < 2)
     {
         PrintTextOnWindow(3, gText_ThreeHyphens, 1, 4, 0, 0);
     }
     else
     {
-        ConvertIntToDecimalStringN(buffer, gMovesInfo[move].power, STR_CONV_MODE_RIGHT_ALIGN, 3);
+        ConvertIntToDecimalStringN(buffer, power, STR_CONV_MODE_RIGHT_ALIGN, 3);
         PrintTextOnWindow(3, buffer, 1, 4, 0, 0);
     }
 
-    if (gMovesInfo[move].accuracy == 0)
+    if (accuracy == 0)
     {
         PrintTextOnWindow(3, gText_ThreeHyphens, 1, 18, 0, 1);
     }
     else
     {
-        ConvertIntToDecimalStringN(buffer, gMovesInfo[move].accuracy, STR_CONV_MODE_RIGHT_ALIGN, 3);
+        ConvertIntToDecimalStringN(buffer, accuracy, STR_CONV_MODE_RIGHT_ALIGN, 3);
         PrintTextOnWindow(3, buffer, 1, 18, 0, 1);
     }
-    ConvertIntToDecimalStringN(buffer, gMovesInfo[move].pp, STR_CONV_MODE_LEFT_ALIGN, 2);
+    ConvertIntToDecimalStringN(buffer, GetMovePP(move), STR_CONV_MODE_LEFT_ALIGN, 2);
     PrintTextOnWindow(4, buffer, 2, 2, 0, 0);
-    PrintTextOnWindow(5, gMovesInfo[move].description, 1, 0, 0, 0);
+    PrintTextOnWindow(5, GetMoveDescription(move), 1, 0, 0, 0);
 }
 
 static void LoadMoveInfoUI(void)
@@ -994,9 +961,9 @@ static void LoadMoveInfoUI(void)
 static void PrintMoveInfoHandleCancel_CopyToVram(void)
 {
     int i;
-    if (sMoveRelearnerStruct->selectedIndex != 0xFE)
+    if (sMoveRelearnerStruct->selectedItemId != LIST_CANCEL)
     {
-        PrintMoveInfo(sMoveRelearnerStruct->learnableMoves[sMoveRelearnerStruct->selectedIndex]);
+        PrintMoveInfo(sMoveRelearnerStruct->selectedItemId);
     }
     else
     {
@@ -1016,11 +983,11 @@ static void PrintMoveInfoHandleCancel_CopyToVram(void)
 
 static void MoveRelearnerMenu_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list)
 {
+    sMoveRelearnerStruct->selectedItemId = itemIndex;
     if (!onInit)
     {
         PlaySE(SE_SELECT);
         sMoveRelearnerStruct->scheduleMoveInfoUpdate = TRUE;
-        sMoveRelearnerStruct->selectedIndex = itemIndex;
     }
 }
 
