@@ -533,7 +533,7 @@ static void CB2_MoveRelearnerMain(void)
 static void PrintMessageWithPlaceholders(const u8 *str)
 {
     StringExpandPlaceholders(gStringVar4, str);
-    PrintTextOnWindow(7, gStringVar4, 0, 2, GetPlayerTextSpeedDelay(), 2);
+    PrintTextOnWindow(RELEARNER_WIN_MESSAGE_BOX, gStringVar4, 0, 2, GetPlayerTextSpeedDelay(), 2);
 }
 
 static void DoMoveRelearnerMain(void)
@@ -723,7 +723,7 @@ static void DoMoveRelearnerMain(void)
     case MENU_STATE_TRY_OVERWRITE_MOVE:
         if (!gPaletteFade.active)
         {
-            if (sMoveRelearnerStruct->selectedMoveSlot == 4)
+            if (sMoveRelearnerStruct->selectedMoveSlot == MAX_MON_MOVES)
             {
                 sMoveRelearnerStruct->state = MENU_STATE_PRINT_STOP_TEACHING;
             }
@@ -929,53 +929,55 @@ static void PrintMoveInfo(u16 move)
     u16 power = GetMovePower(move);
     u16 accuracy = GetMoveAccuracy(move);
 
-    BlitMenuInfoIcon(2, GetMoveType(move) + 1, 1, 4);
+    BlitMenuInfoIcon(RELEARNER_WIN_MOVE_TYPE, GetMoveType(move) + 1, 1, 4);
 
     if (power < 2)
     {
-        PrintTextOnWindow(3, gText_ThreeHyphens, 1, 4, 0, 0);
+        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, gText_ThreeHyphens, 1, 4, 0, 0);
     }
     else
     {
         ConvertIntToDecimalStringN(buffer, power, STR_CONV_MODE_RIGHT_ALIGN, 3);
-        PrintTextOnWindow(3, buffer, 1, 4, 0, 0);
+        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, buffer, 1, 4, 0, 0);
     }
 
     if (accuracy == 0)
     {
-        PrintTextOnWindow(3, gText_ThreeHyphens, 1, 18, 0, 1);
+        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, gText_ThreeHyphens, 1, 18, 0, 1);
     }
     else
     {
         ConvertIntToDecimalStringN(buffer, accuracy, STR_CONV_MODE_RIGHT_ALIGN, 3);
-        PrintTextOnWindow(3, buffer, 1, 18, 0, 1);
+        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, buffer, 1, 18, 0, 1);
     }
     ConvertIntToDecimalStringN(buffer, GetMovePP(move), STR_CONV_MODE_LEFT_ALIGN, 2);
-    PrintTextOnWindow(4, buffer, 2, 2, 0, 0);
-    PrintTextOnWindow(5, GetMoveDescription(move), 1, 0, 0, 0);
+    PrintTextOnWindow(RELEARNER_WIN_MOVE_PP, buffer, 2, 2, 0, 0);
+    PrintTextOnWindow(RELEARNER_WIN_MOVE_DESC, GetMoveDescription(move), 1, 0, 0, 0);
 }
 
 static void LoadMoveInfoUI(void)
 {
-    BlitMenuInfoIcon(0, MENU_INFO_ICON_TYPE, 1, 4);
-    BlitMenuInfoIcon(1, MENU_INFO_ICON_POWER, 0, 4);
-    BlitMenuInfoIcon(1, MENU_INFO_ICON_ACCURACY, 0, 19);
-    BlitMenuInfoIcon(0, MENU_INFO_ICON_PP, 1, 19);
-    BlitMenuInfoIcon(0, MENU_INFO_ICON_EFFECT, 1, 34);
-    PutWindowTilemap(0);
-    PutWindowTilemap(1);
-    PutWindowTilemap(4);
-    PutWindowTilemap(3);
-    PutWindowTilemap(5);
-    PutWindowTilemap(2);
-    PutWindowTilemap(7);
-    CopyWindowToVram(0, COPYWIN_GFX);
-    CopyWindowToVram(1, COPYWIN_GFX);
+    BlitMenuInfoIcon(RELEARNER_WIN_MOVE_GFX1, MENU_INFO_ICON_TYPE, 1, 4);
+    BlitMenuInfoIcon(RELEARNER_WIN_MOVE_GFX1, MENU_INFO_ICON_PP, 1, 19);
+    BlitMenuInfoIcon(RELEARNER_WIN_MOVE_GFX1, MENU_INFO_ICON_EFFECT, 1, 34);
+
+    BlitMenuInfoIcon(RELEARNER_WIN_MOVE_GFX2, MENU_INFO_ICON_POWER, 0, 4);
+    BlitMenuInfoIcon(RELEARNER_WIN_MOVE_GFX2, MENU_INFO_ICON_ACCURACY, 0, 19);
+
+    PutWindowTilemap(RELEARNER_WIN_MOVE_GFX1);
+    PutWindowTilemap(RELEARNER_WIN_MOVE_GFX2);
+    PutWindowTilemap(RELEARNER_WIN_MOVE_TYPE);
+    PutWindowTilemap(RELEARNER_WIN_MOVE_POW_ACC);
+    PutWindowTilemap(RELEARNER_WIN_MOVE_PP);
+    PutWindowTilemap(RELEARNER_WIN_MOVE_DESC);
+    PutWindowTilemap(RELEARNER_WIN_MESSAGE_BOX);
+
+    CopyWindowToVram(RELEARNER_WIN_MOVE_GFX1, COPYWIN_GFX);
+    CopyWindowToVram(RELEARNER_WIN_MOVE_GFX2, COPYWIN_GFX);
 }
 
 static void PrintMoveInfoHandleCancel_CopyToVram(void)
 {
-    int i;
     if (sMoveRelearnerStruct->selectedItemId != LIST_CANCEL)
     {
         PrintMoveInfo(sMoveRelearnerStruct->selectedItemId);
@@ -1010,8 +1012,8 @@ static s8 YesNoMenuProcessInput(void)
     s8 input = Menu_ProcessInputNoWrapClearOnChoose();
     if (input != MENU_NOTHING_CHOSEN)
     {
-        PutWindowTilemap(6);
-        CopyWindowToVram(6, COPYWIN_MAP);
+        PutWindowTilemap(RELEARNER_WIN_MOVE_LIST);
+        CopyWindowToVram(RELEARNER_WIN_MOVE_LIST, COPYWIN_MAP);
     }
     return input;
 }
