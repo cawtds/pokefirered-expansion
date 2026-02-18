@@ -2494,7 +2494,7 @@ static void Task_OnSelectedMon(u8 taskId)
                 gSpecialVar_Result = FALSE;
             else
                 gSpecialVar_Result = TRUE;
-            DebugPrintfLevel(MGBA_LOG_ERROR, "result = %u", gSpecialVar_Result);
+
             gStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;
             SetPokeStorageTask(Task_ChangeScreen);
             break;

@@ -1203,23 +1203,35 @@ void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallbac
         return;
     }
 
-    gLastViewedMonIndex = cursorPos;
-
     sMoveSelectionCursorPos = 0;
     sMoveSwapCursorPos = 0;
     sMonSummaryScreen->savedCallback = savedCallback;
     if (gInitialSummaryScreenCallback == NULL)
         gInitialSummaryScreenCallback = savedCallback;
 
-    sMonSummaryScreen->monList.mons = party;
-
     if (party == gEnemyParty)
         sMonSummaryScreen->isEnemyParty = TRUE;
     else
         sMonSummaryScreen->isEnemyParty = FALSE;
 
-    sMonSummaryScreen->lastIndex = lastIdx;
     sMonSummaryScreen->mode = mode;
+    if (cursorPos == PC_MON_CHOSEN)
+    {
+        sMonSummaryScreen->monList.boxMons = GetBoxedMonPtr(gSpecialVar_MonBoxId, 0);
+        gLastViewedMonIndex = gSpecialVar_MonBoxPos;
+        sMonSummaryScreen->lastIndex = IN_BOX_COUNT - 1;
+    }
+    else
+    {
+        sMonSummaryScreen->monList.mons = party;
+        gLastViewedMonIndex = cursorPos;
+        sMonSummaryScreen->lastIndex = lastIdx;
+    }
+
+    if (mode == PSS_MODE_BOX || cursorPos == PC_MON_CHOSEN)
+        sMonSummaryScreen->isBoxMon = TRUE;
+    else
+        sMonSummaryScreen->isBoxMon = FALSE;
 
     switch (sMonSummaryScreen->mode)
     {
@@ -1227,20 +1239,17 @@ void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallbac
     default:
         SetHelpContext(HELPCONTEXT_POKEMON_INFO);
         sMonSummaryScreen->curPageIndex = PSS_PAGE_INFO;
-        sMonSummaryScreen->isBoxMon = FALSE;
         sMonSummaryScreen->lockMovesFlag = FALSE;
         break;
     case PSS_MODE_BOX:
         SetHelpContext(HELPCONTEXT_POKEMON_INFO);
         sMonSummaryScreen->curPageIndex = PSS_PAGE_INFO;
-        sMonSummaryScreen->isBoxMon = TRUE;
         sMonSummaryScreen->lockMovesFlag = FALSE;
         break;
     case PSS_MODE_SELECT_MOVE:
     case PSS_MODE_FORGET_MOVE:
         SetHelpContext(HELPCONTEXT_POKEMON_MOVES);
         sMonSummaryScreen->curPageIndex = PSS_PAGE_MOVES_INFO;
-        sMonSummaryScreen->isBoxMon = FALSE;
         sMonSummaryScreen->lockMovesFlag = TRUE;
         break;
     }

@@ -106,7 +106,6 @@ u32 IsBoxMonExcluded(struct BoxPokemon *boxmon)
 
 bool32 CanBoxMonBeSelected(struct BoxPokemon *boxmon)
 {
-    DebugPrintfLevel(MGBA_LOG_ERROR, "tasd");
     if (!sPcMonSelectionTypes[sSelectionType].isStrict)
         return TRUE;
     return !IsBoxMonExcluded(boxmon);
@@ -126,7 +125,6 @@ static void Task_ChooseBoxMon(u8 taskId)
 void ChooseBoxMon(struct ScriptContext *ctx)
 {
     sSelectionType = ScriptReadByte(ctx);
-    DebugPrintfLevel(MGBA_LOG_ERROR, "selection type = %u", sSelectionType);
     if (!OW_CHOOSE_FROM_PC_AND_PARTY)
     {
         sPcMonSelectionTypes[sSelectionType].partyMonBackup();
@@ -275,6 +273,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         ui->printMessage(gText_12PoofForgotMove);
         return REPLACE_MOVE_1;
     case REPLACE_MOVE_1:
+    {
         u32 slot = GetMoveSlotToReplace();
         RemoveBoxMonPPBonus(boxmon, slot);
         u32 pp = GetMovePP(move);
@@ -285,6 +284,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         gSpecialVar_Result = TRUE;
         ui->printMessage(gText_PkmnLearnedMove4);
         return LEARN_MOVE_END;
+    }
     case DID_NOT_LEARN_1:
         GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));

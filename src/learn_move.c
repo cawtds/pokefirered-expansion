@@ -510,6 +510,7 @@ static void CB2_InitLearnMoveReturnFromSelectMove(void)
     FreeAllSpritePalettes();
     ResetTasks();
     CreateLearnableMovesList();
+    sMoveRelearnerStruct->selectedPartyMember = gSpecialVar_0x8004;
     sMoveRelearnerStruct->selectedMoveSlot = gSpecialVar_0x8005;
     SetVBlankCallback(VBlankCB_MoveRelearner);
 
@@ -589,15 +590,23 @@ static void DoMoveRelearnerMain(void)
         switch (YesNoMenuProcessInput())
         {
         case 0:
-            if (GiveMoveToMon(&gPlayerParty[sMoveRelearnerStruct->selectedPartyMember], sMoveRelearnerStruct->learnableMoves[sMoveRelearnerStruct->selectedIndex]) != 0xFFFF)
             {
-                PrintMessageWithPlaceholders(gText_MonLearnedMove);
-                gSpecialVar_0x8004 = TRUE;
-                sMoveRelearnerStruct->state = 31;
-            }
-            else
-            {
-                sMoveRelearnerStruct->state = 16;
+                struct BoxPokemon *boxmon;
+                if (sMoveRelearnerStruct->selectedPartyMember == PC_MON_CHOSEN)
+                    boxmon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
+                else
+                    boxmon = &(gPlayerParty[sMoveRelearnerStruct->selectedPartyMember].box);
+
+                if (GiveMoveToBoxMon(boxmon, GetCurrentSelectedMove()) != MON_HAS_MAX_MOVES)
+                {
+                    PrintMessageWithPlaceholders(gText_MonLearnedMove);
+                    gSpecialVar_0x8004 = TRUE;
+                    sMoveRelearnerStruct->state = 31;
+                }
+                else
+                {
+                    sMoveRelearnerStruct->state = 16;
+                }
             }
             break;
         case 1:
@@ -1018,7 +1027,7 @@ static void MoveRelearnerMenu_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct
 static s8 YesNoMenuProcessInput(void)
 {
     s8 input = Menu_ProcessInputNoWrapClearOnChoose();
-    if (input != -2)
+    if (input != MENU_NOTHING_CHOSEN)
     {
         PutWindowTilemap(6);
         CopyWindowToVram(6, COPYWIN_MAP);
