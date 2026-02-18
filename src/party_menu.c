@@ -6835,6 +6835,7 @@ void ChooseMonForTradingBoard(u8 menuType, MainCallback callback)
 
 void ChooseMonForMoveTutor(void)
 {
+    DebugPrintfLevel(MGBA_LOG_ERROR, "ChooseMonForMoveTutor: %u", gSpecialVar_0x8005);
     switch (gSpecialVar_0x8005)
     {
         case MOVE_FRENZY_PLANT:

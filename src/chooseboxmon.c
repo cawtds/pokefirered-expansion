@@ -6,7 +6,7 @@
 #include "field_weather.h"
 #include "menu.h"
 #include "move.h"
-// #include "move_relearner.h"
+#include "move_relearner.h"
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
@@ -39,16 +39,16 @@ static u32 IsNotEgg(struct BoxPokemon *boxmon);
 static u32 IsMatchingSpecies(struct BoxPokemon *boxmon);
 static u32 CanMonDeleteMove(struct BoxPokemon *boxmon);
 static u32 CanMonLearnMove(struct BoxPokemon *boxmon);
-// static u32 CanRelearnMoves(struct BoxPokemon *boxmon);
+static u32 CanRelearnMoves(struct BoxPokemon *boxmon);
 
 static const struct PcMonSelection sPcMonSelectionTypes[] =
 {
     [SELECT_PC_MON_NORMAL] = {ChoosePartyMon, NoFilter, NULL, FALSE},
     [SELECT_PC_MON_TRADE] = {ChoosePartyMon, IsMatchingSpecies, NULL, FALSE},
     [SELECT_PC_MON_DAYCARE] = {ChooseSendDaycareMon, IsNotEgg, NULL, TRUE},
-    // [SELECT_PC_MON_MOVE_TUTOR] = {ChooseMonForMoveTutor, CanMonLearnMove, MoveTutor_AfterChooseBoxMon, FALSE},
+    [SELECT_PC_MON_MOVE_TUTOR] = {ChooseMonForMoveTutor, CanMonLearnMove, MoveTutor_AfterChooseBoxMon, FALSE},
     [SELECT_PC_MON_MOVE_DELETER] = {ChoosePartyMon, CanMonDeleteMove, NULL, FALSE},
-    // [SELECT_PC_MON_MOVE_RELEARNER] = {ChooseMonForMoveRelearner, CanRelearnMoves, NULL, FALSE}
+    [SELECT_PC_MON_MOVE_RELEARNER] = {ChooseMonForMoveRelearner, CanRelearnMoves, NULL, FALSE}
 };
 
 static u32 NoFilter(struct BoxPokemon *boxmon)
@@ -63,14 +63,14 @@ static u32 IsNotEgg(struct BoxPokemon *boxmon)
     return VALID_MON;
 }
 
-// static u32 CanRelearnMoves(struct BoxPokemon *boxmon)
-// {
-//     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
-//         return INVALID_MON;
-//     if (CanBoxMonRelearnMoves(boxmon, gMoveRelearnerState))
-//         return VALID_MON;
-//     return INVALID_MON;
-// }
+static u32 CanRelearnMoves(struct BoxPokemon *boxmon)
+{
+    if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
+        return INVALID_MON;
+    if (CanBoxMonRelearnMoves(boxmon, gMoveRelearnerState))
+        return VALID_MON;
+    return INVALID_MON;
+}
 
 static u32 IsMatchingSpecies(struct BoxPokemon *boxmon)
 {
@@ -106,6 +106,7 @@ u32 IsBoxMonExcluded(struct BoxPokemon *boxmon)
 
 bool32 CanBoxMonBeSelected(struct BoxPokemon *boxmon)
 {
+    DebugPrintfLevel(MGBA_LOG_ERROR, "tasd");
     if (!sPcMonSelectionTypes[sSelectionType].isStrict)
         return TRUE;
     return !IsBoxMonExcluded(boxmon);
@@ -125,6 +126,7 @@ static void Task_ChooseBoxMon(u8 taskId)
 void ChooseBoxMon(struct ScriptContext *ctx)
 {
     sSelectionType = ScriptReadByte(ctx);
+    DebugPrintfLevel(MGBA_LOG_ERROR, "selection type = %u", sSelectionType);
     if (!OW_CHOOSE_FROM_PC_AND_PARTY)
     {
         sPcMonSelectionTypes[sSelectionType].partyMonBackup();
