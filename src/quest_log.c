@@ -5,6 +5,7 @@
 #include "event_object_movement.h"
 #include "field_fadetransition.h"
 #include "field_player_avatar.h"
+#include "field_specials.h"
 #include "field_weather.h"
 #include "help_system.h"
 #include "item.h"
@@ -1017,6 +1018,7 @@ void QL_HandleInput(void)
         // Pressed B, end playback
         sPlaybackControl.endMode = END_MODE_FINISH;
         gQuestLogPlaybackState = QL_PLAYBACK_STATE_STOPPED;
+        DoPicboxCancel();
         DoSkipToEndTransition(-3);
     }
 }

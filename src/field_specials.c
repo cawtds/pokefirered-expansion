@@ -606,8 +606,7 @@ void NullFieldSpecial(void)
 
 void DoPicboxCancel(void)
 {
-    u8 t = EOS;
-    AddTextPrinterParameterized(0, FONT_NORMAL, &t, 0, 1, 0, NULL);
+    DeactivateSingleTextPrinter(0, WINDOW_TEXT_PRINTER);
     PicboxCancel();
 }
 
