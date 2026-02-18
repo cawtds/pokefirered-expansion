@@ -157,7 +157,7 @@ static void Task_WaitForFadeOut(u8 taskId);
 static void CB2_MoveRelearnerMain(void);
 static void DoMoveRelearnerMain(void);
 static void DrawTextBorderOnWindows6and7(void);
-static void PrintTeachWhichMoveToStrVar1(bool8 onInit);
+static void ShowTeachMoveText(void);
 static void SpriteCB_ListMenuScrollIndicators(struct Sprite *sprite);
 static void SpawnListMenuScrollIndicatorSprites(void);
 static void CreateLearnableMovesList(void);
@@ -245,7 +245,20 @@ static const struct BgTemplate sMoveRelearnerMenuBackgroundTemplates[2] = {
     }
 };
 
-static const struct WindowTemplate sMoveRelearnerWindowTemplates[9] = {
+enum RelearnerWindowId
+{
+    RELEARNER_WIN_MOVE_GFX1,
+    RELEARNER_WIN_MOVE_GFX2,
+    RELEARNER_WIN_MOVE_TYPE,
+    RELEARNER_WIN_MOVE_POW_ACC,
+    RELEARNER_WIN_MOVE_PP,
+    RELEARNER_WIN_MOVE_DESC,
+    RELEARNER_WIN_MOVE_LIST,
+    RELEARNER_WIN_MESSAGE_BOX,
+};
+
+static const struct WindowTemplate sMoveRelearnerWindowTemplates[] = {
+    [RELEARNER_WIN_MOVE_GFX1] =
     {
         .bg = 0,
         .tilemapLeft = 0,
@@ -255,6 +268,7 @@ static const struct WindowTemplate sMoveRelearnerWindowTemplates[9] = {
         .paletteNum = 13,
         .baseBlock = 0x014
     },
+    [RELEARNER_WIN_MOVE_GFX2] =
     {
         .bg = 0,
         .tilemapLeft = 10,
@@ -264,6 +278,7 @@ static const struct WindowTemplate sMoveRelearnerWindowTemplates[9] = {
         .paletteNum = 13,
         .baseBlock = 0x03e
     },
+    [RELEARNER_WIN_MOVE_TYPE] =
     {
         .bg = 0,
         .tilemapLeft = 5,
@@ -273,6 +288,7 @@ static const struct WindowTemplate sMoveRelearnerWindowTemplates[9] = {
         .paletteNum = 13,
         .baseBlock = 0x057
     },
+    [RELEARNER_WIN_MOVE_POW_ACC] =
     {
         .bg = 0,
         .tilemapLeft = 15,
@@ -282,6 +298,7 @@ static const struct WindowTemplate sMoveRelearnerWindowTemplates[9] = {
         .paletteNum = 15,
         .baseBlock = 0x061
     },
+    [RELEARNER_WIN_MOVE_PP] =
     {
         .bg = 0,
         .tilemapLeft = 5,
@@ -291,6 +308,7 @@ static const struct WindowTemplate sMoveRelearnerWindowTemplates[9] = {
         .paletteNum = 15,
         .baseBlock = 0x070
     },
+    [RELEARNER_WIN_MOVE_DESC] =
     {
         .bg = 0,
         .tilemapLeft = 2,
@@ -300,6 +318,7 @@ static const struct WindowTemplate sMoveRelearnerWindowTemplates[9] = {
         .paletteNum = 15,
         .baseBlock = 0x079
     },
+    [RELEARNER_WIN_MOVE_LIST] =
     {
         .bg = 0,
         .tilemapLeft = 19,
@@ -309,6 +328,7 @@ static const struct WindowTemplate sMoveRelearnerWindowTemplates[9] = {
         .paletteNum = 15,
         .baseBlock = 0x0f1
     },
+    [RELEARNER_WIN_MESSAGE_BOX] =
     {
         .bg = 0,
         .tilemapLeft = 2,
@@ -336,7 +356,7 @@ static const struct ListMenuTemplate sMoveRelearnerMovesListTemplate = {
     .itemPrintFunc = NULL,
     .totalItems = 0,
     .maxShowed = 7,
-    .windowId = 6,
+    .windowId = RELEARNER_WIN_MOVE_LIST,
     .header_X = 0,
     .item_X = 8,
     .cursor_X = 0,
@@ -389,7 +409,7 @@ static void InitMoveRelearnerWindows(void)
 
     InitWindows(sMoveRelearnerWindowTemplates);
     DeactivateAllTextPrinters();
-    LoadUserWindowBorderGfx(0, 1, BG_PLTT_ID(14));
+    LoadUserWindowBorderGfx(RELEARNER_WIN_MOVE_GFX1, 1, BG_PLTT_ID(14));
     ListMenuLoadStdPalAt(BG_PLTT_ID(13), 1);
 
     for (i = 0; i < ARRAY_COUNT(sMoveRelearnerWindowTemplates); i++)
@@ -397,7 +417,7 @@ static void InitMoveRelearnerWindows(void)
         ClearWindowTilemap(i);
         FillWindowPixelBuffer(i, PIXEL_FILL(0));
     }
-    FillWindowPixelBuffer(7, PIXEL_FILL(1));
+    FillWindowPixelBuffer(RELEARNER_WIN_MESSAGE_BOX, PIXEL_FILL(1));
     FillBgTilemapBufferRect(0, 0x000, 0, 0, 30, 20, 15);
     SetBgTilemapBuffer(1, sMoveRelearnerStruct->bg1TilemapBuffer);
     LoadPalette(gMoveRelearner_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
@@ -496,7 +516,7 @@ static void CB2_InitLearnMoveReturnFromSelectMove(void)
 
 static void CB2_MoveRelearnerMain(void)
 {
-    if (!IsTextPrinterActiveOnWindow(7))
+    if (!IsTextPrinterActiveOnWindow(RELEARNER_WIN_MESSAGE_BOX))
         DoMoveRelearnerMain();
     if (sMoveRelearnerStruct->scheduleMoveInfoUpdate)
     {
@@ -527,7 +547,7 @@ static void DoMoveRelearnerMain(void)
         LoadMoveInfoUI();
         sMoveRelearnerStruct->state++;
         DrawTextBorderOnWindows6and7();
-        PrintTeachWhichMoveToStrVar1(FALSE);
+        ShowTeachMoveText();
         MoveLearnerInitListMenu();
         sMoveRelearnerStruct->scheduleMoveInfoUpdate = TRUE;
         break;
@@ -539,7 +559,7 @@ static void DoMoveRelearnerMain(void)
         sMoveRelearnerStruct->state++;
         break;
     case MENU_STATE_SETUP_BATTLE_MODE:
-        PrintTeachWhichMoveToStrVar1(FALSE);
+        ShowTeachMoveText();
         sMoveRelearnerStruct->scheduleMoveInfoUpdate = TRUE;
         sMoveRelearnerStruct->state++;
         break;
@@ -698,7 +718,6 @@ static void DoMoveRelearnerMain(void)
         LoadMoveInfoUI();
         DrawTextBorderOnWindows6and7();
         MoveLearnerInitListMenu();
-        PrintTeachWhichMoveToStrVar1(TRUE);
         PrintMoveInfoHandleCancel_CopyToVram();
         break;
     case MENU_STATE_TRY_OVERWRITE_MOVE:
@@ -759,20 +778,16 @@ static void DoMoveRelearnerMain(void)
 
 static void DrawTextBorderOnWindows6and7(void)
 {
-    int i;
-    for (i = 6; i < 8; i++)
-        DrawTextBorderOuter(i, 0x001, 14);
+    DrawTextBorderOuter(RELEARNER_WIN_MOVE_LIST, 0x001, 14);
+    DrawTextBorderOuter(RELEARNER_WIN_MESSAGE_BOX, 0x001, 14);
 }
 
-static void PrintTeachWhichMoveToStrVar1(bool8 onInit)
+static void ShowTeachMoveText(void)
 {
-    if (!onInit)
-    {
-        StringExpandPlaceholders(gStringVar4, gText_TeachWhichMoveToMon);
-        PrintTextOnWindow(7, gStringVar4, 0, 2, 0, 2);
-        PutWindowTilemap(7);
-        CopyWindowToVram(7, COPYWIN_FULL);
-    }
+    StringExpandPlaceholders(gStringVar4, gText_TeachWhichMoveToMon);
+    PrintTextOnWindow(RELEARNER_WIN_MESSAGE_BOX, gStringVar4, 0, 2, 0, 2);
+    PutWindowTilemap(RELEARNER_WIN_MESSAGE_BOX);
+    CopyWindowToVram(RELEARNER_WIN_MESSAGE_BOX, COPYWIN_FULL);
 }
 
 static void SpriteCB_ListMenuScrollIndicators(struct Sprite *sprite)
@@ -905,7 +920,7 @@ static s32 GetCurrentSelectedMove(void)
 static void MoveLearnerInitListMenu(void)
 {
     sMoveRelearnerStruct->listMenuTaskId = ListMenuInit(&gMultiuseListMenuTemplate, sMoveRelearnerStruct->listOffset, sMoveRelearnerStruct->listRow);
-    CopyWindowToVram(6, COPYWIN_MAP);
+    CopyWindowToVram(RELEARNER_WIN_MOVE_LIST, COPYWIN_MAP);
 }
 
 static void PrintMoveInfo(u16 move)
@@ -967,18 +982,17 @@ static void PrintMoveInfoHandleCancel_CopyToVram(void)
     }
     else
     {
-        for (i = 2; i < 6; i++)
-        {
-            FillWindowPixelBuffer(i, PIXEL_FILL(0));
-            CopyWindowToVram(i, COPYWIN_GFX);
-        }
+        FillWindowPixelBuffer(RELEARNER_WIN_MOVE_TYPE, PIXEL_FILL(0));
+        FillWindowPixelBuffer(RELEARNER_WIN_MOVE_POW_ACC, PIXEL_FILL(0));
+        FillWindowPixelBuffer(RELEARNER_WIN_MOVE_PP, PIXEL_FILL(0));
+        FillWindowPixelBuffer(RELEARNER_WIN_MOVE_DESC, PIXEL_FILL(0));
     }
-    CopyWindowToVram(3, COPYWIN_GFX);
-    CopyWindowToVram(4, COPYWIN_GFX);
-    CopyWindowToVram(2, COPYWIN_GFX);
-    CopyWindowToVram(2, COPYWIN_GFX);
-    CopyWindowToVram(5, COPYWIN_GFX);
-    CopyWindowToVram(7, COPYWIN_FULL);
+
+    CopyWindowToVram(RELEARNER_WIN_MOVE_TYPE, COPYWIN_GFX);
+    CopyWindowToVram(RELEARNER_WIN_MOVE_POW_ACC, COPYWIN_GFX);
+    CopyWindowToVram(RELEARNER_WIN_MOVE_PP, COPYWIN_GFX);
+    CopyWindowToVram(RELEARNER_WIN_MOVE_DESC, COPYWIN_GFX);
+    CopyWindowToVram(RELEARNER_WIN_MESSAGE_BOX, COPYWIN_FULL);
 }
 
 static void MoveRelearnerMenu_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list)
