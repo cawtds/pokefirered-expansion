@@ -6,7 +6,7 @@
 #include "field_weather.h"
 #include "menu.h"
 #include "move.h"
-// #include "move_relearner.h"
+#include "move_relearner.h"
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
@@ -39,16 +39,16 @@ static u32 IsNotEgg(struct BoxPokemon *boxmon);
 static u32 IsMatchingSpecies(struct BoxPokemon *boxmon);
 static u32 CanMonDeleteMove(struct BoxPokemon *boxmon);
 static u32 CanMonLearnMove(struct BoxPokemon *boxmon);
-// static u32 CanRelearnMoves(struct BoxPokemon *boxmon);
+static u32 CanRelearnMoves(struct BoxPokemon *boxmon);
 
 static const struct PcMonSelection sPcMonSelectionTypes[] =
 {
     [SELECT_PC_MON_NORMAL] = {ChoosePartyMon, NoFilter, NULL, FALSE},
     [SELECT_PC_MON_TRADE] = {ChoosePartyMon, IsMatchingSpecies, NULL, FALSE},
     [SELECT_PC_MON_DAYCARE] = {ChooseSendDaycareMon, IsNotEgg, NULL, TRUE},
-    // [SELECT_PC_MON_MOVE_TUTOR] = {ChooseMonForMoveTutor, CanMonLearnMove, MoveTutor_AfterChooseBoxMon, FALSE},
+    [SELECT_PC_MON_MOVE_TUTOR] = {ChooseMonForMoveTutor, CanMonLearnMove, MoveTutor_AfterChooseBoxMon, FALSE},
     [SELECT_PC_MON_MOVE_DELETER] = {ChoosePartyMon, CanMonDeleteMove, NULL, FALSE},
-    // [SELECT_PC_MON_MOVE_RELEARNER] = {ChooseMonForMoveRelearner, CanRelearnMoves, NULL, FALSE}
+    [SELECT_PC_MON_MOVE_RELEARNER] = {ChooseMonForMoveRelearner, CanRelearnMoves, NULL, FALSE}
 };
 
 static u32 NoFilter(struct BoxPokemon *boxmon)
@@ -63,14 +63,14 @@ static u32 IsNotEgg(struct BoxPokemon *boxmon)
     return VALID_MON;
 }
 
-// static u32 CanRelearnMoves(struct BoxPokemon *boxmon)
-// {
-//     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
-//         return INVALID_MON;
-//     if (CanBoxMonRelearnMoves(boxmon, gMoveRelearnerState))
-//         return VALID_MON;
-//     return INVALID_MON;
-// }
+static u32 CanRelearnMoves(struct BoxPokemon *boxmon)
+{
+    if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
+        return INVALID_MON;
+    if (CanBoxMonRelearnMoves(boxmon, gMoveRelearnerState))
+        return VALID_MON;
+    return INVALID_MON;
+}
 
 static u32 IsMatchingSpecies(struct BoxPokemon *boxmon)
 {
@@ -191,7 +191,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
     switch (state)
     {
     case MON_CAN_LEARN:
-        DayCare_GetBoxMonNickname(boxmon, gStringVar1);
+        GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         gSpecialVar_Result = FALSE;
         switch(CanMonLearnMove(boxmon))
@@ -213,7 +213,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         else
             return ASK_REPLACEMENT_1;
     case ASK_REPLACEMENT_1:
-        DayCare_GetBoxMonNickname(boxmon, gStringVar1);
+        GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         ui->printMessage(gText_PkmnNeedsToReplaceMove);
         return ASK_REPLACEMENT_2;
@@ -259,7 +259,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         else
             return FORGOT_MOVE_1;
     case LEARNED_MOVE_1:
-        DayCare_GetBoxMonNickname(boxmon, gStringVar1);
+        GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         ui->printMessage(gText_PkmnLearnedMove4);
         return LEARNED_MOVE_2;
@@ -268,23 +268,25 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         ui->playFanfare(MUS_LEVEL_UP);
         return LEARN_MOVE_END;
     case FORGOT_MOVE_1:
-        DayCare_GetBoxMonNickname(boxmon, gStringVar1);
+        GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(GetBoxMonData(boxmon, MON_DATA_MOVE1 + GetMoveSlotToReplace())));
         ui->printMessage(gText_12PoofForgotMove);
         return REPLACE_MOVE_1;
     case REPLACE_MOVE_1:
+    {
         u32 slot = GetMoveSlotToReplace();
         RemoveBoxMonPPBonus(boxmon, slot);
         u32 pp = GetMovePP(move);
         SetBoxMonData(boxmon, MON_DATA_MOVE1 + slot, &move);
         SetBoxMonData(boxmon, MON_DATA_PP1 + slot, &pp);
-        DayCare_GetBoxMonNickname(boxmon, gStringVar1);
+        GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         gSpecialVar_Result = TRUE;
         ui->printMessage(gText_PkmnLearnedMove4);
         return LEARN_MOVE_END;
+    }
     case DID_NOT_LEARN_1:
-        DayCare_GetBoxMonNickname(boxmon, gStringVar1);
+        GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         gSpecialVar_Result = FALSE;
         ui->printMessage(gText_MoveNotLearned);

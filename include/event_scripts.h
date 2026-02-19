@@ -982,6 +982,8 @@ extern const u8 EventScript_LostSignal[];
 extern const u8 EventScript_TooDark[];
 extern const u8 EventScript_MovedTooFast[];
 
+extern const u8 MoveTutor_AfterChooseBoxMon[];
+
 // Battle Pyramid.
 extern const u8 BattlePyramid_Retire[];
 extern const u8 BattlePyramid_WarpToNextFloor[];

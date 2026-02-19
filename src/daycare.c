@@ -397,7 +397,7 @@ u8 *GetMonNicknameVanilla(struct Pokemon *mon, u8 *dest)
     return StringCopyN(dest, nickname, VANILLA_POKEMON_NAME_LENGTH);
 }
 
-u8 *DayCare_GetBoxMonNickname(struct BoxPokemon *mon, u8 *dest)
+u8 *GetBoxMonNickname(struct BoxPokemon *mon, u8 *dest)
 {
     u8 nickname[POKEMON_NAME_LENGTH * 2];
 
@@ -616,7 +616,7 @@ static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
     u32 experience;
     struct Pokemon pokemon;
 
-    DayCare_GetBoxMonNickname(&daycareMon->mon, gStringVar1);
+    GetBoxMonNickname(&daycareMon->mon, gStringVar1);
     species = GetBoxMonData(&daycareMon->mon, MON_DATA_SPECIES);
     BoxMonToMon(&daycareMon->mon, &pokemon);
 
@@ -678,7 +678,7 @@ static u8 GetNumLevelsGainedForDaycareMon(struct DaycareMon *daycareMon)
 {
     u8 numLevelsGained = GetNumLevelsGainedFromSteps(daycareMon);
     ConvertIntToDecimalStringN(gStringVar2, numLevelsGained, STR_CONV_MODE_LEFT_ALIGN, 2);
-    DayCare_GetBoxMonNickname(&daycareMon->mon, gStringVar1);
+    GetBoxMonNickname(&daycareMon->mon, gStringVar1);
     return numLevelsGained;
 }
 
@@ -687,7 +687,7 @@ static u32 GetDaycareCostForSelectedMon(struct DaycareMon *daycareMon)
     u32 cost;
 
     u8 numLevelsGained = GetNumLevelsGainedFromSteps(daycareMon);
-    DayCare_GetBoxMonNickname(&daycareMon->mon, gStringVar1);
+    GetBoxMonNickname(&daycareMon->mon, gStringVar1);
     cost = 100 + 100 * numLevelsGained;
     ConvertIntToDecimalStringN(gStringVar2, cost, STR_CONV_MODE_LEFT_ALIGN, 5);
     return cost;
@@ -1469,20 +1469,20 @@ static void _GetDaycareMonNicknames(struct DayCare *daycare)
     u8 text[12];
     if (GetBoxMonData(&daycare->mons[0].mon, MON_DATA_SPECIES) != SPECIES_NONE)
     {
-        DayCare_GetBoxMonNickname(&daycare->mons[0].mon, gStringVar1);
+        GetBoxMonNickname(&daycare->mons[0].mon, gStringVar1);
         GetBoxMonData(&daycare->mons[0].mon, MON_DATA_OT_NAME, text);
         StringCopy(gStringVar3, text);
     }
 
     if (GetBoxMonData(&daycare->mons[1].mon, MON_DATA_SPECIES) != SPECIES_NONE)
     {
-        DayCare_GetBoxMonNickname(&daycare->mons[1].mon, gStringVar2);
+        GetBoxMonNickname(&daycare->mons[1].mon, gStringVar2);
     }
 }
 
 u16 GetSelectedMonNicknameAndSpecies(void)
 {
-    DayCare_GetBoxMonNickname(&gPlayerParty[GetCursorSelectionMonId()].box, gStringVar1);
+    GetBoxMonNickname(&gPlayerParty[GetCursorSelectionMonId()].box, gStringVar1);
     return GetBoxMonData(&gPlayerParty[GetCursorSelectionMonId()].box, MON_DATA_SPECIES);
 }
 
@@ -1672,7 +1672,7 @@ static void UNUSED GetDaycareLevelMenuText(struct DayCare *daycare, u8 *dest)
     *dest = EOS;
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
     {
-        DayCare_GetBoxMonNickname(&daycare->mons[i].mon, monNames[i]);
+        GetBoxMonNickname(&daycare->mons[i].mon, monNames[i]);
         AppendMonGenderSymbol(monNames[i], &daycare->mons[i].mon);
     }
 
@@ -1727,7 +1727,7 @@ static void DaycarePrintMonNickname(struct DayCare *daycare, u8 windowId, u32 da
 {
     u8 nickname[POKEMON_NAME_LENGTH * 2];
 
-    DayCare_GetBoxMonNickname(&daycare->mons[daycareSlotId].mon, nickname);
+    GetBoxMonNickname(&daycare->mons[daycareSlotId].mon, nickname);
     AppendMonGenderSymbol(nickname, &daycare->mons[daycareSlotId].mon);
     DaycareAddTextPrinter(windowId, nickname, 8, y);
 }
@@ -1943,7 +1943,7 @@ static bool8 BufferDayCareMonReceivedMail(struct DayCare *daycare, u8 daycareId)
     u8 nick[0x20];
     struct DaycareMon *daycareMon = &daycare->mons[daycareId];
 
-    DayCare_GetBoxMonNickname(&daycareMon->mon, nick);
+    GetBoxMonNickname(&daycareMon->mon, nick);
     if (daycareMon->mail.message.itemId != ITEM_NONE
         && (StringCompare(nick, daycareMon->mail.monName) != 0
             || StringCompare(gSaveBlock2Ptr->playerName, daycareMon->mail.OT_name) != 0))
