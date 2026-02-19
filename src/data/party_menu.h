@@ -119,6 +119,7 @@ static const u8 sFontColorTable[][3] =
     {TEXT_COLOR_WHITE,       TEXT_COLOR_DARK_GRAY,  TEXT_COLOR_LIGHT_GRAY}, // Selection actions
     {TEXT_COLOR_WHITE,       TEXT_COLOR_BLUE,       TEXT_COLOR_LIGHT_BLUE}, // Field moves
     {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE,      TEXT_COLOR_DARK_GRAY},  // Unused
+    {TEXT_COLOR_WHITE,       TEXT_COLOR_RED,        TEXT_COLOR_LIGHT_RED},  // Move relearner
 };
 
 static const struct WindowTemplate sSinglePartyMenuWindowTemplate[] =
@@ -1018,6 +1019,11 @@ enum
     CURSOR_OPTION_REGISTER,
     CURSOR_OPTION_TRADE1,
     CURSOR_OPTION_TRADE2,
+    MENU_LEVEL_UP_MOVES,
+	MENU_EGG_MOVES,
+    MENU_TM_MOVES,
+    MENU_TUTOR_MOVES,
+    MENU_SUB_MOVES,
     MENU_TOSS,
     CURSOR_OPTION_CATALOG_BULB,
     CURSOR_OPTION_CATALOG_OVEN,
@@ -1055,6 +1061,11 @@ static struct
     [CURSOR_OPTION_TRADE1]                               = {gText_Trade4,                      CursorCB_Trade1          },
     [CURSOR_OPTION_TRADE2]                               = {gText_Trade4,                      CursorCB_Trade2          },
     [MENU_TOSS]                                          = {gMenuText_Toss,                    CursorCb_Toss},
+    [MENU_LEVEL_UP_MOVES]  = {COMPOUND_STRING("LEVEL MOVES"),     CursorCb_ChangeLevelUpMoves},
+	[MENU_EGG_MOVES]       = {COMPOUND_STRING("EGG MOVES"),       CursorCb_ChangeEggMoves},
+	[MENU_TM_MOVES]        = {COMPOUND_STRING("TM MOVES"),        CursorCb_ChangeTMMoves},
+	[MENU_TUTOR_MOVES]     = {COMPOUND_STRING("TUTOR MOVES"),     CursorCb_ChangeTutorMoves},
+    [MENU_SUB_MOVES]       = {COMPOUND_STRING("LEARN MOVES"),     CursorCb_LearnMovesSubMenu},
     [CURSOR_OPTION_CATALOG_BULB]                         = {gText_LightBulb,                   CursorCB_CatalogBulb     },
     [CURSOR_OPTION_CATALOG_OVEN]                         = {gText_MicrowaveOven,               CursorCB_CatalogOven     },
     [CURSOR_OPTION_CATALOG_WASHING]                      = {gText_WashingMachine,              CursorCB_CatalogWashing  },
@@ -1097,6 +1108,7 @@ enum
     ACTIONS_REGISTER,
     ACTIONS_TRADE,
     ACTIONS_SPIN_TRADE,
+    ACTIONS_MOVES_SUB,
     ACTIONS_TAKEITEM_TOSS,
     ACTIONS_ROTOM_CATALOG,
     ACTIONS_ZYGARDE_CUBE,

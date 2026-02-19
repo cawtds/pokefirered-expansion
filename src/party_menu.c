@@ -174,6 +174,11 @@ static void CursorCB_Trade1(u8 taskId);
 static void CursorCB_Trade2(u8 taskId);
 static void CursorCb_Toss(u8 taskId);
 static void CursorCB_FieldMove(u8 taskId);
+static void CursorCb_ChangeLevelUpMoves(u8);
+static void CursorCb_ChangeEggMoves(u8);
+static void CursorCb_ChangeTMMoves(u8);
+static void CursorCb_ChangeTutorMoves(u8);
+static void CursorCb_LearnMovesSubMenu(u8);
 static void CursorCB_CatalogBulb(u8);
 static void CursorCB_CatalogOven(u8);
 static void CursorCB_CatalogWashing(u8);
@@ -292,6 +297,7 @@ static void CreateHeldItemSpriteForTrade(u8 spriteId, bool8 isMail);
 static void SetPartyMonAilmentGfx(struct Pokemon *mon, struct PartyMenuBox *menuBox);
 static void UpdatePartyMonAilmentGfx(u8 status, struct PartyMenuBox *menuBox);
 static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId);
+static void SetPartyMonLearnMoveSelectionActions(struct Pokemon*, u8);
 static u8 GetPartyMenuActionsTypeInBattle(struct Pokemon *mon);
 static u8 GetPartySlotEntryStatus(s8 slot);
 static void Task_HandleSelectionMenuInput(u8 taskId);
@@ -2789,7 +2795,13 @@ static u8 DisplaySelectionWindow(u8 windowType)
     for (i = 0; i < sPartyMenuInternal->numActions; ++i)
     {
         const u8 *text;
-        u8 fontColorsId = (sPartyMenuInternal->actions[i] >= CURSOR_OPTION_FIELD_MOVES) ? 4 : 3;
+        u8 fontColorsId = 3;
+
+        if (sPartyMenuInternal->actions[i] >= CURSOR_OPTION_FIELD_MOVES)
+            fontColorsId = 4;
+        if (sPartyMenuInternal->actions[i] >= MENU_LEVEL_UP_MOVES && sPartyMenuInternal->actions[i] <= MENU_SUB_MOVES)
+            fontColorsId = 6;
+
         if (sPartyMenuInternal->actions[i] >= CURSOR_OPTION_FIELD_MOVES)
             text = gMovesInfo[gFieldMovesInfo[sPartyMenuInternal->actions[i] - CURSOR_OPTION_FIELD_MOVES].moveId].name;
         else
@@ -3182,6 +3194,11 @@ static void SetPartyMonSelectionActions(struct Pokemon *mons, u8 slotId, u8 acti
     {
         SetPartyMonFieldSelectionActions(mons, slotId);
     }
+    else if (action == ACTIONS_MOVES_SUB && P_PARTY_MOVE_RELEARNER)
+    {
+        sPartyMenuInternal->numActions = 0;
+        SetPartyMonLearnMoveSelectionActions(mons, slotId);
+    }
     else
     {
         sPartyMenuInternal->numActions = sPartyMenuActionCounts[action];
@@ -3196,6 +3213,14 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
 
     sPartyMenuInternal->numActions = 0;
     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, CURSOR_OPTION_SUMMARY);
+
+    if (P_PARTY_MOVE_RELEARNER
+     && GetMonData(&mons[slotId], MON_DATA_SPECIES)
+     && CanBoxMonRelearnAnyMove(&mons[slotId].box))
+    {
+        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUB_MOVES);
+    }
+
     // Add field moves to action list
     for (i = 0; i < MAX_MON_MOVES; ++i)
     {
@@ -3217,6 +3242,23 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
         AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, CURSOR_OPTION_MAIL);
     else
         AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, CURSOR_OPTION_ITEM);
+    AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, CURSOR_OPTION_CANCEL1);
+}
+
+static void SetPartyMonLearnMoveSelectionActions(struct Pokemon *mons, u8 slotId)
+{
+    if (CanBoxMonRelearnMoves(&mons[slotId].box, MOVE_RELEARNER_LEVEL_UP_MOVES))
+        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_LEVEL_UP_MOVES);
+
+    if (CanBoxMonRelearnMoves(&mons[slotId].box, MOVE_RELEARNER_EGG_MOVES))
+        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_EGG_MOVES);
+
+    if (CanBoxMonRelearnMoves(&mons[slotId].box, MOVE_RELEARNER_TM_MOVES))
+        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_TM_MOVES);
+
+    if (CanBoxMonRelearnMoves(&mons[slotId].box, MOVE_RELEARNER_TUTOR_MOVES))
+        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_TUTOR_MOVES);
+
     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, CURSOR_OPTION_CANCEL1);
 }
 
@@ -8200,6 +8242,61 @@ void IsSelectedMonEgg(void)
         gSpecialVar_Result = FALSE;
 }
 
+static void CursorCb_ChangeLevelUpMoves(u8 taskId)
+{
+    PlaySE(SE_SELECT);
+	gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
+    gRelearnMode = RELEARN_MODE_PARTY_MENU;
+    gLastViewedMonIndex = gPartyMenu.slotId;
+    gSpecialVar_0x8004 = gLastViewedMonIndex;
+    TeachMoveRelearnerMove();
+    Task_ClosePartyMenu(taskId);
+}
+
+static void CursorCb_ChangeEggMoves(u8 taskId)
+{
+    PlaySE(SE_SELECT);
+	gMoveRelearnerState = MOVE_RELEARNER_EGG_MOVES;
+    gRelearnMode = RELEARN_MODE_PARTY_MENU;
+    gLastViewedMonIndex = gPartyMenu.slotId;
+    gSpecialVar_0x8004 = gLastViewedMonIndex;
+    TeachMoveRelearnerMove();
+    Task_ClosePartyMenu(taskId);
+}
+
+static void CursorCb_ChangeTMMoves(u8 taskId)
+{
+    PlaySE(SE_SELECT);
+	gMoveRelearnerState = MOVE_RELEARNER_TM_MOVES;
+    gRelearnMode = RELEARN_MODE_PARTY_MENU;
+    gLastViewedMonIndex = gPartyMenu.slotId;
+    gSpecialVar_0x8004 = gLastViewedMonIndex;
+    TeachMoveRelearnerMove();
+    Task_ClosePartyMenu(taskId);
+}
+
+static void CursorCb_ChangeTutorMoves(u8 taskId)
+{
+    PlaySE(SE_SELECT);
+	gMoveRelearnerState = MOVE_RELEARNER_TUTOR_MOVES;
+    gRelearnMode = RELEARN_MODE_PARTY_MENU;
+    gLastViewedMonIndex = gPartyMenu.slotId;
+    gSpecialVar_0x8004 = gLastViewedMonIndex;
+    TeachMoveRelearnerMove();
+    Task_ClosePartyMenu(taskId);
+}
+
+static void CursorCb_LearnMovesSubMenu(u8 taskId)
+{
+    PlaySE(SE_SELECT);
+    PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
+    PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
+    SetPartyMonSelectionActions(gPlayerParty, gPartyMenu.slotId, ACTIONS_MOVES_SUB);
+    DisplaySelectionWindow(SELECTWINDOW_ACTIONS);
+    DisplayPartyMenuStdMessage(PARTY_MSG_DO_WHAT_WITH_MON);
+    gTasks[taskId].data[0] = 0xFF;
+    gTasks[taskId].func = Task_HandleSelectionMenuInput;
+}
 
 void DoBattlePyramidMonsHaveHeldItem(void)
 {
