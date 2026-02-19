@@ -2419,4 +2419,11 @@ extern const u8 gText_BattlePyramidDesc[];
 extern const u8 gText_Give[];
 extern const u8 gText_NoNeed[];
 
+// Move Relearner
+extern const u8 MoveRelearner_Text_LevelUpMoveLWR[];
+extern const u8 MoveRelearner_Text_EggMoveLWR[];
+extern const u8 MoveRelearner_Text_TMMoveLWR[];
+extern const u8 MoveRelearner_Text_TutorMoveLWR[];
+extern const u8 MoveRelearner_Text_MoveLWR[];
+
 #endif //GUARD_STRINGS_H

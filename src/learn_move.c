@@ -121,45 +121,14 @@
 #define MENU_STATE_WAIT_FOR_FANFARE 32
 #define MENU_STATE_WAIT_FOR_A_BUTTON 33
 
-#define GFXTAG_UI       5525
-#define PALTAG_UI       5526
-
-struct RelearnType
-{
-    bool32 (*hasMoveToRelearn)(struct BoxPokemon*);
-};
-
-struct LearnMoveGfxResources
-{
-    u8 state;
-    u8 spriteIds[2];
-    u8 scrollPositionMaybe;
-    u8 numLearnableMoves;
-    struct ListMenuItem listMenuItems[MAX_RELEARNER_MOVES + 1];
-    u16 learnableMoves[MAX_RELEARNER_MOVES];
-    bool8 scheduleMoveInfoUpdate;
-    u8 selectedPartyMember;
-    u8 selectedMoveSlot;
-    u8 listMenuTaskId;
-    u8 bg1TilemapBuffer[BG_SCREEN_SIZE]; // 264
-    u8 textColor[3]; // A64
-    s32 selectedItemId;
-    u16 listOffset;
-    u16 listRow;
-    u8 numToShowAtOnce;
-};
-
-static EWRAM_DATA struct LearnMoveGfxResources *sMoveRelearnerStruct = NULL;
-EWRAM_DATA enum MoveRelearnerStates gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
-EWRAM_DATA enum RelearnMode gRelearnMode = RELEARN_MODE_NONE;
+#define MAX_MOVE_LIST_ITEMS 7
 
 static void Task_WaitForFadeOut(u8 taskId);
 static void CB2_MoveRelearnerMain(void);
 static void DoMoveRelearnerMain(void);
 static void DrawTextBorderOnWindows6and7(void);
 static void ShowTeachMoveText(void);
-static void SpriteCB_ListMenuScrollIndicators(struct Sprite *sprite);
-static void SpawnListMenuScrollIndicatorSprites(void);
+static void InitMoveRelearnerBackgroundLayers(void);
 static void CreateLearnableMovesList(void);
 static void HandleInput(void);
 static void MoveLearnerInitListMenu(void);
@@ -178,57 +147,32 @@ static u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves);
 static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves);
 static u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves);
 
-static const struct RelearnType sRelearnTypes[MOVE_RELEARNER_COUNT] =
+struct RelearnType
 {
-    [MOVE_RELEARNER_LEVEL_UP_MOVES] = {HasRelearnerLevelUpMoves},
-    [MOVE_RELEARNER_EGG_MOVES] = {HasRelearnerEggMoves},
-    [MOVE_RELEARNER_TM_MOVES] = {HasRelearnerTMMoves},
-    [MOVE_RELEARNER_TUTOR_MOVES] = {HasRelearnerTutorMoves},
+    bool32 (*hasMoveToRelearn)(struct BoxPokemon*);
 };
 
-static const u16 sUI_Pal[] = INCBIN_U16("graphics/learn_move/interface_sprites.gbapal");
-static const u16 sUI_Tiles[] = INCBIN_U16("graphics/learn_move/interface_sprites.4bpp");
+static EWRAM_DATA struct
+{
+    u8 state;
+    u8 numLearnableMoves;
+    struct ListMenuItem listMenuItems[MAX_RELEARNER_MOVES + 1];
+    u16 learnableMoves[MAX_RELEARNER_MOVES];
+    bool8 scheduleMoveInfoUpdate;
+    u8 selectedPartyMember;
+    u8 selectedMoveSlot;
+    u8 listMenuTaskId;
+    u8 bg1TilemapBuffer[BG_SCREEN_SIZE]; // 264
+    u8 textColor[3]; // A64
+    s32 selectedItemId;
+    u16 listOffset;
+    u16 listRow;
+    u8 numToShowAtOnce;
+    u8 moveListScrollArrowTask;
+} *sMoveRelearnerStruct = NULL;
 
-static const struct SpriteSheet sMoveRelearnerSpriteSheet = {
-    .data = sUI_Tiles,
-    .size = sizeof(sUI_Tiles),
-    .tag = GFXTAG_UI,
-};
-
-static const struct SpritePalette sMoveRelearnerPalette = {
-    .data = sUI_Pal,
-    .tag = PALTAG_UI,
-};
-
-static const struct OamData sOamdata_MoveRelearnerListMenuScrollIndicators = {
-    .shape = SPRITE_SHAPE(16x8),
-    .size = SPRITE_SIZE(16x8)
-};
-
-static const union AnimCmd sAnimCmd_ScrollIndicatorDown[] = {
-    ANIMCMD_FRAME(4, 5),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnimCmd_ScrollIndicatorUp[] = {
-    ANIMCMD_FRAME(6, 5),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sSpriteAnimTable_MoveRelearnerListMenuScrollIndicators[] = {
-    sAnimCmd_ScrollIndicatorDown,
-    sAnimCmd_ScrollIndicatorUp
-};
-
-static const struct SpriteTemplate sSpriteTemplate_MoveRelearnerListMenuScrollIndicators = {
-        .tileTag = GFXTAG_UI,
-        .paletteTag = PALTAG_UI,
-        .oam = &sOamdata_MoveRelearnerListMenuScrollIndicators,
-        .anims = sSpriteAnimTable_MoveRelearnerListMenuScrollIndicators,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCB_ListMenuScrollIndicators,
-};
+EWRAM_DATA enum MoveRelearnerStates gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
+EWRAM_DATA enum RelearnMode gRelearnMode = RELEARN_MODE_NONE;
 
 static const struct BgTemplate sMoveRelearnerMenuBackgroundTemplates[2] = {
     {
@@ -369,6 +313,15 @@ static const struct ListMenuTemplate sMoveRelearnerMovesListTemplate = {
     .scrollMultiple = 0,
     .fontId = FONT_NORMAL,
     .cursorKind = 0,
+    .textNarrowWidth = 68,
+};
+
+static const struct RelearnType sRelearnTypes[MOVE_RELEARNER_COUNT] =
+{
+    [MOVE_RELEARNER_LEVEL_UP_MOVES] = {HasRelearnerLevelUpMoves},
+    [MOVE_RELEARNER_EGG_MOVES] = {HasRelearnerEggMoves},
+    [MOVE_RELEARNER_TM_MOVES] = {HasRelearnerTMMoves},
+    [MOVE_RELEARNER_TUTOR_MOVES] = {HasRelearnerTutorMoves},
 };
 
 static void VBlankCB_MoveRelearner(void)
@@ -394,13 +347,6 @@ static void Task_WaitForFadeOut(u8 taskId)
         gFieldCallback = FieldCB_ContinueScriptHandleMusic;
         DestroyTask(taskId);
     }
-}
-
-static void InitMoveRelearnerBackgroundLayers(void)
-{
-    ResetBgsAndClearDma3BusyFlags(FALSE);
-    InitBgsFromTemplates(0, sMoveRelearnerMenuBackgroundTemplates, ARRAY_COUNT(sMoveRelearnerMenuBackgroundTemplates));
-    ResetTempTileDataBuffers();
 }
 
 static void InitMoveRelearnerWindows(void)
@@ -447,38 +393,34 @@ void CB2_InitLearnMove(void)
     sMoveRelearnerStruct->listOffset = 0;
     sMoveRelearnerStruct->listRow = 0;
 
-    // if ((!P_ENABLE_MOVE_RELEARNERS
-    // && !P_TM_MOVES_RELEARNER
-    // && !FlagGet(P_FLAG_EGG_MOVES)
-    // && !FlagGet(P_FLAG_TUTOR_MOVES)))
-    // {
-    //     StringCopy(gStringVar3, MoveRelearner_Text_MoveLWR);
-    // }
-    // else
-    // {
-    //     switch (gMoveRelearnerState)
-    //     {
-    //     case MOVE_RELEARNER_EGG_MOVES:
-    //         StringCopy(gStringVar3, MoveRelearner_Text_EggMoveLWR);
-    //         break;
-    //     case MOVE_RELEARNER_TM_MOVES:
-    //         StringCopy(gStringVar3, MoveRelearner_Text_TMMoveLWR);
-    //         break;
-    //     case MOVE_RELEARNER_TUTOR_MOVES:
-    //         StringCopy(gStringVar3, MoveRelearner_Text_TutorMoveLWR);
-    //         break;
-    //     case MOVE_RELEARNER_LEVEL_UP_MOVES:
-    //     default:
-    //         StringCopy(gStringVar3, MoveRelearner_Text_LevelUpMoveLWR);
-    //         break;
-    //     }
-    // }
+    if ((!P_ENABLE_MOVE_RELEARNERS
+    && !P_TM_MOVES_RELEARNER
+    && !FlagGet(P_FLAG_EGG_MOVES)
+    && !FlagGet(P_FLAG_TUTOR_MOVES)))
+    {
+        StringCopy(gStringVar3, MoveRelearner_Text_MoveLWR);
+    }
+    else
+    {
+        switch (gMoveRelearnerState)
+        {
+        case MOVE_RELEARNER_EGG_MOVES:
+            StringCopy(gStringVar3, MoveRelearner_Text_EggMoveLWR);
+            break;
+        case MOVE_RELEARNER_TM_MOVES:
+            StringCopy(gStringVar3, MoveRelearner_Text_TMMoveLWR);
+            break;
+        case MOVE_RELEARNER_TUTOR_MOVES:
+            StringCopy(gStringVar3, MoveRelearner_Text_TutorMoveLWR);
+            break;
+        case MOVE_RELEARNER_LEVEL_UP_MOVES:
+        default:
+            StringCopy(gStringVar3, MoveRelearner_Text_LevelUpMoveLWR);
+            break;
+        }
+    }
 
     CreateLearnableMovesList();
-
-    LoadSpriteSheet(&sMoveRelearnerSpriteSheet);
-    LoadSpritePalette(&sMoveRelearnerPalette);
-    SpawnListMenuScrollIndicatorSprites();
 
     RunTasks();
     AnimateSprites();
@@ -501,10 +443,6 @@ static void CB2_InitLearnMoveReturnFromSelectMove(void)
     InitMoveRelearnerBackgroundLayers();
     InitMoveRelearnerWindows();
 
-    LoadSpriteSheet(&sMoveRelearnerSpriteSheet);
-    LoadSpritePalette(&sMoveRelearnerPalette);
-    SpawnListMenuScrollIndicatorSprites();
-
     SetBackdropFromColor(RGB_BLACK);
 
     RunTasks();
@@ -512,6 +450,13 @@ static void CB2_InitLearnMoveReturnFromSelectMove(void)
     BuildOamBuffer();
     UpdatePaletteFade();
     SetMainCallback2(CB2_MoveRelearnerMain);
+}
+
+static void InitMoveRelearnerBackgroundLayers(void)
+{
+    ResetBgsAndClearDma3BusyFlags(FALSE);
+    InitBgsFromTemplates(0, sMoveRelearnerMenuBackgroundTemplates, ARRAY_COUNT(sMoveRelearnerMenuBackgroundTemplates));
+    ResetTempTileDataBuffers();
 }
 
 static void CB2_MoveRelearnerMain(void)
@@ -790,49 +735,16 @@ static void ShowTeachMoveText(void)
     CopyWindowToVram(RELEARNER_WIN_MESSAGE_BOX, COPYWIN_FULL);
 }
 
-static void SpriteCB_ListMenuScrollIndicators(struct Sprite *sprite)
-{
-    s16 abcissa = (sprite->data[1] * 10) & 0xFF;
-    switch (sprite->data[0])
-    {
-    case 0:
-        break;
-    case 1:
-        sprite->x2 = Sin(abcissa, 3) * sprite->data[2];
-        break;
-    case 2:
-        sprite->y2 = Sin(abcissa, 1) * sprite->data[2];
-        break;
-    }
-    sprite->data[1]++;
-}
-
-static void SpawnListMenuScrollIndicatorSprites(void)
-{
-    int i;
-    sMoveRelearnerStruct->spriteIds[0] = CreateSprite(&sSpriteTemplate_MoveRelearnerListMenuScrollIndicators, 200, 4, 0);
-    StartSpriteAnim(&gSprites[sMoveRelearnerStruct->spriteIds[0]], 1);
-    gSprites[sMoveRelearnerStruct->spriteIds[0]].data[0] = 2;
-    gSprites[sMoveRelearnerStruct->spriteIds[0]].data[2] = -1;
-
-    // Bug: This should be using the second element of spriteIds.
-    sMoveRelearnerStruct->spriteIds[0] = CreateSprite(&sSpriteTemplate_MoveRelearnerListMenuScrollIndicators, 200, 108, 0);
-    gSprites[sMoveRelearnerStruct->spriteIds[0]].data[0] = 2;
-    gSprites[sMoveRelearnerStruct->spriteIds[0]].data[2] = 1;
-    for (i = 0; i < 2; i++)
-        gSprites[sMoveRelearnerStruct->spriteIds[i]].invisible = TRUE;
-}
-
 static u8 LoadMoveRelearnerMovesList(const struct ListMenuItem *items, u16 numChoices)
 {
     gMultiuseListMenuTemplate = sMoveRelearnerMovesListTemplate;
     gMultiuseListMenuTemplate.totalItems = numChoices;
     gMultiuseListMenuTemplate.items = items;
 
-    if (numChoices < 7)
+    if (numChoices < MAX_MOVE_LIST_ITEMS)
         gMultiuseListMenuTemplate.maxShowed = numChoices;
     else
-        gMultiuseListMenuTemplate.maxShowed = 7;
+        gMultiuseListMenuTemplate.maxShowed = MAX_MOVE_LIST_ITEMS;
 
     return gMultiuseListMenuTemplate.maxShowed;
 }
@@ -899,16 +811,6 @@ static void HandleInput(void)
                 sMoveRelearnerStruct->state = 12;
             }
             break;
-    }
-
-    if (sMoveRelearnerStruct->numLearnableMoves > 6)
-    {
-        gSprites[0].invisible = FALSE;
-        gSprites[1].invisible = FALSE;
-        if (sMoveRelearnerStruct->scrollPositionMaybe == 0)
-            gSprites[0].invisible = TRUE;
-        else if (sMoveRelearnerStruct->scrollPositionMaybe == sMoveRelearnerStruct->numLearnableMoves - 6)
-            gSprites[1].invisible = TRUE;
     }
 }
 
@@ -1042,6 +944,7 @@ static void PrintTextOnWindow(u8 windowId, const u8 *str, u8 x, u8 y, s32 speed,
     }
     if (colorIdx != 1)
         FillWindowPixelBuffer(windowId, PIXEL_FILL(sMoveRelearnerStruct->textColor[0]));
+
     AddTextPrinterParameterized4(windowId, FONT_NORMAL_COPY_2, x, y, letterSpacing, lineSpacing, sMoveRelearnerStruct->textColor, speed, str);
 }
 

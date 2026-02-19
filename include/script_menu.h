@@ -4,6 +4,7 @@
 #include "global.h"
 #include "list_menu.h"
 #include "menu.h"
+#include "constants/script_menu.h"
 
 #define MULTI_B_PRESSED  127
 
@@ -52,11 +53,5 @@ void QL_DestroyAbortedDisplay(void);
 void PicboxCancel(void);
 int DisplayTextAndGetWidth(const u8 *str, int width);
 int ScriptMenu_AdjustLeftCoordFromWidth(int left, int width);
-
-// Dynamic Multichoice Callbacks
-
-#define DYN_MULTICHOICE_CB_DEBUG      0
-#define DYN_MULTICHOICE_CB_SHOW_ITEM  1
-#define DYN_MULTICHOICE_CB_NONE       255
 
 #endif //GUARD_SCRIPT_MENU_H
