@@ -90,6 +90,8 @@
  *
  */
 
+#define MAX_MOVE_LIST_ITEMS 7
+
 enum RelearnMenuState
 {
     MENU_STATE_FADE_TO_BLACK,
@@ -119,7 +121,11 @@ enum RelearnMenuState
     MENU_STATE_WAIT_FOR_A_BUTTON,
 };
 
-#define MAX_MOVE_LIST_ITEMS 7
+enum RelearnerTextColor
+{
+    GENERAL_TEXT_COLOR,
+    MESSAGE_BOX_TEXT_COLOR
+};
 
 static void Task_WaitForFadeOut(u8 taskId);
 static void CB2_MoveRelearnerMain(void);
@@ -134,7 +140,7 @@ static void LoadMoveInfoUI(void);
 static void PrintMoveInfoHandleCancel_CopyToVram(void);
 static void MoveRelearnerMenu_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list);
 static s8 YesNoMenuProcessInput(void);
-static void PrintTextOnWindow(u8 windowId, const u8 *str, u8 x, u8 y, s32 speed, s32 colorIdx);
+static void PrintTextOnWindow(u8 windowId, const u8 *str, u8 x, u8 y, s32 speed, enum RelearnerTextColor colorType, bool32 fillWindow);
 static s32 GetCurrentSelectedMove(void);
 static bool32 HasRelearnerLevelUpMoves(struct BoxPokemon *boxMon);
 static bool32 HasRelearnerEggMoves(struct BoxPokemon *boxMon);
@@ -165,8 +171,13 @@ static EWRAM_DATA struct
     u8 numToShowAtOnce;
     u8 moveSlot;
     u8 partyMon;
-    u8 textColor[3];
 } *sMoveRelearnerStruct = NULL;
+
+static const u8 sTextColors[][3] =
+{
+    [GENERAL_TEXT_COLOR] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY},
+    [MESSAGE_BOX_TEXT_COLOR] = {TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY},
+};
 
 EWRAM_DATA enum MoveRelearnerStates gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
 EWRAM_DATA enum RelearnMode gRelearnMode = RELEARN_MODE_NONE;
@@ -476,7 +487,7 @@ static void CB2_MoveRelearnerMain(void)
 static void PrintMessageWithPlaceholders(const u8 *str)
 {
     StringExpandPlaceholders(gStringVar4, str);
-    PrintTextOnWindow(RELEARNER_WIN_MESSAGE_BOX, gStringVar4, 0, 2, GetPlayerTextSpeedDelay(), 2);
+    PrintTextOnWindow(RELEARNER_WIN_MESSAGE_BOX, gStringVar4, 0, 2, GetPlayerTextSpeedDelay(), MESSAGE_BOX_TEXT_COLOR, TRUE);
 }
 
 static void DoMoveRelearnerMain(void)
@@ -719,7 +730,7 @@ static void DrawWindowTextBorders(void)
 static void ShowTeachMoveText(void)
 {
     StringExpandPlaceholders(gStringVar4, gText_TeachWhichMoveToMon);
-    PrintTextOnWindow(RELEARNER_WIN_MESSAGE_BOX, gStringVar4, 0, 2, 0, 2);
+    PrintTextOnWindow(RELEARNER_WIN_MESSAGE_BOX, gStringVar4, 0, 2, 0, MESSAGE_BOX_TEXT_COLOR, TRUE);
     PutWindowTilemap(RELEARNER_WIN_MESSAGE_BOX);
     CopyWindowToVram(RELEARNER_WIN_MESSAGE_BOX, COPYWIN_FULL);
 }
@@ -824,26 +835,26 @@ static void PrintMoveInfo(u16 move)
 
     if (power < 2)
     {
-        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, gText_ThreeHyphens, 1, 4, 0, 0);
+        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, gText_ThreeHyphens, 1, 4, 0, GENERAL_TEXT_COLOR, TRUE);
     }
     else
     {
         ConvertIntToDecimalStringN(buffer, power, STR_CONV_MODE_RIGHT_ALIGN, 3);
-        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, buffer, 1, 4, 0, 0);
+        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, buffer, 1, 4, 0, GENERAL_TEXT_COLOR, TRUE);
     }
 
     if (accuracy == 0)
     {
-        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, gText_ThreeHyphens, 1, 18, 0, 1);
+        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, gText_ThreeHyphens, 1, 18, 0, GENERAL_TEXT_COLOR, FALSE);
     }
     else
     {
         ConvertIntToDecimalStringN(buffer, accuracy, STR_CONV_MODE_RIGHT_ALIGN, 3);
-        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, buffer, 1, 18, 0, 1);
+        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, buffer, 1, 18, 0, GENERAL_TEXT_COLOR, FALSE);
     }
     ConvertIntToDecimalStringN(buffer, GetMovePP(move), STR_CONV_MODE_LEFT_ALIGN, 2);
-    PrintTextOnWindow(RELEARNER_WIN_MOVE_PP, buffer, 2, 2, 0, 0);
-    PrintTextOnWindow(RELEARNER_WIN_MOVE_DESC, GetMoveDescription(move), 1, 0, 0, 0);
+    PrintTextOnWindow(RELEARNER_WIN_MOVE_PP, buffer, 2, 2, 0, GENERAL_TEXT_COLOR, TRUE);
+    PrintTextOnWindow(RELEARNER_WIN_MOVE_DESC, GetMoveDescription(move), 1, 0, 0, GENERAL_TEXT_COLOR, TRUE);
 }
 
 static void LoadMoveInfoUI(void)
@@ -909,30 +920,16 @@ static s8 YesNoMenuProcessInput(void)
     return input;
 }
 
-static void PrintTextOnWindow(u8 windowId, const u8 *str, u8 x, u8 y, s32 speed, s32 colorIdx)
+static void PrintTextOnWindow(u8 windowId, const u8 *str, u8 x, u8 y, s32 speed, enum RelearnerTextColor colorType, bool32 fillWindow)
 {
-    s32 letterSpacing = 1;
-    s32 lineSpacing = 1;
+    const u8 *colors = sTextColors[colorType];
+    s32 letterSpacing = colorType == GENERAL_TEXT_COLOR ? 0 : 1;
+    s32 lineSpacing = colorType == GENERAL_TEXT_COLOR ? 0 : 1;
 
-    switch (colorIdx)
-    {
-    case 0:
-    case 1:
-        letterSpacing = 0;
-        lineSpacing = 0;
-        sMoveRelearnerStruct->textColor[0] = TEXT_COLOR_TRANSPARENT;
-        sMoveRelearnerStruct->textColor[1] = TEXT_COLOR_DARK_GRAY;
-        sMoveRelearnerStruct->textColor[2] = TEXT_COLOR_LIGHT_GRAY;
-        break;
-    case 2:
-        sMoveRelearnerStruct->textColor[0] = TEXT_COLOR_WHITE;
-        sMoveRelearnerStruct->textColor[1] = TEXT_COLOR_DARK_GRAY;
-        sMoveRelearnerStruct->textColor[2] = TEXT_COLOR_LIGHT_GRAY;
-    }
-    if (colorIdx != 1)
-        FillWindowPixelBuffer(windowId, PIXEL_FILL(sMoveRelearnerStruct->textColor[0]));
+    if (fillWindow)
+        FillWindowPixelBuffer(windowId, PIXEL_FILL(colors[0]));
 
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL_COPY_2, x, y, letterSpacing, lineSpacing, sMoveRelearnerStruct->textColor, speed, str);
+    AddTextPrinterParameterized4(windowId, FONT_NORMAL_COPY_2, x, y, letterSpacing, lineSpacing, colors, speed, str);
 }
 
 static void QuickSortMoves(u16 *moves, s32 left, s32 right)
