@@ -152,21 +152,20 @@ struct RelearnType
 
 static EWRAM_DATA struct
 {
-    enum RelearnMenuState state;
-    u8 numLearnableMoves;
-    struct ListMenuItem listMenuItems[MAX_RELEARNER_MOVES + 1];
-    u16 learnableMoves[MAX_RELEARNER_MOVES];
-    bool8 scheduleMoveInfoUpdate;
-    u8 selectedPartyMember;
-    u8 selectedMoveSlot;
-    u8 listMenuTaskId;
-    u8 bg1TilemapBuffer[BG_SCREEN_SIZE]; // 264
-    u8 textColor[3]; // A64
+    struct ListMenuItem menuItems[MAX_RELEARNER_MOVES + 1];
     s32 selectedItemId;
+    enum RelearnMenuState state;
     u16 listOffset;
     u16 listRow;
+    u16 movesToLearn[MAX_RELEARNER_MOVES];
+    ALIGNED(4) u8 bg1TilemapBuffer[BG_SCREEN_SIZE];
+    bool8 scheduleMoveInfoUpdate;
+    u8 listMenuTaskId;
+    u8 numMenuChoices;
     u8 numToShowAtOnce;
-    u8 moveListScrollArrowTask;
+    u8 moveSlot;
+    u8 partyMon;
+    u8 textColor[3];
 } *sMoveRelearnerStruct = NULL;
 
 EWRAM_DATA enum MoveRelearnerStates gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
@@ -383,7 +382,7 @@ void CB2_InitLearnMove(void)
     ResetTasks();
     sMoveRelearnerStruct = AllocZeroed(sizeof(*sMoveRelearnerStruct));
     sMoveRelearnerStruct->state = MENU_STATE_FADE_TO_BLACK;
-    sMoveRelearnerStruct->selectedPartyMember = gSpecialVar_0x8004;
+    sMoveRelearnerStruct->partyMon = gSpecialVar_0x8004;
     SetVBlankCallback(VBlankCB_MoveRelearner);
 
     InitMoveRelearnerBackgroundLayers();
@@ -435,8 +434,8 @@ static void CB2_InitLearnMoveReturnFromSelectMove(void)
     FreeAllSpritePalettes();
     ResetTasks();
     CreateLearnableMovesList();
-    sMoveRelearnerStruct->selectedPartyMember = gSpecialVar_0x8004;
-    sMoveRelearnerStruct->selectedMoveSlot = gSpecialVar_0x8005;
+    sMoveRelearnerStruct->partyMon = gSpecialVar_0x8004;
+    sMoveRelearnerStruct->moveSlot = gSpecialVar_0x8005;
     SetVBlankCallback(VBlankCB_MoveRelearner);
 
     InitMoveRelearnerBackgroundLayers();
@@ -517,10 +516,10 @@ static void DoMoveRelearnerMain(void)
         case 0:
             {
                 struct BoxPokemon *boxmon;
-                if (sMoveRelearnerStruct->selectedPartyMember == PC_MON_CHOSEN)
+                if (sMoveRelearnerStruct->partyMon == PC_MON_CHOSEN)
                     boxmon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
                 else
-                    boxmon = &(gPlayerParty[sMoveRelearnerStruct->selectedPartyMember].box);
+                    boxmon = &(gPlayerParty[sMoveRelearnerStruct->partyMon].box);
 
                 if (GiveMoveToBoxMon(boxmon, GetCurrentSelectedMove()) != MON_HAS_MAX_MOVES)
                 {
@@ -626,13 +625,13 @@ static void DoMoveRelearnerMain(void)
                 switch (gRelearnMode)
                 {
                 case RELEARN_MODE_PSS_PAGE_BATTLE_MOVES:
-                    ShowPokemonSummaryScreen(gPlayerParty, sMoveRelearnerStruct->selectedPartyMember, gPlayerPartyCount - 1, gInitialSummaryScreenCallback, SUMMARY_MODE_RELEARNER_BATTLE);
+                    ShowPokemonSummaryScreen(gPlayerParty, sMoveRelearnerStruct->partyMon, gPlayerPartyCount - 1, gInitialSummaryScreenCallback, SUMMARY_MODE_RELEARNER_BATTLE);
                     break;
                 case RELEARN_MODE_BOX_PSS_PAGE_BATTLE_MOVES:
                     ShowPokemonSummaryScreen(GetBoxedMonPtr(gSpecialVar_MonBoxId, 0), gSpecialVar_MonBoxPos, IN_BOX_COUNT - 1, gInitialSummaryScreenCallback, SUMMARY_MODE_RELEARNER_BATTLE);
                     break;
                 default:
-                    ShowPokemonSummaryScreen(gPlayerParty, sMoveRelearnerStruct->selectedPartyMember, gPlayerPartyCount - 1, gInitialSummaryScreenCallback, PSS_MODE_NORMAL);
+                    ShowPokemonSummaryScreen(gPlayerParty, sMoveRelearnerStruct->partyMon, gPlayerPartyCount - 1, gInitialSummaryScreenCallback, PSS_MODE_NORMAL);
                     break;
                 }
             }
@@ -658,7 +657,7 @@ static void DoMoveRelearnerMain(void)
     case MENU_STATE_TRY_OVERWRITE_MOVE:
         if (!gPaletteFade.active)
         {
-            if (sMoveRelearnerStruct->selectedMoveSlot == MAX_MON_MOVES)
+            if (sMoveRelearnerStruct->moveSlot == MAX_MON_MOVES)
             {
                 sMoveRelearnerStruct->state = MENU_STATE_PRINT_STOP_TEACHING;
             }
@@ -666,19 +665,19 @@ static void DoMoveRelearnerMain(void)
             {
                 enum Move move;
                 struct BoxPokemon *boxmon;
-                if (sMoveRelearnerStruct->selectedPartyMember == PC_MON_CHOSEN)
+                if (sMoveRelearnerStruct->partyMon == PC_MON_CHOSEN)
                     boxmon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
                 else
-                    boxmon = &(gPlayerParty[sMoveRelearnerStruct->selectedPartyMember].box);
-                move = GetBoxMonData(boxmon, MON_DATA_MOVE1 + sMoveRelearnerStruct->selectedMoveSlot);
-                u8 originalPP = GetBoxMonData(boxmon, MON_DATA_PP1 + sMoveRelearnerStruct->selectedMoveSlot);
+                    boxmon = &(gPlayerParty[sMoveRelearnerStruct->partyMon].box);
+                move = GetBoxMonData(boxmon, MON_DATA_MOVE1 + sMoveRelearnerStruct->moveSlot);
+                u8 originalPP = GetBoxMonData(boxmon, MON_DATA_PP1 + sMoveRelearnerStruct->moveSlot);
 
-                RemoveBoxMonPPBonus(boxmon, sMoveRelearnerStruct->selectedMoveSlot);
-                SetBoxMonMoveSlot(boxmon, GetCurrentSelectedMove(), sMoveRelearnerStruct->selectedMoveSlot);
-                u8 newPP = GetBoxMonData(boxmon, MON_DATA_PP1 + sMoveRelearnerStruct->selectedMoveSlot);
+                RemoveBoxMonPPBonus(boxmon, sMoveRelearnerStruct->moveSlot);
+                SetBoxMonMoveSlot(boxmon, GetCurrentSelectedMove(), sMoveRelearnerStruct->moveSlot);
+                u8 newPP = GetBoxMonData(boxmon, MON_DATA_PP1 + sMoveRelearnerStruct->moveSlot);
                 if (!P_SUMMARY_MOVE_RELEARNER_FULL_PP
                  && (gRelearnMode == RELEARN_MODE_PSS_PAGE_BATTLE_MOVES || gRelearnMode == RELEARN_MODE_PSS_PAGE_CONTEST_MOVES) && originalPP < newPP)
-                    SetBoxMonData(boxmon, MON_DATA_PP1 + sMoveRelearnerStruct->selectedMoveSlot, &originalPP);
+                    SetBoxMonData(boxmon, MON_DATA_PP1 + sMoveRelearnerStruct->moveSlot, &originalPP);
 
                 StringCopy(gStringVar3, GetMoveName(move));
                 StringCopy(gStringVar2, GetMoveName(GetCurrentSelectedMove()));
@@ -746,31 +745,31 @@ static void CreateLearnableMovesList(void)
     switch (gMoveRelearnerState)
     {
     case MOVE_RELEARNER_EGG_MOVES:
-        sMoveRelearnerStruct->numLearnableMoves = GetRelearnerEggMoves(boxmon, sMoveRelearnerStruct->learnableMoves);
+        sMoveRelearnerStruct->numMenuChoices = GetRelearnerEggMoves(boxmon, sMoveRelearnerStruct->movesToLearn);
         break;
     case MOVE_RELEARNER_TM_MOVES:
-        sMoveRelearnerStruct->numLearnableMoves = GetRelearnerTMMoves(boxmon, sMoveRelearnerStruct->learnableMoves);
+        sMoveRelearnerStruct->numMenuChoices = GetRelearnerTMMoves(boxmon, sMoveRelearnerStruct->movesToLearn);
         break;
     case MOVE_RELEARNER_TUTOR_MOVES:
-        sMoveRelearnerStruct->numLearnableMoves = GetRelearnerTutorMoves(boxmon, sMoveRelearnerStruct->learnableMoves);
+        sMoveRelearnerStruct->numMenuChoices = GetRelearnerTutorMoves(boxmon, sMoveRelearnerStruct->movesToLearn);
         break;
     case MOVE_RELEARNER_LEVEL_UP_MOVES:
     default:
-        sMoveRelearnerStruct->numLearnableMoves = GetRelearnerLevelUpMoves(boxmon, sMoveRelearnerStruct->learnableMoves);
+        sMoveRelearnerStruct->numMenuChoices = GetRelearnerLevelUpMoves(boxmon, sMoveRelearnerStruct->movesToLearn);
         break;
     }
 
     GetBoxMonData(boxmon, MON_DATA_NICKNAME, gStringVar1);
 
-    for (i = 0; i < sMoveRelearnerStruct->numLearnableMoves; i++)
+    for (i = 0; i < sMoveRelearnerStruct->numMenuChoices; i++)
     {
-        sMoveRelearnerStruct->listMenuItems[i].name = GetMoveName(sMoveRelearnerStruct->learnableMoves[i]);
-        sMoveRelearnerStruct->listMenuItems[i].id = sMoveRelearnerStruct->learnableMoves[i];
+        sMoveRelearnerStruct->menuItems[i].name = GetMoveName(sMoveRelearnerStruct->movesToLearn[i]);
+        sMoveRelearnerStruct->menuItems[i].id = sMoveRelearnerStruct->movesToLearn[i];
     }
-    sMoveRelearnerStruct->listMenuItems[i].name = gFameCheckerText_Cancel;
-    sMoveRelearnerStruct->listMenuItems[i].id = LIST_CANCEL;
-    sMoveRelearnerStruct->numLearnableMoves++;
-    sMoveRelearnerStruct->numToShowAtOnce = LoadMoveRelearnerMovesList(sMoveRelearnerStruct->listMenuItems, sMoveRelearnerStruct->numLearnableMoves);
+    sMoveRelearnerStruct->menuItems[i].name = gFameCheckerText_Cancel;
+    sMoveRelearnerStruct->menuItems[i].id = LIST_CANCEL;
+    sMoveRelearnerStruct->numMenuChoices++;
+    sMoveRelearnerStruct->numToShowAtOnce = LoadMoveRelearnerMovesList(sMoveRelearnerStruct->menuItems, sMoveRelearnerStruct->numMenuChoices);
 }
 
 static void HandleInput(void)
@@ -806,7 +805,7 @@ static void HandleInput(void)
 
 static s32 GetCurrentSelectedMove(void)
 {
-    return sMoveRelearnerStruct->listMenuItems[sMoveRelearnerStruct->listRow + sMoveRelearnerStruct->listOffset].id;
+    return sMoveRelearnerStruct->menuItems[sMoveRelearnerStruct->listRow + sMoveRelearnerStruct->listOffset].id;
 }
 
 static void MoveLearnerInitListMenu(void)
@@ -914,23 +913,21 @@ static void PrintTextOnWindow(u8 windowId, const u8 *str, u8 x, u8 y, s32 speed,
 {
     s32 letterSpacing = 1;
     s32 lineSpacing = 1;
-    if (colorIdx == 0 || colorIdx == 1)
-    {
-        letterSpacing = 0;
-        lineSpacing = 0;
-    }
+
     switch (colorIdx)
     {
     case 0:
     case 1:
-        sMoveRelearnerStruct->textColor[0] = 0;
-        sMoveRelearnerStruct->textColor[1] = 2;
-        sMoveRelearnerStruct->textColor[2] = 3;
+        letterSpacing = 0;
+        lineSpacing = 0;
+        sMoveRelearnerStruct->textColor[0] = TEXT_COLOR_TRANSPARENT;
+        sMoveRelearnerStruct->textColor[1] = TEXT_COLOR_DARK_GRAY;
+        sMoveRelearnerStruct->textColor[2] = TEXT_COLOR_LIGHT_GRAY;
         break;
     case 2:
-        sMoveRelearnerStruct->textColor[0] = 1;
-        sMoveRelearnerStruct->textColor[1] = 2;
-        sMoveRelearnerStruct->textColor[2] = 3;
+        sMoveRelearnerStruct->textColor[0] = TEXT_COLOR_WHITE;
+        sMoveRelearnerStruct->textColor[1] = TEXT_COLOR_DARK_GRAY;
+        sMoveRelearnerStruct->textColor[2] = TEXT_COLOR_LIGHT_GRAY;
     }
     if (colorIdx != 1)
         FillWindowPixelBuffer(windowId, PIXEL_FILL(sMoveRelearnerStruct->textColor[0]));
