@@ -545,7 +545,7 @@ static void DoMoveRelearnerMain(void)
             }
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             sMoveRelearnerStruct->state = MENU_STATE_SETUP_BATTLE_MODE;
             break;
         }
@@ -562,7 +562,7 @@ static void DoMoveRelearnerMain(void)
             sMoveRelearnerStruct->state = MENU_STATE_FADE_AND_RETURN;
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             sMoveRelearnerStruct->state = MENU_STATE_SETUP_BATTLE_MODE;
             break;
         }
@@ -583,7 +583,7 @@ static void DoMoveRelearnerMain(void)
             sMoveRelearnerStruct->state = MENU_STATE_PRINT_WHICH_MOVE_PROMPT;
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             sMoveRelearnerStruct->state = MENU_STATE_PRINT_STOP_TEACHING;
             break;
         }
@@ -603,7 +603,7 @@ static void DoMoveRelearnerMain(void)
             sMoveRelearnerStruct->state = MENU_STATE_CHOOSE_SETUP_STATE;
             break;
         case 1:
-        case -1:
+        case MENU_B_PRESSED:
             sMoveRelearnerStruct->state = MENU_STATE_PRINT_TRYING_TO_LEARN_PROMPT;
             break;
         }
@@ -825,36 +825,34 @@ static void MoveLearnerInitListMenu(void)
     CopyWindowToVram(RELEARNER_WIN_MOVE_LIST, COPYWIN_MAP);
 }
 
+const u8 *GetBufferedString(u8 *buffer, u16 value)
+{
+    if (value < 2)
+        return gText_ThreeHyphens;
+
+    ConvertIntToDecimalStringN(buffer, value, STR_CONV_MODE_RIGHT_ALIGN, 3);
+    return buffer;
+}
+
 static void PrintMoveInfo(u16 move)
 {
+    const u8 *colors = sTextColors[GENERAL_TEXT_COLOR];
     u8 buffer[50];
     u16 power = GetMovePower(move);
     u16 accuracy = GetMoveAccuracy(move);
 
     BlitMenuInfoIcon(RELEARNER_WIN_MOVE_TYPE, GetMoveType(move) + 1, 1, 4);
 
-    if (power < 2)
-    {
-        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, gText_ThreeHyphens, 1, 4, 0, GENERAL_TEXT_COLOR, TRUE);
-    }
-    else
-    {
-        ConvertIntToDecimalStringN(buffer, power, STR_CONV_MODE_RIGHT_ALIGN, 3);
-        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, buffer, 1, 4, 0, GENERAL_TEXT_COLOR, TRUE);
-    }
+    FillWindowPixelBuffer(RELEARNER_WIN_MOVE_PP, PIXEL_FILL(colors[0]));
+    FillWindowPixelBuffer(RELEARNER_WIN_MOVE_POW_ACC, PIXEL_FILL(colors[0]));
+    FillWindowPixelBuffer(RELEARNER_WIN_MOVE_DESC, PIXEL_FILL(colors[0]));
 
-    if (accuracy == 0)
-    {
-        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, gText_ThreeHyphens, 1, 18, 0, GENERAL_TEXT_COLOR, FALSE);
-    }
-    else
-    {
-        ConvertIntToDecimalStringN(buffer, accuracy, STR_CONV_MODE_RIGHT_ALIGN, 3);
-        PrintTextOnWindow(RELEARNER_WIN_MOVE_POW_ACC, buffer, 1, 18, 0, GENERAL_TEXT_COLOR, FALSE);
-    }
+    AddTextPrinterParameterized4(RELEARNER_WIN_MOVE_POW_ACC, FONT_NORMAL_COPY_2, 1, 4, 0, 0, colors, 0, GetBufferedString(buffer, power));
+    AddTextPrinterParameterized4(RELEARNER_WIN_MOVE_POW_ACC, FONT_NORMAL_COPY_2, 1, 18, 0, 0, colors, 0, GetBufferedString(buffer, accuracy));
+
     ConvertIntToDecimalStringN(buffer, GetMovePP(move), STR_CONV_MODE_LEFT_ALIGN, 2);
-    PrintTextOnWindow(RELEARNER_WIN_MOVE_PP, buffer, 2, 2, 0, GENERAL_TEXT_COLOR, TRUE);
-    PrintTextOnWindow(RELEARNER_WIN_MOVE_DESC, GetMoveDescription(move), 1, 0, 0, GENERAL_TEXT_COLOR, TRUE);
+    AddTextPrinterParameterized4(RELEARNER_WIN_MOVE_PP, FONT_NORMAL_COPY_2, 2, 2, 0, 0, colors, 0, buffer);
+    AddTextPrinterParameterized4(RELEARNER_WIN_MOVE_DESC, FONT_NORMAL_COPY_2, 1, 0, 0, 0, colors, 0, GetMoveDescription(move));
 }
 
 static void LoadMoveInfoUI(void)
