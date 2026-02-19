@@ -109,6 +109,7 @@ enum RelearnMenuState
     MENU_STATE_CONFIRM_DELETE_OLD_MOVE,
     MENU_STATE_PRINT_WHICH_MOVE_PROMPT,
     MENU_STATE_SHOW_MOVE_SUMMARY_SCREEN,
+    MENU_STATE_RETURN_TO_PARTY_MENU,
     MENU_STATE_PRINT_STOP_TEACHING,
     MENU_STATE_WAIT_FOR_STOP_TEACHING,
     MENU_STATE_CONFIRM_STOP_TEACHING,
@@ -626,7 +627,10 @@ static void DoMoveRelearnerMain(void)
         break;
     case MENU_STATE_FADE_AND_RETURN:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
-        sMoveRelearnerStruct->state = MENU_STATE_RETURN_TO_FIELD;
+        if (gRelearnMode == RELEARN_MODE_PARTY_MENU)
+            sMoveRelearnerStruct->state = MENU_STATE_RETURN_TO_PARTY_MENU;
+        else
+            sMoveRelearnerStruct->state = MENU_STATE_RETURN_TO_FIELD;
         break;
     case MENU_STATE_RETURN_TO_FIELD:
         if (!gPaletteFade.active)
@@ -653,6 +657,14 @@ static void DoMoveRelearnerMain(void)
             FreeAllWindowBuffers();
             Free(sMoveRelearnerStruct);
             gRelearnMode = RELEARN_MODE_NONE;
+        }
+        break;
+    case MENU_STATE_RETURN_TO_PARTY_MENU:
+        if (!gPaletteFade.active)
+        {
+            FreeAllWindowBuffers();
+            Free(sMoveRelearnerStruct);
+            SetMainCallback2(CB2_ReturnToPartyMenuFromSummaryScreen);
         }
         break;
     case MENU_STATE_FADE_FROM_SUMMARY_SCREEN:
@@ -687,7 +699,7 @@ static void DoMoveRelearnerMain(void)
                 SetBoxMonMoveSlot(boxmon, GetCurrentSelectedMove(), sMoveRelearnerStruct->moveSlot);
                 u8 newPP = GetBoxMonData(boxmon, MON_DATA_PP1 + sMoveRelearnerStruct->moveSlot);
                 if (!P_SUMMARY_MOVE_RELEARNER_FULL_PP
-                 && (gRelearnMode == RELEARN_MODE_PSS_PAGE_BATTLE_MOVES || gRelearnMode == RELEARN_MODE_PSS_PAGE_CONTEST_MOVES) && originalPP < newPP)
+                 && (gRelearnMode == RELEARN_MODE_PSS_PAGE_BATTLE_MOVES) && originalPP < newPP)
                     SetBoxMonData(boxmon, MON_DATA_PP1 + sMoveRelearnerStruct->moveSlot, &originalPP);
 
                 StringCopy(gStringVar3, GetMoveName(move));

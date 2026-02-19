@@ -102,5 +102,6 @@ u32 Party_FirstMonWithMove(u16 moveId);
 void ChoosePartyMon(void);
 bool8 CB2_FadeFromPartyMenu(void);
 void ChooseMonForMoveRelearner(void);
+void CB2_ReturnToPartyMenuFromSummaryScreen(void);
 
 #endif // GUARD_PARTY_MENU_H
