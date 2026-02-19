@@ -90,43 +90,41 @@
  *
  */
 
-#define MENU_STATE_FADE_TO_BLACK 0
-#define MENU_STATE_WAIT_FOR_FADE 1
-#define MENU_STATE_UNREACHABLE 2
-#define MENU_STATE_SETUP_BATTLE_MODE 3
-#define MENU_STATE_IDLE_BATTLE_MODE 4
-// States 5, 6, and 7 are skipped.
-#define MENU_STATE_PRINT_TEACH_MOVE_PROMPT 8
-#define MENU_STATE_TEACH_MOVE_CONFIRM 9
-// States 10 and 11 are skipped.
-#define MENU_STATE_PRINT_GIVE_UP_PROMPT 12
-#define MENU_STATE_GIVE_UP_CONFIRM 13
-#define MENU_STATE_FADE_AND_RETURN 14
-#define MENU_STATE_RETURN_TO_FIELD 15
-#define MENU_STATE_PRINT_TRYING_TO_LEARN_PROMPT 16
-#define MENU_STATE_WAIT_FOR_TRYING_TO_LEARN 17
-#define MENU_STATE_CONFIRM_DELETE_OLD_MOVE 18
-#define MENU_STATE_PRINT_WHICH_MOVE_PROMPT 19
-#define MENU_STATE_SHOW_MOVE_SUMMARY_SCREEN 20
-#define MENU_STATE_RETURN_TO_PARTY_MENU 21
-// States 22 and 23 are skipped.
-#define MENU_STATE_PRINT_STOP_TEACHING 24
-#define MENU_STATE_WAIT_FOR_STOP_TEACHING 25
-#define MENU_STATE_CONFIRM_STOP_TEACHING 26
-#define MENU_STATE_CHOOSE_SETUP_STATE 27
-#define MENU_STATE_FADE_FROM_SUMMARY_SCREEN 28
-#define MENU_STATE_TRY_OVERWRITE_MOVE 29
-#define MENU_STATE_DOUBLE_FANFARE_FORGOT_MOVE 30
-#define MENU_STATE_PRINT_TEXT_THEN_FANFARE 31
-#define MENU_STATE_WAIT_FOR_FANFARE 32
-#define MENU_STATE_WAIT_FOR_A_BUTTON 33
+enum RelearnMenuState
+{
+    MENU_STATE_FADE_TO_BLACK,
+    MENU_STATE_WAIT_FOR_FADE,
+    MENU_STATE_SETUP_BATTLE_MODE,
+    MENU_STATE_IDLE_BATTLE_MODE,
+    MENU_STATE_PRINT_TEACH_MOVE_PROMPT,
+    MENU_STATE_TEACH_MOVE_CONFIRM,
+    MENU_STATE_PRINT_GIVE_UP_PROMPT,
+    MENU_STATE_GIVE_UP_CONFIRM,
+    MENU_STATE_FADE_AND_RETURN,
+    MENU_STATE_RETURN_TO_FIELD,
+    MENU_STATE_PRINT_TRYING_TO_LEARN_PROMPT,
+    MENU_STATE_WAIT_FOR_TRYING_TO_LEARN,
+    MENU_STATE_CONFIRM_DELETE_OLD_MOVE,
+    MENU_STATE_PRINT_WHICH_MOVE_PROMPT,
+    MENU_STATE_SHOW_MOVE_SUMMARY_SCREEN,
+    MENU_STATE_PRINT_STOP_TEACHING,
+    MENU_STATE_WAIT_FOR_STOP_TEACHING,
+    MENU_STATE_CONFIRM_STOP_TEACHING,
+    MENU_STATE_CHOOSE_SETUP_STATE,
+    MENU_STATE_FADE_FROM_SUMMARY_SCREEN,
+    MENU_STATE_TRY_OVERWRITE_MOVE,
+    MENU_STATE_DOUBLE_FANFARE_FORGOT_MOVE,
+    MENU_STATE_PRINT_TEXT_THEN_FANFARE,
+    MENU_STATE_WAIT_FOR_FANFARE,
+    MENU_STATE_WAIT_FOR_A_BUTTON,
+};
 
 #define MAX_MOVE_LIST_ITEMS 7
 
 static void Task_WaitForFadeOut(u8 taskId);
 static void CB2_MoveRelearnerMain(void);
 static void DoMoveRelearnerMain(void);
-static void DrawTextBorderOnWindows6and7(void);
+static void DrawWindowTextBorders(void);
 static void ShowTeachMoveText(void);
 static void InitMoveRelearnerBackgroundLayers(void);
 static void CreateLearnableMovesList(void);
@@ -154,7 +152,7 @@ struct RelearnType
 
 static EWRAM_DATA struct
 {
-    u8 state;
+    enum RelearnMenuState state;
     u8 numLearnableMoves;
     struct ListMenuItem listMenuItems[MAX_RELEARNER_MOVES + 1];
     u16 learnableMoves[MAX_RELEARNER_MOVES];
@@ -384,6 +382,7 @@ void CB2_InitLearnMove(void)
     FreeAllSpritePalettes();
     ResetTasks();
     sMoveRelearnerStruct = AllocZeroed(sizeof(*sMoveRelearnerStruct));
+    sMoveRelearnerStruct->state = MENU_STATE_FADE_TO_BLACK;
     sMoveRelearnerStruct->selectedPartyMember = gSpecialVar_0x8004;
     SetVBlankCallback(VBlankCB_MoveRelearner);
 
@@ -490,30 +489,27 @@ static void DoMoveRelearnerMain(void)
         ShowBg(0);
         ShowBg(1);
         LoadMoveInfoUI();
-        sMoveRelearnerStruct->state++;
-        DrawTextBorderOnWindows6and7();
+        DrawWindowTextBorders();
         ShowTeachMoveText();
         MoveLearnerInitListMenu();
         sMoveRelearnerStruct->scheduleMoveInfoUpdate = TRUE;
+        sMoveRelearnerStruct->state = MENU_STATE_WAIT_FOR_FADE;
         break;
     case MENU_STATE_WAIT_FOR_FADE:
         if (!gPaletteFade.active)
-            sMoveRelearnerStruct->state = 4;
-        break;
-    case MENU_STATE_UNREACHABLE:
-        sMoveRelearnerStruct->state++;
+            sMoveRelearnerStruct->state = MENU_STATE_IDLE_BATTLE_MODE;
         break;
     case MENU_STATE_SETUP_BATTLE_MODE:
         ShowTeachMoveText();
         sMoveRelearnerStruct->scheduleMoveInfoUpdate = TRUE;
-        sMoveRelearnerStruct->state++;
+        sMoveRelearnerStruct->state = MENU_STATE_IDLE_BATTLE_MODE;
         break;
     case MENU_STATE_IDLE_BATTLE_MODE:
         HandleInput();
         break;
     case MENU_STATE_PRINT_TEACH_MOVE_PROMPT:
         CreateYesNoMenuAtPos(&sMoveRelearnerYesNoMenuTemplate, FONT_NORMAL_COPY_2, 0, 2, 0x001, 14, 0);
-        sMoveRelearnerStruct->state++;
+        sMoveRelearnerStruct->state = MENU_STATE_TEACH_MOVE_CONFIRM;
         break;
     case MENU_STATE_TEACH_MOVE_CONFIRM :
         switch (YesNoMenuProcessInput())
@@ -530,23 +526,23 @@ static void DoMoveRelearnerMain(void)
                 {
                     PrintMessageWithPlaceholders(gText_MonLearnedMove);
                     gSpecialVar_0x8004 = TRUE;
-                    sMoveRelearnerStruct->state = 31;
+                    sMoveRelearnerStruct->state = MENU_STATE_PRINT_TEXT_THEN_FANFARE;
                 }
                 else
                 {
-                    sMoveRelearnerStruct->state = 16;
+                    sMoveRelearnerStruct->state = MENU_STATE_PRINT_TRYING_TO_LEARN_PROMPT;
                 }
             }
             break;
         case 1:
         case -1:
-            sMoveRelearnerStruct->state = 3;
+            sMoveRelearnerStruct->state = MENU_STATE_SETUP_BATTLE_MODE;
             break;
         }
         break;
     case MENU_STATE_PRINT_GIVE_UP_PROMPT:
         CreateYesNoMenuAtPos(&sMoveRelearnerYesNoMenuTemplate, FONT_NORMAL_COPY_2, 0, 2, 0x001, 14, 0);
-        sMoveRelearnerStruct->state++;
+        sMoveRelearnerStruct->state = MENU_STATE_GIVE_UP_CONFIRM;
         break;
     case MENU_STATE_GIVE_UP_CONFIRM:
         switch (YesNoMenuProcessInput())
@@ -557,57 +553,57 @@ static void DoMoveRelearnerMain(void)
             break;
         case 1:
         case -1:
-            sMoveRelearnerStruct->state = 3;
+            sMoveRelearnerStruct->state = MENU_STATE_SETUP_BATTLE_MODE;
             break;
         }
         break;
     case MENU_STATE_PRINT_TRYING_TO_LEARN_PROMPT:
         PrintMessageWithPlaceholders(gText_MonIsTryingToLearnMove);
-        sMoveRelearnerStruct->state++;
+        sMoveRelearnerStruct->state = MENU_STATE_WAIT_FOR_TRYING_TO_LEARN;
         break;
     case MENU_STATE_WAIT_FOR_TRYING_TO_LEARN:
         CreateYesNoMenuAtPos(&sMoveRelearnerYesNoMenuTemplate, FONT_NORMAL_COPY_2, 0, 2, 0x001, 14, 0);
-        sMoveRelearnerStruct->state = 18;
+        sMoveRelearnerStruct->state = MENU_STATE_CONFIRM_DELETE_OLD_MOVE;
         break;
     case MENU_STATE_CONFIRM_DELETE_OLD_MOVE:
         switch (YesNoMenuProcessInput())
         {
         case 0:
             PrintMessageWithPlaceholders(gText_WhichMoveShouldBeForgotten);
-            sMoveRelearnerStruct->state = 19;
+            sMoveRelearnerStruct->state = MENU_STATE_PRINT_WHICH_MOVE_PROMPT;
             break;
         case 1:
         case -1:
-            sMoveRelearnerStruct->state = 24;
+            sMoveRelearnerStruct->state = MENU_STATE_PRINT_STOP_TEACHING;
             break;
         }
         break;
     case MENU_STATE_PRINT_STOP_TEACHING:
         PrintMessageWithPlaceholders(gText_StopLearningMove);
-        sMoveRelearnerStruct->state++;
+        sMoveRelearnerStruct->state = MENU_STATE_WAIT_FOR_STOP_TEACHING;
         break;
     case MENU_STATE_WAIT_FOR_STOP_TEACHING:
         CreateYesNoMenuAtPos(&sMoveRelearnerYesNoMenuTemplate, FONT_NORMAL_COPY_2, 0, 2, 0x001, 14, 0);
-        sMoveRelearnerStruct->state = 26;
+        sMoveRelearnerStruct->state = MENU_STATE_CONFIRM_STOP_TEACHING;
         break;
     case MENU_STATE_CONFIRM_STOP_TEACHING:
         switch (YesNoMenuProcessInput())
         {
         case 0:
-            sMoveRelearnerStruct->state = 27;
+            sMoveRelearnerStruct->state = MENU_STATE_CHOOSE_SETUP_STATE;
             break;
         case 1:
         case -1:
-            sMoveRelearnerStruct->state = 16;
+            sMoveRelearnerStruct->state = MENU_STATE_PRINT_TRYING_TO_LEARN_PROMPT;
             break;
         }
         break;
     case MENU_STATE_CHOOSE_SETUP_STATE :
-        sMoveRelearnerStruct->state = 3;
+        sMoveRelearnerStruct->state = MENU_STATE_SETUP_BATTLE_MODE;
         break;
     case MENU_STATE_PRINT_WHICH_MOVE_PROMPT:
-        sMoveRelearnerStruct->state = 20;
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+        sMoveRelearnerStruct->state = MENU_STATE_SHOW_MOVE_SUMMARY_SCREEN;
         break;
     case MENU_STATE_SHOW_MOVE_SUMMARY_SCREEN:
         if (!gPaletteFade.active)
@@ -615,18 +611,12 @@ static void DoMoveRelearnerMain(void)
             ListMenuGetScrollAndRow(sMoveRelearnerStruct->listMenuTaskId, &sMoveRelearnerStruct->listOffset, &sMoveRelearnerStruct->listRow);
             FreeAllWindowBuffers();
             ShowSelectMovePokemonSummaryScreen(gPlayerParty, gSpecialVar_0x8004, CB2_InitLearnMoveReturnFromSelectMove, GetCurrentSelectedMove());
-            sMoveRelearnerStruct->state = 28;
+            sMoveRelearnerStruct->state = MENU_STATE_FADE_FROM_SUMMARY_SCREEN;
         }
-        break;
-    case 21:
-        sMoveRelearnerStruct->state = MENU_STATE_FADE_AND_RETURN;
-        break;
-    case 22:
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
         break;
     case MENU_STATE_FADE_AND_RETURN:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
-        sMoveRelearnerStruct->state++;
+        sMoveRelearnerStruct->state = MENU_STATE_RETURN_TO_FIELD;
         break;
     case MENU_STATE_RETURN_TO_FIELD:
         if (!gPaletteFade.active)
@@ -659,9 +649,9 @@ static void DoMoveRelearnerMain(void)
         BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
         ShowBg(0);
         ShowBg(1);
-        sMoveRelearnerStruct->state++;
+        sMoveRelearnerStruct->state = MENU_STATE_TRY_OVERWRITE_MOVE;
         LoadMoveInfoUI();
-        DrawTextBorderOnWindows6and7();
+        DrawWindowTextBorders();
         MoveLearnerInitListMenu();
         PrintMoveInfoHandleCancel_CopyToVram();
         break;
@@ -700,16 +690,16 @@ static void DoMoveRelearnerMain(void)
         break;
     case MENU_STATE_DOUBLE_FANFARE_FORGOT_MOVE:
         PrintMessageWithPlaceholders(gText_MonForgotOldMoveAndMonLearnedNewMove);
-        sMoveRelearnerStruct->state = 31;
+        sMoveRelearnerStruct->state = MENU_STATE_PRINT_TEXT_THEN_FANFARE;
         PlayFanfare(MUS_LEVEL_UP);
         break;
     case MENU_STATE_PRINT_TEXT_THEN_FANFARE:
         PlayFanfare(MUS_LEVEL_UP);
-        sMoveRelearnerStruct->state = 32;
+        sMoveRelearnerStruct->state = MENU_STATE_WAIT_FOR_FANFARE;
         break;
     case MENU_STATE_WAIT_FOR_FANFARE:
         if (IsFanfareTaskInactive())
-            sMoveRelearnerStruct->state = 33;
+            sMoveRelearnerStruct->state = MENU_STATE_WAIT_FOR_A_BUTTON;
         break;
     case MENU_STATE_WAIT_FOR_A_BUTTON:
         if (JOY_NEW(A_BUTTON))
@@ -721,7 +711,7 @@ static void DoMoveRelearnerMain(void)
     }
 }
 
-static void DrawTextBorderOnWindows6and7(void)
+static void DrawWindowTextBorders(void)
 {
     DrawTextBorderOuter(RELEARNER_WIN_MOVE_LIST, 0x001, 14);
     DrawTextBorderOuter(RELEARNER_WIN_MESSAGE_BOX, 0x001, 14);
@@ -794,21 +784,21 @@ static void HandleInput(void)
             break;
         case LIST_CANCEL:
             PlaySE(SE_SELECT);
-            sMoveRelearnerStruct->state = 12;
+            sMoveRelearnerStruct->state = MENU_STATE_PRINT_GIVE_UP_PROMPT;
             PrintMessageWithPlaceholders(gText_GiveUpTryingToTeachNewMove);
             break;
         default:
             PlaySE(SE_SELECT);
             if (sMoveRelearnerStruct->selectedItemId != LIST_CANCEL)
             {
-                sMoveRelearnerStruct->state = 8;
+                sMoveRelearnerStruct->state = MENU_STATE_PRINT_TEACH_MOVE_PROMPT;
                 StringCopy(gStringVar2, GetMoveName(GetCurrentSelectedMove()));
                 PrintMessageWithPlaceholders(gText_TeachMoveQues);
             }
             else
             {
                 PrintMessageWithPlaceholders(gText_GiveUpTryingToTeachNewMove);
-                sMoveRelearnerStruct->state = 12;
+                sMoveRelearnerStruct->state = MENU_STATE_PRINT_GIVE_UP_PROMPT;
             }
             break;
     }
