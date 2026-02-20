@@ -141,7 +141,7 @@ static void LoadMoveInfoUI(void);
 static void PrintMoveInfoHandleCancel_CopyToVram(void);
 static void MoveRelearnerMenu_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list);
 static s8 YesNoMenuProcessInput(void);
-static void PrintTextOnWindow(u8 windowId, const u8 *str, u8 x, u8 y, s32 speed, enum RelearnerTextColor colorType, bool32 fillWindow);
+static void MoveRelearnerPrintMessage(const u8 *str, s32 speed);
 static s32 GetCurrentSelectedMove(void);
 static bool32 HasRelearnerLevelUpMoves(struct BoxPokemon *boxMon);
 static bool32 HasRelearnerEggMoves(struct BoxPokemon *boxMon);
@@ -488,7 +488,7 @@ static void CB2_MoveRelearnerMain(void)
 static void PrintMessageWithPlaceholders(const u8 *str)
 {
     StringExpandPlaceholders(gStringVar4, str);
-    PrintTextOnWindow(RELEARNER_WIN_MESSAGE_BOX, gStringVar4, 0, 2, GetPlayerTextSpeedDelay(), MESSAGE_BOX_TEXT_COLOR, TRUE);
+    MoveRelearnerPrintMessage(gStringVar4, GetPlayerTextSpeedDelay());
 }
 
 static void DoMoveRelearnerMain(void)
@@ -742,7 +742,7 @@ static void DrawWindowTextBorders(void)
 static void ShowTeachMoveText(void)
 {
     StringExpandPlaceholders(gStringVar4, gText_TeachWhichMoveToMon);
-    PrintTextOnWindow(RELEARNER_WIN_MESSAGE_BOX, gStringVar4, 0, 2, 0, MESSAGE_BOX_TEXT_COLOR, TRUE);
+    MoveRelearnerPrintMessage(gStringVar4, 0);
     PutWindowTilemap(RELEARNER_WIN_MESSAGE_BOX);
     CopyWindowToVram(RELEARNER_WIN_MESSAGE_BOX, COPYWIN_FULL);
 }
@@ -930,16 +930,12 @@ static s8 YesNoMenuProcessInput(void)
     return input;
 }
 
-static void PrintTextOnWindow(u8 windowId, const u8 *str, u8 x, u8 y, s32 speed, enum RelearnerTextColor colorType, bool32 fillWindow)
+static void MoveRelearnerPrintMessage(const u8 *str, s32 speed)
 {
-    const u8 *colors = sTextColors[colorType];
-    s32 letterSpacing = colorType == GENERAL_TEXT_COLOR ? 0 : 1;
-    s32 lineSpacing = colorType == GENERAL_TEXT_COLOR ? 0 : 1;
+    const u8 *colors = sTextColors[MESSAGE_BOX_TEXT_COLOR];
 
-    if (fillWindow)
-        FillWindowPixelBuffer(windowId, PIXEL_FILL(colors[0]));
-
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL_COPY_2, x, y, letterSpacing, lineSpacing, colors, speed, str);
+    FillWindowPixelBuffer(RELEARNER_WIN_MESSAGE_BOX, PIXEL_FILL(colors[0]));
+    AddTextPrinterParameterized4(RELEARNER_WIN_MESSAGE_BOX, FONT_NORMAL_COPY_2, 0, 2, 1, 1, colors, speed, str);
 }
 
 static void QuickSortMoves(u16 *moves, s32 left, s32 right)
