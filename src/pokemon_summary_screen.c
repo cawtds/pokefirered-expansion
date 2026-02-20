@@ -334,6 +334,7 @@ EWRAM_DATA u8 gLastViewedMonIndex = 0;
 static EWRAM_DATA u8 sMoveSelectionCursorPos = 0;
 static EWRAM_DATA u8 sMoveSwapCursorPos = 0;
 static EWRAM_DATA struct MonPicBounceState * sMonPicBounceState = NULL;
+EWRAM_DATA MainCallback gInitialSummaryScreenCallback = NULL; // stores callback from the first time the screen is opened from the party or PC menu
 
 extern const u32 gSummaryScreen_PageSkills_Tilemap[];
 extern const u32 gSummaryScreen_PageMoves_Tilemap[];
@@ -1191,17 +1192,7 @@ const struct SpriteTemplate gSpriteTemplate_MoveTypes =
     .callback = SpriteCallbackDummy
 };
 
-
-#define FREE_AND_SET_NULL_IF_SET(ptr) \
-{                                     \
-    if (ptr != NULL)                  \
-    {                                 \
-        free(ptr);                    \
-        (ptr) = NULL;                 \
-    }                                 \
-}
-
-void ShowPokemonSummaryScreen(struct Pokemon * party, u8 cursorPos, u8 lastIdx, MainCallback savedCallback, u8 mode)
+void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallback savedCallback, u8 mode)
 {
     sMonSummaryScreen = AllocZeroed(sizeof(struct PokemonSummaryScreenData));
     sMonSkillsPrinterXpos = AllocZeroed(sizeof(struct Struct203B144));
@@ -1212,20 +1203,35 @@ void ShowPokemonSummaryScreen(struct Pokemon * party, u8 cursorPos, u8 lastIdx, 
         return;
     }
 
-    gLastViewedMonIndex = cursorPos;
-
     sMoveSelectionCursorPos = 0;
     sMoveSwapCursorPos = 0;
     sMonSummaryScreen->savedCallback = savedCallback;
-    sMonSummaryScreen->monList.mons = party;
+    if (gInitialSummaryScreenCallback == NULL)
+        gInitialSummaryScreenCallback = savedCallback;
 
     if (party == gEnemyParty)
         sMonSummaryScreen->isEnemyParty = TRUE;
     else
         sMonSummaryScreen->isEnemyParty = FALSE;
 
-    sMonSummaryScreen->lastIndex = lastIdx;
     sMonSummaryScreen->mode = mode;
+    if (cursorPos == PC_MON_CHOSEN)
+    {
+        sMonSummaryScreen->monList.boxMons = GetBoxedMonPtr(gSpecialVar_MonBoxId, 0);
+        gLastViewedMonIndex = gSpecialVar_MonBoxPos;
+        sMonSummaryScreen->lastIndex = IN_BOX_COUNT - 1;
+    }
+    else
+    {
+        sMonSummaryScreen->monList.mons = party;
+        gLastViewedMonIndex = cursorPos;
+        sMonSummaryScreen->lastIndex = lastIdx;
+    }
+
+    if (mode == PSS_MODE_BOX || cursorPos == PC_MON_CHOSEN)
+        sMonSummaryScreen->isBoxMon = TRUE;
+    else
+        sMonSummaryScreen->isBoxMon = FALSE;
 
     switch (sMonSummaryScreen->mode)
     {
@@ -1233,20 +1239,17 @@ void ShowPokemonSummaryScreen(struct Pokemon * party, u8 cursorPos, u8 lastIdx, 
     default:
         SetHelpContext(HELPCONTEXT_POKEMON_INFO);
         sMonSummaryScreen->curPageIndex = PSS_PAGE_INFO;
-        sMonSummaryScreen->isBoxMon = FALSE;
         sMonSummaryScreen->lockMovesFlag = FALSE;
         break;
     case PSS_MODE_BOX:
         SetHelpContext(HELPCONTEXT_POKEMON_INFO);
         sMonSummaryScreen->curPageIndex = PSS_PAGE_INFO;
-        sMonSummaryScreen->isBoxMon = TRUE;
         sMonSummaryScreen->lockMovesFlag = FALSE;
         break;
     case PSS_MODE_SELECT_MOVE:
     case PSS_MODE_FORGET_MOVE:
         SetHelpContext(HELPCONTEXT_POKEMON_MOVES);
         sMonSummaryScreen->curPageIndex = PSS_PAGE_MOVES_INFO;
-        sMonSummaryScreen->isBoxMon = FALSE;
         sMonSummaryScreen->lockMovesFlag = TRUE;
         break;
     }
@@ -1277,10 +1280,10 @@ void ShowPokemonSummaryScreen(struct Pokemon * party, u8 cursorPos, u8 lastIdx, 
     SetMainCallback2(CB2_SetUpPSS);
 }
 
-void ShowSelectMovePokemonSummaryScreen(struct Pokemon * party, u8 cursorPos, MainCallback savedCallback, u16 a4)
+void ShowSelectMovePokemonSummaryScreen(struct Pokemon *party, u8 cursorPos, MainCallback savedCallback, u16 move)
 {
     ShowPokemonSummaryScreen(party, cursorPos, gPlayerPartyCount - 1, savedCallback, PSS_MODE_SELECT_MOVE);
-    sMonSummaryScreen->moveIds[4] = a4;
+    sMonSummaryScreen->moveIds[4] = move;
 }
 
 static u8 PageFlipInputIsDisabled(u8 direction)
@@ -3430,6 +3433,8 @@ static void CommitStaticWindowTilemaps(void)
 
 static void Task_DestroyResourcesOnExit(u8 taskId)
 {
+    if (sMonSummaryScreen->savedCallback == gInitialSummaryScreenCallback)
+        gInitialSummaryScreenCallback = NULL;
     PokeSum_DestroySprites();
     FreeAllSpritePalettes();
 
@@ -3443,8 +3448,8 @@ static void Task_DestroyResourcesOnExit(u8 taskId)
 
     gLastViewedMonIndex = GetLastViewedMonIndex();
 
-    FREE_AND_SET_NULL_IF_SET(sMonSummaryScreen);
-    FREE_AND_SET_NULL_IF_SET(sMonSkillsPrinterXpos);
+    TRY_FREE_AND_SET_NULL(sMonSummaryScreen);
+    TRY_FREE_AND_SET_NULL(sMonSkillsPrinterXpos);
 }
 
 static void CB2_RunPokemonSummaryScreen(void)
@@ -4657,8 +4662,8 @@ static void CreateMoveSelectionCursorObjs(u16 tileTag, u16 palTag)
 
     ShoworHideMoveSelectionCursor(TRUE);
 
-    FREE_AND_SET_NULL_IF_SET(gfxBufferPtrs[0]);
-    FREE_AND_SET_NULL_IF_SET(gfxBufferPtrs[1]);
+    TRY_FREE_AND_SET_NULL(gfxBufferPtrs[0]);
+    TRY_FREE_AND_SET_NULL(gfxBufferPtrs[1]);
 }
 
 static void ShoworHideMoveSelectionCursor(bool8 invisible)
@@ -4720,7 +4725,7 @@ static void DestroyMoveSelectionCursorObjs(void)
         if (sMoveSelectionCursorObjs[i]->sprite != NULL)
             DestroySpriteAndFreeResources(sMoveSelectionCursorObjs[i]->sprite);
 
-        FREE_AND_SET_NULL_IF_SET(sMoveSelectionCursorObjs[i]);
+        TRY_FREE_AND_SET_NULL(sMoveSelectionCursorObjs[i]);
     }
 }
 
@@ -4764,7 +4769,7 @@ static void CreateMonStatusIconObj(u16 tileTag, u16 palTag)
 
     ShowOrHideStatusIcon(TRUE);
     UpdateMonStatusIconObj();
-    FREE_AND_SET_NULL_IF_SET(gfxBufferPtr);
+    TRY_FREE_AND_SET_NULL(gfxBufferPtr);
 }
 
 static void DestroyMonStatusIconObj(void)
@@ -4772,7 +4777,7 @@ static void DestroyMonStatusIconObj(void)
     if (sStatusIcon->sprite != NULL)
         DestroySpriteAndFreeResources(sStatusIcon->sprite);
 
-    FREE_AND_SET_NULL_IF_SET(sStatusIcon);
+    TRY_FREE_AND_SET_NULL(sStatusIcon);
 }
 
 static void UpdateMonStatusIconObj(void)
@@ -4877,7 +4882,7 @@ static void CreateHpBarObjs(u16 tileTag, u16 palTag)
     UpdateHpBarObjs();
     ShowOrHideHpBarObjs(TRUE);
 
-    FREE_AND_SET_NULL_IF_SET(gfxBufferPtr);
+    TRY_FREE_AND_SET_NULL(gfxBufferPtr);
 }
 
 static void UpdateHpBarObjs(void)
@@ -4962,7 +4967,7 @@ static void DestroyHpBarObjs(void)
         if (sHpBarObjs->sprites[i] != NULL)
             DestroySpriteAndFreeResources(sHpBarObjs->sprites[i]);
 
-    FREE_AND_SET_NULL_IF_SET(sHpBarObjs);
+    TRY_FREE_AND_SET_NULL(sHpBarObjs);
 }
 
 static void ShowOrHideHpBarObjs(u8 invisible)
@@ -5019,7 +5024,7 @@ static void CreateExpBarObjs(u16 tileTag, u16 palTag)
     UpdateExpBarObjs();
     ShowOrHideExpBarObjs(TRUE);
 
-    FREE_AND_SET_NULL_IF_SET(gfxBufferPtr);
+    TRY_FREE_AND_SET_NULL(gfxBufferPtr);
 }
 
 static void UpdateExpBarObjs(void)
@@ -5095,7 +5100,7 @@ static void DestroyExpBarObjs(void)
         if (sExpBarObjs->sprites[i] != NULL)
             DestroySpriteAndFreeResources(sExpBarObjs->sprites[i]);
 
-    FREE_AND_SET_NULL_IF_SET(sExpBarObjs);
+    TRY_FREE_AND_SET_NULL(sExpBarObjs);
 }
 
 static void ShowOrHideExpBarObjs(u8 invisible)
@@ -5147,7 +5152,7 @@ static void CreatePokerusIconObj(u16 tileTag, u16 palTag)
     HideShowPokerusIcon(TRUE);
     ShowPokerusIconObjIfHasOrHadPokerus();
 
-    FREE_AND_SET_NULL_IF_SET(gfxBufferPtr);
+    TRY_FREE_AND_SET_NULL(gfxBufferPtr);
 }
 
 static void DestroyPokerusIconObj(void)
@@ -5155,7 +5160,7 @@ static void DestroyPokerusIconObj(void)
     if (sPokerusIconObj->sprite != NULL)
         DestroySpriteAndFreeResources(sPokerusIconObj->sprite);
 
-    FREE_AND_SET_NULL_IF_SET(sPokerusIconObj);
+    TRY_FREE_AND_SET_NULL(sPokerusIconObj);
 }
 
 static void ShowPokerusIconObjIfHasOrHadPokerus(void)
@@ -5231,7 +5236,7 @@ static void CreateShinyStarObj(u16 tileTag, u16 palTag)
     HideShowShinyStar(TRUE);
     ShowShinyStarObjIfMonShiny();
 
-    FREE_AND_SET_NULL_IF_SET(gfxBufferPtr);
+    TRY_FREE_AND_SET_NULL(gfxBufferPtr);
 }
 
 static void DestroyShinyStarObj(void)
@@ -5239,7 +5244,7 @@ static void DestroyShinyStarObj(void)
     if (sShinyStarObjData->sprite != NULL)
         DestroySpriteAndFreeResources(sShinyStarObjData->sprite);
 
-    FREE_AND_SET_NULL_IF_SET(sShinyStarObjData);
+    TRY_FREE_AND_SET_NULL(sShinyStarObjData);
 }
 
 static void HideShowShinyStar(bool8 invisible)

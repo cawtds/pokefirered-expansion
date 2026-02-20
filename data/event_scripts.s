@@ -27,6 +27,7 @@
 #include "constants/party_menu.h"
 #include "constants/pokemon.h"
 #include "constants/moves.h"
+#include "constants/move_relearner.h"
 #include "constants/songs.h"
 #include "constants/sound.h"
 #include "constants/species.h"
@@ -49,6 +50,7 @@
 #include "constants/weather.h"
 #include "constants/union_room.h"
 #include "constants/trade.h"
+#include "constants/script_menu.h"
 #include "constants/quest_log.h"
 #include "constants/daycare.h"
 #include "constants/easy_chat.h"
@@ -923,6 +925,7 @@ Text_PlayerWhatCanIDoForYou::
 	.string "What can I do for you?$"
 
 	.include "data/text/obtain_item.inc"
+	.include "data/text/move_relearner.inc"
 
 Text_MakingPreparations::
 	.string "じゅんびちゅうです！$"
@@ -1139,6 +1142,7 @@ EventScript_ResetAllMapFlags::
 	.include "data/scripts/pkmn_center_nurse.inc"
 	.include "data/scripts/obtain_item.inc"
 	.include "data/scripts/pc.inc"
+	.include "data/scripts/move_relearner.inc"
 
 Common_ShowEasyChatScreen::
 	fadescreen FADE_TO_BLACK

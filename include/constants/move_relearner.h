@@ -22,8 +22,8 @@ enum RelearnMode
     RELEARN_MODE_SCRIPT = 1,                     // Relearning moves through an event script
     // These two must stay 2 and 3, they are tied to the summary screen pages
     RELEARN_MODE_PSS_PAGE_BATTLE_MOVES = 2,      // Relearning moves through the summary screen's battle moves page
-    RELEARN_MODE_PSS_PAGE_CONTEST_MOVES = 3,     // Relearning moves through the summary screen's contest moves page (defaults to contest page on relearner screen)
-    RELEARN_MODE_PARTY_MENU = 4,                 // Relearning moves through the party menu's moves submenu
+    RELEARN_MODE_PARTY_MENU = 3,                 // Relearning moves through the party menu's moves submenu
+    RELEARN_MODE_BOX_PSS_PAGE_BATTLE_MOVES = 4,
 };
 
 #endif // GUARD_CONSTANTS_MOVE_RELEARNER_H

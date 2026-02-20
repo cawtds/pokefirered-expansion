@@ -881,6 +881,7 @@ static bool8 SaveCallback(void)
         ScriptUnfreezeObjectEvents();
         UnlockPlayerFieldControls();
         RestoreHelpContext();
+        SoftResetInBattlePyramid();
         return TRUE;
     }
     return FALSE;

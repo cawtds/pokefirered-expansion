@@ -330,36 +330,41 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
 
 void FieldInput_HandleCancelSignpost(struct FieldInput * input)
 {
-    if (ScriptContext_IsEnabled() == TRUE)
+    if (!ScriptContext_IsEnabled())
+        return;
+
+    if (gWalkAwayFromSignInhibitTimer != 0)
     {
-        if (gWalkAwayFromSignInhibitTimer != 0)
-            gWalkAwayFromSignInhibitTimer--;
-        else if (CanWalkAwayToCancelMsgBox() == TRUE)
-        {
-            if (input->dpadDirection != 0 && GetPlayerFacingDirection() != input->dpadDirection)
-            {
-                if (IsMsgBoxWalkawayDisabled() == TRUE)
-                    return;
-                if (input->dpadDirection == DIR_NORTH)
-                    RegisterQuestLogInput(QL_INPUT_UP);
-                else if (input->dpadDirection == DIR_SOUTH)
-                    RegisterQuestLogInput(QL_INPUT_DOWN);
-                else if (input->dpadDirection == DIR_WEST)
-                    RegisterQuestLogInput(QL_INPUT_LEFT);
-                else if (input->dpadDirection == DIR_EAST)
-                    RegisterQuestLogInput(QL_INPUT_RIGHT);
-                ScriptContext_SetupScript(EventScript_CancelMessageBox);
-                LockPlayerFieldControls();
-            }
-            else if (input->pressedStartButton)
-            {
-                ScriptContext_SetupScript(EventScript_CancelMessageBox);
-                LockPlayerFieldControls();
-                if (!FuncIsActiveTask(Task_QuestLogPlayback_OpenStartMenu))
-                    CreateTask(Task_QuestLogPlayback_OpenStartMenu, 8);
-            }
-        }
+        gWalkAwayFromSignInhibitTimer--;
+        return;
     }
+
+    if (!CanWalkAwayToCancelMsgBox())
+        return;
+
+    if (input->dpadDirection != 0 && GetPlayerFacingDirection() != input->dpadDirection)
+    {
+        if (IsMsgBoxWalkawayDisabled() == TRUE)
+            return;
+        if (input->dpadDirection == DIR_NORTH)
+            RegisterQuestLogInput(QL_INPUT_UP);
+        else if (input->dpadDirection == DIR_SOUTH)
+            RegisterQuestLogInput(QL_INPUT_DOWN);
+        else if (input->dpadDirection == DIR_WEST)
+            RegisterQuestLogInput(QL_INPUT_LEFT);
+        else if (input->dpadDirection == DIR_EAST)
+            RegisterQuestLogInput(QL_INPUT_RIGHT);
+        ScriptContext_SetupScript(EventScript_CancelMessageBox);
+        LockPlayerFieldControls();
+    }
+    else if (input->pressedStartButton)
+    {
+        ScriptContext_SetupScript(EventScript_CancelMessageBox);
+        LockPlayerFieldControls();
+        if (!FuncIsActiveTask(Task_QuestLogPlayback_OpenStartMenu))
+            CreateTask(Task_QuestLogPlayback_OpenStartMenu, 8);
+    }
+
 }
 
 static void Task_QuestLogPlayback_OpenStartMenu(u8 taskId)
