@@ -1839,7 +1839,7 @@ void EnterPokeStorage(u8 boxOption)
     {
         gStorage->boxOption = boxOption;
         gStorage->isReopening = FALSE;
-        sMovingItemId = 0;
+        sMovingItemId = ITEM_NONE;
         gStorage->state = 0;
         gStorage->taskId = CreateTask(Task_InitPokeStorage, 3);
         sLastUsedBox = StorageGetCurrentBox();
@@ -2484,6 +2484,7 @@ static void Task_OnSelectedMon(u8 taskId)
                 gSpecialVar_Result = FALSE;
             else
                 gSpecialVar_Result = TRUE;
+
             gStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;
             SetPokeStorageTask(Task_ChangeScreen);
             break;

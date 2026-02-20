@@ -1,58 +1,64 @@
 #include "global.h"
-#include "gflib.h"
-#include "list_menu.h"
-#include "load_save.h"
+#include "battle.h"
 #include "cable_club.h"
+#include "chooseboxmon.h"
+#include "data.h"
 #include "debug.h"
 #include "diploma.h"
-#include "script.h"
-#include "field_control_avatar.h"
-#include "field_player_avatar.h"
-#include "overworld.h"
-#include "field_player_avatar.h"
-#include "field_message_box.h"
+#include "dynamic_placeholder_text_util.h"
 #include "event_data.h"
-#include "international_string_util.h"
-#include "strings.h"
-#include "battle.h"
-#include "fieldmap.h"
-#include "field_specials.h"
-#include "region_map.h"
-#include "task.h"
-#include "field_camera.h"
-#include "field_effect.h"
-#include "field_weather.h"
 #include "event_object_movement.h"
-#include "item.h"
+#include "field_camera.h"
+#include "field_control_avatar.h"
+#include "field_effect.h"
+#include "field_fadetransition.h"
+#include "field_message_box.h"
+#include "field_player_avatar.h"
+#include "field_player_avatar.h"
+#include "field_specials.h"
+#include "field_weather.h"
+#include "fieldmap.h"
+#include "international_string_util.h"
 #include "item_icon.h"
+#include "item.h"
 #include "link.h"
-#include "random.h"
+#include "list_menu.h"
+#include "load_save.h"
 #include "mail.h"
-#include "pokemon_storage_system.h"
-#include "script_menu.h"
-#include "data.h"
-#include "pokedex.h"
-#include "text_window.h"
+#include "malloc.h"
 #include "menu.h"
 #include "mystery_gift.h"
 #include "naming_screen.h"
+#include "overworld.h"
+#include "palette.h"
 #include "party_menu.h"
+#include "pokedex.h"
+#include "pokemon_storage_system.h"
+#include "pokemon_summary_screen.h"
+#include "random.h"
+#include "region_map.h"
 #include "rtc.h"
+#include "script_menu.h"
+#include "script.h"
+#include "sound.h"
+#include "string_util.h"
+#include "strings.h"
+#include "task.h"
+#include "text_window.h"
 #include "tilesets.h"
 #include "wallclock.h"
-#include "dynamic_placeholder_text_util.h"
+#include "constants/battle_frontier.h"
 #include "constants/battle_pyramid.h"
 #include "constants/battle_tower.h"
-#include "constants/songs.h"
+#include "constants/event_objects.h"
 #include "constants/items.h"
 #include "constants/maps.h"
-#include "constants/metatile_labels.h"
-#include "constants/region_map_sections.h"
-#include "constants/moves.h"
 #include "constants/menu.h"
-#include "constants/event_objects.h"
-#include "constants/battle_frontier.h"
 #include "constants/metatile_labels.h"
+#include "constants/metatile_labels.h"
+#include "constants/moves.h"
+#include "constants/region_map_sections.h"
+#include "constants/songs.h"
 
 #define TAG_ITEM_ICON 5500
 
@@ -112,6 +118,8 @@ static void Task_MoveElevator(u8);
 static void MoveElevatorWindowLights(u16, bool8);
 static void Task_MoveElevatorWindowLights(u8);
 static void Task_LinkRetireStatusWithBattleTowerPartner(u8);
+static void CB2_ReturnToFieldWhileLearningMove(void);
+static void Task_ReturnToFieldWhileLearningMove(u8);
 
 static u8 *const sStringVarPtrs[] = {
     gStringVar1,
@@ -603,8 +611,7 @@ void NullFieldSpecial(void)
 
 void DoPicboxCancel(void)
 {
-    u8 t = EOS;
-    AddTextPrinterParameterized(0, FONT_NORMAL, &t, 0, 1, 0, NULL);
+    DeactivateSingleTextPrinter(0, WINDOW_TEXT_PRINTER);
     PicboxCancel();
 }
 
@@ -3714,3 +3721,100 @@ void GetBattlePyramidHint(void)
     gSpecialVar_Result = gSpecialVar_0x8004 / FRONTIER_STAGES_PER_CHALLENGE;
     gSpecialVar_Result -= (gSpecialVar_Result / TOTAL_PYRAMID_ROUNDS) * TOTAL_PYRAMID_ROUNDS;
 }
+
+static void UIAskConfirmation(void)
+{
+    DisplayYesNoMenuDefaultYes();
+}
+
+static s32 UIWaitConfirmation(void)
+{
+    return Menu_ProcessInputNoWrapClearOnChoose();
+}
+
+static void UIPrintMessage(const u8 *message)
+{
+    ShowFieldMessage(message);
+}
+
+static void UIPlayFanfare(u32 songId)
+{
+    PlayFanfare(songId);
+}
+
+static void UIEndTask(u8 taskId)
+{
+    DestroyTask(taskId);
+    ScriptContext_Enable();
+}
+
+#define tState         data[0]
+#define tPartyIndex    data[1]
+#define tMove          data[2]
+
+static void UIShowMoveList(u8 taskId)
+{
+    gSpecialVar_0x8000 = gTasks[taskId].tPartyIndex;
+    gSpecialVar_0x8001 = gTasks[taskId].tMove;
+    DestroyTask(taskId);
+    ShowSelectMovePokemonSummaryScreen(gPlayerParty, gTasks[taskId].tPartyIndex, CB2_ReturnToFieldWhileLearningMove, gTasks[taskId].tMove);
+}
+
+static const struct MoveLearnUI sMoveLearnUI =
+{
+    .askConfirmation = UIAskConfirmation,
+    .waitConfirmation = UIWaitConfirmation,
+    .printMessage = UIPrintMessage,
+    .playFanfare = UIPlayFanfare,
+    .showMoveList = UIShowMoveList,
+    .endTask = UIEndTask
+};
+
+static void Task_LearnMove(u8 taskId)
+{
+    if (IsTextPrinterActiveOnWindow(0))
+        return;
+    gTasks[taskId].tState = LearnMove(&sMoveLearnUI, taskId);
+}
+
+void CanTeachMoveBoxMon(void)
+{
+    if (gSpecialVar_0x8004 == PARTY_NOTHING_CHOSEN)
+    {
+        // We want to wait one frame before using ScriptContext_Enable() or the game freezes
+        CreateTask(UIEndTask, 1);
+        return;
+    }
+    u32 taskId = CreateTask(Task_LearnMove, 1);
+    gTasks[taskId].tState = GetLearnMoveStartState();
+    gTasks[taskId].tPartyIndex = gSpecialVar_0x8004;
+    gTasks[taskId].tMove = gSpecialVar_0x8005;
+}
+
+static void FieldCB_ContinueLearningMove(void)
+{
+    LockPlayerFieldControls();
+    FadeInFromBlack();
+    CreateTask(Task_ReturnToFieldWhileLearningMove, 1);
+}
+
+static void CB2_ReturnToFieldWhileLearningMove(void)
+{
+    gFieldCallback = FieldCB_ContinueLearningMove;
+    CB2_ReturnToField();
+}
+
+static void Task_ReturnToFieldWhileLearningMove(u8 taskId)
+{
+    if (IsWeatherNotFadingIn() == TRUE)
+    {
+        gTasks[taskId].func = Task_LearnMove;
+        gTasks[taskId].tState = GetLearnMoveResumeAfterSummaryScreenState();
+        gTasks[taskId].tPartyIndex = gSpecialVar_0x8000;
+        gTasks[taskId].tMove = gSpecialVar_0x8001;
+    }
+}
+
+#undef tState
+#undef tPartyIndex
+#undef tMove

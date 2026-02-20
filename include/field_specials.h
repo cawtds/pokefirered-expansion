@@ -32,6 +32,7 @@ void UpdateFrontierManiac(u16 daysSince);
 void UpdateFrontierGambler(u16 daysSince);
 void FrontierGamblerSetWonOrLost(bool8 won);
 bool8 InMultiPartnerRoom(void);
+void DoPicboxCancel(void);
 void Special_UpdateTrainerFansAfterLinkBattle(void);
 void ResetTrainerFanClub(void);
 
