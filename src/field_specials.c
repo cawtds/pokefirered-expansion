@@ -27,6 +27,7 @@
 #include "mail.h"
 #include "malloc.h"
 #include "menu.h"
+#include "metatile_behavior.h"
 #include "mystery_gift.h"
 #include "naming_screen.h"
 #include "overworld.h"
@@ -264,27 +265,13 @@ bool8 PlayerHasGrassPokemonInParty(void)
     return FALSE;
 }
 
-static bool32 IsBuildingPCTile(u32 tileId)
-{
-    return GetPrimaryTileset(gMapHeader.mapLayout) == &gTileset_Building
-        && (tileId == METATILE_Building_PCOn || tileId == METATILE_Building_PCOff);
-}
-
-static bool32 IsPlayerHousePCTile(u32 tileId)
-{
-    return (GetSecondaryTileset(gMapHeader.mapLayout) == &gTileset_GenericBuilding1
-        && (tileId == METATILE_GenericBuilding1_PlayersPCOn || tileId == METATILE_GenericBuilding1_PlayersPCOff));
-}
-
 static bool32 IsPlayerInFrontOfPC(void)
 {
     s16 x, y;
-    u32 tileInFront;
 
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
-    tileInFront = MapGridGetMetatileIdAt(x, y);
 
-    return IsBuildingPCTile(tileInFront) || IsPlayerHousePCTile(tileInFront);
+    return MetatileBehavior_IsPC(MapGridGetMetatileBehaviorAt(x, y));
 }
 
 #define tState data[0]
@@ -321,9 +308,52 @@ static void Task_AnimatePcTurnOn(u8 taskId)
 #undef tState
 #undef tTimer
 
+struct PcAnimation
+{
+    const struct Tileset *tileset;
+    u16 onTileId;
+    u16 offTileId;
+};
+
+static const struct PcAnimation sPcAnimations[] =
+{
+    {&gTileset_Building,                METATILE_Building_PCOn,                 METATILE_Building_PCOff },
+    {&gTileset_Building,                METATILE_GenericBuilding1_PlayersPCOn,  METATILE_GenericBuilding1_PlayersPCOff},
+    {&gTileset_BattleFrontierInside,    METATILE_BattleFrontierInside_PCOn,     METATILE_BattleFrontierInside_PCOff},
+    {&gTileset_BattlePyramid,           METATILE_BattleFrontierInside_PCOn,     METATILE_BattlePyramid_PCOff},
+    {&gTileset_BattlePike,              METATILE_BattleFrontierInside_PCOn,     METATILE_BattlePike_PCOff},
+    {&gTileset_BattlePalaceBuilding,    METATILE_BattleFrontierInside_PCOn,     METATILE_BattlePalaceBuilding_PCOff},
+    {&gTileset_BattleDome,              METATILE_BattleFrontierInside_PCOn,     METATILE_BattleDome_PCOff},
+    {&gTileset_BattleFactory,           METATILE_BattleFrontierInside_PCOn,     METATILE_BattleFactory_PCOff},
+};
+
+static u16 GetPcAnimationMetatileId(void)
+{
+    const struct Tileset *primary = GetPrimaryTilesetFromLayout(gMapHeader.mapLayout);
+    const struct Tileset *secondary = GetSecondaryTilesetFromLayout(gMapHeader.mapLayout);
+    s16 x, y;
+    u16 pcTileId;
+
+    GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
+    pcTileId = MapGridGetMetatileIdAt(x, y);
+
+    for (u32 i = 0; i < ARRAY_COUNT(sPcAnimations); i++)
+    {
+        struct PcAnimation anim = sPcAnimations[i];
+        if (pcTileId == anim.offTileId && (anim.tileset == primary || anim.tileset == secondary))
+            return anim.onTileId;
+
+        if (pcTileId == anim.onTileId && (anim.tileset == primary || anim.tileset == secondary))
+            return anim.offTileId;
+    }
+
+    errorf("Unknown PC animation: %d", pcTileId);
+    return 0;
+}
+
 static void PcTurnOnUpdateMetatileId(bool16 flickerOff)
 {
-    u16 metatileId = 0;
+    u16 metatileId = GetPcAnimationMetatileId();
     s8 deltaX = 0;
     s8 deltaY = 0;
     u8 direction = GetPlayerFacingDirection();
@@ -343,36 +373,22 @@ static void PcTurnOnUpdateMetatileId(bool16 flickerOff)
         deltaY = -1;
         break;
     }
-    if (flickerOff)
-    {
-        if (gSpecialVar_0x8004 == 0)
-            metatileId = METATILE_Building_PCOff;
-        else if (gSpecialVar_0x8004 == 1)
-            metatileId = METATILE_GenericBuilding1_PlayersPCOff;
-        else if (gSpecialVar_0x8004 == 2)
-            metatileId = METATILE_GenericBuilding1_PlayersPCOff;
-    }
-    else
-    {
-        if (gSpecialVar_0x8004 == 0)
-            metatileId = METATILE_Building_PCOn;
-        else if (gSpecialVar_0x8004 == 1)
-            metatileId = METATILE_GenericBuilding1_PlayersPCOn;
-        else if (gSpecialVar_0x8004 == 2)
-            metatileId = METATILE_GenericBuilding1_PlayersPCOn;
-    }
+
     MapGridSetMetatileIdAt(gSaveBlock1Ptr->pos.x + deltaX + MAP_OFFSET, gSaveBlock1Ptr->pos.y + deltaY + MAP_OFFSET, metatileId | MAPGRID_COLLISION_MASK);
 }
 
 void AnimatePcTurnOff()
 {
-    u16 metatileId = 0;
+    u16 metatileId;
     s8 deltaX = 0;
     s8 deltaY = 0;
     u8 direction = GetPlayerFacingDirection();
 
     if (IsPlayerInFrontOfPC() == FALSE)
         return;
+
+    metatileId = GetPcAnimationMetatileId();
+
     switch (direction)
     {
     case DIR_NORTH:
@@ -388,12 +404,7 @@ void AnimatePcTurnOff()
         deltaY = -1;
         break;
     }
-    if (gSpecialVar_0x8004 == 0)
-        metatileId = METATILE_Building_PCOff;
-    else if (gSpecialVar_0x8004 == 1)
-        metatileId = METATILE_GenericBuilding1_PlayersPCOff;
-    else if (gSpecialVar_0x8004 == 2)
-        metatileId = METATILE_GenericBuilding1_PlayersPCOff;
+
     MapGridSetMetatileIdAt(gSaveBlock1Ptr->pos.x + deltaX + MAP_OFFSET, gSaveBlock1Ptr->pos.y + deltaY + MAP_OFFSET, metatileId | MAPGRID_COLLISION_MASK);
     DrawWholeMapView();
 }
