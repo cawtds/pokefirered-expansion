@@ -588,15 +588,15 @@ void AnimTask_StatsChange(u8 taskId)
 
 #undef CASE
 
-void LaunchStatusAnimation(u8 battlerId, u8 statusAnimId)
+void LaunchStatusAnimation(enum BattlerId battler, u8 statusAnimId)
 {
     u8 taskId;
 
-    gBattleAnimAttacker = battlerId;
-    gBattleAnimTarget = battlerId;
+    gBattleAnimAttacker = battler;
+    gBattleAnimTarget = battler;
     LaunchBattleAnimation(ANIM_TYPE_STATUS, statusAnimId);
     taskId = CreateTask(Task_DoStatusAnimation, 10);
-    gTasks[taskId].data[0] = battlerId;
+    gTasks[taskId].data[0] = battler;
 }
 
 static void Task_DoStatusAnimation(u8 taskId)
