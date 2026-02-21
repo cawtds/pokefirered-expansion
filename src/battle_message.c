@@ -2885,7 +2885,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 while (*toCpy != EOS)
                 {
                     if (*toCpy == CHAR_SPACE)
-                        dst[dstID] = CHAR_SPACE; // CHAR_NBSP;
+                        dst[dstID] = CHAR_NBSP;
                     else
                         dst[dstID] = *toCpy;
                     dstID++;

@@ -18,11 +18,12 @@ enum {
     FONT_BRAILLE,
     FONT_BOLD,
     FONT_NARROW,
-    FONT_SMALL_NARROW, // Very similar to FONT_SMALL, some glyphs are narrower
     FONT_NARROWER,
+    FONT_SMALL_NARROW, // Very similar to FONT_SMALL, some glyphs are narrower
     FONT_SMALL_NARROWER,
+    FONT_SHORT,
     FONT_SHORT_NARROW,
-    FONT_SHORT
+    FONT_SHORT_NARROWER,
 };
 
 // Return values for font functions
