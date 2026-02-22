@@ -2281,8 +2281,8 @@ void TryShinyAnimation(enum BattlerId battler, struct Pokemon *mon)
         {
             if (GetSpriteTileStartByTag(ANIM_TAG_GOLD_STARS) == 0xFFFF)
             {
-                LoadCompressedSpriteSheetUsingHeap(&gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_GOLD_STARS)]);
-                LoadSpritePalette(&gBattleAnimPaletteTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_GOLD_STARS)]);
+                LoadCompressedSpriteSheetUsingHeap(&gBattleAnimTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_GOLD_STARS)].pic);
+                LoadSpritePalette(&gBattleAnimTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_GOLD_STARS)].palette);
             }
 
             taskCirc = CreateTask(Task_ShinyStars, 10);
@@ -2436,8 +2436,8 @@ void AnimTask_LoadBaitGfx(u8 taskId)
 {
     u8 UNUSED paletteIndex;
 
-    LoadCompressedSpriteSheetUsingHeap(&gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_SAFARI_BAIT)]);
-    LoadSpritePalette(&gBattleAnimPaletteTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_SAFARI_BAIT)]);
+    LoadCompressedSpriteSheetUsingHeap(&gBattleAnimTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_SAFARI_BAIT)].pic);
+    LoadSpritePalette(&gBattleAnimTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_SAFARI_BAIT)].palette);
     paletteIndex = IndexOfSpritePaletteTag(ANIM_TAG_SAFARI_BAIT);
     DestroyAnimVisualTask(taskId);
 }
