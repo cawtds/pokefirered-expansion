@@ -469,7 +469,7 @@ void TryStartQuestLogPlayback(u8 taskId)
 
     if (!IsLastSaveInPyramid() && sNumScenes != 0)
     {
-        gHelpSystemEnabled = FALSE;
+        gHelpSystemStatus = HELP_DISABLED;
         Task_BeginQuestLogPlayback(taskId);
         DestroyTask(taskId);
     }
@@ -1242,7 +1242,7 @@ static void Task_EndQuestLog(u8 taskId)
         gTextFlags.autoScroll = FALSE;
         gGlobalFieldTintMode = QL_TINT_NONE;
         DisableWildEncounters(FALSE);
-        gHelpSystemEnabled = TRUE;
+        gHelpSystemStatus = HELP_ENABLED;
         DestroyTask(taskId);
         break;
     }

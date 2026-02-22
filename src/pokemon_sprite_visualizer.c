@@ -1221,7 +1221,7 @@ void CB2_Pokemon_Sprite_Visualizer(void)
     {
         case 0:
         default:
-            HelpSystem_Disable();
+            HelpSystem_DisableNoSound();
             SetVBlankCallback(NULL);
             FreeMonSpritesGfx();
             ResetBGs_PokemonSpriteVisualizer(0);
