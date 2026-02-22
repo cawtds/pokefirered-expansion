@@ -8,9 +8,6 @@
 #include "test_runner.h"
 #include "trig.h"
 
-static void BattleIntroSlide1(u8 taskId);
-static void BattleIntroSlide2(u8 taskId);
-static void BattleIntroSlide3(u8 taskId);
 static void BattleIntroSlideLink(u8 taskId);
 static void BattleIntroSlidePartner(u8);
 
@@ -63,7 +60,7 @@ void SetAnimBgAttribute(u8 bgId, u8 attributeId, u8 value)
     }
 }
 
-s32 GetAnimBgAttribute(u8 bgId, u8 attributeId)
+int GetAnimBgAttribute(u8 bgId, u8 attributeId)
 {
     u32 bgCnt;
 
@@ -193,7 +190,7 @@ static void BattleIntroNoSlide(u8 taskId)
     }
 }
 
-static void BattleIntroSlide1(u8 taskId)
+void BattleIntroSlide1(u8 taskId)
 {
     s32 i;
     if (B_FAST_INTRO_NO_SLIDE || gTestRunnerHeadless)
@@ -274,7 +271,7 @@ static void BattleIntroSlide1(u8 taskId)
     }
 }
 
-static void BattleIntroSlide2(u8 taskId)
+void BattleIntroSlide2(u8 taskId)
 {
     s32 i;
     if (B_FAST_INTRO_NO_SLIDE || gTestRunnerHeadless)
@@ -377,7 +374,7 @@ static void BattleIntroSlide2(u8 taskId)
         SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(gTasks[taskId].data[4], 0));
 }
 
-static void BattleIntroSlide3(u8 taskId)
+void BattleIntroSlide3(u8 taskId)
 {
     s32 i;
     if (B_FAST_INTRO_NO_SLIDE || gTestRunnerHeadless)
@@ -602,7 +599,7 @@ static void BattleIntroSlidePartner(u8 taskId)
     }
 }
 
-void DrawBattlerOnBg(int bgId, u8 x, u8 y, u8 battlerPosition, u8 paletteId, u8 *tiles, u16 *tilemap, u16 tilesOffset)
+void DrawBattlerOnBg(int bgId, u8 x, u8 y, enum BattlerPosition battlerPosition, u8 paletteId, u8 *tiles, u16 *tilemap, u16 tilesOffset)
 {
     int i, j;
     int offset = tilesOffset;

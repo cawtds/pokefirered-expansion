@@ -384,6 +384,7 @@ void PlayCry_Script(u16 species, u8 mode)
     RestoreBGMVolumeAfterPokemonCry();
 }
 
+
 void PlayCryInternal(u16 species, s8 pan, s8 volume, u8 priority, u8 mode)
 {
     bool32 reverse;
@@ -399,6 +400,10 @@ void PlayCryInternal(u16 species, s8 pan, s8 volume, u8 priority, u8 mode)
     release = 0;
     pitch = 15360;
     chorus = 0;
+
+    // If we're not using extra mega cries, we need to modify the cry mode for mega evolutions.
+    if (!P_MODIFIED_MEGA_CRIES && gSpeciesInfo[species].isMegaEvolution)
+        mode = P_MODIFIED_MEGA_CRY_MODE;
 
     switch (mode)
     {
@@ -437,7 +442,7 @@ void PlayCryInternal(u16 species, s8 pan, s8 volume, u8 priority, u8 mode)
         release = 220;
         pitch = 15555;
         chorus = 192;
-        volume = 90; // FR/LG changed this from 70 to 90
+        volume = 70;
         break;
     case CRY_MODE_ROAR_1:
         length = 10;
@@ -466,6 +471,12 @@ void PlayCryInternal(u16 species, s8 pan, s8 volume, u8 priority, u8 mode)
         // fallthrough
     case CRY_MODE_WEAK:
         pitch = 15000;
+        break;
+    case CRY_MODE_DYNAMAX:
+        length = 255;
+        release = 255;
+        pitch = 12150;
+        chorus = 200;
         break;
     }
 

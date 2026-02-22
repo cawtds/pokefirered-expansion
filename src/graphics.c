@@ -494,6 +494,15 @@ const u16 gBattleAnimSpritePal_BlueFlames[] = INCBIN_U16("graphics/battle_anims/
 
 const u32 gBattleAnimSpriteGfx_BlueFlames2[] = INCBIN_U32("graphics/battle_anims/sprites/blue_flames_2.4bpp.lz");
 
+const u32 gBattleAnimSpriteGfx_TatsugiriCurly[] = INCBIN_U32("graphics/battle_anims/sprites/tatsugiri_curly.4bpp.smol");
+const u16 gBattleAnimSpritePal_TatsugiriCurly[] = INCBIN_U16("graphics/battle_anims/sprites/tatsugiri_curly.gbapal");
+
+const u32 gBattleAnimSpriteGfx_TatsugiriDroopy[] = INCBIN_U32("graphics/battle_anims/sprites/tatsugiri_droopy.4bpp.smol");
+const u16 gBattleAnimSpritePal_TatsugiriDroopy[] = INCBIN_U16("graphics/battle_anims/sprites/tatsugiri_droopy.gbapal");
+
+const u32 gBattleAnimSpriteGfx_TatsugiriStretchy[] = INCBIN_U32("graphics/battle_anims/sprites/tatsugiri_stretchy.4bpp.smol");
+const u16 gBattleAnimSpritePal_TatsugiriStretchy[] = INCBIN_U16("graphics/battle_anims/sprites/tatsugiri_stretchy.gbapal");
+
 // Contest (unused)
 
 const u32 gJpContest_Gfx1[] = INCBIN_U32("graphics/contest/japanese/composite_1.4bpp.lz");
@@ -1158,9 +1167,11 @@ const u32 gBattleAnimSpriteGfx_WhiteShadow[] = INCBIN_U32("graphics/battle_anims
 const u16 gBattleAnimSpritePal_WhiteShadow[] = INCBIN_U16("graphics/battle_anims/sprites/white_shadow.gbapal");
 
 // Pledge Effect field status - Rainbow
-const u32 gBattleAnimBgImage_Rainbow[] = INCBIN_U32("graphics/battle_anims/backgrounds/rainbow.4bpp.lz");
-const u16 gBattleAnimBGPalette_Rainbow[] = INCBIN_U16("graphics/battle_anims/backgrounds/rainbow.gbapal");
-const u32 gBattleAnimBgTilemap_Rainbow[] = INCBIN_U32("graphics/battle_anims/backgrounds/rainbow.bin.lz");
+const u32 gBattleAnimBgImage_RainbowPlayer[] = INCBIN_U32("graphics/battle_anims/backgrounds/rainbow_player_tile.4bpp.smol");
+const u32 gBattleAnimBgImage_RainbowOpponent[] = INCBIN_U32("graphics/battle_anims/backgrounds/rainbow_opponent_tile.4bpp.smol");
+const u16 gBattleAnimBGPalette_Rainbow[] = INCBIN_U16("graphics/battle_anims/backgrounds/rainbow_player_tile.gbapal");
+const u32 gBattleAnimBgTilemap_RainbowPlayer[] = INCBIN_U32("graphics/battle_anims/backgrounds/rainbow_player_tile.bin.smolTM");
+const u32 gBattleAnimBgTilemap_RainbowOpponent[] = INCBIN_U32("graphics/battle_anims/backgrounds/rainbow_opponent_tile.bin.smolTM");
 
 // Pledge Effect field status - Swamp
 const u32 gBattleAnimBgImage_Swamp[] = INCBIN_U32("graphics/battle_anims/backgrounds/swampswizzle.4bpp.lz");
@@ -1525,6 +1536,9 @@ const u16 gBattleAnimSpritePal_AlphaSymbol[] = INCBIN_U16("graphics/battle_anims
 
 const u32 gBattleAnimSpriteGfx_OmegaSymbol[] = INCBIN_U32("graphics/battle_anims/sprites/omega_symbol.4bpp.lz");
 const u16 gBattleAnimSpritePal_OmegaSymbol[] = INCBIN_U16("graphics/battle_anims/sprites/omega_symbol.gbapal");
+
+const u32 gBattleAnimSpriteGfx_TeraSymbol[] = INCBIN_U32("graphics/battle_anims/sprites/tera_symbol.4bpp.smol");
+const u16 gBattleAnimSpritePal_TeraSymbol[] = INCBIN_U16("graphics/battle_anims/sprites/tera_symbol.gbapal");
 
 const u32 gBattleAnimSpriteGfx_FlashCannonBall[] = INCBIN_U32("graphics/battle_anims/sprites/flash_cannon_ball.4bpp.lz");
 const u16 gBattleAnimSpritePal_FlashCannonBall[] = INCBIN_U16("graphics/battle_anims/sprites/flash_cannon_ball.gbapal");
