@@ -15,7 +15,7 @@ SevenIsland_House_Room2_EventScript_BattleVisitingTrainer::
 	lockall
 	applymovement LOCALID_PLAYER, SevenIsland_House_Room2_Movement_PlayerEnterRoom
 	waitmovement 0
-	special BufferEReaderTrainerGreeting
+	special CopyEReaderTrainerGreeting
 	msgbox gStringVar4
 	closemessage
 	setvar VAR_0x8004, SPECIAL_BATTLE_EREADER

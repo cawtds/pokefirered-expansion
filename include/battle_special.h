@@ -4,7 +4,7 @@
 void ClearEReaderTrainer(struct BattleTowerEReaderTrainer *);
 void ValidateEReaderTrainer(void);
 u8 GetEreaderTrainerFrontSpriteId(void);
-void CopyEReaderTrainerName5(u8 *dest);
-u8 GetEreaderTrainerClassId(void);
+void GetEreaderTrainerName(u8 *dest);
+enum TrainerClassID GetEreaderTrainerClassId(void);
 
 #endif // GUARD_BATTLE_SPECIAL_H

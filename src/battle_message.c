@@ -2210,7 +2210,7 @@ static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text,
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_EREADER_TRAINER)
     {
-        CopyEReaderTrainerName5(text);
+        GetEreaderTrainerName(text);
         toCpy = text;
     }
     else

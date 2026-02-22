@@ -246,7 +246,7 @@ gSpecials::
 	def_special NullFieldSpecial
 	def_special NullFieldSpecial
 	def_special GetLeadMonFriendship
-	def_special BufferEReaderTrainerGreeting
+	def_special CopyEReaderTrainerGreeting
 	def_special ValidateEReaderTrainer
 	def_special NullFieldSpecial
 	def_special ReducePlayerPartyToSelectedMons
