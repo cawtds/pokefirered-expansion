@@ -41,7 +41,7 @@
 #include "constants/items.h"
 #include "constants/event_objects.h"
 
-extern const struct BattleEnvironmentInfo gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT];
+extern const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT];
 extern const struct CompressedSpriteSheet gSpriteSheet_EnemyShadow;
 extern const struct CompressedSpriteSheet gSpriteSheet_EnemyShadowsSized;
 extern const struct SpriteTemplate gSpriteTemplate_EnemyShadow;
@@ -956,7 +956,7 @@ static void LoadBattleBg(u8 battleBgType, u8 battleTerrain)
         // todo
         break;
     }
-    
+
     DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleTerrain].background.tileset, (void*)(BG_CHAR_ADDR(2)));
     DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleTerrain].background.tilemap, (void*)(BG_SCREEN_ADDR(26)));
     LoadPalette(GetBattleBackgroundPalette(battleTerrain), 0x20, 0x60);
