@@ -1,5 +1,6 @@
 #include "battle_anim_scripts.h"
 #include "graphics/battle_environment.h"
+#include "config/battle.h"
 #include "constants/battle.h"
 
 #define ENVIRONMENT_BACKGROUND(Background)             \

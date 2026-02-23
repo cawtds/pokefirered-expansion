@@ -30,11 +30,11 @@
 #include "constants/trainers.h"
 #include "constants/battle_anim.h"
 #include "constants/battle_partner.h"
-#include "data/battle_environment.h"
 
 static u8 GetBattleTerrainOverride(void);
 
 // .rodata
+#include "data/battle_environment.h"
 
 static const struct OamData sVsLetter_V_OamData =
 {

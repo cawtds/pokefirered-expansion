@@ -984,12 +984,12 @@ static void UpdateBattleBg(u8 taskId, bool8 increment)
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
 
     if (increment) {
-        data->battleEnvironment = (data->battleEnvironment + 1) % (BATTLE_ENVIRONMENT_PLAIN + 1); // Can use BATTLE_ENVIRONMENT_COUNT once the remaining environments have sprites
+        data->battleEnvironment = (data->battleEnvironment + 1) % (BATTLE_ENVIRONMENT_CHAMPION + 1); // Can use BATTLE_ENVIRONMENT_COUNT once the remaining environments have sprites
     }
     else
     {
         if (data->battleEnvironment == BATTLE_ENVIRONMENT_GRASS)
-            data->battleEnvironment = BATTLE_ENVIRONMENT_PLAIN;
+            data->battleEnvironment = BATTLE_ENVIRONMENT_CHAMPION;
         else
             data->battleEnvironment -= 1;
     }
