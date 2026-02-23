@@ -61,17 +61,18 @@ static const struct BgTemplate sBGTemplates[] = {
 
 static const s8 sSeag[][4] = {
                                    // Map                     X     Y
-    [SEAGALLOP_VERMILION_CITY]  = {MAP(MAP_VERMILION_CITY),      0x17, 0x20},
-    [SEAGALLOP_ONE_ISLAND]      = {MAP(MAP_ONE_ISLAND_HARBOR),   0x08, 0x05},
-    [SEAGALLOP_TWO_ISLAND]      = {MAP(MAP_TWO_ISLAND_HARBOR),   0x08, 0x05},
-    [SEAGALLOP_THREE_ISLAND]    = {MAP(MAP_THREE_ISLAND_HARBOR), 0x08, 0x05},
-    [SEAGALLOP_FOUR_ISLAND]     = {MAP(MAP_FOUR_ISLAND_HARBOR),  0x08, 0x05},
-    [SEAGALLOP_FIVE_ISLAND]     = {MAP(MAP_FIVE_ISLAND_HARBOR),  0x08, 0x05},
-    [SEAGALLOP_SIX_ISLAND]      = {MAP(MAP_SIX_ISLAND_HARBOR),   0x08, 0x05},
-    [SEAGALLOP_SEVEN_ISLAND]    = {MAP(MAP_SEVEN_ISLAND_HARBOR), 0x08, 0x05},
-    [SEAGALLOP_CINNABAR_ISLAND] = {MAP(MAP_CINNABAR_ISLAND),     0x15, 0x07},
-    [SEAGALLOP_NAVEL_ROCK]      = {MAP(MAP_NAVEL_ROCK_HARBOR),   0x08, 0x05},
-    [SEAGALLOP_BIRTH_ISLAND]    = {MAP(MAP_BIRTH_ISLAND_HARBOR), 0x08, 0x05}
+    [SEAGALLOP_VERMILION_CITY]  = {MAP(MAP_VERMILION_CITY),      23, 32},
+    [SEAGALLOP_ONE_ISLAND]      = {MAP(MAP_ONE_ISLAND_HARBOR),   8,  5},
+    [SEAGALLOP_TWO_ISLAND]      = {MAP(MAP_TWO_ISLAND_HARBOR),   8,  5},
+    [SEAGALLOP_THREE_ISLAND]    = {MAP(MAP_THREE_ISLAND_HARBOR), 8,  5},
+    [SEAGALLOP_FOUR_ISLAND]     = {MAP(MAP_FOUR_ISLAND_HARBOR),  8,  5},
+    [SEAGALLOP_FIVE_ISLAND]     = {MAP(MAP_FIVE_ISLAND_HARBOR),  8,  5},
+    [SEAGALLOP_SIX_ISLAND]      = {MAP(MAP_SIX_ISLAND_HARBOR),   8,  5},
+    [SEAGALLOP_SEVEN_ISLAND]    = {MAP(MAP_SEVEN_ISLAND_HARBOR), 8,  5},
+    [SEAGALLOP_CINNABAR_ISLAND] = {MAP(MAP_CINNABAR_ISLAND),     21, 7},
+    [SEAGALLOP_NAVEL_ROCK]      = {MAP(MAP_NAVEL_ROCK_HARBOR),   8,  5},
+    [SEAGALLOP_BIRTH_ISLAND]    = {MAP(MAP_BIRTH_ISLAND_HARBOR), 8,  5},
+    [SEAGALLOP_BATTLE_FRONTIER] = {MAP(MAP_BATTLE_FRONTIER_OUTSIDE_WEST), 20, 68},
 };
 
 // Bitpacked array.  In the commented section, right-most bit is the
@@ -95,7 +96,8 @@ static const u16 sTravelDirectionMatrix[] = {
     [SEAGALLOP_SEVEN_ISLAND]    = 0x440, // 10001000000
     [SEAGALLOP_CINNABAR_ISLAND] = 0x7ff, // 11111111111
     [SEAGALLOP_NAVEL_ROCK]      = 0x6e0, // 11011100000
-    [SEAGALLOP_BIRTH_ISLAND]    = 0x000  // 00000000000
+    [SEAGALLOP_BIRTH_ISLAND]    = 0x000, // 00000000000
+    [SEAGALLOP_BATTLE_FRONTIER] = 0x000, // 00000000000
 };
 
 static const union AnimCmd sSpriteAnims_Ferry_WB[] = {
@@ -470,23 +472,26 @@ u8 GetSeagallopNumber(void)
     if (originId == SEAGALLOP_BIRTH_ISLAND || destId == SEAGALLOP_BIRTH_ISLAND)
         return 12;
 
-    if ((originId == SEAGALLOP_ONE_ISLAND 
-      || originId == SEAGALLOP_TWO_ISLAND 
-      || originId == SEAGALLOP_THREE_ISLAND) 
-      && (destId == SEAGALLOP_ONE_ISLAND 
-       || destId == SEAGALLOP_TWO_ISLAND 
+    if (originId == SEAGALLOP_BATTLE_FRONTIER || destId == SEAGALLOP_BATTLE_FRONTIER)
+        return 14;
+
+    if ((originId == SEAGALLOP_ONE_ISLAND
+      || originId == SEAGALLOP_TWO_ISLAND
+      || originId == SEAGALLOP_THREE_ISLAND)
+      && (destId == SEAGALLOP_ONE_ISLAND
+       || destId == SEAGALLOP_TWO_ISLAND
        || destId == SEAGALLOP_THREE_ISLAND))
         return 2;
 
-    if ((originId == SEAGALLOP_FOUR_ISLAND 
-      || originId == SEAGALLOP_FIVE_ISLAND) 
-      && (destId == SEAGALLOP_FOUR_ISLAND 
+    if ((originId == SEAGALLOP_FOUR_ISLAND
+      || originId == SEAGALLOP_FIVE_ISLAND)
+      && (destId == SEAGALLOP_FOUR_ISLAND
        || destId == SEAGALLOP_FIVE_ISLAND))
         return 3;
 
-    if ((originId == SEAGALLOP_SIX_ISLAND 
-      || originId == SEAGALLOP_SEVEN_ISLAND) 
-      && (destId == SEAGALLOP_SIX_ISLAND 
+    if ((originId == SEAGALLOP_SIX_ISLAND
+      || originId == SEAGALLOP_SEVEN_ISLAND)
+      && (destId == SEAGALLOP_SIX_ISLAND
        || destId == SEAGALLOP_SEVEN_ISLAND))
         return 5;
 
@@ -495,8 +500,8 @@ u8 GetSeagallopNumber(void)
 
 bool8 IsPlayerLeftOfVermilionSailor(void)
 {
-    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_VERMILION_CITY) 
-       && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_VERMILION_CITY) 
+    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_VERMILION_CITY)
+       && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_VERMILION_CITY)
        && gSaveBlock1Ptr->pos.x < 24)
         return TRUE;
 
