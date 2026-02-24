@@ -1168,6 +1168,16 @@ static void MultichoiceDynamic_MoveCursor(s32 itemIndex, bool8 onInit, struct Li
     }
 }
 
+u32 GetMultiChoiceWindowHeight(u8 argc, u8 maxBeforeScroll)
+{
+    u32 windowHeight;
+    u8 numItems = argc < maxBeforeScroll ? argc : maxBeforeScroll;
+
+    windowHeight = numItems * GetFontAttribute(sScriptableListMenuTemplate.fontId, FONTATTR_MAX_LETTER_HEIGHT);
+
+    return (windowHeight + 7) / 8;
+}
+
 static void DrawMultichoiceMenuDynamic(u8 left, u8 top, u8 argc, struct ListMenuItem *items, bool8 ignoreBPress, u32 initialRow, u8 maxBeforeScroll, u32 callbackSet)
 {
     u32 i;
@@ -1183,7 +1193,8 @@ static void DrawMultichoiceMenuDynamic(u8 left, u8 top, u8 argc, struct ListMenu
         width = DisplayTextAndGetWidth(items[i].name, width);
     }
     LoadMessageBoxAndBorderGfx();
-    windowHeight = (argc < maxBeforeScroll) ? argc * 2 : maxBeforeScroll * 2;
+    windowHeight = GetMultiChoiceWindowHeight(argc, maxBeforeScroll);
+
     newWidth = ConvertPixelWidthToTileWidth(width);
     left = ScriptMenu_AdjustLeftCoordFromWidth(left, newWidth);
     windowId = CreateWindowFromRect(left, top, newWidth, windowHeight);

@@ -52,7 +52,6 @@ PokemonLeague_ChampionsRoom_EventScript_EnterRoom::
 	delay 20
 	call_if_unset FLAG_SYS_GAME_CLEAR, PokemonLeague_ChampionsRoom_EventScript_Intro
 	call_if_set FLAG_SYS_GAME_CLEAR, PokemonLeague_ChampionsRoom_EventScript_RematchIntro
-	call_if_set FLAG_SYS_GAME_CLEAR, PokemonLeague_ChampionsRoom_UnlockBattleFrontier
 	goto_if_questlog PokemonLeague_ChampionsRoom_EventScript_QuestLogEnd
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
@@ -119,10 +118,6 @@ PokemonLeague_ChampionsRoom_EventScript_Intro::
 
 PokemonLeague_ChampionsRoom_EventScript_RematchIntro::
 	msgbox PokemonLeague_ChampionsRoom_Text_RematchIntro
-	return
-
-PokemonLeague_ChampionsRoom_UnlockBattleFrontier::
-	setflag FLAG_BATTLE_FRONTIER_UNLOCKED
 	return
 
 PokemonLeague_ChampionsRoom_EventScript_BattleSquirtle::
