@@ -96,7 +96,7 @@ VermilionCity_EventScript_ChooseFrontierUnlocked::
 	case 2, EventScript_SailToNavelRock
 	case 3, EventScript_SailToBirthIsland
 	case 4, EventScript_CancelSail
-	case 127, EventScript_CancelSail
+	case MULTI_B_PRESSED, EventScript_CancelSail
 	end
 
 VermilionCity_AddMysticTicket::
@@ -146,7 +146,7 @@ VermilionCity_EventScript_HasMysticTicket::
 	case 0, EventScript_SeviiDestinationsPage1
 	case 1, EventScript_SailToNavelRock
 	case 2, EventScript_CancelSail
-	case 127, EventScript_CancelSail
+	case MULTI_B_PRESSED, EventScript_CancelSail
 	end
 
 VermilionCity_EventScript_ShowMysticTicket::
@@ -163,7 +163,7 @@ VermilionCity_EventScript_HasAuroraTicket::
 	case 0, EventScript_SeviiDestinationsPage1
 	case 1, EventScript_SailToBirthIsland
 	case 2, EventScript_CancelSail
-	case 127, EventScript_CancelSail
+	case MULTI_B_PRESSED, EventScript_CancelSail
 	end
 
 VermilionCity_EventScript_ShowAuroraTicket::
@@ -182,7 +182,7 @@ VermilionCity_EventScript_HasMysticAndAuroraTickets::
 	case 1, EventScript_SailToNavelRock
 	case 2, EventScript_SailToBirthIsland
 	case 3, EventScript_CancelSail
-	case 127, EventScript_CancelSail
+	case MULTI_B_PRESSED, EventScript_CancelSail
 	end
 
 EventScript_SailToNavelRock::
@@ -216,7 +216,7 @@ VermilionCity_EventScript_ChooseSeagallopDestTriPass::
 	case 1, EventScript_SailToTwoIsland2
 	case 2, EventScript_SailToThreeIsland2
 	case 3, EventScript_CancelSail
-	case 127, EventScript_CancelSail
+	case MULTI_B_PRESSED, EventScript_CancelSail
 	end
 
 @ Unreachable
