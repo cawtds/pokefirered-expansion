@@ -115,7 +115,7 @@ void AgbMain()
     InitHeap(gHeap, HEAP_SIZE);
 
     gSoftResetDisabled = FALSE;
-    gHelpSystemEnabled = FALSE;
+    gHelpSystemStatus = HELP_DISABLED;
 
     SetNotInSaveFailedScreen();
 

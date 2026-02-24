@@ -1903,16 +1903,21 @@ bool8 HelpSystem_IsSinglePlayer(void)
     return TRUE;
 }
 
+void HelpSystem_DisableNoSound(void)
+{
+    gHelpSystemStatus = HELP_DISABLED_NO_SOUND;
+}
+
 void HelpSystem_Disable(void)
 {
-    gHelpSystemEnabled = FALSE;
+    gHelpSystemStatus = HELP_DISABLED;
 }
 
 void HelpSystem_Enable(void)
 {
     if (!QL_IS_PLAYBACK_STATE)
     {
-        gHelpSystemEnabled = TRUE;
+        gHelpSystemStatus = HELP_ENABLED;
         HelpSystem_EnableToggleWithRButton();
     }
 }

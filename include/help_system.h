@@ -24,9 +24,16 @@ struct HelpSystemListMenu
     u8 filler_10[0xC];
 };
 
+enum PACKED HelpSystemStatus
+{
+    HELP_DISABLED,
+    HELP_DISABLED_NO_SOUND,
+    HELP_ENABLED,
+};
+
 extern struct HelpSystemListMenu gHelpSystemListMenu;
 extern struct ListMenuItem gHelpSystemListMenuItems[];
-extern bool8 gHelpSystemEnabled;
+extern enum HelpSystemStatus gHelpSystemStatus;
 extern bool8 gHelpSystemToggleWithRButtonDisabled;
 
 // help_system_812B1E0
@@ -36,6 +43,7 @@ void SetHelpContext(u8);
 bool8 HelpSystem_UpdateHasntSeenIntro(void);
 bool8 HelpSystem_IsSinglePlayer(void);
 void HelpSystem_Disable(void);
+void HelpSystem_DisableNoSound(void);
 void HelpSystem_Enable(void);
 void HelpSystem_EnableToggleWithRButton(void);
 bool8 RunHelpMenuSubroutine(struct HelpSystemListMenu * helpListMenu, struct ListMenuItem * listMenuItemsBuffer);

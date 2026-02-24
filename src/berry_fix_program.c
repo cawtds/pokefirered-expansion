@@ -109,7 +109,7 @@ void CB2_InitBerryFixProgram(void)
     ResetSpriteData();
     ResetTasks();
     ScanlineEffect_Stop();
-    gHelpSystemEnabled = FALSE;
+    gHelpSystemStatus = HELP_DISABLED;
     taskId = CreateTask(Task_BerryFixMain, 0);
     gTasks[taskId].tState = STATE_BEGIN;
     SetMainCallback2(CB2_BerryFix);

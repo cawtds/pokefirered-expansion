@@ -469,7 +469,7 @@ void TryStartQuestLogPlayback(u8 taskId)
 
     if (!IsLastSaveInPyramid() && sNumScenes != 0)
     {
-        gHelpSystemEnabled = FALSE;
+        gHelpSystemStatus = HELP_DISABLED;
         Task_BeginQuestLogPlayback(taskId);
         DestroyTask(taskId);
     }
@@ -1011,6 +1011,7 @@ void QL_HandleInput(void)
         // Pressed A, skip to next scene
         sPlaybackControl.endMode = END_MODE_SCENE;
         gQuestLogPlaybackState = QL_PLAYBACK_STATE_STOPPED;
+        DoPicboxCancel();
         DoSceneEndTransition(-3);
     }
     else if (JOY_NEW(B_BUTTON))
@@ -1242,7 +1243,7 @@ static void Task_EndQuestLog(u8 taskId)
         gTextFlags.autoScroll = FALSE;
         gGlobalFieldTintMode = QL_TINT_NONE;
         DisableWildEncounters(FALSE);
-        gHelpSystemEnabled = TRUE;
+        gHelpSystemStatus = HELP_ENABLED;
         DestroyTask(taskId);
         break;
     }

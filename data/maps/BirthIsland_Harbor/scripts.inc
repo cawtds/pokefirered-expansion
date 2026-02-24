@@ -11,5 +11,5 @@ BirthIsland_Harbor_EventScript_Sailor::
 	switch VAR_RESULT
 	case 0, EventScript_SailToVermilionCity
 	case 1, EventScript_CancelSail
-	case 127, EventScript_CancelSail
+	case MULTI_B_PRESSED, EventScript_CancelSail
 	end

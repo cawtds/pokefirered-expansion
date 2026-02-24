@@ -6094,6 +6094,8 @@ extern const u32 gBattleAnimSpriteGfx_MegaParticles[];
 extern const u16 gBattleAnimSpritePal_MegaParticles[];
 extern const u32 gBattleAnimSpriteGfx_MegaSymbol[];
 extern const u16 gBattleAnimSpritePal_MegaSymbol[];
+extern const u32 gBattleAnimSpriteGfx_TeraSymbol[];
+extern const u16 gBattleAnimSpritePal_TeraSymbol[];
 extern const u32 gBattleAnimSpriteGfx_FlashCannonBall[];
 extern const u16 gBattleAnimSpritePal_FlashCannonBall[];
 extern const u32 gBattleAnimSpriteGfx_WaterGun[];
@@ -6106,6 +6108,13 @@ extern const u32 gBattleAnimSpriteGfx_TeraCrystal[];
 extern const u16 gBattleAnimSpritePal_TeraCrystal[];
 extern const u32 gBattleAnimSpriteGfx_TeraShatter[];
 extern const u16 gBattleAnimSpritePal_TeraShatter[];
+extern const u32 gBattleAnimSpriteGfx_TatsugiriCurly[];
+extern const u16 gBattleAnimSpritePal_TatsugiriCurly[];
+extern const u32 gBattleAnimSpriteGfx_TatsugiriDroopy[];
+extern const u16 gBattleAnimSpritePal_TatsugiriDroopy[];
+extern const u32 gBattleAnimSpriteGfx_TatsugiriStretchy[];
+extern const u16 gBattleAnimSpritePal_TatsugiriStretchy[];
+
 
 // New Battle Anim Particles
 extern const u32 gBattleAnimSpriteGfx_AlphaStone[];
@@ -6468,9 +6477,11 @@ extern const u32 gBattleAnimBgTilemap_Sandstorm[];
 extern const u32 gBattleAnimBgImage_Sandstorm[];
 
 // Pledge Effect field status - Rainbow
-extern const u32 gBattleAnimBgImage_Rainbow[];
+extern const u32 gBattleAnimBgImage_RainbowPlayer[];
+extern const u32 gBattleAnimBgImage_RainbowOpponent[];
 extern const u16 gBattleAnimBGPalette_Rainbow[];
-extern const u32 gBattleAnimBgTilemap_Rainbow[];
+extern const u32 gBattleAnimBgTilemap_RainbowPlayer[];
+extern const u32 gBattleAnimBgTilemap_RainbowOpponent[];
 
 // Pledge Effect field status - Swamp
 extern const u32 gBattleAnimBgImage_Swamp[];

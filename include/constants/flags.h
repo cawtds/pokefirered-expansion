@@ -206,7 +206,7 @@
 #define FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_ALT_2   0x0BC
 #define FLAG_HIDE_BATTLE_FRONTIER_RECEPTION_GATE_SCOTT      0x0BD
 #define FLAG_CANCEL_BATTLE_ROOM_CHALLENGE                   0x0BE
-#define FLAG_0x0BF               0x0BF
+#define FLAG_BATTLE_FRONTIER_UNLOCKED                       0x0BF
 #define FLAG_0x0C0               0x0C0
 #define FLAG_0x0C1               0x0C1
 #define FLAG_0x0C2               0x0C2

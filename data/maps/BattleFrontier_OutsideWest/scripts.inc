@@ -15,61 +15,16 @@ BattleFrontier_OutsideWest_EventScript_FerryAttendant::
 	goto_if_eq VAR_RESULT, FALSE, BattleFrontier_OutsideWest_EventScript_NoSSTicket
 	message BattleFrontier_OutsideWest_Text_WhereWouldYouLikeToGo
 	waitmessage
-	goto BattleFrontier_OutsideWest_EventScript_ChooseFerryDestination
-	end
-
-BattleFrontier_OutsideWest_EventScript_ChooseFerryDestination::
-	multichoicedefault 18, 6, MULTI_SSTIDAL_BATTLE_FRONTIER, 2, FALSE
+	setvar VAR_0x8004, SEAGALLOP_NAVEL_ROCK
+	multichoice 20, 8, MULTICHOICE_SEAGALLOP_VERMILION, FALSE
 	switch VAR_RESULT
-	case 0, BattleFrontier_OutsideWest_EventScript_FerryToSlateport
-	case 1, BattleFrontier_OutsideWest_EventScript_FerryToLilycove
-	case 2, BattleFrontier_OutsideWest_EventScript_CancelFerrySelect
-	case MULTI_B_PRESSED, BattleFrontier_OutsideWest_EventScript_CancelFerrySelect
+	case 0, EventScript_SailToVermilionCity
+	case 1, EventScript_CancelSail
+	case MULTI_B_PRESSED, EventScript_CancelSail
 	end
 
 BattleFrontier_OutsideWest_EventScript_NoSSTicket::
 	msgbox BattleFrontier_OutsideWest_Text_MustHaveTicketToBoard, MSGBOX_DEFAULT
-	release
-	end
-
-BattleFrontier_OutsideWest_EventScript_FerryToSlateport::
-	msgbox BattleFrontier_OutsideWest_Text_SlateportItIs, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, BattleFrontier_OutsideWest_EventScript_ChooseNewFerryDestination
-	msgbox BattleFrontier_OutsideWest_Text_PleaseBoardFerry, MSGBOX_DEFAULT
-	call BattleFrontier_OutsideWest_EventScript_BoardFerry
-	warp MAP_VERMILION_CITY, 8, 11
-	waitstate
-	release
-	end
-
-BattleFrontier_OutsideWest_EventScript_FerryToLilycove::
-	msgbox BattleFrontier_OutsideWest_Text_LilycoveItIs, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, BattleFrontier_OutsideWest_EventScript_ChooseNewFerryDestination
-	msgbox BattleFrontier_OutsideWest_Text_PleaseBoardFerry, MSGBOX_DEFAULT
-	call BattleFrontier_OutsideWest_EventScript_BoardFerry
-	warp MAP_VERMILION_CITY, 8, 11
-	waitstate
-	release
-	end
-
-BattleFrontier_OutsideWest_EventScript_ChooseNewFerryDestination::
-	message BattleFrontier_OutsideWest_Text_ThenWhereWouldYouLikeToGo
-	waitmessage
-	goto BattleFrontier_OutsideWest_EventScript_ChooseFerryDestination
-	end
-
-BattleFrontier_OutsideWest_EventScript_BoardFerry::
-	closemessage
-	applymovement VAR_LAST_TALKED, Common_Movement_WalkInPlaceFasterDown
-	waitmovement 0
-	delay 30
-	hideobjectat LOCALID_FRONTIER_FERRY_ATTENDANT, MAP_BATTLE_FRONTIER_OUTSIDE_WEST
-	setvar VAR_0x8004, LOCALID_FRONTIER_SS_TIDAL
-	call Common_EventScript_FerryDepartIsland
-	return
-
-BattleFrontier_OutsideWest_EventScript_CancelFerrySelect::
-	msgbox BattleFrontier_OutsideWest_Text_SailWithUsAnotherTime, MSGBOX_DEFAULT
 	release
 	end
 
