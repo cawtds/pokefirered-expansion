@@ -70,11 +70,55 @@ VermilionCity_EventScript_CheckHasAuroraTicket::
 
 VermilionCity_EventScript_CheckSeagallopPresent::
 	setvar VAR_0x8004, SEAGALLOP_VERMILION_CITY
+	goto_if_set FLAG_BATTLE_FRONTIER_UNLOCKED, VermilionCity_EventScript_ChooseFrontierUnlocked
 	goto_if_ge VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 5, VermilionCity_EventScript_ChooseSeagallopDestRainbowPass
 	goto_if_ge VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 1, VermilionCity_EventScript_ChooseSeagallopDestTriPass
 	msgbox VermilionCity_Text_TheShipSetSail
 	release
 	end
+
+VermilionCity_EventScript_ChooseFrontierUnlocked::
+	message VermilionCity_Text_BoardSeagallopFerry
+	waitmessage
+	dynmultipush Seagallop_SeviiIslands, 0
+	dynmultipush Seagallop_BattleFrontier, 1
+	call VermilionCity_EventScript_CheckHasMysticTicket
+	call_if_eq VAR_RESULT, TRUE, VermilionCity_AddMysticTicket
+	call VermilionCity_EventScript_CheckHasAuroraTicket
+	call_if_eq VAR_RESULT, TRUE, VermilionCity_AddAuroraTicket
+	dynmultipush Seagallop_Cancel, 4
+	dynmultistack 0, 0, FALSE, 5, FALSE, 0, NULL
+	switch VAR_RESULT
+	case 0, EventScript_SeviiDestinationsPage1
+	case 1, EventScript_SailToBattleFrontier
+	case 2, EventScript_SailToNavelRock
+	case 3, EventScript_SailToBirthIsland
+	case 4, EventScript_CancelSail
+	case MULTI_B_PRESSED, EventScript_CancelSail
+	end
+
+VermilionCity_AddMysticTicket::
+	dynmultipush Seagallop_NavelRock, 2
+	return
+
+VermilionCity_AddAuroraTicket::
+	dynmultipush Seagallop_BirthIsland, 3
+	return
+
+Seagallop_SeviiIslands::
+	.string "SEVII ISLANDS$"
+
+Seagallop_NavelRock::
+	.string "NAVEL ROCK$"
+
+Seagallop_BirthIsland::
+	.string "BIRTH ISLAND$"
+
+Seagallop_BattleFrontier::
+	.string "BATTLE FRONTIER$"
+
+Seagallop_Cancel::
+	.string "CANCEL$"
 
 VermilionCity_EventScript_ChooseSeagallopDestRainbowPass::
 	call VermilionCity_EventScript_CheckHasMysticTicket
@@ -98,7 +142,7 @@ VermilionCity_EventScript_HasMysticTicket::
 	case 0, EventScript_SeviiDestinationsPage1
 	case 1, EventScript_SailToNavelRock
 	case 2, EventScript_CancelSail
-	case 127, EventScript_CancelSail
+	case MULTI_B_PRESSED, EventScript_CancelSail
 	end
 
 VermilionCity_EventScript_ShowMysticTicket::
@@ -115,7 +159,7 @@ VermilionCity_EventScript_HasAuroraTicket::
 	case 0, EventScript_SeviiDestinationsPage1
 	case 1, EventScript_SailToBirthIsland
 	case 2, EventScript_CancelSail
-	case 127, EventScript_CancelSail
+	case MULTI_B_PRESSED, EventScript_CancelSail
 	end
 
 VermilionCity_EventScript_ShowAuroraTicket::
@@ -134,7 +178,7 @@ VermilionCity_EventScript_HasMysticAndAuroraTickets::
 	case 1, EventScript_SailToNavelRock
 	case 2, EventScript_SailToBirthIsland
 	case 3, EventScript_CancelSail
-	case 127, EventScript_CancelSail
+	case MULTI_B_PRESSED, EventScript_CancelSail
 	end
 
 EventScript_SailToNavelRock::
@@ -151,6 +195,13 @@ EventScript_SailToBirthIsland::
 	goto EventScript_SetSail
 	end
 
+EventScript_SailToBattleFrontier::
+	msgbox VermilionCity_Text_Seagallop12Departing
+	setvar VAR_0x8004, SEAGALLOP_VERMILION_CITY
+	setvar VAR_0x8006, SEAGALLOP_BATTLE_FRONTIER
+	goto EventScript_SetSail
+	end
+
 VermilionCity_EventScript_ChooseSeagallopDestTriPass::
 	message VermilionCity_Text_BoardSeagallopTriPass
 	waitmessage
@@ -161,7 +212,7 @@ VermilionCity_EventScript_ChooseSeagallopDestTriPass::
 	case 1, EventScript_SailToTwoIsland2
 	case 2, EventScript_SailToThreeIsland2
 	case 3, EventScript_CancelSail
-	case 127, EventScript_CancelSail
+	case MULTI_B_PRESSED, EventScript_CancelSail
 	end
 
 @ Unreachable
@@ -206,6 +257,7 @@ VermilionCity_EventScript_DontHaveSSTicket::
 
 VermilionCity_EventScript_CheckSeagallopPresentTrigger::
 	setvar VAR_0x8004, SEAGALLOP_VERMILION_CITY
+	goto_if_set FLAG_BATTLE_FRONTIER_UNLOCKED, VermilionCity_EventScript_ChooseFrontierUnlocked
 	goto_if_ge VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 5, VermilionCity_EventScript_ChooseSeagallopDestRainbowPass
 	goto_if_ge VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 1, VermilionCity_EventScript_ChooseSeagallopDestTriPass
 	msgbox VermilionCity_Text_TheShipSetSail

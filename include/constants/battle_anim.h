@@ -423,19 +423,21 @@
 #define ANIM_TAG_TATSUGIRI_CURLY            (ANIM_SPRITES_START + 409)
 #define ANIM_TAG_TATSUGIRI_DROOPY           (ANIM_SPRITES_START + 410)
 #define ANIM_TAG_TATSUGIRI_STRETCHY         (ANIM_SPRITES_START + 411)
+#define ANIM_TAG_COUNT                      GET_TRUE_SPRITE_INDEX(ANIM_TAG_TATSUGIRI_STRETCHY + 1)
 
 // battlers
-#define ANIM_ATTACKER         0
-#define ANIM_TARGET           1
-#define ANIM_ATK_PARTNER      2
-#define ANIM_DEF_PARTNER      3
-
-// Below are used by AnimTask_ShakeMon2 and AnimTask_SetGrayscaleOrOriginalPal
-#define ANIM_PLAYER_LEFT      (MAX_BATTLERS_COUNT + 0)
-#define ANIM_OPPONENT_LEFT    (MAX_BATTLERS_COUNT + 1)
-#define ANIM_PLAYER_RIGHT     (MAX_BATTLERS_COUNT + 2)
-#define ANIM_OPPONENT_RIGHT   (MAX_BATTLERS_COUNT + 3)
-#define ANIM_ATTACKER_FORCE   (MAX_BATTLERS_COUNT + 4)
+enum AnimBattler
+{
+    ANIM_ATTACKER,
+    ANIM_TARGET,
+    ANIM_ATK_PARTNER,
+    ANIM_DEF_PARTNER,
+    ANIM_PLAYER_LEFT = MAX_BATTLERS_COUNT,
+    ANIM_OPPONENT_LEFT,
+    ANIM_PLAYER_RIGHT,
+    ANIM_OPPONENT_RIGHT,
+    ANIM_ATTACKER_FORCE,
+};
 
 // stereo panning constants [0-255]
 //
@@ -482,11 +484,11 @@
 #define BG_MAGMA_STORM 27
 #define BG_GIGA_IMPACT_OPPONENT 28
 #define BG_GIGA_IMPACT_PLAYER 29
-#define BG_GIGA_IMPACT_CONTEST 30
+#define BG_GIGA_IMPACT_CONTESTS 30
 #define BG_TRICK_ROOM 31
 #define BG_ROCK_WRECKER 32
-#define BG_SPACIAL_REND_ON_OPPONENT 33
-#define BG_SPACIAL_REND_ON_PLAYER 34
+#define BG_SPACIAL_REND_OPPONENT 33
+#define BG_SPACIAL_REND_PLAYER 34
 #define BG_DARK_VOID 35
 #define BG_WATER 36
 #define BG_NIGHTMARE 37
@@ -520,7 +522,7 @@
 #define BG_BLOOM_DOOM 65
 #define BG_SHATTERED_PSYCHE 66
 #define BG_TWINKLE_TACKLE 67
-#define BG_BLACKHOLE_ECLIPSE 68
+#define BG_BLACK_HOLE_ECLIPSE 68
 #define BG_SOULSTEALING_7STAR_STRIKE 69
 #define BG_MALICIOUS_MOONSAULT 70
 #define BG_CLANGOROUS_SOULBLAZE 71
@@ -533,8 +535,10 @@
 #define BG_STEEL_BEAM_OPPONENT 78
 #define BG_STEEL_BEAM_PLAYER 79
 #define BG_CHLOROBLAST 80
-#define BG_RAINBOW 81
-#define BG_SWAMP 82
+#define BG_RAINBOW_PLAYER 81
+#define BG_RAINBOW_OPPONENT 82
+#define BG_SWAMP 83
+#define BG_COUNT 84
 
 // table ids for general animations (sBattleAnims_General)
 #define B_ANIM_STATS_CHANGE             0
@@ -705,5 +709,8 @@ enum SpeciesGfxChange
 // The below are only used by AnimTask_BlendBattleAnimPal to get battler sprite palettes by position rather than by role.
 // It's redundant with F_PAL_BATTLERS, because they're only ever used together to refer to all the battlers at once.
 #define F_PAL_BATTLERS_2  (1 << 7 | 1 << 8 | 1 << 9 | 1 << 10)
+
+enum { SHAKE_BG_X, SHAKE_BG_Y, SHAKE_MON_X, SHAKE_MON_Y };
+enum { SHAKE_MON_ATTACKER, SHAKE_MON_TARGET, SHAKE_MON_BOTH };
 
 #endif // GUARD_CONSTANTS_BATTLE_ANIM_H

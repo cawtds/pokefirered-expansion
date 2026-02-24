@@ -38,6 +38,7 @@ static u16 FontFunc_SmallNarrow(struct TextPrinter *textPrinter);
 static u16 FontFunc_Narrower(struct TextPrinter *textPrinter);
 static u16 FontFunc_SmallNarrower(struct TextPrinter *textPrinter);
 static u16 FontFunc_ShortNarrow(struct TextPrinter *textPrinter);
+static u16 FontFunc_ShortNarrower(struct TextPrinter *textPrinter);
 static void DecompressGlyph_NormalCopy1(u16 glyphId, bool32 isJapanese);
 static void DecompressGlyph_NormalCopy2(u16 glyphId, bool32 isJapanese);
 static void DecompressGlyph_Short(u16 glyphId, bool32 isJapanese);
@@ -48,6 +49,7 @@ static void DecompressGlyph_SmallNarrow(u16, bool32);
 static void DecompressGlyph_Narrower(u16, bool32);
 static void DecompressGlyph_SmallNarrower(u16, bool32);
 static void DecompressGlyph_ShortNarrow(u16, bool32);
+static void DecompressGlyph_ShortNarrower(u16, bool32);
 static u32 GetGlyphWidth_Small(u16 glyphId, bool32 isJapanese);
 static u32 GetGlyphWidth_NormalCopy1(u16 glyphId, bool32 isJapanese);
 static u32 GetGlyphWidth_Normal(u16 glyphId, bool32 isJapanese);
@@ -60,6 +62,7 @@ static u32 GetGlyphWidth_Narrower(u16, bool32);
 static u32 GetGlyphWidth_SmallNarrower(u16, bool32);
 static u32 GetGlyphWidth_ShortNarrow(u16, bool32);
 static u32 GetGlyphWidth_Short(u16, bool32);
+static u32 GetGlyphWidth_ShortNarrower(u16, bool32);
 static struct TextPrinter *AllocateTextPrinter(void);
 static u32 GetNumTextPrinters(void);
 static void FreeFinishedTextPrinters(void);
@@ -88,19 +91,20 @@ static const u8 sWindowVerticalScrollSpeeds[] = {
 };
 
 static const struct GlyphWidthFunc sGlyphWidthFuncs[] = {
-    { FONT_SMALL,           GetGlyphWidth_Small },
-    { FONT_NORMAL_COPY_1,   GetGlyphWidth_NormalCopy1 },
-    { FONT_NORMAL,          GetGlyphWidth_Normal },
-    { FONT_NORMAL_COPY_2,   GetGlyphWidth_NormalCopy2 },
-    { FONT_MALE,            GetGlyphWidth_Male },
-    { FONT_FEMALE,          GetGlyphWidth_Female },
-    { FONT_BRAILLE,         GetGlyphWidth_Braille },
-    { FONT_NARROW,          GetGlyphWidth_Narrow },
-    { FONT_SMALL_NARROW,    GetGlyphWidth_SmallNarrow },
-    { FONT_NARROWER,        GetGlyphWidth_Narrower },
-    { FONT_SMALL_NARROWER,  GetGlyphWidth_SmallNarrower },
-    { FONT_SHORT_NARROW,    GetGlyphWidth_ShortNarrow },
-    { FONT_SHORT,           GetGlyphWidth_Short },
+    { FONT_SMALL,          GetGlyphWidth_Small },
+    { FONT_NORMAL_COPY_1,  GetGlyphWidth_NormalCopy1 },
+    { FONT_NORMAL,         GetGlyphWidth_Normal },
+    { FONT_NORMAL_COPY_2,  GetGlyphWidth_NormalCopy2 },
+    { FONT_MALE,           GetGlyphWidth_Male },
+    { FONT_FEMALE,         GetGlyphWidth_Female },
+    { FONT_BRAILLE,        GetGlyphWidth_Braille },
+    { FONT_NARROW,         GetGlyphWidth_Narrow },
+    { FONT_NARROWER,       GetGlyphWidth_Narrower },
+    { FONT_SMALL_NARROW,   GetGlyphWidth_SmallNarrow },
+    { FONT_SMALL_NARROWER, GetGlyphWidth_SmallNarrower },
+    { FONT_SHORT,          GetGlyphWidth_Short },
+    { FONT_SHORT_NARROW,   GetGlyphWidth_ShortNarrow },
+    { FONT_SHORT_NARROWER, GetGlyphWidth_ShortNarrower },
 };
 
 struct
@@ -228,10 +232,10 @@ static const struct FontInfo sFontInfos[] =
         .color.accent = 1,
         .color.shadow = 3,
     },
-    [FONT_SMALL_NARROW] = {
-        .fontFunction = FontFunc_SmallNarrow,
+    [FONT_NARROWER] = {
+        .fontFunction = FontFunc_Narrower,
         .maxLetterWidth = 5,
-        .maxLetterHeight = 8,
+        .maxLetterHeight = 16,
         .letterSpacing = 0,
         .lineSpacing = 0,
         .color.foreground = 2,
@@ -239,10 +243,10 @@ static const struct FontInfo sFontInfos[] =
         .color.accent = 1,
         .color.shadow = 3,
     },
-    [FONT_NARROWER] = {
-        .fontFunction = FontFunc_Narrower,
+    [FONT_SMALL_NARROW] = {
+        .fontFunction = FontFunc_SmallNarrow,
         .maxLetterWidth = 5,
-        .maxLetterHeight = 16,
+        .maxLetterHeight = 8,
         .letterSpacing = 0,
         .lineSpacing = 0,
         .color.foreground = 2,
@@ -261,6 +265,17 @@ static const struct FontInfo sFontInfos[] =
         .color.accent = 1,
         .color.shadow = 3,
     },
+    [FONT_SHORT] = {
+        .fontFunction = FontFunc_Short,
+        .maxLetterWidth = 6,
+        .maxLetterHeight = 14,
+        .letterSpacing = 0,
+        .lineSpacing = 0,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
+    },
     [FONT_SHORT_NARROW] = {
         .fontFunction = FontFunc_ShortNarrow,
         .maxLetterWidth = 5,
@@ -272,9 +287,9 @@ static const struct FontInfo sFontInfos[] =
         .color.accent = 1,
         .color.shadow = 3,
     },
-    [FONT_SHORT] = {
-        .fontFunction = FontFunc_Short,
-        .maxLetterWidth = 6,
+    [FONT_SHORT_NARROWER] = {
+        .fontFunction = FontFunc_ShortNarrower,
+        .maxLetterWidth = 5,
         .maxLetterHeight = 14,
         .letterSpacing = 0,
         .lineSpacing = 0,
@@ -296,11 +311,12 @@ static const u8 sMenuCursorDimensions[][2] =
     [FONT_BRAILLE]          = { 8,  16 },
     [FONT_BOLD]             = {},
     [FONT_NARROW]           = { 8,  15 },
-    [FONT_SMALL_NARROW]     = { 8,   8 },
     [FONT_NARROWER]         = { 8,  15 },
+    [FONT_SMALL_NARROW]     = { 8,   8 },
     [FONT_SMALL_NARROWER]   = { 8,   8 },
-    [FONT_SHORT_NARROW]     = { 8,  14 },
     [FONT_SHORT]            = { 8,  14 },
+    [FONT_SHORT_NARROW]     = { 8,  14 },
+    [FONT_SHORT_NARROWER]   = { 8,  14 },
 };
 
 // these three arrays are most for readability, ie instead of returning a magic number 8
@@ -1170,6 +1186,16 @@ static u16 FontFunc_ShortNarrow(struct TextPrinter *textPrinter)
     return RenderText(textPrinter);
 }
 
+static u16 FontFunc_ShortNarrower(struct TextPrinter *textPrinter)
+{
+    if (textPrinter->hasFontIdBeenSet == FALSE)
+    {
+        textPrinter->fontId = FONT_SHORT_NARROWER;
+        textPrinter->hasFontIdBeenSet = TRUE;
+    }
+    return RenderText(textPrinter);
+}
+
 void TextPrinterInitDownArrowCounters(struct TextPrinter *textPrinter)
 {
     if (gTextFlags.autoScroll == 1)
@@ -1615,6 +1641,9 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             break;
         case FONT_SHORT_NARROW:
             DecompressGlyph_ShortNarrow(currChar, textPrinter->japanese);
+            break;
+        case FONT_SHORT_NARROWER:
+            DecompressGlyph_ShortNarrower(currChar, textPrinter->japanese);
             break;
         case FONT_SHORT:
             DecompressGlyph_Short(currChar, textPrinter->japanese);
@@ -2224,10 +2253,21 @@ void DecompressGlyph_Small(u16 glyphId, bool32 isJapanese)
     }
     else
     {
-        glyphs = gFontSmallLatinGlyphs + (0x10 * glyphId);
-        DecompressGlyphTile(glyphs, gCurGlyph.gfxBufferTop);
-        DecompressGlyphTile(glyphs + 0x8, gCurGlyph.gfxBufferBottom);
+        glyphs = gFontSmallLatinGlyphs + (0x20 * glyphId);
         gCurGlyph.width = gFontSmallLatinGlyphWidths[glyphId];
+        if (gCurGlyph.width <= 8)
+        {
+            DecompressGlyphTile(glyphs, gCurGlyph.gfxBufferTop);
+            DecompressGlyphTile(glyphs + 0x10, gCurGlyph.gfxBufferBottom);
+        }
+        else
+        {
+            DecompressGlyphTile(glyphs, gCurGlyph.gfxBufferTop);
+            DecompressGlyphTile(glyphs + 0x8, gCurGlyph.gfxBufferTop + 8);
+            DecompressGlyphTile(glyphs + 0x10, gCurGlyph.gfxBufferBottom);
+            DecompressGlyphTile(glyphs + 0x18, gCurGlyph.gfxBufferBottom + 8);
+        }
+
         gCurGlyph.height = 13;
     }
 }
@@ -2810,22 +2850,67 @@ static u32 GetGlyphWidth_ShortNarrow(u16 glyphId, bool32 isJapanese)
         return gFontShortNarrowLatinGlyphWidths[glyphId];
 }
 
+static void DecompressGlyph_ShortNarrower(u16 glyphId, bool32 isJapanese)
+{
+    const u16 *glyphs;
+
+    if (isJapanese == TRUE)
+    {
+        glyphs = gFontShortJapaneseGlyphs + (0x100 * (glyphId >> 0x3)) + (0x10 * (glyphId & 0x7));
+        DecompressGlyphTile(glyphs, gCurGlyph.gfxBufferTop);
+        DecompressGlyphTile(glyphs + 0x8, gCurGlyph.gfxBufferTop + 8);
+        DecompressGlyphTile(glyphs + 0x80, gCurGlyph.gfxBufferBottom);    // gCurGlyph + 0x20
+        DecompressGlyphTile(glyphs + 0x88, gCurGlyph.gfxBufferBottom + 8);    // gCurGlyph + 0x60
+        gCurGlyph.width = gFontShortJapaneseGlyphWidths[glyphId];
+        gCurGlyph.height = 14;
+    }
+    else
+    {
+        glyphs = gFontShortNarrowerLatinGlyphs + (0x20 * glyphId);
+        gCurGlyph.width = gFontShortNarrowerLatinGlyphWidths[glyphId];
+
+        if (gCurGlyph.width <= 8)
+        {
+            DecompressGlyphTile(glyphs, gCurGlyph.gfxBufferTop);
+            DecompressGlyphTile(glyphs + 0x10, gCurGlyph.gfxBufferBottom);
+        }
+        else
+        {
+            DecompressGlyphTile(glyphs, gCurGlyph.gfxBufferTop);
+            DecompressGlyphTile(glyphs + 0x8, gCurGlyph.gfxBufferTop + 8);
+            DecompressGlyphTile(glyphs + 0x10, gCurGlyph.gfxBufferBottom);
+            DecompressGlyphTile(glyphs + 0x18, gCurGlyph.gfxBufferBottom + 8);
+        }
+
+        gCurGlyph.height = 14;
+    }
+}
+
+static u32 GetGlyphWidth_ShortNarrower(u16 glyphId, bool32 isJapanese)
+{
+    if (isJapanese == TRUE)
+        return gFontShortJapaneseGlyphWidths[glyphId];
+    else
+        return gFontShortNarrowerLatinGlyphWidths[glyphId];
+}
+
 static const s8 sNarrowerFontIds[] =
 {
     [FONT_SMALL] = FONT_SMALL_NARROW, // FONT_SMALL_NARROW,
     [FONT_NORMAL] = FONT_NARROW, // FONT_NARROW,
-    [FONT_SHORT] = FONT_SHORT_NARROW,
     [FONT_NORMAL_COPY_1] = FONT_NARROW,
     [FONT_NORMAL_COPY_2] = FONT_NARROW,
-    [FONT_BRAILLE] = -1,
-    [FONT_NARROW] = FONT_NARROWER,
-    [FONT_SMALL_NARROW] = FONT_SMALL_NARROWER,
-    [FONT_BOLD] = -1,
-    [FONT_NARROWER] = -1,
-    [FONT_SMALL_NARROWER] = -1,
-    [FONT_SHORT_NARROW] = -1,
     [FONT_MALE] = FONT_NORMAL,
     [FONT_FEMALE] = FONT_NORMAL,
+    [FONT_BRAILLE] = -1,
+    [FONT_BOLD] = -1,
+    [FONT_NARROW] = FONT_NARROWER,
+    [FONT_NARROWER] = -1,
+    [FONT_SMALL_NARROW] = FONT_SMALL_NARROWER,
+    [FONT_SMALL_NARROWER] = -1,
+    [FONT_SHORT] = FONT_SHORT_NARROW,
+    [FONT_SHORT_NARROW] = FONT_SHORT_NARROWER,
+    [FONT_SHORT_NARROWER] = -1,
 };
 
 // If the narrowest font ID doesn't fit the text, we still return that

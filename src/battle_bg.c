@@ -30,11 +30,11 @@
 #include "constants/trainers.h"
 #include "constants/battle_anim.h"
 #include "constants/battle_partner.h"
-#include "data/battle_environment.h"
 
 static u8 GetBattleTerrainOverride(void);
 
 // .rodata
+#include "data/battle_environment.h"
 
 static const struct OamData sVsLetter_V_OamData =
 {
@@ -664,11 +664,11 @@ static const void* const sSeasonBattleBackgrounds[BATTLE_ENVIRONMENT_COUNT][SEAS
 const void* GetBattleBackgroundPalette(u16 terrain)
 {
     if (!OW_SEASONS)
-        return gBattleEnvironmentInfo[terrain].background.palette;
+        return gBattleEnvironmentInfo[terrain].palette;
 
     if (sSeasonBattleBackgrounds[terrain][gLoadedSeason] != NULL)
         return sSeasonBattleBackgrounds[terrain][gLoadedSeason];
-    return gBattleEnvironmentInfo[terrain].background.palette;
+    return gBattleEnvironmentInfo[terrain].palette;
 }
 
 static void LoadBattleTerrainGfx(u16 terrain)
@@ -686,8 +686,8 @@ static void LoadBattleTerrainEntryGfx(u16 terrain)
     if (terrain >= NELEMS(gBattleEnvironmentInfo))
         terrain = BATTLE_ENVIRONMENT_PLAIN;
     // Copy to bg1
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[terrain].background.entryTileset, (void *)BG_CHAR_ADDR(1));
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[terrain].background.entryTilemap, (void *)BG_SCREEN_ADDR(28));
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[terrain].entry.tileset, (void *)BG_CHAR_ADDR(1));
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[terrain].entry.tilemap, (void *)BG_SCREEN_ADDR(28));
 }
 
 void BattleInitBgsAndWindows(void)

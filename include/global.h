@@ -411,6 +411,35 @@ struct RecordMixingGift
     struct RecordMixingGiftData data;
 };
 
+struct SecretBaseParty
+{
+    u32 personality[PARTY_SIZE];
+    u16 moves[PARTY_SIZE * MAX_MON_MOVES];
+    u16 species[PARTY_SIZE];
+    u16 heldItems[PARTY_SIZE];
+    u8 levels[PARTY_SIZE];
+    u8 EVs[PARTY_SIZE];
+};
+
+// Leftover from R/S, still referenced in the unused function CreateSecretBaseEnemyParty
+struct SecretBase
+{
+    /*0x1A9C*/ u8 secretBaseId;
+    /*0x1A9D*/ u8 toRegister:4;
+    /*0x1A9D*/ u8 gender:1;
+    /*0x1A9D*/ u8 battledOwnerToday:1;
+    /*0x1A9D*/ u8 registryStatus:2;
+    /*0x1A9E*/ u8 trainerName[PLAYER_NAME_LENGTH];
+    /*0x1AA5*/ u8 trainerId[TRAINER_ID_LENGTH]; // byte 0 is used for determining trainer class
+    /*0x1AA9*/ u8 language;
+    /*0x1AAA*/ u16 numSecretBasesReceived;
+    /*0x1AAC*/ u8 numTimesEntered;
+    /*0x1AAD*/ u8 unused;
+    /*0x1AAE*/ u8 decorations[DECOR_MAX_SECRET_BASE];
+    /*0x1ABE*/ u8 decorationPos[DECOR_MAX_SECRET_BASE];
+    /*0x1AD0*/ struct SecretBaseParty party;
+};
+
 #include "constants/game_stat.h"
 #include "global.fieldmap.h"
 #include "pokemon.h"
@@ -656,35 +685,6 @@ struct SaveBlock2
 }; // size: 0xF24
 
 extern struct SaveBlock2 *gSaveBlock2Ptr;
-
-struct SecretBaseParty
-{
-    u32 personality[PARTY_SIZE];
-    u16 moves[PARTY_SIZE * MAX_MON_MOVES];
-    u16 species[PARTY_SIZE];
-    u16 heldItems[PARTY_SIZE];
-    u8 levels[PARTY_SIZE];
-    u8 EVs[PARTY_SIZE];
-};
-
-// Leftover from R/S, still referenced in the unused function CreateSecretBaseEnemyParty
-struct SecretBaseRecord
-{
-    /*0x1A9C*/ u8 secretBaseId;
-    /*0x1A9D*/ u8 toRegister:4;
-    /*0x1A9D*/ u8 gender:1;
-    /*0x1A9D*/ u8 battledOwnerToday:1;
-    /*0x1A9D*/ u8 registryStatus:2;
-    /*0x1A9E*/ u8 trainerName[PLAYER_NAME_LENGTH];
-    /*0x1AA5*/ u8 trainerId[TRAINER_ID_LENGTH]; // byte 0 is used for determining trainer class
-    /*0x1AA9*/ u8 language;
-    /*0x1AAA*/ u16 numSecretBasesReceived;
-    /*0x1AAC*/ u8 numTimesEntered;
-    /*0x1AAD*/ u8 unused;
-    /*0x1AAE*/ u8 decorations[DECOR_MAX_SECRET_BASE];
-    /*0x1ABE*/ u8 decorationPos[DECOR_MAX_SECRET_BASE];
-    /*0x1AD0*/ struct SecretBaseParty party;
-};
 
 struct WarpData
 {

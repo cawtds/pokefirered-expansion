@@ -34,14 +34,17 @@ extern const struct Tileset gTileset_SSAnne;
 extern const struct Tileset gTileset_SeaCottage;
 extern const struct Tileset gTileset_TrainerTower;
 
-extern const struct Tileset gTileset_BattleFrontierBuilding;
-extern const struct Tileset gTileset_BattleFrontierOutside;
-extern const struct Tileset gTileset_BattleFrontierOutsideWest;
-extern const struct Tileset gTileset_BattleFrontierOutsideEast;
 extern const struct Tileset gTileset_BattleArena;
-extern const struct Tileset gTileset_BattlePalaceGeneral;
-extern const struct Tileset gTileset_BattlePalaceBuilding;
-extern const struct Tileset gTileset_BattlePike;
 extern const struct Tileset gTileset_BattleDome;
+extern const struct Tileset gTileset_BattleFactory;
+extern const struct Tileset gTileset_BattleFrontierBuilding;
+extern const struct Tileset gTileset_BattleFrontierInside;
+extern const struct Tileset gTileset_BattleFrontierOutside;
+extern const struct Tileset gTileset_BattleFrontierOutsideEast;
+extern const struct Tileset gTileset_BattleFrontierOutsideWest;
+extern const struct Tileset gTileset_BattlePalaceBuilding;
+extern const struct Tileset gTileset_BattlePalaceGeneral;
+extern const struct Tileset gTileset_BattlePike;
+extern const struct Tileset gTileset_BattlePyramid;
 
 #endif // GUARD_TILESETS_H

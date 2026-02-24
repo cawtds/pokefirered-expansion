@@ -5,7 +5,7 @@
 #include "graphics.h"
 #include "sprite.h"
 #include "util.h"
-// #include "constants/battle_palace.h"
+#include "constants/battle_palace.h"
 
 #define TAG_SMOKESCREEN 55019
 
@@ -87,8 +87,6 @@ static const struct SpriteTemplate sSmokescreenImpactSpriteTemplate =
     .paletteTag = TAG_SMOKESCREEN,
     .oam = &sOamData_SmokescreenImpact,
     .anims = sAnims_SmokescreenImpact,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_SmokescreenImpact
 };
 
