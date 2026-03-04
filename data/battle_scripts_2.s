@@ -259,11 +259,6 @@ BattleScript_SuccessBallThrowEnd::
 	setbyte gBattleOutcome, B_OUTCOME_CAUGHT
 	finishturn
 
-BattleScript_WallyBallThrow::
-	printstring STRINGID_GOTCHAPKMNCAUGHTWALLY
-	setbyte gBattleOutcome, B_OUTCOME_CAUGHT
-	finishturn
-
 BattleScript_ShakeBallThrow::
 	animatewildpokemonafterfailedpokeball BS_TARGET
 	waitmessage B_WAIT_TIME_LONG

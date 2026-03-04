@@ -576,8 +576,8 @@ struct BattleStruct
     u8 battlerPartyOrders[MAX_BATTLERS_COUNT][PARTY_SIZE / 2];
     u8 runTries;
     u8 caughtMonNick[POKEMON_NAME_LENGTH + 1];
-    u8 safariRockThrowCounter; // safariGoNearCounter in pokeemerald
-    u8 safariBaitThrowCounter; // safariPkblThrowCounter in pokeemerald
+    u8 safariRockThrowCounter;
+    u8 safariBaitThrowCounter;
     u8 safariEscapeFactor;
     u8 safariCatchFactor;
     u8 linkBattleVsSpriteId_V; // The letter "V"
@@ -598,7 +598,8 @@ struct BattleStruct
     u8 sleepClauseNotBlocked:1;
     u8 isSkyBattle:1;
     u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
-    u8 unused:4;
+    u8 triAttackBurn:1;
+    u8 unused:3;
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];
@@ -697,8 +698,8 @@ struct BattleStruct
     u16 flingItem;
     u8 incrementEchoedVoice:1;
     u8 echoedVoiceCounter:3;
-    u8 preAttackAnimPlayed:1;
-    u8 padding4:1;
+    u8 attackAnimPlayed:1;
+    u8 preAttackEffectHappened:1;
     u8 magicCoatActive:1;
     u8 magicBounceActive:1;
     u8 moveBouncer;

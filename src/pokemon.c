@@ -6650,6 +6650,7 @@ u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
         case FORM_CHANGE_DEPOSIT:
         case FORM_CHANGE_FAINT:
         case FORM_CHANGE_DAYS_PASSED:
+        case FORM_CHANGE_BEGIN_WILD_ENCOUNTER:
             targetSpecies = formChanges[i].targetSpecies;
             break;
         case FORM_CHANGE_STATUS:

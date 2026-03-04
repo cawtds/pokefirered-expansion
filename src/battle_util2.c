@@ -108,17 +108,10 @@ void AdjustFriendshipOnBattleFaint(enum BattlerId battler)
         opposingBattlerId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
     }
 
-    if (gBattleMons[opposingBattlerId].level > gBattleMons[battler].level)
-    {
-        if (gBattleMons[opposingBattlerId].level - gBattleMons[battler].level > 29)
-            AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_LARGE);
-        else
-            AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_SMALL);
-    }
+    if (gBattleMons[opposingBattlerId].level - gBattleMons[battler].level > 29)
+        AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_LARGE);
     else
-    {
         AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_SMALL);
-    }
 }
 
 void SwitchPartyOrderInGameMulti(enum BattlerId battler, u8 arg1)
@@ -204,7 +197,8 @@ u32 BattlePalace_TryEscapeStatus(enum BattlerId battler)
                 {
                     // Unfreeze
                     gBattleMons[battler].status1 &= ~(STATUS1_FREEZE);
-                    BattleScriptCall(BattleScript_MoveUsedUnfroze);
+                    gBattleScripting.battler = battler;
+                    BattleScriptCall(BattleScript_BattlerDefrosted);
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
                 }
                 effect = 2;
