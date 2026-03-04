@@ -321,33 +321,6 @@ enum {
     MON_SPR_GFX_MANAGERS_COUNT
 };
 
-struct BattleTowerPokemon
-{
-    /*0x00*/ u16 species;
-    /*0x02*/ u16 heldItem;
-    /*0x04*/ u16 moves[MAX_MON_MOVES];
-    /*0x0C*/ u8 level;
-    /*0x0D*/ u8 ppBonuses;
-    /*0x0E*/ u8 hpEV;
-    /*0x0F*/ u8 attackEV;
-    /*0x10*/ u8 defenseEV;
-    /*0x11*/ u8 speedEV;
-    /*0x12*/ u8 spAttackEV;
-    /*0x13*/ u8 spDefenseEV;
-    /*0x14*/ u32 otId;
-    /*0x18*/ u32 hpIV:5;
-             u32 attackIV:5;
-             u32 defenseIV:5;
-             u32 speedIV:5;
-             u32 spAttackIV:5;
-             u32 spDefenseIV:5;
-             u32 gap:1;
-             u32 abilityNum:1;
-    /*0x1C*/ u32 personality;
-    /*0x20*/ u8 nickname[VANILLA_POKEMON_NAME_LENGTH + 1];
-    /*0x2B*/ u8 friendship;
-};
-
 #define UNPACK_VOLATILE_STRUCT(_enum, _fieldName, _typeMaxValue, ...) INVOKE_WITH_(UNPACK_VOLATILE_STRUCT_, _fieldName, UNPACK_B(_typeMaxValue));
 #define UNPACK_VOLATILE_STRUCT_(_fieldName, _type, ...) _type FIRST(__VA_OPT__(_fieldName:BIT_SIZE(FIRST(__VA_ARGS__)),) _fieldName)
 
@@ -869,14 +842,11 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
 bool8 IsMonPastEvolutionLevel(struct Pokemon *mon);
 u16 NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum);
 u32 NationalToRegionalOrder(enum NationalDexOrder nationalNum);
-// enum KantoDexOrder NationalToKantoOrder(enum NationalDexOrder nationalNum);
 enum HoennDexOrder NationalToHoennOrder(enum NationalDexOrder nationalNum);
 enum NationalDexOrder SpeciesToNationalPokedexNum(u16 species);
 u32 SpeciesToRegionalPokedexNum(u16 species);
-// enum KantoDexOrder SpeciesToKantoPokedexNum(u16 species);
 enum HoennDexOrder SpeciesToHoennPokedexNum(u16 species);
 enum NationalDexOrder RegionalToNationalOrder(u32 regionNum);
-// enum NationalDexOrder KantoToNationalOrder(enum KantoDexOrder kantoNum);
 enum NationalDexOrder HoennToNationalOrder(enum HoennDexOrder hoennNum);
 enum KantoDexOrder SpeciesToKantoDexNum(u16 species);
 bool32 IsSpeciesInKantoDex(u16 species);
@@ -898,9 +868,7 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
 bool8 TryIncrementMonLevel(struct Pokemon *mon);
 u8 CanLearnTeachableMove(u16 species, enum Move move);
-u8 GetMoveRelearnerMoves(struct Pokemon *mon, u16 *moves);
 u8 GetLevelUpMovesBySpecies(u16 species, u16 *moves);
-u8 GetNumberOfRelearnableMoves(struct Pokemon *mon);
 u16 SpeciesToPokedexNum(u16 species);
 bool32 IsSpeciesInHoennDex(u16 species);
 u16 GetBattleBGM(void);
@@ -979,6 +947,6 @@ void ChangePokemonNicknameWithCallback(void (*callback)(void));
 // pokefirered
 u16 GetFirstPartnerMove(u16 species);
 u8 GetPlayerPartyHighestLevel(void);
-bool8 CheckBattleTypeGhost(struct Pokemon *mon, u8 bank);
+bool8 CheckBattleTypeGhost(struct Pokemon *mon, enum BattlerId battler);
 
 #endif // GUARD_POKEMON_H
