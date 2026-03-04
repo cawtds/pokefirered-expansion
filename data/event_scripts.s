@@ -25,6 +25,7 @@
 #include "constants/maps.h"
 #include "constants/metatile_labels.h"
 #include "constants/party_menu.h"
+#include "constants/pokeball.h"
 #include "constants/pokemon.h"
 #include "constants/moves.h"
 #include "constants/move_relearner.h"
