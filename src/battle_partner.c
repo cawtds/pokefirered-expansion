@@ -2,17 +2,13 @@
 #include "main.h"
 #include "battle.h"
 #include "battle_partner.h"
-#include "battle_setup.h"
-#include "battle_transition.h"
-// #include "battle_frontier.h"
+#include "battle_frontier.h"
 #include "data.h"
-// #include "frontier_util.h"
+#include "frontier_util.h"
 #include "difficulty.h"
-#include "event_data.h"
-#include "overworld.h"
 #include "string_util.h"
-#include "task.h"
 #include "text.h"
+
 #include "constants/abilities.h"
 #include "constants/battle_ai.h"
 
@@ -28,11 +24,12 @@ void FillPartnerParty(u16 trainerId)
 {
     s32 i, j, k;
     u32 firstIdPart = 0, secondIdPart = 0, thirdIdPart = 0;
-    u32 personality;
+    u32 ivs, level, personality;
+    u16 monId;
     u32 otID;
     u8 trainerName[(PLAYER_NAME_LENGTH * 3) + 1];
-    s32 ball = -1;
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
+    SetFacilityPtrsGetLevel();
 
     if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
     {
@@ -43,6 +40,7 @@ void FillPartnerParty(u16 trainerId)
         {
             const struct TrainerMon *partyData = gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].party;
             const u8 *partnerName = gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName;
+
             for (k = 0; partnerName[k] != EOS && k < 3; k++)
             {
                 if (k == 0)
@@ -101,10 +99,9 @@ void FillPartnerParty(u16 trainerId)
                     SetMonData(&gPlayerParty[i + 3], MON_DATA_ABILITY_NUM, &j);
             }
             SetMonData(&gPlayerParty[i + 3], MON_DATA_FRIENDSHIP, &(partyData[i].friendship));
-            if (partyData[i].ball != ITEM_NONE)
+            if (partyData[i].ball < POKEBALL_COUNT)
             {
-                ball = partyData[i].ball;
-                SetMonData(&gPlayerParty[i + 3], MON_DATA_POKEBALL, &ball);
+                SetMonData(&gPlayerParty[i + 3], MON_DATA_POKEBALL, &partyData[i].ball);
             }
             if (partyData[i].nickname != NULL)
             {
@@ -116,6 +113,64 @@ void FillPartnerParty(u16 trainerId)
             SetMonData(&gPlayerParty[i + 3], MON_DATA_OT_NAME, trainerName);
             j = gBattlePartners[difficulty][SanitizeTrainerId(trainerId - TRAINER_PARTNER(PARTNER_NONE))].gender;
             SetMonData(&gPlayerParty[i + 3], MON_DATA_OT_GENDER, &j);
+        }
+    }
+    else if (trainerId == TRAINER_EREADER)
+    {
+        // Scrapped, lol.
+        trainerName[0] = gGameLanguage;
+    }
+    else if (trainerId < FRONTIER_TRAINERS_COUNT)
+    {
+        level = SetFacilityPtrsGetLevel();
+        ivs = GetFrontierTrainerFixedIvs(trainerId);
+        otID = Random32();
+        for (i = 0; i < FRONTIER_MULTI_PARTY_SIZE; i++)
+        {
+            monId = gSaveBlock2Ptr->frontier.trainerIds[i + 18];
+            CreateFacilityMon(&gFacilityTrainerMons[monId], level, ivs, otID, 0, &gPlayerParty[MULTI_PARTY_SIZE + i]);
+            for (j = 0; j < PLAYER_NAME_LENGTH + 1; j++)
+                trainerName[j] = gFacilityTrainers[trainerId].trainerName[j];
+            SetMonData(&gPlayerParty[MULTI_PARTY_SIZE + i], MON_DATA_OT_NAME, &trainerName);
+            j = IsFrontierTrainerFemale(trainerId);
+            SetMonData(&gPlayerParty[MULTI_PARTY_SIZE + i], MON_DATA_OT_GENDER, &j);
+        }
+    }
+    else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
+    {
+        trainerId -= TRAINER_RECORD_MIXING_FRIEND;
+        for (i = 0; i < FRONTIER_MULTI_PARTY_SIZE; i++)
+        {
+            struct EmeraldBattleTowerRecord *record = &gSaveBlock2Ptr->frontier.towerRecords[trainerId];
+            struct BattleTowerPokemon monData = record->party[gSaveBlock2Ptr->frontier.trainerIds[18 + i]];
+            StringCopy(trainerName, record->name);
+            if (record->language == LANGUAGE_JAPANESE)
+            {
+                if (monData.nickname[0] != EXT_CTRL_CODE_BEGIN || monData.nickname[1] != EXT_CTRL_CODE_JPN)
+                {
+                    monData.nickname[5] = EOS;
+                    ConvertInternationalString(monData.nickname, LANGUAGE_JAPANESE);
+                }
+            }
+            else
+            {
+                if (monData.nickname[0] == EXT_CTRL_CODE_BEGIN && monData.nickname[1] == EXT_CTRL_CODE_JPN)
+                    trainerName[5] = EOS;
+            }
+            CreateBattleTowerMon_HandleLevel(&gPlayerParty[MULTI_PARTY_SIZE + i], &monData, TRUE);
+            SetMonData(&gPlayerParty[MULTI_PARTY_SIZE + i], MON_DATA_OT_NAME, trainerName);
+            j = IsFrontierTrainerFemale(trainerId + TRAINER_RECORD_MIXING_FRIEND);
+            SetMonData(&gPlayerParty[MULTI_PARTY_SIZE + i], MON_DATA_OT_GENDER, &j);
+        }
+    }
+    else
+    {
+        trainerId -= TRAINER_RECORD_MIXING_APPRENTICE;
+        for (i = 0; i < FRONTIER_MULTI_PARTY_SIZE; i++)
+        {
+            CreateApprenticeMon(&gPlayerParty[MULTI_PARTY_SIZE + i], &gSaveBlock1Ptr->apprentices[trainerId], gSaveBlock2Ptr->frontier.trainerIds[18 + i]);
+            j = IsFrontierTrainerFemale(trainerId + TRAINER_RECORD_MIXING_APPRENTICE);
+            SetMonData(&gPlayerParty[MULTI_PARTY_SIZE + i], MON_DATA_OT_GENDER, &j);
         }
     }
 }
