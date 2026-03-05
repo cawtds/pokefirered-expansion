@@ -51,7 +51,6 @@
 #include "task.h"
 #include "test_runner.h"
 #include "text.h"
-// #include "trainer_hill.h"
 #include "util.h"
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
@@ -7480,4 +7479,3 @@ u16 GetFirstPartnerMove(u16 species)
             return MOVE_NONE;
     }
 }
-
