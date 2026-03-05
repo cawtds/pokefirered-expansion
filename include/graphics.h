@@ -6640,6 +6640,9 @@ extern const u32 gBattlePyramidBagTilemap[];
 extern const u16 gBattlePyramidBagInterface_Pal[];
 extern const u16 gBattlePyramidFloor_Pal[][16];
 
+extern const u32 gMultiBattleIntroBg_Opponent_Tilemap[];
+extern const u32 gMultiBattleIntroBg_Player_Tilemap[];
+
 // Frontier Pass
 extern const u32 gFrontierPassBg_Gfx[];
 extern const u32 gFrontierPassBg_Tilemap[];
