@@ -7,7 +7,6 @@
 #include "battle_interface.h"
 #include "battle_util.h"
 #include "bg.h"
-// #include "contest.h"
 #include "decompress.h"
 #include "dma3.h"
 #include "gpu_regs.h"
@@ -88,7 +87,6 @@ static void Cmd_jumpifmovetypeequal(void);
 static void Cmd_createdragondartsprite(void);
 static void RunAnimScriptCommand(void);
 static void Task_UpdateMonBg(u8 taskId);
-// static void FlipBattlerBgTiles(void);
 static void Task_ClearMonBg(u8 taskId);
 static void Task_ClearMonBgStatic(u8 taskId);
 static void Task_FadeToBg(u8 taskId);
@@ -379,18 +377,10 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
         }
     }
 
-    if (!IsContest())
-    {
-        InitPrioritiesForVisibleBattlers();
-        UpdateOamPriorityInAllHealthboxes(0, sAnimHideHpBoxes);
-        for (i = 0; i < MAX_BATTLERS_COUNT; i++)
-            gAnimBattlerSpecies[i] = GetMonData(GetBattlerMon(i), MON_DATA_SPECIES);
-    }
-    else
-    {
-        // for (i = 0; i < CONTESTANT_COUNT; i++)
-        //     gAnimBattlerSpecies[i] = gContestResources->moveAnim->species;
-    }
+    InitPrioritiesForVisibleBattlers();
+    UpdateOamPriorityInAllHealthboxes(0, sAnimHideHpBoxes);
+    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+        gAnimBattlerSpecies[i] = GetMonData(GetBattlerMon(i), MON_DATA_SPECIES);
 
     if (animType != ANIM_TYPE_MOVE)
         gAnimMoveIndex = 0;
@@ -1101,9 +1091,6 @@ void MoveBattlerSpriteToBG(enum BattlerId battler, bool8 toBG_2, bool8 setSprite
         }
         else
         {
-            // different values in pokefirered
-            // RequestDma3Fill(0, (void *)(BG_SCREEN_ADDR(8)), 0x2000, 1);
-            // RequestDma3Fill(0xFF, (void *)(BG_SCREEN_ADDR(28)), 0x1000, 0);
             RequestDma3Fill(0, (void *)(BG_SCREEN_ADDR(8)), 0x2000, DMA3_32BIT);
             RequestDma3Fill(0, (void *)(BG_SCREEN_ADDR(28)), 0x1000, DMA3_32BIT);
         }
@@ -1119,9 +1106,6 @@ void MoveBattlerSpriteToBG(enum BattlerId battler, bool8 toBG_2, bool8 setSprite
         battlerSpriteId = gBattlerSpriteIds[battler];
 
         gBattle_BG1_X =  -(gSprites[battlerSpriteId].x + gSprites[battlerSpriteId].x2) + 0x20;
-        // if (IsContest() && IsSpeciesNotUnown(gContestResources->moveAnim->species))
-        //     gBattle_BG1_X--;
-
         gBattle_BG1_Y =  -(gSprites[battlerSpriteId].y + gSprites[battlerSpriteId].y2) + 0x20;
         if (setSpriteInvisible)
             gSprites[gBattlerSpriteIds[battler]].invisible = TRUE;
@@ -1138,9 +1122,6 @@ void MoveBattlerSpriteToBG(enum BattlerId battler, bool8 toBG_2, bool8 setSprite
             battlerPosition = GetBattlerPosition(battler);
 
         DrawBattlerOnBg(1, 0, 0, battlerPosition, animBg.paletteId, animBg.bgTiles, animBg.bgTilemap, animBg.tilesOffset);
-
-        // if (IsContest())
-        //     FlipBattlerBgTiles();
     }
     else
     {
@@ -1170,32 +1151,6 @@ void MoveBattlerSpriteToBG(enum BattlerId battler, bool8 toBG_2, bool8 setSprite
         DrawBattlerOnBg(2, 0, 0, GetBattlerPosition(battler), animBg.paletteId, animBg.bgTiles + 0x1000, animBg.bgTilemap + 0x400, animBg.tilesOffset);
     }
 }
-
-// static void FlipBattlerBgTiles(void)
-// {
-//     s32 i, j;
-//     struct BattleAnimBgData animBg;
-//     u16 *ptr;
-
-//     if (IsSpeciesNotUnown(gContestResources->moveAnim->species))
-//     {
-//         GetBattleAnimBg1Data(&animBg);
-//         ptr = animBg.bgTilemap;
-//         for (i = 0; i < 8; i++)
-//         {
-//             for (j = 0; j < 4; j++)
-//             {
-//                 u16 temp;
-//                 SWAP(ptr[j + i * 32], ptr[7 - j + i * 32], temp);
-//             }
-//         }
-//         for (i = 0; i < 8; i++)
-//         {
-//             for (j = 0; j < 8; j++)
-//                 ptr[j + i * 32] ^= 0x400;
-//         }
-//     }
-// }
 
 void RelocateBattleBgPal(u16 paletteNum, u16 *dest, u32 offset, bool8 largeScreen)
 {
@@ -1524,9 +1479,6 @@ static void Cmd_goto(void)
 // As a result, if misused, this function cannot reliably discern between field and contest status and could result in undefined behavior.
 bool8 IsContest(void)
 {
-    // if (!gMain.inBattle)
-    //     return TRUE;
-    // else
     return FALSE;
 }
 
@@ -1626,9 +1578,7 @@ void LoadMoveBg(u16 bgId)
 
 static void LoadDefaultBg(void)
 {
-    if (IsContest())
-        ;// LoadContestBgAfterMoveAnim();
-    else if (B_TERRAIN_BG_CHANGE == TRUE && gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+    if (B_TERRAIN_BG_CHANGE == TRUE && gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
         DrawTerrainTypeBattleBackground();
     else
         DrawMainBattleBackground();
