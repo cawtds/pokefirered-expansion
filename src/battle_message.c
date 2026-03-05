@@ -239,6 +239,7 @@ static const u8 sText_TwoTrainersSentPkmn[] = _("{B_TRAINER1_NAME_WITH_CLASS} se
 static const u8 sText_Trainer2SentOutPkmn[] = _("{B_TRAINER2_NAME_WITH_CLASS} sent out {B_BUFF1}!");
 static const u8 sText_TwoTrainersWantToBattle[] = _("You are challenged by {B_TRAINER1_NAME_WITH_CLASS} and {B_TRAINER2_NAME_WITH_CLASS}!\p");
 static const u8 sText_InGamePartnerSentOutZGoN[] = _("{B_PARTNER_NAME_WITH_CLASS} sent out {B_PLAYER_MON2_NAME}! Go, {B_PLAYER_MON1_NAME}!");
+static const u8 sText_InGamePartnerSentOutNGoZ[] = _("{B_PARTNER_NAME_WITH_CLASS} sent out {B_PLAYER_MON1_NAME}! Go, {B_PLAYER_MON2_NAME}!");
 static const u8 sText_InGamePartnerSentOutPkmn1[] = _("{B_PARTNER_NAME_WITH_CLASS} sent out {B_PLAYER_MON1_NAME}!");
 static const u8 sText_InGamePartnerSentOutPkmn2[] = _("{B_PARTNER_NAME_WITH_CLASS} sent out {B_PLAYER_MON2_NAME}!");
 static const u8 sText_InGamePartnerWithdrewPkmn1[] = _("{B_PARTNER_NAME_WITH_CLASS} withdrew {B_PLAYER_MON1_NAME}!");
@@ -1548,7 +1549,7 @@ const u8 *const gTrainerTowerChallengeTypeTexts[NUM_TOWER_CHALLENGE_TYPES] =
 
 static const u8 sRecordedBattleTextSpeeds[] = {8, 4, 1, 0};
 
-void BufferStringBattle(enum StringID stringID, u32 battler)
+void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
 {
     s32 i;
     const u8 *stringPtr = NULL;
@@ -1580,12 +1581,38 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
         {
             if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
             {
-                if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+                if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
+                {
+                    stringPtr = sText_TwoTrainersWantToBattle;
+                }
+                else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
                 {
                     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
-                        stringPtr = sText_TwoLinkTrainersWantToBattlePause;
+                    {
+                        if (TESTING && gBattleTypeFlags & BATTLE_TYPE_MULTI)
+                        {
+                            if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+                                stringPtr = sText_Trainer1WantsToBattle;
+                            else
+                                stringPtr = sText_TwoTrainersWantToBattle;
+                        }
+                        else if (TESTING && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+                        {
+                            stringPtr = sText_TwoTrainersWantToBattle;
+                        }
+                        else if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+                        {
+                            stringPtr = sText_LinkTrainerWantsToBattlePause;
+                        }
+                        else
+                        {
+                            stringPtr = sText_TwoLinkTrainersWantToBattlePause;
+                        }
+                    }
                     else
+                    {
                         stringPtr = sText_TwoLinkTrainersWantToBattle;
+                    }
                 }
                 else
                 {
@@ -1631,13 +1658,27 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
             if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(BATTLE_PARTNER(battler))))
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-                    stringPtr = sText_InGamePartnerSentOutZGoN;
+                {
+                    if (BattlerIsPlayer(battler)) // Player is battler 0
+                        stringPtr = sText_InGamePartnerSentOutZGoN;
+                    else // Player is battler 2
+                        stringPtr = sText_InGamePartnerSentOutNGoZ;
+                }
                 else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+                {
                     stringPtr = sText_GoTwoPkmn;
+                }
                 else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-                    stringPtr = sText_LinkPartnerSentOutPkmnGoPkmn;
+                {
+                    if (BattlerIsPlayer(battler)) // Player is battler 0
+                        stringPtr = sText_LinkPartnerSentOutPkmn2GoPkmn;
+                    else // Player is battler 2
+                        stringPtr = sText_LinkPartnerSentOutPkmn1GoPkmn;
+                }
                 else
+                {
                     stringPtr = sText_GoTwoPkmn;
+                }
             }
             else
             {
@@ -1656,7 +1697,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                     stringPtr = sText_TwoTrainersSentPkmn;
                 else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
                     stringPtr = sText_TwoLinkTrainersSentOutPkmn;
-                else if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+                else if (BattlerIsLink(battler) || (BattlerIsRecorded(battler) && BattlerIsOpponent(battler))) // Link Opponent 1 and test opponent
                     stringPtr = sText_LinkTrainerSentOutTwoPkmn;
                 else
                     stringPtr = sText_Trainer1SentOutTwoPkmn;
@@ -1839,7 +1880,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
         if (gBattleTextBuff1[0] & B_OUTCOME_LINK_BATTLE_RAN)
         {
             gBattleTextBuff1[0] &= ~(B_OUTCOME_LINK_BATTLE_RAN);
-            if (!IsOnPlayerSide(battler) && gBattleTextBuff1[0] != B_OUTCOME_DREW)
+            if (!(BattlerIsPlayer(battler) || BattlerIsPlayer(BATTLE_PARTNER(battler))) && gBattleTextBuff1[0] != B_OUTCOME_DREW)
                 gBattleTextBuff1[0] ^= (B_OUTCOME_LOST | B_OUTCOME_WON);
 
             if (gBattleTextBuff1[0] == B_OUTCOME_LOST || gBattleTextBuff1[0] == B_OUTCOME_DREW)
@@ -1851,7 +1892,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
         }
         else
         {
-            if (!IsOnPlayerSide(battler) && gBattleTextBuff1[0] != B_OUTCOME_DREW)
+            if (!(BattlerIsPlayer(battler) || BattlerIsPlayer(BATTLE_PARTNER(battler))) && gBattleTextBuff1[0] != B_OUTCOME_DREW)
                 gBattleTextBuff1[0] ^= (B_OUTCOME_LOST | B_OUTCOME_WON);
 
             if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
@@ -1859,7 +1900,10 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                 switch (gBattleTextBuff1[0])
                 {
                 case B_OUTCOME_WON:
-                    stringPtr = sText_TwoLinkTrainersDefeated;
+                    if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
+                        stringPtr = sText_TwoInGameTrainersDefeated;
+                    else
+                        stringPtr = sText_TwoLinkTrainersDefeated;
                     break;
                 case B_OUTCOME_LOST:
                     stringPtr = sText_PlayerLostToTwo;
@@ -1967,16 +2011,11 @@ static const u8 *TryGetStatusString(u8 *src)
     return NULL;
 }
 
-static void GetBattlerNick(u32 battler, u8 *dst)
+static void GetBattlerNick(enum BattlerId battler, u8 *dst)
 {
-    struct Pokemon *mon, *illusionMon;
+    struct Pokemon *illusionMon = GetIllusionMonPtr(battler);
+    struct Pokemon *mon = GetBattlerMon(battler);
 
-    if (GetBattlerSide(battler) == B_SIDE_PLAYER)
-        mon = &gPlayerParty[gBattlerPartyIndexes[battler]];
-    else
-        mon = &gEnemyParty[gBattlerPartyIndexes[battler]];
-
-    illusionMon = GetIllusionMonPtr(battler);
     if (illusionMon != NULL)
         mon = illusionMon;
     GetMonData(mon, MON_DATA_NICKNAME, dst);
@@ -1984,7 +2023,7 @@ static void GetBattlerNick(u32 battler, u8 *dst)
 }
 
 #define HANDLE_NICKNAME_STRING_CASE(battler)                            \
-    if (GetBattlerSide(battler) != B_SIDE_PLAYER)                       \
+    if (!IsOnPlayerSide(battler))                                       \
     {                                                                   \
         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)                     \
             toCpy = sText_FoePkmnPrefix;                                \
@@ -2001,7 +2040,7 @@ static void GetBattlerNick(u32 battler, u8 *dst)
     toCpy = text;
 
 #define HANDLE_NICKNAME_STRING_LOWERCASE(battler)                       \
-    if (GetBattlerSide(battler) != B_SIDE_PLAYER)                       \
+    if (!IsOnPlayerSide(battler))                       \
     {                                                                   \
         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)                     \
             toCpy = sText_FoePkmnPrefixLower;                           \
@@ -2017,11 +2056,11 @@ static void GetBattlerNick(u32 battler, u8 *dst)
     GetBattlerNick(battler, text);                                      \
     toCpy = text;
 
-static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text, u8 multiplayerId, u8 battler)
+static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text, u8 multiplayerId, enum BattlerId battler)
 {
     const u8 *toCpy = NULL;
 
-    if (trainerId == TRAINER_SECRET_BASE)
+    if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
     {
         u32 i;
         for (i = 0; i < ARRAY_COUNT(gBattleResources->secretBase->trainerName); i++)
@@ -2030,7 +2069,7 @@ static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text,
         ConvertInternationalString(text, gBattleResources->secretBase->language);
         toCpy = text;
     }
-    if (trainerId == TRAINER_UNION_ROOM)
+    else if (trainerId == TRAINER_UNION_ROOM)
     {
         toCpy = gLinkPlayers[multiplayerId ^ BIT_SIDE].name;
     }
@@ -2063,7 +2102,8 @@ static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text,
     }
     else
     {
-        u32 trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
+        enum TrainerClassID trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
+
         if (trainerClass == TRAINER_CLASS_RIVAL_EARLY
             || trainerClass == TRAINER_CLASS_RIVAL_LATE
             || trainerClass == TRAINER_CLASS_CHAMPION)
@@ -2072,10 +2112,15 @@ static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text,
             toCpy = GetTrainerNameFromId(trainerId);
     }
 
+    assertf(DoesStringProperlyTerminate(toCpy, TRAINER_NAME_LENGTH + 1),"Opponent needs a valid name")
+    {
+        return gText_EmptyString3;
+    }
+
     return toCpy;
 }
 
-static const u8 *BattleStringGetOpponentName(u8 *text, u8 multiplayerId, u8 battler)
+static const u8 *BattleStringGetOpponentName(u8 *text, u8 multiplayerId, enum BattlerId battler)
 {
     const u8 *toCpy = NULL;
 
@@ -2097,7 +2142,7 @@ static const u8 *BattleStringGetOpponentName(u8 *text, u8 multiplayerId, u8 batt
     return toCpy;
 }
 
-static const u8 *BattleStringGetPlayerName(u8 *text, u8 battler)
+static const u8 *BattleStringGetPlayerName(u8 *text, enum BattlerId battler)
 {
     const u8 *toCpy = NULL;
 
@@ -2121,8 +2166,8 @@ static const u8 *BattleStringGetPlayerName(u8 *text, u8 battler)
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
         {
-            enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
-            toCpy = gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName;
+            GetFrontierTrainerName(text, gPartnerTrainerId);
+            toCpy = text;
         }
         else
         {
@@ -2136,9 +2181,9 @@ static const u8 *BattleStringGetPlayerName(u8 *text, u8 battler)
     return toCpy;
 }
 
-static const u8 *BattleStringGetTrainerName(u8 *text, u8 multiplayerId, u8 battler)
+static const u8 *BattleStringGetTrainerName(u8 *text, u8 multiplayerId, enum BattlerId battler)
 {
-    if (GetBattlerSide(battler) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(battler))
         return BattleStringGetPlayerName(text, battler);
     else
         return BattleStringGetOpponentName(text, multiplayerId, battler);
@@ -2761,35 +2806,26 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
     return dstID;
 }
 
-static void IllusionNickHack(u32 battler, u32 partyId, u8 *dst)
+static void IllusionNickHack(enum BattlerId battler, u32 partyId, u8 *dst)
 {
-    s32 id, i;
+    u32 id = PARTY_SIZE;
     // we know it's gEnemyParty
     struct Pokemon *mon = &gEnemyParty[partyId], *partnerMon;
 
     if (GetMonAbility(mon) == ABILITY_ILLUSION)
     {
         if (IsBattlerAlive(BATTLE_PARTNER(battler)))
-            partnerMon = &gEnemyParty[gBattlerPartyIndexes[BATTLE_PARTNER(battler)]];
+            partnerMon = GetBattlerMon(BATTLE_PARTNER(battler));
         else
             partnerMon = mon;
 
-        // Find last alive non-egg pokemon.
-        for (i = PARTY_SIZE - 1; i >= 0; i--)
-        {
-            id = i;
-            if (GetMonData(&gEnemyParty[id], MON_DATA_SANITY_HAS_SPECIES)
-                && GetMonData(&gEnemyParty[id], MON_DATA_HP)
-                && &gEnemyParty[id] != mon
-                && &gEnemyParty[id] != partnerMon)
-            {
-                GetMonData(&gEnemyParty[id], MON_DATA_NICKNAME, dst);
-                return;
-            }
-        }
+        id = GetIllusionMonPartyId(gEnemyParty, mon, partnerMon, battler);
     }
 
-    GetMonData(mon, MON_DATA_NICKNAME, dst);
+    if (id != PARTY_SIZE)
+        GetMonData(&gEnemyParty[id], MON_DATA_NICKNAME, dst);
+    else
+        GetMonData(mon, MON_DATA_NICKNAME, dst);
 }
 
 void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
@@ -2826,7 +2862,7 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
             srcID += src[srcID + 1] + 3;
             break;
         case B_BUFF_MOVE: // move name
-            StringAppend(dst, gMovesInfo[T1_READ_16(&src[srcID + 1])].name);
+            StringAppend(dst, GetMoveName(T1_READ_16(&src[srcID + 1])));
             srcID += 3;
             break;
         case B_BUFF_TYPE: // type name
@@ -2835,11 +2871,7 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
             break;
         case B_BUFF_MON_NICK_WITH_PREFIX: // poke nick with prefix
         case B_BUFF_MON_NICK_WITH_PREFIX_LOWER: // poke nick with lowercase prefix
-            if (GetBattlerSide(src[srcID + 1]) == B_SIDE_PLAYER)
-            {
-                GetMonData(&gPlayerParty[src[srcID + 2]], MON_DATA_NICKNAME, nickname);
-            }
-            else
+            if (!IsOnPlayerSide(src[srcID + 1]))
             {
                 if (src[srcID] == B_BUFF_MON_NICK_WITH_PREFIX_LOWER)
                 {
@@ -2855,9 +2887,8 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
                     else
                         StringAppend(dst, sText_WildPkmnPrefix);
                 }
-
-                GetMonData(&gEnemyParty[src[srcID + 2]], MON_DATA_NICKNAME, nickname);
             }
+            GetMonData(&GetBattlerParty(src[srcID + 1])[src[srcID + 2]], MON_DATA_NICKNAME, nickname);
             StringGet_Nickname(nickname);
             StringAppend(dst, nickname);
             srcID += 3;
@@ -2883,7 +2914,7 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
             }
             else
             {
-                if (GetBattlerSide(src[srcID + 1]) == B_SIDE_PLAYER)
+                if (IsOnPlayerSide(src[srcID + 1]))
                     GetMonData(&gPlayerParty[src[srcID + 2]], MON_DATA_NICKNAME, dst);
                 else
                     GetMonData(&gEnemyParty[src[srcID + 2]], MON_DATA_NICKNAME, dst);
@@ -3882,9 +3913,6 @@ static const u8 sNpcTextColorToFont[] =
     [NPC_TEXT_COLOR_NEUTRAL] = FONT_NORMAL,
 };
 
-// windowId: Upper 2 bits are text flags
-//   x40: Use NPC context-defined font
-//   x80: Inhibit window clear
 void BattlePutTextOnWindow(const u8 *text, u8 windowId)
 {
     const struct BattleWindowText *textInfo = sBattleTextOnWindowsInfo[gBattleScripting.windowsType];
@@ -3927,9 +3955,11 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
     }
     if (x < 0)
         x = 0;
+
     printerTemplate.currentChar = text;
     printerTemplate.type = WINDOW_TEXT_PRINTER;
     printerTemplate.windowId = windowId;
+    printerTemplate.fontId = textInfo[windowId].fontId;
     printerTemplate.x = x;
     printerTemplate.y = textInfo[windowId].y;
     printerTemplate.currentX = printerTemplate.x;
@@ -3943,10 +3973,13 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
         // We cannot check the actual width of the window because
         // B_WIN_MOVE_NAME_1 and B_WIN_MOVE_NAME_3 are 16 wide for
         // Z-move details.
-        printerTemplate.fontId = GetFontIdToFit(text, printerTemplate.fontId, printerTemplate.letterSpacing, 8 * TILE_WIDTH);
+        if (gBattleStruct->zmove.viewing && windowId == B_WIN_MOVE_NAME_1)
+            printerTemplate.fontId = GetFontIdToFit(text, printerTemplate.fontId, printerTemplate.letterSpacing, 16 * TILE_WIDTH);
+        else
+            printerTemplate.fontId = GetFontIdToFit(text, printerTemplate.fontId, printerTemplate.letterSpacing, 8 * TILE_WIDTH);
     }
 
-    if (windowId == B_WIN_OAK_OLD_MAN)
+    if (windowId == ARENA_WIN_JUDGMENT_TEXT || windowId == B_WIN_OAK_OLD_MAN)
         gTextFlags.useAlternateDownArrow = FALSE;
     else
         gTextFlags.useAlternateDownArrow = TRUE;
@@ -3956,7 +3989,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
     else
         gTextFlags.autoScroll = FALSE;
 
-    if (windowId == B_WIN_MSG || windowId == B_WIN_OAK_OLD_MAN)
+    if (windowId == B_WIN_MSG || windowId == ARENA_WIN_JUDGMENT_TEXT || windowId == B_WIN_OAK_OLD_MAN)
     {
         if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
             speed = 1;
@@ -3964,6 +3997,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
             speed = sRecordedBattleTextSpeeds[GetTextSpeedInRecordedBattle()];
         else
             speed = GetPlayerTextSpeedDelay();
+
         gTextFlags.canABSpeedUpPrint = TRUE;
     }
     else
@@ -3990,12 +4024,17 @@ bool8 BattleStringShouldBeColored(u16 stringId)
     return FALSE;
 }
 
-void SetPpNumbersPaletteInMoveSelection(u32 battler)
+void SetPpNumbersPaletteInMoveSelection(enum BattlerId battler)
 {
     struct ChooseMoveStruct *chooseMoveStruct = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
     const u16 *palPtr = gPPTextPalette;
-    u8 var = GetCurrentPpToMaxPpState(chooseMoveStruct->currentPp[gMoveSelectionCursor[battler]],
-                                      chooseMoveStruct->maxPp[gMoveSelectionCursor[battler]]);
+    u8 var;
+
+    if (!gBattleStruct->zmove.viewing)
+        var = GetCurrentPpToMaxPpState(chooseMoveStruct->currentPp[gMoveSelectionCursor[battler]],
+                         chooseMoveStruct->maxPp[gMoveSelectionCursor[battler]]);
+    else
+        var = 3;
 
     gPlttBufferUnfaded[BG_PLTT_ID(5) + 12] = palPtr[(var * 2) + 0];
     gPlttBufferUnfaded[BG_PLTT_ID(5) + 11] = palPtr[(var * 2) + 1];
