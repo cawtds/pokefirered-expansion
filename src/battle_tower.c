@@ -16,7 +16,6 @@
 #include "strings.h"
 #include "recorded_battle.h"
 #include "easy_chat.h"
-// #include "gym_leader_rematch.h"
 #include "battle_transition.h"
 #include "trainer_see.h"
 #include "new_game.h"
@@ -24,7 +23,6 @@
 #include "data.h"
 #include "link.h"
 #include "field_message_box.h"
-// #include "tv.h"
 #include "battle_factory.h"
 #include "constants/abilities.h"
 #include "constants/apprentice.h"
@@ -33,9 +31,6 @@
 #include "constants/battle_frontier.h"
 #include "constants/battle_frontier_mons.h"
 #include "constants/battle_move_effects.h"
-// #include "constants/battle_tent.h"
-// #include "constants/battle_tent_mons.h"
-// #include "constants/battle_tent_trainers.h"
 #include "constants/battle_tower.h"
 #include "constants/battle_partner.h"
 #include "constants/frontier_util.h"
@@ -603,8 +598,6 @@ static const u8 *const *const sPartnerApprenticeTextTables[NUM_APPRENTICES] =
     sPartnerApprenticeTexts16
 };
 
-// #include "data/battle_frontier/battle_tent.h"
-
 static void (* const sBattleTowerFuncs[])(void) =
 {
     [BATTLE_TOWER_FUNC_INIT]                = InitTowerChallenge,
@@ -832,54 +825,46 @@ static bool8 ChooseSpecialBattleTowerTrainer(void)
 
 static void SetNextTowerOpponent(void)
 {
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    if (lvlMode == FRONTIER_LVL_TENT)
+    u16 id;
+    u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
+    u16 winStreak = GetCurrentFacilityWinStreak();
+    u32 challengeNum = winStreak / FRONTIER_STAGES_PER_CHALLENGE;
+    SetFacilityPtrsGetLevel();
+
+    if (battleMode == FRONTIER_MODE_MULTIS || battleMode == FRONTIER_MODE_LINK_MULTIS)
     {
-        // SetNextBattleTentOpponent();
+        id = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
+        TRAINER_BATTLE_PARAM.opponentA = gSaveBlock2Ptr->frontier.trainerIds[id * 2];
+        TRAINER_BATTLE_PARAM.opponentB = gSaveBlock2Ptr->frontier.trainerIds[id * 2 + 1];
+        SetBattleFacilityTrainerGfxId(TRAINER_BATTLE_PARAM.opponentA, 0);
+        SetBattleFacilityTrainerGfxId(TRAINER_BATTLE_PARAM.opponentB, 1);
+    }
+    else if (ChooseSpecialBattleTowerTrainer())
+    {
+        SetBattleFacilityTrainerGfxId(TRAINER_BATTLE_PARAM.opponentA, 0);
+        gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum] = TRAINER_BATTLE_PARAM.opponentA;
     }
     else
     {
-        u16 id;
-        u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
-        u16 winStreak = GetCurrentFacilityWinStreak();
-        u32 challengeNum = winStreak / FRONTIER_STAGES_PER_CHALLENGE;
-        SetFacilityPtrsGetLevel();
+        s32 i;
+        while (1)
+        {
+            id = GetRandomScaledFrontierTrainerId(challengeNum, gSaveBlock2Ptr->frontier.curChallengeBattleNum);
 
-        if (battleMode == FRONTIER_MODE_MULTIS || battleMode == FRONTIER_MODE_LINK_MULTIS)
-        {
-            id = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
-            TRAINER_BATTLE_PARAM.opponentA = gSaveBlock2Ptr->frontier.trainerIds[id * 2];
-            TRAINER_BATTLE_PARAM.opponentB = gSaveBlock2Ptr->frontier.trainerIds[id * 2 + 1];
-            SetBattleFacilityTrainerGfxId(TRAINER_BATTLE_PARAM.opponentA, 0);
-            SetBattleFacilityTrainerGfxId(TRAINER_BATTLE_PARAM.opponentB, 1);
-        }
-        else if (ChooseSpecialBattleTowerTrainer())
-        {
-            SetBattleFacilityTrainerGfxId(TRAINER_BATTLE_PARAM.opponentA, 0);
-            gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum] = TRAINER_BATTLE_PARAM.opponentA;
-        }
-        else
-        {
-            s32 i;
-            while (1)
+            // Ensure trainer wasn't previously fought in this challenge.
+            for (i = 0; i < gSaveBlock2Ptr->frontier.curChallengeBattleNum; i++)
             {
-                id = GetRandomScaledFrontierTrainerId(challengeNum, gSaveBlock2Ptr->frontier.curChallengeBattleNum);
-
-                // Ensure trainer wasn't previously fought in this challenge.
-                for (i = 0; i < gSaveBlock2Ptr->frontier.curChallengeBattleNum; i++)
-                {
-                    if (gSaveBlock2Ptr->frontier.trainerIds[i] == id)
-                        break;
-                }
-                if (i == gSaveBlock2Ptr->frontier.curChallengeBattleNum)
+                if (gSaveBlock2Ptr->frontier.trainerIds[i] == id)
                     break;
             }
-
-            TRAINER_BATTLE_PARAM.opponentA = id;
-            SetBattleFacilityTrainerGfxId(TRAINER_BATTLE_PARAM.opponentA, 0);
-            if (gSaveBlock2Ptr->frontier.curChallengeBattleNum + 1 < FRONTIER_STAGES_PER_CHALLENGE)
-                gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum] = TRAINER_BATTLE_PARAM.opponentA;
+            if (i == gSaveBlock2Ptr->frontier.curChallengeBattleNum)
+                break;
         }
+
+        TRAINER_BATTLE_PARAM.opponentA = id;
+        SetBattleFacilityTrainerGfxId(TRAINER_BATTLE_PARAM.opponentA, 0);
+        if (gSaveBlock2Ptr->frontier.curChallengeBattleNum + 1 < FRONTIER_STAGES_PER_CHALLENGE)
+            gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum] = TRAINER_BATTLE_PARAM.opponentA;
     }
 }
 
