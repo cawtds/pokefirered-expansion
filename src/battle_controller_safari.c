@@ -13,7 +13,6 @@
 #include "palette.h"
 #include "party_menu.h"
 #include "pokeball.h"
-// #include "pokeblock.h"
 #include "pokemon.h"
 #include "reshow_battle_screen.h"
 #include "sound.h"

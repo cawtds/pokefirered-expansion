@@ -7,7 +7,6 @@
 #include "battle_interface.h"
 #include "battle_message.h"
 #include "battle_setup.h"
-// #include "battle_tv.h"
 #include "battle_z_move.h"
 #include "battle_gimmick.h"
 #include "bg.h"
@@ -476,6 +475,7 @@ void HandleInputChooseTarget(enum BattlerId battler)
         }
         else
         {
+            bool32 validTarget = FALSE;
             do
             {
                 enum BattlerPosition currSelIdentity = GetBattlerPosition(gMultiUsePlayerCursor);
@@ -487,34 +487,37 @@ void HandleInputChooseTarget(enum BattlerId battler)
                 }
                 do
                 {
-                    if (--i < 0)
+                    if (i == 0)
                         i = MAX_BATTLERS_COUNT - 1;
+                    else
+                        i--;
                     gMultiUsePlayerCursor = GetBattlerAtPosition(identities[i]);
-                } while (gMultiUsePlayerCursor == gBattlersCount);
+                } while (gMultiUsePlayerCursor >= gBattlersCount);
 
-                i = 0;
                 switch (GetBattlerPosition(gMultiUsePlayerCursor))
                 {
                 case B_POSITION_PLAYER_LEFT:
                 case B_POSITION_PLAYER_RIGHT:
                     if (battler != gMultiUsePlayerCursor)
-                        i++;
+                        validTarget = TRUE;
                     break;
                 case B_POSITION_OPPONENT_LEFT:
                 case B_POSITION_OPPONENT_RIGHT:
-                    i++;
+                    validTarget = TRUE;
                     break;
                 default:
                     break;
                 }
-                if (B_SHOW_EFFECTIVENESS)
-                    MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(battler, gMultiUsePlayerCursor), battler);
 
                 if (gAbsentBattlerFlags & (1u << gMultiUsePlayerCursor)
                  || !CanTargetBattler(battler, gMultiUsePlayerCursor, move)
                  || (moveTarget == TARGET_OPPONENT && IsOnPlayerSide(gMultiUsePlayerCursor)))
-                    i = 0;
-            } while (i == 0);
+                    validTarget = FALSE;
+
+                if (B_SHOW_EFFECTIVENESS && validTarget)
+                    MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(battler, gMultiUsePlayerCursor), battler);
+
+            } while (!validTarget);
         }
         gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_ShowAsMoveTarget;
     }
@@ -1213,8 +1216,6 @@ static void SetLinkBattleEndCallbacks(enum BattlerId battler)
             gMain.inBattle = FALSE;
             gMain.callback1 = gPreBattleCallback1;
             SetMainCallback2(CB2_InitEndLinkBattle);
-            // if (gBattleOutcome == B_OUTCOME_WON)
-            //     TryPutLinkBattleTvShowOnAir();
             FreeAllWindowBuffers();
         }
     }
@@ -1226,8 +1227,6 @@ static void SetLinkBattleEndCallbacks(enum BattlerId battler)
             gMain.inBattle = FALSE;
             gMain.callback1 = gPreBattleCallback1;
             SetMainCallback2(CB2_InitEndLinkBattle);
-            // if (gBattleOutcome == B_OUTCOME_WON)
-            //     TryPutLinkBattleTvShowOnAir();
             FreeAllWindowBuffers();
         }
     }
@@ -2107,7 +2106,6 @@ static void PlayerHandleChooseAction(enum BattlerId battler)
     s32 i;
 
     gBattlerControllerFuncs[battler] = HandleChooseActionAfterDma3;
-    // BattleTv_ClearExplosionFaintCause();
     BattlePutTextOnWindow(gText_BattleMenu, B_WIN_ACTION_MENU);
 
     for (i = 0; i < 4; i++)
