@@ -735,21 +735,20 @@ void BattleGfxSfxDummy2(u16 species)
 void DecompressTrainerFrontPic(u16 frontPicId, enum BattlerId battler)
 {
     enum BattlerPosition position = GetBattlerPosition(battler);
-    DecompressPicFromTable(&gTrainerSprites[frontPicId].frontPic,
-                           gMonSpritesGfxPtr->spritesGfx[position]);
-    LoadSpritePalette(&gTrainerSprites[frontPicId].palette);
+    DecompressDataWithHeaderWram(GetTrainerFrontPicData(frontPicId), gMonSpritesGfxPtr->spritesGfx[position]);
+    LoadSpritePaletteWithTag(GetTrainerFrontPicPalette(frontPicId), frontPicId);
 }
 
 void DecompressTrainerBackPic(enum TrainerPicID backPicId, enum BattlerId battler)
 {
     enum BattlerPosition position = GetBattlerPosition(battler);
     CopyTrainerBackspriteFramesToDest(backPicId, gMonSpritesGfxPtr->spritesGfx[position]);
-    LoadSpritePalette(&gTrainerBacksprites[backPicId].palette);
+    LoadSpritePaletteWithTag(GetTrainerBackPicPalette(backPicId), backPicId);
 }
 
 void FreeTrainerFrontPicPalette(u16 frontPicId)
 {
-    FreeSpritePaletteByTag(gTrainerSprites[frontPicId].palette.tag);
+    FreeSpritePaletteByTag(frontPicId);
 }
 
 // Unused.

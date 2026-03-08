@@ -223,7 +223,6 @@ extern const union AnimCmd sAnim_GeneralFrame0[];
 extern const union AnimCmd sAnim_GeneralFrame3[];
 extern const union AnimCmd *const gAnims_MonPic[];
 extern const union AnimCmd *const gAnims_Trainer[];
-extern const struct TrainerSprite gTrainerSprites[];
 extern const struct TrainerBacksprite gTrainerBacksprites[];
 extern const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT];
 
@@ -408,6 +407,11 @@ static inline enum TrainerPicID SanitizeBackTrainerPic(enum TrainerPicID trainer
 static inline const u32 *GetTrainerFrontPicData(enum TrainerPicID trainerPic)
 {
     return gTrainerPicInfo[SanitizeFrontTrainerPic(trainerPic)].frontPic->imageData;
+}
+
+static inline u16 GetTrainerFrontPicSize(enum TrainerPicID trainerPic)
+{
+    return gTrainerPicInfo[SanitizeFrontTrainerPic(trainerPic)].frontPic->imageSize;
 }
 
 static inline const u16 *GetTrainerFrontPicPalette(enum TrainerPicID trainerPic)

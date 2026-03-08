@@ -324,7 +324,7 @@ static void PokedudeHandleDrawTrainerPic(enum BattlerId battler)
         trainerPicId = TRAINER_PIC_PROFESSOR_OAK;
         isFrontPic = TRUE;
         xPos = 176;
-        yPos = (8 - gTrainerSprites[trainerPicId].frontPicCoords.size) * 4 + 40;
+        yPos = 40;
     }
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, isFrontPic, xPos, yPos, subpriority);
 }

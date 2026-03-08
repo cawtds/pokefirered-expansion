@@ -2094,13 +2094,14 @@ static void HBlankCB_Mugshots(void)
 static void Mugshots_CreateTrainerPics(struct Task *task)
 {
     struct Sprite *opponentSprite, *playerSprite;
-    u32 trainerId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentA);
-    s16 opponentRotationScales = gTrainerSprites[trainerId].mugshotRotation;
+    u32 trainerPicId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentA);
+    struct Coords16 mugshotCoordsA = GetTrainerFrontPicMugshotCoords(trainerPicId);
+    s16 opponentRotationScales = GetTrainerFrontPicMugshotRotation(trainerPicId);
 
     gReservedSpritePaletteCount = 10;
-    task->tOpponentSpriteId = CreateTrainerSprite(trainerId,
-                                                  gTrainerSprites[trainerId].mugshotCoords.x - 32,
-                                                  gTrainerSprites[trainerId].mugshotCoords.y + 42,
+    task->tOpponentSpriteId = CreateTrainerSprite(trainerPicId,
+                                                  mugshotCoordsA.x - 32,
+                                                  mugshotCoordsA.y + 42,
                                                   0, NULL);
     task->tPlayerSpriteId = CreateTrainerSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender),
                                                 DISPLAY_WIDTH + 32,
