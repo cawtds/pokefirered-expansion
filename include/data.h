@@ -30,34 +30,14 @@ struct MonCoords
     u8 y_offset;
 };
 
-struct TrainerSprite
-{
-    u8 y_offset;
-    struct CompressedSpriteSheet frontPic;
-    struct SpritePalette palette;
-    const union AnimCmd *const *const animation;
-    const struct Coords16 mugshotCoords;
-    s16 mugshotRotation;
-    struct MonCoords frontPicCoords;
-};
-
-struct TrainerBacksprite
-{
-    const struct MonCoords coordinates;
-    const struct SpriteFrameImage backPic;
-    const struct SpritePalette palette;
-    const union AnimCmd *const *const animation;
-};
-
 struct TrainerFrontPicInfo
 {
     const u32 *imageData;
     const u16 *paletteData;
-    const struct MonCoords coordinates;
     const union AnimCmd *const *const animation;
     const struct Coords16 mugshotCoords;
-    u16 imageSize;
     s16 mugshotRotation;
+    u16 imageSize;
 };
 
 struct TrainerBackPicInfo
