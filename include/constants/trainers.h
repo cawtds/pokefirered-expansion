@@ -182,6 +182,7 @@ enum __attribute__((packed)) TrainerPicID
     TRAINER_PIC_FACTORY_HEAD_NOLAND,
     TRAINER_PIC_PIKE_QUEEN_LUCY,
     TRAINER_PIC_PYRAMID_KING_BRANDON,
+    TRAINER_PIC_COUNT,
 };
 
 // Special Trainer Ids.
