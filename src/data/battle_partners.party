@@ -1,18 +1,16 @@
 === PARTNER_NONE ===
 Name:
 Class: Pkmn Trainer 1
-Pic: RS Brendan 1
+Pic: RS Brendan
 Gender: Male
 Music: Male
-Back Pic: RS Brendan
 
 === PARTNER_STEVEN ===
 Name: STEVEN
 Class: Pkmn Trainer 1
-Pic: RS Brendan 1
+Pic: Steven
 Gender: Male
 Music: Male
-Back Pic: Steven
 AI: Basic Trainer
 
 Metang
