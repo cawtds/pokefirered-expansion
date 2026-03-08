@@ -313,7 +313,7 @@ static void PokedudeHandleDrawTrainerPic(enum BattlerId battler)
 
     if (GetBattlerSide(battler) == B_SIDE_PLAYER)
     {
-        trainerPicId = TRAINER_BACK_PIC_POKEDUDE;
+        trainerPicId = TRAINER_PIC_POKEDUDE;
         isFrontPic = FALSE;
         subpriority = 30;
         xPos = 80;
@@ -331,7 +331,7 @@ static void PokedudeHandleDrawTrainerPic(enum BattlerId battler)
 
 static void PokedudeHandleTrainerSlide(enum BattlerId battler)
 {
-    BtlController_HandleTrainerSlide(battler, TRAINER_BACK_PIC_POKEDUDE);
+    BtlController_HandleTrainerSlide(battler, TRAINER_PIC_POKEDUDE);
 }
 
 static void PokedudeHandlePrintSelectionString(enum BattlerId battler)
@@ -447,7 +447,7 @@ static void PokedudeHandlePlaySE(enum BattlerId battler)
 
 static void PokedudeHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
-    BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, gTrainerBacksprites[TRAINER_BACK_PIC_POKEDUDE].palette.data, 31, Intro_TryShinyAnimShowHealthbox);
+    BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, gTrainerBacksprites[TRAINER_PIC_POKEDUDE].palette.data, 31, Intro_TryShinyAnimShowHealthbox);
 }
 
 static void PokedudeHandleDrawPartyStatusSummary(enum BattlerId battler)

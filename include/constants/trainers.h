@@ -21,6 +21,14 @@
 
 enum __attribute__((packed)) TrainerPicID
 {
+    TRAINER_PIC_NONE,
+    TRAINER_PIC_RED,
+    TRAINER_PIC_LEAF,
+    TRAINER_PIC_RS_BRENDAN,
+    TRAINER_PIC_RS_MAY,
+    TRAINER_PIC_POKEDUDE,
+    TRAINER_PIC_OLD_MAN,
+    TRAINER_PIC_STEVEN,
     TRAINER_PIC_AQUA_LEADER_ARCHIE,
     TRAINER_PIC_AQUA_GRUNT_M,
     TRAINER_PIC_AQUA_GRUNT_F,
@@ -154,10 +162,6 @@ enum __attribute__((packed)) TrainerPicID
     TRAINER_PIC_CRUSH_KIN,
     TRAINER_PIC_SIS_AND_BRO,
     TRAINER_PIC_PROFESSOR_OAK,
-    TRAINER_PIC_RS_BRENDAN_2,
-    TRAINER_PIC_RS_MAY_2,
-    TRAINER_PIC_RED,
-    TRAINER_PIC_LEAF,
     TRAINER_PIC_ROCKET_GRUNT_F,
     TRAINER_PIC_PSYCHIC_F,
     TRAINER_PIC_CRUSH_GIRL,
@@ -179,15 +183,6 @@ enum __attribute__((packed)) TrainerPicID
     TRAINER_PIC_PIKE_QUEEN_LUCY,
     TRAINER_PIC_PYRAMID_KING_BRANDON,
 };
-
-// The player back pics are assumed to alternate according to the gender values (MALE/FEMALE)
-#define TRAINER_BACK_PIC_RED                    0
-#define TRAINER_BACK_PIC_LEAF                   1
-#define TRAINER_BACK_PIC_RUBY_SAPPHIRE_BRENDAN  2
-#define TRAINER_BACK_PIC_RUBY_SAPPHIRE_MAY      3
-#define TRAINER_BACK_PIC_POKEDUDE               4
-#define TRAINER_BACK_PIC_OLD_MAN                5
-#define TRAINER_BACK_PIC_STEVEN                 6
 
 // Special Trainer Ids.
 #define TRAINER_RECORD_MIXING_FRIEND        FRONTIER_TRAINERS_COUNT

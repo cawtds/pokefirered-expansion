@@ -1968,9 +1968,9 @@ enum TrainerPicID LinkPlayerGetTrainerPicId(u32 multiplayerId)
     u8 version = gLinkPlayers[multiplayerId].version & 0xFF;
 
     if (version == VERSION_RUBY || version == VERSION_SAPPHIRE || version == VERSION_EMERALD)
-        trainerPicId = gender + TRAINER_BACK_PIC_RUBY_SAPPHIRE_BRENDAN;
+        trainerPicId = gender + TRAINER_PIC_RS_BRENDAN;
     else
-        trainerPicId = gender + TRAINER_BACK_PIC_RED;
+        trainerPicId = gender + TRAINER_PIC_RED;
 
     return trainerPicId;
 }
@@ -1982,7 +1982,7 @@ static enum TrainerPicID PlayerGetTrainerBackPicId(void)
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
         trainerPicId = LinkPlayerGetTrainerPicId(GetMultiplayerId());
     else
-        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_RED;
+        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_PIC_RED;
 
     return trainerPicId;
 }
@@ -1998,7 +1998,7 @@ static void PlayerHandleDrawTrainerPic(enum BattlerId battler)
 
     if (IsMultibattleTest())
     {
-        trainerPicId = TRAINER_BACK_PIC_RED;
+        trainerPicId = TRAINER_PIC_RED;
         if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
             xPos = 32;
         else

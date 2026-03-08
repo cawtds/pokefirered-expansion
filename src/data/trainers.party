@@ -763,7 +763,7 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 === TRAINER_BRENDAN ===
 Name: PH
 Class: Pkmn Trainer
-Pic: RS Brendan 1
+Pic: RS Brendan
 Gender: Male
 Music: Male
 Double Battle: No
@@ -776,7 +776,7 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 === TRAINER_BRENDAN_2 ===
 Name: PH
 Class: Pkmn Trainer
-Pic: RS Brendan 1
+Pic: RS Brendan
 Gender: Male
 Music: Male
 Double Battle: No
@@ -789,7 +789,7 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 === TRAINER_BRENDAN_3 ===
 Name: PH
 Class: Pkmn Trainer
-Pic: RS Brendan 1
+Pic: RS Brendan
 Gender: Male
 Music: Male
 Double Battle: No
@@ -802,7 +802,7 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 === TRAINER_MAY ===
 Name: PH
 Class: Pkmn Trainer
-Pic: RS May 1
+Pic: RS May
 Gender: Male
 Music: Female
 Double Battle: No
@@ -815,7 +815,7 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 === TRAINER_MAY_2 ===
 Name: PH
 Class: Pkmn Trainer
-Pic: RS May 1
+Pic: RS May
 Gender: Male
 Music: Female
 Double Battle: No
@@ -828,7 +828,7 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 === TRAINER_MAY_3 ===
 Name: PH
 Class: Pkmn Trainer
-Pic: RS May 1
+Pic: RS May
 Gender: Male
 Music: Female
 Double Battle: No
@@ -10516,7 +10516,7 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 === TRAINER_PLAYER_BRENDAN ===
 Name: BRENDAN
 Class: Rival
-Pic: RS Brendan 2
+Pic: RS Brendan
 Gender: Male
 Music: Male
 Double Battle: No
@@ -10529,7 +10529,7 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 === TRAINER_PLAYER_MAY ===
 Name: MAY
 Class: Rival
-Pic: RS May 2
+Pic: RS May
 Gender: Male
 Music: Female
 Double Battle: No
