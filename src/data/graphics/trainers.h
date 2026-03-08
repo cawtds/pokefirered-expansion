@@ -542,26 +542,6 @@ static const union AnimCmd *const sBackAnims_Hoenn[] =
     sAnimCmd_Point_HGSS,
 };
 
-#define TRAINER_BACK_SPRITE(trainerPic, yOffset, sprite, pal, anim)                          \
-    [trainerPic] =                                                                           \
-    {                                                                                        \
-        .coordinates = {.size = 8, .y_offset = yOffset},                                     \
-        .backPic = {.data = sprite, .size = TRAINER_PIC_SIZE, .relativeFrames = TRUE},       \
-        .palette = {.data = pal, .tag = trainerPic},                                         \
-        .animation = anim,                                                                   \
-    }
-
-const struct TrainerBacksprite gTrainerBacksprites[] =
-{
-    TRAINER_BACK_SPRITE(TRAINER_PIC_RED, 5, gTrainerBackPic_Red, gTrainerPalette_RedBackPic, sBackAnims_Kanto),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_LEAF, 5, gTrainerBackPic_Leaf, gTrainerPalette_LeafBackPic, sBackAnims_Kanto),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_RS_BRENDAN, 4, gTrainerBackPic_RSBrendan, gTrainerPalette_RSBrendan, sBackAnims_Hoenn),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_RS_MAY, 4, gTrainerBackPic_RSMay, gTrainerPalette_RSMay, sBackAnims_Hoenn),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_POKEDUDE, 4, gTrainerBackPic_Pokedude, gTrainerPalette_PokedudeBackPic, sBackAnims_OldManPokedude),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_OLD_MAN, 4, gTrainerBackPic_OldMan, gTrainerPalette_OldManBackPic, sBackAnims_OldManPokedude),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_STEVEN, 4, gTrainerBackPic_Steven, gTrainerPalette_Steven, sBackAnims_Hoenn),
-};
-
 // The first two parameters invoke a front pic and palette by
 // calling a "TRAINER_PIC" constant (e.g. TRAINER_PIC_HIKER), and
 // gTrainerFrontPic/gTrainerPalette pointers, (e.g "gTrainerFrontPic_Hiker" and "gTrainerPalette_Hiker").

@@ -9,6 +9,7 @@
 #include "battle_anim.h"
 #include "battle_controllers.h"
 #include "reshow_battle_screen.h"
+#include "trainer.h"
 
 static void CB2_ReshowBattleScreenAfterMenu(void);
 static void CB2_ReshowBlankBattleScreenAfterMenu(void);
@@ -344,20 +345,18 @@ void CreateBattlerSprite(u32 battler)
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && battler == B_POSITION_PLAYER_LEFT)
         {
-            SetMultiuseSpriteTemplateToTrainerBack(gSaveBlock2Ptr->playerGender, position);
-            gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 80,
-                                                      (8 - gTrainerBacksprites[gSaveBlock2Ptr->playerGender].coordinates.size) * 4 + 80,
-                                                      GetBattlerSpriteSubpriority(0));
+            enum TrainerPicID trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
+
+            SetMultiuseSpriteTemplateToTrainerBack(trainerPicId, position);
+            gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 80, (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80, GetBattlerSpriteSubpriority(0));
             gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
             gSprites[gBattlerSpriteIds[battler]].callback = SpriteCallbackDummy;
             gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && battler == B_POSITION_PLAYER_LEFT)
         {
-            SetMultiuseSpriteTemplateToTrainerBack(5, GetBattlerPosition(0));
-            gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 80,
-                                                      (8 - gTrainerBacksprites[TRAINER_PIC_OLD_MAN].coordinates.size) * 4 + 80,
-                                                      GetBattlerSpriteSubpriority(0));
+            SetMultiuseSpriteTemplateToTrainerBack(TRAINER_PIC_OLD_MAN, GetBattlerPosition(0));
+            gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 80, (8 - GetTrainerBackPicCoords(TRAINER_PIC_OLD_MAN)->size) * 4 + 80, GetBattlerSpriteSubpriority(0));
             gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = (8 + battler / 2);
             gSprites[gBattlerSpriteIds[battler]].callback = SpriteCallbackDummy;
             gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
