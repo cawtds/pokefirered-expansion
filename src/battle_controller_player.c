@@ -30,6 +30,7 @@
 #include "task.h"
 #include "test_runner.h"
 #include "text.h"
+#include "trainer.h"
 #include "util.h"
 #include "window.h"
 #include "line_break.h"
@@ -1967,12 +1968,7 @@ enum TrainerPicID LinkPlayerGetTrainerPicId(u32 multiplayerId)
     u8 gender = gLinkPlayers[multiplayerId].gender;
     u8 version = gLinkPlayers[multiplayerId].version & 0xFF;
 
-    if (version == VERSION_RUBY || version == VERSION_SAPPHIRE || version == VERSION_EMERALD)
-        trainerPicId = gender + TRAINER_PIC_RS_BRENDAN;
-    else
-        trainerPicId = gender + TRAINER_PIC_RED;
-
-    return trainerPicId;
+    return GetPlayerTrainerPic(gender, version);
 }
 
 static enum TrainerPicID PlayerGetTrainerBackPicId(void)
@@ -1982,7 +1978,7 @@ static enum TrainerPicID PlayerGetTrainerBackPicId(void)
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
         trainerPicId = LinkPlayerGetTrainerPicId(GetMultiplayerId());
     else
-        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_PIC_RED;
+        trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
 
     return trainerPicId;
 }

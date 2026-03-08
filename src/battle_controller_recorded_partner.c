@@ -27,6 +27,7 @@
 #include "task.h"
 #include "test_runner.h"
 #include "text.h"
+#include "trainer.h"
 #include "util.h"
 #include "window.h"
 #include "constants/battle_anim.h"
@@ -202,7 +203,7 @@ static enum TrainerPicID RecordedPartnerGetTrainerBackPicId(enum DifficultyLevel
     if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
         trainerPicId = gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerBackPic;
     else
-        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_PIC_RED;
+        trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
 
     return trainerPicId;
 }
