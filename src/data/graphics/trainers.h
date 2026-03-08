@@ -2,6 +2,9 @@
 
 #include "data.h"
 
+const u32 gTrainerFrontPic_None[] = INCBIN_U32("graphics/trainers/front_pics/none.4bpp.smol");
+const u16 gTrainerPalette_None[] = INCBIN_U16("graphics/trainers/palettes/none.gbapal");
+
 const u32 gTrainerFrontPic_AquaLeaderArchie[] = INCBIN_U32("graphics/trainers/front_pics/aqua_leader_archie_front_pic.4bpp.smol");
 const u16 gTrainerPalette_AquaLeaderArchie[] = INCBIN_U16("graphics/trainers/palettes/aqua_leader_archie.gbapal");
 
@@ -461,6 +464,7 @@ const u16 gTrainerPalette_PikeQueenLucy[] = INCBIN_U16("graphics/trainers/front_
 const u32 gTrainerFrontPic_PyramidKingBrandon[] = INCBIN_U32("graphics/trainers/front_pics/pyramid_king_brandon.4bpp.smol");
 const u16 gTrainerPalette_PyramidKingBrandon[] = INCBIN_U16("graphics/trainers/front_pics/pyramid_king_brandon.gbapal");
 
+static const u8 gTrainerBackPic_None[] = INCBIN_U8("graphics/trainers/back_pics/none.4bpp");
 const u8 gTrainerBackPic_Red[] = INCBIN_U8("graphics/trainers/back_pics/red_back_pic.4bpp");
 const u8 gTrainerBackPic_Leaf[] = INCBIN_U8("graphics/trainers/back_pics/leaf_back_pic.4bpp");
 const u8 gTrainerBackPic_Pokedude[] = INCBIN_U8("graphics/trainers/back_pics/pokedude_back_pic.4bpp");
@@ -523,6 +527,12 @@ static const union AnimCmd sAnimCmd_Point_HGSS_Red_Leaf[] =
     ANIMCMD_END,
 };
 
+static const union AnimCmd *const sBackAnims_None[] = {
+    sAnim_GeneralFrame0,
+    sAnim_GeneralFrame0,
+    sAnim_GeneralFrame0
+};
+
 static const union AnimCmd *const sBackAnims_Kanto[] = {
     sAnim_GeneralFrame0,
     sAnimCmd_Kanto,
@@ -569,6 +579,11 @@ static const union AnimCmd *const sBackAnims_Hoenn[] =
 
 const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
 {
+    [TRAINER_PIC_NONE] =
+    {
+        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_None, TRAINER_PIC_SIZE, gTrainerPalette_None, 8, 1),
+        .backPic = TRAINER_BACK_PIC(1, gTrainerBackPic_None, gTrainerPalette_None, sBackAnims_None),
+    },
     [TRAINER_PIC_RED] =
     {
         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_Red, TRAINER_PIC_SIZE, gTrainerPalette_Red, 8, 1),
