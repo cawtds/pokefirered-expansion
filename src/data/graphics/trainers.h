@@ -24,6 +24,11 @@ static const u32 gTrainerFrontPic_RSMay[] = INCBIN_U32("graphics/trainers/front_
 static const u8 gTrainerBackPic_RSMay[] = INCBIN_U8("graphics/trainers/back_pics/ruby_sapphire_may_back_pic.4bpp");
 static const u16 gTrainerPalette_RSMay[] = INCBIN_U16("graphics/trainers/palettes/ruby_sapphire_may.gbapal");
 
+static const u32 gTrainerFrontPic_Wally[] = INCBIN_U32("graphics/trainers/front_pics/wally_front_pic.4bpp.smol");
+static const u8 gTrainerBackPic_Wally[] = INCBIN_U8("graphics/trainers/back_pics/wally.4bpp");
+static const u16 gTrainerPalette_Wally[] = INCBIN_U16("graphics/trainers/palettes/wally.gbapal");
+
+static const u32 gTrainerFrontPic_Steven[] = INCBIN_U32("graphics/trainers/front_pics/steven.4bpp.smol");
 static const u8 gTrainerBackPic_Steven[] = INCBIN_U8("graphics/trainers/back_pics/steven.4bpp");
 static const u16 gTrainerPalette_Steven[] = INCBIN_U16("graphics/trainers/palettes/steven.gbapal");
 
@@ -145,9 +150,6 @@ static const u16 gTrainerPalette_ExpertF[] = INCBIN_U16("graphics/trainers/palet
 static const u32 gTrainerFrontPic_RSYoungster[] = INCBIN_U32("graphics/trainers/front_pics/rs_youngster_front_pic.4bpp.smol");
 static const u16 gTrainerPalette_RSYoungster[] = INCBIN_U16("graphics/trainers/palettes/rs_youngster.gbapal");
 
-static const u32 gTrainerFrontPic_ChampionSteven[] = INCBIN_U32("graphics/trainers/front_pics/champion_steven_front_pic.4bpp.smol");
-static const u16 gTrainerPalette_ChampionSteven[] = INCBIN_U16("graphics/trainers/palettes/champion_steven.gbapal");
-
 static const u32 gTrainerFrontPic_RSFisherman[] = INCBIN_U32("graphics/trainers/front_pics/rs_fisherman_front_pic.4bpp.smol");
 static const u16 gTrainerPalette_RSFisherman[] = INCBIN_U16("graphics/trainers/palettes/rs_fisherman.gbapal");
 
@@ -198,9 +200,6 @@ static const u16 gTrainerPalette_RSSailor[] = INCBIN_U16("graphics/trainers/pale
 
 static const u32 gTrainerFrontPic_Collector[] = INCBIN_U32("graphics/trainers/front_pics/collector_front_pic.4bpp.smol");
 static const u16 gTrainerPalette_Collector[] = INCBIN_U16("graphics/trainers/palettes/collector.gbapal");
-
-static const u32 gTrainerFrontPic_Wally[] = INCBIN_U32("graphics/trainers/front_pics/wally_front_pic.4bpp.smol");
-static const u16 gTrainerPalette_Wally[] = INCBIN_U16("graphics/trainers/palettes/wally.gbapal");
 
 static const u32 gTrainerFrontPic_RSPokemonBreederM[] = INCBIN_U32("graphics/trainers/front_pics/rs_pokemon_breeder_m_front_pic.4bpp.smol");
 static const u16 gTrainerPalette_RSPokemonBreederM[] = INCBIN_U16("graphics/trainers/palettes/rs_pokemon_breeder_m.gbapal");
@@ -605,6 +604,16 @@ const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_RSMay, gTrainerPalette_RSMay, TRAINER_PIC_SIZE),
         .backPic = TRAINER_BACK_PIC(4, gTrainerBackPic_RSMay, gTrainerPalette_RSMay, sBackAnims_Hoenn),
     },
+    [TRAINER_PIC_WALLY] =
+    {
+        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_Wally, gTrainerPalette_Wally, TRAINER_PIC_SIZE),
+        .backPic = TRAINER_BACK_PIC(4, gTrainerBackPic_Wally, gTrainerPalette_Wally, sBackAnims_Hoenn),
+    },
+    [TRAINER_PIC_STEVEN] =
+    {
+        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_Steven, gTrainerPalette_Steven, TRAINER_PIC_SIZE),
+        .backPic = TRAINER_BACK_PIC(4, gTrainerBackPic_Steven, gTrainerPalette_Steven, sBackAnims_Hoenn),
+    },
     [TRAINER_PIC_POKEDUDE] =
     {
         .backPic = TRAINER_BACK_PIC(4, gTrainerBackPic_Pokedude, gTrainerPalette_PokedudeBackPic, sBackAnims_OldManPokedude),
@@ -612,10 +621,6 @@ const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
     [TRAINER_PIC_OLD_MAN] =
     {
         .backPic = TRAINER_BACK_PIC(4, gTrainerBackPic_OldMan, gTrainerPalette_OldManBackPic, sBackAnims_OldManPokedude),
-    },
-    [TRAINER_PIC_STEVEN] =
-    {
-        .backPic = TRAINER_BACK_PIC(4, gTrainerBackPic_Steven, gTrainerPalette_Steven, sBackAnims_Hoenn),
     },
     [TRAINER_PIC_AQUA_LEADER_ARCHIE] =
     {
@@ -765,10 +770,6 @@ const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
     {
         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_RSYoungster, gTrainerPalette_RSYoungster, TRAINER_PIC_SIZE),
     },
-    [TRAINER_PIC_CHAMPION_STEVEN] =
-    {
-        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_ChampionSteven, gTrainerPalette_ChampionSteven, TRAINER_PIC_SIZE),
-    },
     [TRAINER_PIC_RS_FISHERMAN] =
     {
         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_RSFisherman, gTrainerPalette_RSFisherman, TRAINER_PIC_SIZE),
@@ -836,10 +837,6 @@ const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
     [TRAINER_PIC_COLLECTOR] =
     {
         .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_Collector, gTrainerPalette_Collector, TRAINER_PIC_SIZE),
-    },
-    [TRAINER_PIC_WALLY] =
-    {
-        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_Wally, gTrainerPalette_Wally, TRAINER_PIC_SIZE),
     },
     [TRAINER_PIC_RS_POKEMON_BREEDER_M] =
     {
