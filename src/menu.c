@@ -1607,7 +1607,6 @@ void BufferSaveMenuText(enum SaveStat gameStatId, u8 *dest0, u8 color)
         dest = StringCopy(dest, gSaveBlock2Ptr->playerName);
         break;
     case SAVE_MENU_POKEDEX:
-        break;
         if (IsNationalPokedexEnabled())
             dest = ConvertIntToDecimalStringN(dest, GetNationalPokedexCount(FLAG_GET_CAUGHT), STR_CONV_MODE_LEFT_ALIGN, 4);
         else
