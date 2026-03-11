@@ -6,6 +6,7 @@
 #include "battle_setup.h"
 #include "item.h"
 #include "malloc.h"
+#include "party_menu.h"
 #include "main_menu.h"
 #include "string_util.h"
 #include "text.h"
@@ -20,7 +21,7 @@ TEST("Move names fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 72;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
@@ -33,7 +34,7 @@ TEST("Move names fit on Battle Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 64;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
@@ -45,7 +46,7 @@ TEST("Move names fit on Contest Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 59;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
@@ -66,12 +67,13 @@ TEST("Move names fit on Contest Screen")
 
 TEST("Move names fit on TMs & HMs Bag Screen")
 {
-    u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 1000;
-    u32 move = MOVE_NONE;
-    for (i = 1; i < MOVES_COUNT; i++)
+    enum Move move = MOVE_NONE;
+
+    for (enum TMHMIndex tm = 1; tm <= NUM_ALL_MACHINES; tm++)
     {
-        PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
+        u32 tmMove = GetTMHMMoveId(tm);
+        PARAMETRIZE_LABEL("%S", GetMoveName(tmMove)) { move = tmMove; }
     }
     EXPECT_LE(GetStringWidth(fontId, GetMoveName(move), 0), widthPx);
 }
@@ -80,7 +82,7 @@ TEST("Move names fit on Move Relearner Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 1000;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
@@ -92,7 +94,7 @@ TEST("Move descriptions fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NORMAL, widthPx = 1000;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT_ALL; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveDescription(i)) { move = i; }
@@ -105,7 +107,7 @@ TEST("Item names fit on Bag Screen (list)")
     u32 i;
     const u32 fontId = FONT_NARROWER;
     const u32 tmHmBerryWidthPx = 1000, restWidthPx = 1000;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gItemsInfo[i].name) { item = i; }
@@ -122,7 +124,7 @@ TEST("Item plural names fit on Bag Screen (left box)")
     u32 i;
     // -6 for the question mark in FONT_NORMAL.
     const u32 fontId = FONT_NARROWER, widthPx = 1000 - 6;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     u8 pluralName[ITEM_NAME_PLURAL_LENGTH + 1];
     for (i = 1; i < ITEMS_COUNT; i++)
     {
@@ -136,7 +138,7 @@ TEST("Item names fit on PC Storage (list)")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 1000;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gItemsInfo[i].name) { item = i; }
@@ -149,7 +151,7 @@ TEST("Item plural names fit on PC storage (left box)")
     u32 i;
     // -6 for the question mark in FONT_NORMAL.
     const u32 fontId = FONT_NARROWER, widthPx = 1000 - 6;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     u8 pluralName[ITEM_NAME_PLURAL_LENGTH + 1];
     for (i = 1; i < ITEMS_COUNT; i++)
     {
@@ -163,7 +165,7 @@ TEST("Item names fit on Pokemon Storage System")
 {
     u32 i;
     const u32 fontId = FONT_SMALL_NARROWER, widthPx = 66;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         if (gItemsInfo[i].importance) continue;
@@ -190,7 +192,7 @@ TEST("Item names fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 72;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         if (gItemsInfo[i].importance) continue;
@@ -212,7 +214,7 @@ TEST("Item names fit on Shop Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 1000;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gItemsInfo[i].name) { item = i; }
@@ -224,7 +226,7 @@ TEST("Item descriptions fit on Bag and Shop Screen")
 {
     u32 i;
     const u32 fontId = FONT_NORMAL, widthPx = 1000;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gItemsInfo[i].description) { item = i; }
@@ -323,7 +325,7 @@ TEST("Species names fit on Pokemon Storage System")
         }
     }
     EXPECT_LE(GetStringWidth(FONT_NARROWER, gSpeciesInfo[species].speciesName, 0), 66);
-    // EXPECT_LE(GetStringWidth(FONT_SHORT_NARROWER, gSpeciesInfo[species].speciesName, 0), 60);
+    EXPECT_LE(GetStringWidth(FONT_SHORT_NARROWER, gSpeciesInfo[species].speciesName, 0), 60);
 }
 
 TEST("Species names fit on Contest Screen")
@@ -356,20 +358,20 @@ TEST("Species names fit on Contest Screen - Rankings")
     EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
 }
 
-// TEST("Species names fit on Battle Dome Screen")
-// {
-//     u32 i;
-//     const u32 fontId = FONT_SHORT_NARROWER, widthPx = 60;
-//     u32 species = SPECIES_NONE;
-//     for (i = 1; i < NUM_SPECIES; i++)
-//     {
-//         if (IsSpeciesEnabled(i))
-//         {
-//             PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
-//         }
-//     }
-//     EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
-// }
+TEST("Species names fit on Battle Dome Screen")
+{
+    u32 i;
+    const u32 fontId = FONT_SHORT_NARROWER, widthPx = 60;
+    u32 species = SPECIES_NONE;
+    for (i = 1; i < NUM_SPECIES; i++)
+    {
+        if (IsSpeciesEnabled(i))
+        {
+            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+        }
+    }
+    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+}
 
 TEST("Species names fit on Hall of Fame")
 {
@@ -535,7 +537,7 @@ TEST("Type names fit on Battle Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 1000;
-    u32 type = TYPE_NORMAL;
+    enum Type type = TYPE_NORMAL;
     for (i = 0; i < NUMBER_OF_MON_TYPES; i++)
     {
         PARAMETRIZE_LABEL("%S", gTypesInfo[i].name) { type = i; }
@@ -547,7 +549,7 @@ TEST("Type names fit on Pokedex Search Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 1000;
-    u32 type = TYPE_NORMAL;
+    enum Type type = TYPE_NORMAL;
     for (i = 0; i < NUMBER_OF_MON_TYPES; i++)
     {
         PARAMETRIZE_LABEL("%S", gTypesInfo[i].name) { type = i; }
@@ -570,9 +572,9 @@ TEST("Battle strings fit on the battle message window")
     s32 sixDigitNines = 999999;                                 // 36 pixels.
     u8 nickname[POKEMON_NAME_LENGTH + 1] = _("MMMMMMMMMMMM");   // 72 pixels.
     u32 longMoveID = MOVE_NATURES_MADNESS;                      // 89 pixels.
-    enum Ability longAbilityID = ABILITY_SUPERSWEET_SYRUP;    // 91 pixels.
+    enum Ability longAbilityID = ABILITY_SUPERSWEET_SYRUP;      // 91 pixels.
     u32 longStatName = STAT_EVASION;                            // 40 pixels.
-    u32 longTypeName = TYPE_ELECTRIC;                           // 43 pixels.
+    enum Type longTypeName = TYPE_ELECTRIC;                     // 43 pixels.
     u32 longSpeciesName = SPECIES_SANDY_SHOCKS;                 // 47 pixels.
     u32 longItemName = ITEM_UNREMARKABLE_TEACUP;                // 73 pixels.
     u8 boxName[9] = _("MMMMMMMM");                              // 54 pixels.
@@ -799,9 +801,7 @@ TEST("Battle strings fit on the battle message window")
         break;
     // Buffer Box name to STR_VAR_1 and STR_VAR_3, Nickname to STR_VAR_2
     case STRINGID_PKMNTRANSFERREDSOMEONESPC:
-    case STRINGID_PKMNTRANSFERREDLANETTESPC:
     case STRINGID_PKMNBOXSOMEONESPCFULL:
-    case STRINGID_PKMNBOXLANETTESPCFULL:
         StringCopy(gStringVar1, boxName);
         StringCopy(gStringVar2, nickname);
         StringCopy(gStringVar3, boxName);

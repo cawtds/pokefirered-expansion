@@ -1,27 +1,24 @@
 #include "global.h"
-
-
-#include "gpu_regs.h"
-#include "malloc.h"
-#include "sprite.h"
-
 #include "battle_setup.h"
 #include "battle_transition.h"
+#include "battle.h"
 #include "data.h"
 #include "decompress.h"
 #include "event_object_movement.h"
 #include "field_camera.h"
 #include "field_effect.h"
 #include "field_weather.h"
+#include "gpu_regs.h"
+#include "malloc.h"
 #include "overworld.h"
 #include "palette.h"
 #include "random.h"
 #include "scanline_effect.h"
 #include "sound.h"
+#include "sprite.h"
 #include "task.h"
 #include "trainer_pokemon_sprites.h"
 #include "trig.h"
-
 #include "constants/songs.h"
 
 #define PALTAG_UNUSED_MUGSHOT 0x100A
@@ -159,6 +156,7 @@ static void Task_Spiral(u8 taskId);
 static void Task_Intro(u8 taskId);
 
 static void SpriteCB_MugshotTrainerPic(struct Sprite *sprite);
+static void SpriteCB_MugshotTrainerPicPartner(struct Sprite *);
 static void SpriteCB_FldEffPokeballTrail(struct Sprite *sprite);
 static void SpriteCB_WhiteBarFade(struct Sprite *sprite);
 
@@ -166,6 +164,7 @@ static bool8 MugshotTrainerPic_Pause(struct Sprite *sprite);
 static bool8 MugshotTrainerPic_Init(struct Sprite *sprite);
 static bool8 MugshotTrainerPic_Slide(struct Sprite *sprite);
 static bool8 MugshotTrainerPic_SlideSlow(struct Sprite *sprite);
+static bool8 MugshotTrainerPic_SlidePartner(struct Sprite *);
 static bool8 MugshotTrainerPic_SlideOffscreen(struct Sprite *sprite);
 
 static void VBlankCB_Swirl(void);
@@ -202,7 +201,7 @@ static void SetCircularMask(s16 *buffer, s16 x, s16 y, s16 radius);
 static void FadeScreenBlack(void);
 static void InitBlackWipe(s16 *data, s16 startX, s16 startY, s16 endX, s16 endY, s16 stepX, s16 stepY);
 static bool8 UpdateBlackWipe(s16 *data, bool8 xExact, bool8 yExact);
-static void SetTrainerPicSlideDirection(s16 spriteId, bool16 value);
+static void SetTrainerPicSlideDirection(s16 spriteId, s16 value);
 static void IncrementTrainerPicState(s16 spriteId);
 static s16 IsTrainerPicSlideDone(s16 spriteId);
 static void Mugshots_CreateTrainerPics(struct Task *task);
@@ -362,6 +361,17 @@ static const TransitionSpriteCallback sMugshotTrainerPicFuncs[] =
     MugshotTrainerPic_Pause,
     MugshotTrainerPic_SlideOffscreen,
     MugshotTrainerPic_Pause,
+};
+
+static const TransitionSpriteCallback sMugshotTrainerPicFuncsPartner[] =
+{
+    MugshotTrainerPic_Pause,
+    MugshotTrainerPic_Init,
+    MugshotTrainerPic_SlidePartner,
+    MugshotTrainerPic_SlideSlow,
+    MugshotTrainerPic_Pause,
+    MugshotTrainerPic_SlideOffscreen,
+    MugshotTrainerPic_Pause
 };
 
 // One element per slide direction.
@@ -1793,28 +1803,28 @@ static void VBlankCB_Spiral(void)
     }
 }
 
-//----------------------------------------------------------------
-// B_TRANSITION_LORELEI, B_TRANSITION_BRUNO, B_TRANSITION_AGATHA,
-// B_TRANSITION_LANCE, and B_TRANSITION_BLUE
-//
-// These are all the "mugshot" transitions, where a banner shows
-// the trainer pic of the player and their opponent.
-//----------------------------------------------------------------
+//----------------------------------------------------
+// B_TRANSITION_MUGSHOT
+// Where a banner shows the trainer pic of the player
+// and their opponent.
+//----------------------------------------------------
 
-#define tSinIndex         data[1]
-#define tTopBannerX       data[2]
-#define tBottomBannerX    data[3]
-#define tTimer            data[3] // Re-used
-#define tFadeSpread       data[4]
-#define tOpponentSpriteId data[13]
-#define tPlayerSpriteId   data[14]
+#define tSinIndex           data[1]
+#define tTopBannerX         data[2]
+#define tBottomBannerX      data[3]
+#define tTimer              data[3] // Re-used
+#define tFadeSpread         data[4]
+#define tOpponentSpriteAId   data[11]
+#define tOpponentSpriteBId   data[12]
+#define tPlayerSpriteId     data[14]
+#define tPartnerSpriteId    data[13]
 
 // Sprite data for trainer sprites in mugshots
-#define sState      data[0]
-#define sSlideSpeed data[1]
-#define sSlideAccel data[2]
-#define sDone       data[6]
-#define sSlideDir   data[7]
+#define sState       data[0]
+#define sSlideSpeed  data[1]
+#define sSlideAccel  data[2]
+#define sDone        data[6]
+#define sSlideDir    data[7]
 
 static void Task_Mugshot(u8 taskId)
 {
@@ -1833,11 +1843,14 @@ static bool8 Mugshot_Init(struct Task *task)
     task->tTopBannerX = 1;
     task->tBottomBannerX = DISPLAY_WIDTH - 1;
     sTransitionData->winIn = WININ_WIN0_ALL;
-    sTransitionData->winOut = WININ_WIN0_BG1 | WININ_WIN0_BG2 | WININ_WIN0_BG3 | WININ_WIN0_OBJ | WININ_WIN0_CLR;
+    sTransitionData->winOut = WINOUT_WIN01_BG1 | WINOUT_WIN01_BG2 | WINOUT_WIN01_BG3 | WINOUT_WIN01_OBJ | WINOUT_WIN01_CLR;
     sTransitionData->win0V = DISPLAY_HEIGHT;
+
     for (i = 0; i < DISPLAY_HEIGHT; i++)
         gScanlineEffectRegBuffers[1][i] = WIN_RANGE(DISPLAY_WIDTH, DISPLAY_WIDTH + 1);
+
     SetVBlankCallback(VBlankCB_Mugshots);
+
     task->tState++;
     return FALSE;
 }
@@ -1847,22 +1860,25 @@ static bool8 Mugshot_SetGfx(struct Task *task)
     s16 i, j;
     u16 *tilemap, *tileset;
     const u16 *mugshotsMap = sMugshotsTilemap;
-    u8 mugshotColor = GetTrainerMugshotColorFromId(TRAINER_BATTLE_PARAM.opponentA);
+    enum MugshotColor mugshotColor = GetTrainerMugshotColorFromId(TRAINER_BATTLE_PARAM.opponentA);
 
     GetBg0TilesDst(&tilemap, &tileset);
-    CpuCopy16(sMugshotBanner_Gfx, tileset, sizeof(sMugshotBanner_Gfx));
+    CpuSet(sMugshotBanner_Gfx, tileset, sizeof(sMugshotBanner_Gfx));
 
     if (mugshotColor >= ARRAY_COUNT(sOpponentMugshotsPals))
         mugshotColor = MUGSHOT_COLOR_PURPLE;
 
     LoadPalette(sOpponentMugshotsPals[mugshotColor], BG_PLTT_ID(15), PLTT_SIZE_4BPP);
-    LoadPalette(sPlayerMugshotsPals[gSaveBlock2Ptr->playerGender], BG_PLTT_ID(15) + 10, PLTT_SIZEOF(16 - 10));
+    LoadPalette(sPlayerMugshotsPals[gSaveBlock2Ptr->playerGender], BG_PLTT_ID(15) + 10, PLTT_SIZEOF(6));
 
     for (i = 0; i < 20; i++)
+    {
         for (j = 0; j < 32; j++, mugshotsMap++)
             SET_TILE(tilemap, i, j, *mugshotsMap);
+    }
 
     EnableInterrupts(INTR_FLAG_HBLANK);
+
     SetHBlankCallback(HBlankCB_Mugshots);
     task->tState++;
     return FALSE;
@@ -1871,36 +1887,36 @@ static bool8 Mugshot_SetGfx(struct Task *task)
 static bool8 Mugshot_ShowBanner(struct Task *task)
 {
     u8 i, sinIndex;
-    u16 *winVal;
+    u16 *toStore;
     s16 x;
     s32 mergedValue;
 
     sTransitionData->vblankDma = FALSE;
 
-    winVal = gScanlineEffectRegBuffers[0];
+    toStore = gScanlineEffectRegBuffers[0];
     sinIndex = task->tSinIndex;
     task->tSinIndex += 16;
 
     // Update top banner
-    for (i = 0; i < DISPLAY_HEIGHT / 2; i++, winVal++, sinIndex += 16)
+    for (i = 0; i < DISPLAY_HEIGHT / 2; i++, toStore++, sinIndex += 16)
     {
         x = task->tTopBannerX + Sin(sinIndex, 16);
         if (x < 0)
             x = 1;
         if (x > DISPLAY_WIDTH)
             x = DISPLAY_WIDTH;
-        *winVal = x;
+        *toStore = x;
     }
 
     // Update bottom banner
-    for (; i < DISPLAY_HEIGHT; i++, winVal++, sinIndex += 16)
+    for (; i < DISPLAY_HEIGHT; i++, toStore++, sinIndex += 16)
     {
         x = task->tBottomBannerX - Sin(sinIndex, 16);
         if (x < 0)
             x = 0;
         if (x > DISPLAY_WIDTH - 1)
             x = DISPLAY_WIDTH - 1;
-        *winVal = (x << 8) | (DISPLAY_WIDTH);
+        *toStore = (x << 8) | DISPLAY_WIDTH;
     }
 
     // Slide banners across screen
@@ -1925,11 +1941,13 @@ static bool8 Mugshot_ShowBanner(struct Task *task)
 static bool8 Mugshot_StartOpponentSlide(struct Task *task)
 {
     u8 i;
-    u16 *winVal;
+    u16 *toStore;
 
     sTransitionData->vblankDma = FALSE;
-    for (i = 0, winVal = gScanlineEffectRegBuffers[0]; i < DISPLAY_HEIGHT; i++, winVal++)
-        *winVal = DISPLAY_WIDTH;
+
+    for (i = 0, toStore = gScanlineEffectRegBuffers[0]; i < DISPLAY_HEIGHT; i++, toStore++)
+        *toStore = DISPLAY_WIDTH;
+
     task->tState++;
 
     // Clear old data
@@ -1940,12 +1958,27 @@ static bool8 Mugshot_StartOpponentSlide(struct Task *task)
     sTransitionData->bg0HOfsOpponent -= 8;
     sTransitionData->bg0HOfsPlayer += 8;
 
-    SetTrainerPicSlideDirection(task->tOpponentSpriteId, 0);
+    SetTrainerPicSlideDirection(task->tOpponentSpriteAId, 0);
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+    {
+        SetTrainerPicSlideDirection(task->tOpponentSpriteBId, 0);
+    }
     SetTrainerPicSlideDirection(task->tPlayerSpriteId, 1);
+    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    {
+        SetTrainerPicSlideDirection(task->tPartnerSpriteId, 1);
+    }
 
     // Start opponent slide
-    IncrementTrainerPicState(task->tOpponentSpriteId);
+    IncrementTrainerPicState(task->tOpponentSpriteAId);
+
     PlaySE(SE_MUGSHOT);
+
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+    {
+        IncrementTrainerPicState(task->tOpponentSpriteBId);
+    }
+
     sTransitionData->vblankDma++;
     return FALSE;
 }
@@ -1956,9 +1989,13 @@ static bool8 Mugshot_WaitStartPlayerSlide(struct Task *task)
     sTransitionData->bg0HOfsPlayer += 8;
 
     // Start player's slide in once the opponent is finished
-    if (IsTrainerPicSlideDone(task->tOpponentSpriteId))
+    if (IsTrainerPicSlideDone(task->tOpponentSpriteAId))
     {
         task->tState++;
+        if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+        {
+            IncrementTrainerPicState(task->tPartnerSpriteId);
+        }
         IncrementTrainerPicState(task->tPlayerSpriteId);
     }
     return FALSE;
@@ -1969,20 +2006,49 @@ static bool8 Mugshot_WaitPlayerSlide(struct Task *task)
     sTransitionData->bg0HOfsOpponent -= 8;
     sTransitionData->bg0HOfsPlayer += 8;
 
-    if (IsTrainerPicSlideDone(task->tPlayerSpriteId))
+    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {
-        sTransitionData->vblankDma = FALSE;
-        SetVBlankCallback(NULL);
-        DmaStop(0);
-        memset(gScanlineEffectRegBuffers[0], 0, DISPLAY_HEIGHT * 2);
-        memset(gScanlineEffectRegBuffers[1], 0, DISPLAY_HEIGHT * 2);
-        SetGpuReg(REG_OFFSET_WIN0H, DISPLAY_WIDTH);
-        SetGpuReg(REG_OFFSET_BLDY, 0);
-        task->tState++;
-        task->tTimer = 0;
-        task->tFadeSpread = 0;
-        sTransitionData->bldCnt = BLDCNT_TGT1_ALL | BLDCNT_EFFECT_LIGHTEN;
-        SetVBlankCallback(VBlankCB_MugshotsFadeOut);
+        if (IsTrainerPicSlideDone(task->tPartnerSpriteId))
+        {
+            sTransitionData->vblankDma = FALSE;
+            SetVBlankCallback(NULL);
+            DmaStop(0);
+            memset(gScanlineEffectRegBuffers[0], 0, DISPLAY_HEIGHT * 2);
+            memset(gScanlineEffectRegBuffers[1], 0, DISPLAY_HEIGHT * 2);
+            SetGpuReg(REG_OFFSET_WIN0H, DISPLAY_WIDTH);
+            SetGpuReg(REG_OFFSET_BLDY, 0);
+            task->tState++;
+            task->tTimer = 0;
+            task->tFadeSpread = 0;
+            sTransitionData->bldCnt = BLDCNT_TGT1_ALL | BLDCNT_EFFECT_LIGHTEN;
+            SetVBlankCallback(VBlankCB_MugshotsFadeOut);
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
+    else
+    {
+        if (IsTrainerPicSlideDone(task->tPlayerSpriteId))
+        {
+            sTransitionData->vblankDma = FALSE;
+            SetVBlankCallback(NULL);
+            DmaStop(0);
+            memset(gScanlineEffectRegBuffers[0], 0, DISPLAY_HEIGHT * 2);
+            memset(gScanlineEffectRegBuffers[1], 0, DISPLAY_HEIGHT * 2);
+            SetGpuReg(REG_OFFSET_WIN0H, DISPLAY_WIDTH);
+            SetGpuReg(REG_OFFSET_BLDY, 0);
+            task->tState++;
+            task->tTimer = 0;
+            task->tFadeSpread = 0;
+            sTransitionData->bldCnt = BLDCNT_TGT1_ALL | BLDCNT_EFFECT_LIGHTEN;
+            SetVBlankCallback(VBlankCB_MugshotsFadeOut);
+        }
+        else
+        {
+            return FALSE;
+        }
     }
     return FALSE;
 }
@@ -2008,22 +2074,24 @@ static bool8 Mugshot_GradualWhiteFade(struct Task *task)
         {
             // Fade starts in middle of screen and
             // spreads outwards in both directions.
-            s16 y1 = DISPLAY_HEIGHT / 2 - i;
-            s16 y2 = DISPLAY_HEIGHT / 2 + i;
-            if (gScanlineEffectRegBuffers[0][y1] <= 15)
+            s16 index1 = DISPLAY_HEIGHT / 2 - i;
+            s16 index2 = DISPLAY_HEIGHT / 2 + i;
+            if (gScanlineEffectRegBuffers[0][index1] <= 15)
             {
                 active = TRUE;
-                gScanlineEffectRegBuffers[0][y1]++;
+                gScanlineEffectRegBuffers[0][index1]++;
             }
-            if (gScanlineEffectRegBuffers[0][y2] <= 15)
+            if (gScanlineEffectRegBuffers[0][index2] <= 15)
             {
                 active = TRUE;
-                gScanlineEffectRegBuffers[0][y2]++;
+                gScanlineEffectRegBuffers[0][index2]++;
             }
         }
     }
+
     if (task->tFadeSpread == DISPLAY_HEIGHT / 2 && !active)
         task->tState++;
+
     sTransitionData->vblankDma++;
     return FALSE;
 }
@@ -2034,8 +2102,9 @@ static bool8 Mugshot_InitFadeWhiteToBlack(struct Task *task)
 {
     sTransitionData->vblankDma = FALSE;
     BlendPalettes(PALETTES_ALL, 16, RGB_WHITE);
-    sTransitionData->bldCnt = BLDCNT_TGT1_BG0 | BLDCNT_TGT1_BG1 | BLDCNT_TGT1_BG2 | BLDCNT_TGT1_BG3 | BLDCNT_TGT1_OBJ | BLDCNT_TGT1_BD | BLDCNT_EFFECT_DARKEN;
+    sTransitionData->bldCnt = 0xFF;
     task->tTimer = 0;
+
     task->tState++;
     return TRUE;
 }
@@ -2043,10 +2112,12 @@ static bool8 Mugshot_InitFadeWhiteToBlack(struct Task *task)
 static bool8 Mugshot_FadeToBlack(struct Task *task)
 {
     sTransitionData->vblankDma = FALSE;
+
     task->tTimer++;
     memset(gScanlineEffectRegBuffers[0], task->tTimer, DISPLAY_HEIGHT * 2);
     if (task->tTimer > 15)
         task->tState++;
+
     sTransitionData->vblankDma++;
     return FALSE;
 }
@@ -2063,12 +2134,12 @@ static void VBlankCB_Mugshots(void)
 {
     DmaStop(0);
     VBlankCB_BattleTransition();
-    if (sTransitionData->vblankDma)
+    if (sTransitionData->vblankDma != 0)
         DmaCopy16(3, gScanlineEffectRegBuffers[0], gScanlineEffectRegBuffers[1], DISPLAY_HEIGHT * 2);
-    SetGpuReg(REG_OFFSET_BG0VOFS, sTransitionData->bg0VOfs);
-    SetGpuReg(REG_OFFSET_WININ, sTransitionData->winIn);
-    SetGpuReg(REG_OFFSET_WINOUT, sTransitionData->winOut);
-    SetGpuReg(REG_OFFSET_WIN0V, sTransitionData->win0V);
+    REG_BG0VOFS = sTransitionData->bg0VOfs;
+    REG_WININ = sTransitionData->winIn;
+    REG_WINOUT = sTransitionData->winOut;
+    REG_WIN0V = sTransitionData->win0V;
     DmaSet(0, gScanlineEffectRegBuffers[1], &REG_WIN0H, B_TRANS_DMA_FLAGS);
 }
 
@@ -2076,9 +2147,9 @@ static void VBlankCB_MugshotsFadeOut(void)
 {
     DmaStop(0);
     VBlankCB_BattleTransition();
-    if (sTransitionData->vblankDma)
+    if (sTransitionData->vblankDma != 0)
         DmaCopy16(3, gScanlineEffectRegBuffers[0], gScanlineEffectRegBuffers[1], DISPLAY_HEIGHT * 2);
-    SetGpuReg(REG_OFFSET_BLDCNT, sTransitionData->bldCnt);
+    REG_BLDCNT = sTransitionData->bldCnt;
     DmaSet(0, gScanlineEffectRegBuffers[1], &REG_BLDY, B_TRANS_DMA_FLAGS);
 }
 
@@ -2090,46 +2161,87 @@ static void HBlankCB_Mugshots(void)
         REG_BG0HOFS = sTransitionData->bg0HOfsPlayer;
 }
 
-
 static void Mugshots_CreateTrainerPics(struct Task *task)
 {
-    struct Sprite *opponentSprite, *playerSprite;
-    u32 trainerId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentA);
-    s16 opponentRotationScales = gTrainerSprites[trainerId].mugshotRotation;
+    struct Sprite *opponentSpriteA, *opponentSpriteB=0, *playerSprite, *partnerSprite=0;
+
+    u8 trainerAPicId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentA);
+    u8 trainerBPicId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentB);
+    u8 partnerPicId = GetTrainerPicFromId(gPartnerTrainerId);
+    struct Coords16 mugshotCoordsA = GetTrainerFrontPicMugshotCoords(trainerAPicId);
+    s16 opponentARotationScales = 0;
+    s16 opponentBRotationScales = 0;
 
     gReservedSpritePaletteCount = 10;
-    task->tOpponentSpriteId = CreateTrainerSprite(trainerId,
-                                                  gTrainerSprites[trainerId].mugshotCoords.x - 32,
-                                                  gTrainerSprites[trainerId].mugshotCoords.y + 42,
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+    {
+        struct Coords16 mugshotCoordsB = GetTrainerFrontPicMugshotCoords(trainerBPicId);
+        task->tOpponentSpriteBId = CreateTrainerSprite(trainerBPicId,
+                                                    mugshotCoordsB.x - 240,
+                                                    mugshotCoordsB.y + 42,
+                                                    0, NULL);
+        opponentSpriteB = &gSprites[task->tOpponentSpriteBId];
+        opponentSpriteB->callback = SpriteCB_MugshotTrainerPicPartner;
+        opponentSpriteB->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
+        opponentSpriteB->oam.matrixNum = AllocOamMatrix();
+        opponentSpriteB->oam.shape = SPRITE_SHAPE(64x32);
+        opponentSpriteB->oam.size = SPRITE_SIZE(64x32);
+        CalcCenterToCornerVec(opponentSpriteB, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
+        opponentBRotationScales = GetTrainerFrontPicMugshotRotation(trainerBPicId);
+        SetOamMatrixRotationScaling(opponentSpriteB->oam.matrixNum, opponentBRotationScales, opponentBRotationScales, 0);
+    }
+
+    task->tOpponentSpriteAId = CreateTrainerSprite(trainerAPicId,
+                                                  mugshotCoordsA.x - 32,
+                                                  mugshotCoordsA.y + 42,
                                                   0, NULL);
+
+    gReservedSpritePaletteCount = 12;
+    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    {
+        task->tPartnerSpriteId = CreateTrainerSprite(partnerPicId,
+                                                DISPLAY_WIDTH + 240,
+                                                106,
+                                                0, NULL);
+        partnerSprite = &gSprites[task->tPartnerSpriteId];
+        partnerSprite->callback = SpriteCB_MugshotTrainerPicPartner;
+        partnerSprite->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
+        partnerSprite->oam.matrixNum = AllocOamMatrix();
+        partnerSprite->oam.shape = SPRITE_SHAPE(64x32);
+        partnerSprite->oam.size = SPRITE_SIZE(64x32);
+        CalcCenterToCornerVec(partnerSprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
+        SetOamMatrixRotationScaling(partnerSprite->oam.matrixNum, -512, 512, 0);
+    }
+
     task->tPlayerSpriteId = CreateTrainerSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender),
                                                 DISPLAY_WIDTH + 32,
                                                 106,
                                                 0, NULL);
-    gReservedSpritePaletteCount = 12;
 
-    opponentSprite = &gSprites[task->tOpponentSpriteId];
+    opponentSpriteA = &gSprites[task->tOpponentSpriteAId];
     playerSprite = &gSprites[task->tPlayerSpriteId];
 
-    opponentSprite->callback = SpriteCB_MugshotTrainerPic;
+    opponentSpriteA->callback = SpriteCB_MugshotTrainerPic;
     playerSprite->callback = SpriteCB_MugshotTrainerPic;
 
-    opponentSprite->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
+    opponentSpriteA->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
     playerSprite->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
 
-    opponentSprite->oam.matrixNum = AllocOamMatrix();
+    opponentSpriteA->oam.matrixNum = AllocOamMatrix();
     playerSprite->oam.matrixNum = AllocOamMatrix();
 
-    opponentSprite->oam.shape = SPRITE_SHAPE(64x32);
+    opponentSpriteA->oam.shape = SPRITE_SHAPE(64x32);
     playerSprite->oam.shape = SPRITE_SHAPE(64x32);
 
-    opponentSprite->oam.size = SPRITE_SIZE(64x32);
+    opponentSpriteA->oam.size = SPRITE_SIZE(64x32);
     playerSprite->oam.size = SPRITE_SIZE(64x32);
 
-    CalcCenterToCornerVec(opponentSprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
+    CalcCenterToCornerVec(opponentSpriteA, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
     CalcCenterToCornerVec(playerSprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
 
-    SetOamMatrixRotationScaling(opponentSprite->oam.matrixNum, opponentRotationScales, opponentRotationScales, 0);
+    opponentARotationScales = GetTrainerFrontPicMugshotRotation(trainerAPicId);
+
+    SetOamMatrixRotationScaling(opponentSpriteA->oam.matrixNum, opponentARotationScales, opponentARotationScales, 0);
     SetOamMatrixRotationScaling(playerSprite->oam.matrixNum, -512, 512, 0);
 }
 
@@ -2137,6 +2249,12 @@ static void SpriteCB_MugshotTrainerPic(struct Sprite *sprite)
 {
     while (sMugshotTrainerPicFuncs[sprite->sState](sprite));
 }
+
+static void SpriteCB_MugshotTrainerPicPartner(struct Sprite *sprite)
+{
+    while (sMugshotTrainerPicFuncsPartner[sprite->sState](sprite));
+}
+
 
 // Wait until IncrementTrainerPicState is called
 static bool8 MugshotTrainerPic_Pause(struct Sprite *sprite)
@@ -2151,6 +2269,7 @@ static bool8 MugshotTrainerPic_Init(struct Sprite *sprite)
 
     memcpy(speeds, sTrainerPicSlideSpeeds, sizeof(sTrainerPicSlideSpeeds));
     memcpy(accels, sTrainerPicSlideAccels, sizeof(sTrainerPicSlideAccels));
+
     sprite->sState++;
     sprite->sSlideSpeed = speeds[sprite->sSlideDir];
     sprite->sSlideAccel = accels[sprite->sSlideDir];
@@ -2165,6 +2284,18 @@ static bool8 MugshotTrainerPic_Slide(struct Sprite *sprite)
     if (sprite->sSlideDir && sprite->x < DISPLAY_WIDTH - 107)
         sprite->sState++;
     else if (!sprite->sSlideDir && sprite->x > 103)
+        sprite->sState++;
+    return FALSE;
+}
+
+static bool8 MugshotTrainerPic_SlidePartner(struct Sprite *sprite)
+{
+    sprite->x += sprite->sSlideSpeed;
+
+    // Advance state when pic passes ~40% of screen
+    if (sprite->sSlideDir && sprite->x < DISPLAY_WIDTH - 60)
+        sprite->sState++;
+    else if (!sprite->sSlideDir && sprite->x > 60)
         sprite->sState++;
     return FALSE;
 }
@@ -2198,7 +2329,7 @@ static bool8 MugshotTrainerPic_SlideOffscreen(struct Sprite *sprite)
     return FALSE;
 }
 
-static void SetTrainerPicSlideDirection(s16 spriteId, bool16 dirId)
+static void SetTrainerPicSlideDirection(s16 spriteId, s16 dirId)
 {
     gSprites[spriteId].sSlideDir = dirId;
 }
@@ -2223,8 +2354,10 @@ static s16 IsTrainerPicSlideDone(s16 spriteId)
 #undef tBottomBannerX
 #undef tTimer
 #undef tFadeSpread
-#undef tOpponentSpriteId
+#undef tOpponentSpriteAId
+#undef tOpponentSpriteBId
 #undef tPlayerSpriteId
+#undef tPartnerSpriteId
 
 //--------------------
 // B_TRANSITION_SLICE

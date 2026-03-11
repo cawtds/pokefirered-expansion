@@ -36,13 +36,6 @@ gBattlescriptsForUsingItem::
 	.4byte BattleScript_ItemIncreaseAllStats         @ EFFECT_ITEM_INCREASE_ALL_STATS
 	.4byte BattleScript_UsePokeFlute                 @ EFFECT_ITEM_USE_POKE_FLUTE
 
-	.align 2
-gBattlescriptsForSafariActions::
-	.4byte BattleScript_WatchesCarefully
-	.4byte BattleScript_ThrowRock
-	.4byte BattleScript_ThrowBait
-	.4byte BattleScript_LeftoverWallyPrepToThrow
-
 BattleScript_WatchesCarefully::
 	printfromtable gSafariReactionStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -59,17 +52,6 @@ BattleScript_ThrowBait::
 	printstring STRINGID_THREWBAIT
 	waitmessage B_WAIT_TIME_LONG
 	playanimation BS_ATTACKER, B_ANIM_BAIT_THROW
-	end2
-
-BattleScript_LeftoverWallyPrepToThrow::
-	printstring STRINGID_RETURNMON
-	waitmessage B_WAIT_TIME_LONG
-	returnatktoball
-	waitstate
-	trainerslidein BS_TARGET
-	waitstate
-	printstring STRINGID_YOUTHROWABALLNOWRIGHT
-	waitmessage B_WAIT_TIME_LONG
 	end2
 
 BattleScript_ItemEnd:
@@ -256,11 +238,6 @@ BattleScript_TryNicknameCaughtMon::
 BattleScript_GiveCaughtMonEnd::
 	givecaughtmon BattleScript_SuccessBallThrowEnd
 BattleScript_SuccessBallThrowEnd::
-	setbyte gBattleOutcome, B_OUTCOME_CAUGHT
-	finishturn
-
-BattleScript_WallyBallThrow::
-	printstring STRINGID_GOTCHAPKMNCAUGHTWALLY
 	setbyte gBattleOutcome, B_OUTCOME_CAUGHT
 	finishturn
 

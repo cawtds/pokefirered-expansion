@@ -276,7 +276,7 @@ static const struct SpriteTemplate sSpriteTemplate_Confetti = {
 };
 
 static const u16 sHallOfFame_Pal[] = INCBIN_U16("graphics/hall_of_fame/hall_of_fame.gbapal");
-static const u32 sHallOfFame_Gfx[] = INCBIN_U32("graphics/hall_of_fame/hall_of_fame.4bpp.lz");
+static const u32 sHallOfFame_Gfx[] = INCBIN_U32("graphics/hall_of_fame/hall_of_fame.4bpp.smol");
 
 static const struct HallofFameMon sDummyHofMon = {
     .tid = 0x03EA03EA,

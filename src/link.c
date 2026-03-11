@@ -148,8 +148,8 @@ static void StopTimer(void);
 static void SendRecvDone(void);
 
 static const u16 sWirelessLinkDisplayPal[] = INCBIN_U16("graphics/link/wireless_display.gbapal");
-static const u16 sWirelessLinkDisplayGfx[] = INCBIN_U16("graphics/link/wireless_display.4bpp.lz");
-static const u16 sWirelessLinkDisplayTilemap[] = INCBIN_U16("graphics/link/wireless_display.bin.lz");
+static const u16 sWirelessLinkDisplayGfx[] = INCBIN_U16("graphics/link/wireless_display.4bpp.smol");
+static const u16 sWirelessLinkDisplayTilemap[] = INCBIN_U16("graphics/link/wireless_display.bin.smolTM");
 static const u16 sLinkTestFontPal[] = INCBIN_U16("graphics/link/test_font.gbapal");
 static const u16 sLinkTestFontGfx[] = INCBIN_U16("graphics/link/test_font.4bpp");
 
