@@ -24,11 +24,9 @@
 #include "pokedex.h"
 #include "util.h"
 #include "trainer_pokemon_sprites.h"
-// #include "starter_choose.h"
 #include "strings.h"
 #include "graphics.h"
 #include "constants/battle_frontier.h"
-// #include "constants/battle_tent.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
 
@@ -188,7 +186,6 @@ static void Select_Task_OpenChosenMonPics(u8);
 static void Select_Task_HandleChooseMons(u8);
 static void Select_Task_HandleMenu(u8);
 static void CreateFrontierFactorySelectableMons(u8);
-// static void CreateSlateportTentSelectableMons(u8);
 static void Select_SetBallSpritePaletteNum(u8);
 static void Select_ErasePopupMenu(u8);
 static u8 Select_RunMenuOptionFunc(void);
@@ -274,7 +271,7 @@ static const u8 sMonPicBgAnim_Gfx[]          = INCBIN_U8( "graphics/battle_front
 static const u8 sMonPicBg_Tilemap[]          = INCBIN_U8( "graphics/battle_frontier/factory_screen/mon_pic_bg.bin");
 static const u16 sMonPicBg_Gfx[]             = INCBIN_U16("graphics/battle_frontier/factory_screen/mon_pic_bg.4bpp");
 static const u16 sMonPicBg_Pal[]             = INCBIN_U16("graphics/battle_frontier/factory_screen/mon_pic_bg.gbapal");
-const u32 gPokeballSelection_Gfx[] = INCBIN_U32("graphics/starter_choose/pokeball_selection.4bpp.smol");
+static const u32 gPokeballSelection_Gfx[] = INCBIN_U32("graphics/starter_choose/pokeball_selection.4bpp.smol");
 
 static const struct SpriteSheet sSelect_SpriteSheets[] =
 {
@@ -1276,10 +1273,6 @@ static void Select_InitMonsData(void)
         sFactorySelectScreen->mons[i].selectedId = 0;
 
     CreateFrontierFactorySelectableMons(0);
-    // if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_TENT)
-    //     CreateFrontierFactorySelectableMons(0);
-    // else
-    //     CreateSlateportTentSelectableMons(0);
 }
 
 static void Select_InitAllSprites(void)
@@ -1743,24 +1736,6 @@ static void CreateFrontierFactorySelectableMons(u8 firstMonId)
                 &sFactorySelectScreen->mons[i + firstMonId].monData);
     }
 }
-
-// static void CreateSlateportTentSelectableMons(u8 firstMonId)
-// {
-//     u8 i;
-//     u8 ivs = 0;
-//     u8 level = TENT_MIN_LEVEL;
-//     u32 otId = 0;
-
-//     gFacilityTrainerMons = gSlateportBattleTentMons;
-//     otId = READ_OTID_FROM_SAVE;
-
-//     for (i = 0; i < SELECTABLE_MONS_COUNT; i++)
-//     {
-//         u16 monId = gSaveBlock2Ptr->frontier.rentalMons[i].monId;
-//         sFactorySelectScreen->mons[i + firstMonId].monId = monId;
-//         CreateFacilityMon(&gFacilityTrainerMons[monId], level, ivs, otId, 0, &sFactorySelectScreen->mons[i + firstMonId].monData);
-//     }
-// }
 
 static void Select_CopyMonsToPlayerParty(void)
 {

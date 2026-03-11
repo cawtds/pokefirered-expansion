@@ -1,7 +1,6 @@
 #include "global.h"
 #include "battle_anim.h"
 #include "battle_environment.h"
-// #include "contest.h"
 #include "gpu_regs.h"
 #include "graphics.h"
 #include "malloc.h"
@@ -419,10 +418,7 @@ static void StatsChangeAnimation_Step1(u8 taskId)
         }
     }
 
-    if (IsContest())
-        sAnimStatsChangeData->species = 0; // gContestResources->moveAnim->species;
-    else
-        sAnimStatsChangeData->species = GetMonData(GetBattlerMon(sAnimStatsChangeData->battler1), MON_DATA_SPECIES);
+    sAnimStatsChangeData->species = GetMonData(GetBattlerMon(sAnimStatsChangeData->battler1), MON_DATA_SPECIES);
 
     gTasks[taskId].func = StatsChangeAnimation_Step2;
 }
@@ -473,7 +469,7 @@ static void StatsChangeAnimation_Step2(u8 taskId)
         LoadPalette(gStatAnim_SpDefense_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     default:
- // case STAT_ANIM_PAL_MULTIPLE:
+    // case STAT_ANIM_PAL_MULTIPLE:
         LoadPalette(gStatAnim_Multiple_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     }
@@ -796,10 +792,7 @@ void StartMonScrollingBgMask(u8 taskId, int UNUSED unused, u16 scrollSpeed, enum
 
     SetGpuReg(REG_OFFSET_BG1CNT, bg1Cnt);
 
-    if (IsContest())
-        species = 0; // gContestResources->moveAnim->species;
-    else
-        species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
+    species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
 
     spriteId = CreateInvisibleSpriteCopy(battler, gBattlerSpriteIds[battler], species);
     if (includePartner)

@@ -14,46 +14,36 @@
 #include "fieldmap.h"
 #include "follower_npc.h"
 #include "random.h"
-// #include "starter_choose.h"
 #include "script_pokemon_util.h"
 #include "palette.h"
 #include "window.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
-// #include "tv.h"
 #include "trainer_see.h"
 #include "field_message_box.h"
 #include "sound.h"
 #include "strings.h"
-// #include "trainer_hill.h"
-// #include "secret_base.h"
 #include "string_util.h"
 #include "overworld.h"
 #include "field_weather.h"
 #include "battle_tower.h"
-// #include "gym_leader_rematch.h"
 #include "battle_frontier.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "fldeff.h"
-// #include "fldeff_misc.h"
 #include "field_control_avatar.h"
-// #include "mirage_tower.h"
 #include "field_screen_effect.h"
 #include "data.h"
 #include "vs_seeker.h"
 #include "item.h"
 #include "script.h"
-// #include "field_name_box.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_setup.h"
 #include "constants/event_objects.h"
 #include "constants/game_stat.h"
 #include "constants/items.h"
 #include "constants/songs.h"
-#include "constants/map_types.h"
 #include "constants/trainers.h"
-// #include "constants/trainer_hill.h"
 #include "constants/weather.h"
 #include "fishing.h"
 #include "wild_encounter.h"
@@ -74,20 +64,8 @@ static void DoStandardWildBattle(bool32 isDouble);
 static void CB2_EndWildBattle(void);
 static void CB2_EndScriptedWildBattle(void);
 static void CB2_EndMarowakBattle(void);
-// static void TryUpdateGymLeaderRematchFromWild(void);
-// static void TryUpdateGymLeaderRematchFromTrainer(void);
-// static void CB2_GiveStarter(void);
-// static void CB2_StartFirstBattle(void);
-// static void CB2_EndFirstBattle(void);
-// static void SaveChangesToPlayerParty(void);
-// static void HandleBattleVariantEndParty(void);
 static void CB2_EndTrainerBattle(void);
 static bool32 IsPlayerDefeated(u32 battleOutcome);
-// #if FREE_MATCH_CALL == FALSE
-// static u16 GetRematchTrainerId(u16 trainerId);
-// #endif //FREE_MATCH_CALL
-// static void RegisterTrainerInMatchCall(void);
-// static void HandleRematchVarsOnBattleEnd(void);
 static const u8 *GetIntroSpeechOfApproachingTrainer(void);
 static const u8 *GetTrainerCantBattleSpeech(void);
 
@@ -160,7 +138,6 @@ static void Task_BattleStart(u8 taskId)
         if (!FldEffPoison_IsActive()) // is poison not active?
         {
             BattleTransition_StartOnField(tTransition);
-            // ClearMirageTowerPulseBlendEffect();
             tState++; // go to case 1.
         }
         break;
@@ -196,7 +173,6 @@ static void Task_BattleStart_Debug(u8 taskId)
         if (!FldEffPoison_IsActive()) // is poison not active?
         {
             BattleTransition_StartOnField(tTransition);
-            // ClearMirageTowerPulseBlendEffect();
             tState++; // go to case 1.
         }
         break;
@@ -281,8 +257,6 @@ static void DoStandardWildBattle(bool32 isDouble)
     CreateBattleStartTask(GetWildBattleTransition(), 0);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
-    // IncrementDailyWildBattles();
-    // TryUpdateGymLeaderRematchFromWild();
 }
 
 void DoStandardWildBattle_Debug(void)
@@ -314,8 +288,6 @@ void BattleSetup_StartRoamerBattle(void)
     CreateBattleStartTask(GetWildBattleTransition(), MUS_VS_LEGEND);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
-    // IncrementDailyWildBattles();
-    // TryUpdateGymLeaderRematchFromWild();
 }
 
 static void DoSafariBattle(void)
@@ -351,8 +323,6 @@ static void DoBattlePikeWildBattle(void)
     CreateBattleStartTask(GetWildBattleTransition(), 0);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
-    // IncrementDailyWildBattles();
-    // TryUpdateGymLeaderRematchFromWild();
 }
 
 static void DoTrainerBattle(void)
@@ -360,7 +330,6 @@ static void DoTrainerBattle(void)
     CreateBattleStartTask(GetTrainerBattleTransition(), 0);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_TRAINER_BATTLES);
-    // TryUpdateGymLeaderRematchFromTrainer();
 }
 
 static void DoBattlePyramidTrainerHillBattle(void)
@@ -372,18 +341,7 @@ static void DoBattlePyramidTrainerHillBattle(void)
 
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_TRAINER_BATTLES);
-    // TryUpdateGymLeaderRematchFromTrainer();
 }
-
-// Initiates battle where Wally catches Ralts
-// void StartWallyTutorialBattle(void)
-// {
-//     CreateMaleMon(&gEnemyParty[0], SPECIES_RALTS, 5);
-//     LockPlayerFieldControls();
-//     gMain.savedCallback = CB2_ReturnToFieldContinueScriptPlayMapMusic;
-//     gBattleTypeFlags = BATTLE_TYPE_CATCH_TUTORIAL;
-//     CreateBattleStartTask(B_TRANSITION_SLICE, 0);
-// }
 
 void StartOldManTutorialBattle(void)
 {
@@ -402,8 +360,6 @@ void BattleSetup_StartScriptedWildBattle(void)
     CreateBattleStartTask(GetWildBattleTransition(), 0);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
-    // IncrementDailyWildBattles();
-    // TryUpdateGymLeaderRematchFromWild();
 }
 
 void BattleSetup_StartScriptedDoubleWildBattle(void)
@@ -414,8 +370,6 @@ void BattleSetup_StartScriptedDoubleWildBattle(void)
     CreateBattleStartTask(GetWildBattleTransition(), 0);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
-    // IncrementDailyWildBattles();
-    // TryUpdateGymLeaderRematchFromWild();
 }
 
 void StartMarowakBattle(void)
@@ -445,8 +399,6 @@ void BattleSetup_StartLatiBattle(void)
     CreateBattleStartTask(GetWildBattleTransition(), 0);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
-    // IncrementDailyWildBattles();
-    // TryUpdateGymLeaderRematchFromWild();
 }
 
 void BattleSetup_StartLegendaryBattle(void)
@@ -492,8 +444,6 @@ void BattleSetup_StartLegendaryBattle(void)
 
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
-    // IncrementDailyWildBattles();
-    // TryUpdateGymLeaderRematchFromWild();
 }
 
 void StartGroudonKyogreBattle(void)
@@ -509,8 +459,6 @@ void StartGroudonKyogreBattle(void)
 
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
-    // IncrementDailyWildBattles();
-    // TryUpdateGymLeaderRematchFromWild();
 }
 
 void StartRegiBattle(void)
@@ -542,8 +490,6 @@ void StartRegiBattle(void)
 
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
-    // IncrementDailyWildBattles();
-    // TryUpdateGymLeaderRematchFromWild();
 }
 
 static void DowngradeBadPoison(void)
@@ -552,7 +498,7 @@ static void DowngradeBadPoison(void)
     u32 status = STATUS1_POISON;
     if (B_TOXIC_REVERSAL < GEN_5)
         return;
-    for(i = 0; i < PARTY_SIZE; i++)
+    for (i = 0; i < PARTY_SIZE; i++)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SANITY_HAS_SPECIES) && GetMonData(&gPlayerParty[i], MON_DATA_STATUS) == STATUS1_TOXIC_POISON)
             SetMonData(&gPlayerParty[i], MON_DATA_STATUS, &status);
@@ -881,6 +827,7 @@ static bool32 IsPlayerDefeated(u32 battleOutcome)
     {
     case B_OUTCOME_LOST:
     case B_OUTCOME_DREW:
+    case B_OUTCOME_FORFEITED:
         return TRUE;
     case B_OUTCOME_WON:
     case B_OUTCOME_RAN:
@@ -1288,15 +1235,18 @@ static void CB2_EndTrainerBattle(void)
         DowngradeBadPoison();
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
     }
+    else if (DidPlayerForfeitNormalTrainerBattle())
+    {
+        if (FlagGet(B_FLAG_NO_WHITEOUT) || CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
+            SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+        else
+            SetMainCallback2(CB2_WhiteOut);
+    }
     else if (IsPlayerDefeated(gBattleOutcome) == TRUE)
     {
         if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || (!NoAliveMonsForPlayer()) || FlagGet(B_FLAG_NO_WHITEOUT))
             SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
         else
-            SetMainCallback2(CB2_WhiteOut);
-    }
-    else if (DidPlayerForfeitNormalTrainerBattle())
-    {
             SetMainCallback2(CB2_WhiteOut);
     }
     else
@@ -1324,9 +1274,7 @@ static void CB2_EndRematchBattle(void)
     else
     {
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
-        // RegisterTrainerInMatchCall();
         SetBattledTrainersFlags();
-        // HandleRematchVarsOnBattleEnd();
         ClearRematchStateOfLastTalked();
         DowngradeBadPoison();
     }

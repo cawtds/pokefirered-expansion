@@ -89,9 +89,9 @@ static void Task_ShinyStars(u8);
 static void SpriteCB_ShinyStars_Encircle(struct Sprite *);
 static void SpriteCB_ShinyStars_Diagonal(struct Sprite *);
 static void Task_ShinyStars_Wait(u8);
-static void SpriteCB_SafariBaitOrRock_WaitPlayerThrow(struct Sprite *);
-static void SpriteCB_SafariBaitOrRock_ArcFlight(struct Sprite *);
-static void SpriteCB_SafariBaitOrRock_Finish(struct Sprite *);
+static void SpriteCB_SafariBaitOrRock_LiftArm(struct Sprite *);
+static void SpriteCB_SafariBaitOrRock_Arc(struct Sprite *);
+static void SpriteCB_SafariBaitOrRock_Free(struct Sprite *);
 static void PokeBallOpenParticleAnimation(u8);
 static void GreatBallOpenParticleAnimation(u8);
 static void SafariBallOpenParticleAnimation(u8);
@@ -102,7 +102,7 @@ static void RepeatBallOpenParticleAnimation(u8);
 static void TimerBallOpenParticleAnimation(u8);
 static void PremierBallOpenParticleAnimation(u8);
 static void CB_CriticalCaptureThrownBallMovement(struct Sprite *sprite);
-static void SpriteCB_SafariBaitOrRock_Init(struct Sprite *);
+static void SpriteCB_SafariBaitOrRock_Throw(struct Sprite *);
 static void GhostBallDodge(struct Sprite *sprite);
 static void GhostBallDodge2(struct Sprite *sprite);
 
@@ -466,7 +466,7 @@ const struct SpriteTemplate gSafariBaitSpriteTemplate =
     .tileTag = ANIM_TAG_SAFARI_BAIT,
     .paletteTag = ANIM_TAG_SAFARI_BAIT,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
-    .callback = SpriteCB_SafariBaitOrRock_Init,
+    .callback = SpriteCB_SafariBaitOrRock_Throw,
 };
 
 static const union AnimCmd sAnim_SafariRock[] =
@@ -485,7 +485,7 @@ const struct SpriteTemplate sSafariRockSpriteTemplate =
     .paletteTag = ANIM_TAG_ROCKS,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_SafariRock,
-    .callback = SpriteCB_SafariBaitOrRock_Init,
+    .callback = SpriteCB_SafariBaitOrRock_Throw,
 };
 
 extern const struct SpriteTemplate gWishStarSpriteTemplate;
@@ -798,7 +798,7 @@ void AnimTask_ThrowBall(u8 taskId)
     u8 spriteId;
 
     enum PokeBall ballId = ItemIdToBallId(gLastUsedItem);
-    spriteId = CreateSprite(&gBallSpriteTemplates[ballId], 32, 80, 29);
+    spriteId = CreateSprite(&gPokeBalls[ballId].spriteTemplate, 32, 80, 29);
     gSprites[spriteId].sDuration = 34;
     gSprites[spriteId].sTargetX = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
     gSprites[spriteId].sTargetY = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) - 16;
@@ -838,7 +838,7 @@ void AnimTask_ThrowBall_StandingTrainer(u8 taskId)
 
     ballId = ItemIdToBallId(gLastUsedItem);
     subpriority = GetBattlerSpriteSubpriority(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)) + 1;
-    spriteId = CreateSprite(&gBallSpriteTemplates[ballId], x | 32, y | 80, subpriority);
+    spriteId = CreateSprite(&gPokeBalls[ballId].spriteTemplate, x | 32, y | 80, subpriority);
     gSprites[spriteId].sDuration = 34;
     gSprites[spriteId].sTargetX = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
     gSprites[spriteId].sTargetY = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) - 16;
@@ -2454,7 +2454,7 @@ void AnimTask_FreeBaitGfx(u8 taskId)
 #define sTargetY data[4]
 #define sAmplitude data[5]
 
-static void SpriteCB_SafariBaitOrRock_Init(struct Sprite *sprite)
+static void SpriteCB_SafariBaitOrRock_Throw(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, FALSE);
     sprite->sDuration = 30;
@@ -2463,7 +2463,7 @@ static void SpriteCB_SafariBaitOrRock_Init(struct Sprite *sprite)
     sprite->sAmplitude = -32;
     InitAnimArcTranslation(sprite);
     gSprites[gBattlerSpriteIds[gBattleAnimAttacker]].callback = SpriteCB_TrainerThrowObject;
-    sprite->callback = SpriteCB_SafariBaitOrRock_WaitPlayerThrow;
+    sprite->callback = SpriteCB_SafariBaitOrRock_LiftArm;
 }
 
 #undef sDuration
@@ -2471,24 +2471,24 @@ static void SpriteCB_SafariBaitOrRock_Init(struct Sprite *sprite)
 #undef sTargetY
 #undef sAmplitude
 
-static void SpriteCB_SafariBaitOrRock_WaitPlayerThrow(struct Sprite *sprite)
+static void SpriteCB_SafariBaitOrRock_LiftArm(struct Sprite *sprite)
 {
     if (gSprites[gBattlerSpriteIds[gBattleAnimAttacker]].animCmdIndex == 1)
-        sprite->callback = SpriteCB_SafariBaitOrRock_ArcFlight;
+        sprite->callback = SpriteCB_SafariBaitOrRock_Arc;
 }
 
-static void SpriteCB_SafariBaitOrRock_ArcFlight(struct Sprite *sprite)
+static void SpriteCB_SafariBaitOrRock_Arc(struct Sprite *sprite)
 {
     if (TranslateAnimHorizontalArc(sprite))
     {
         sprite->data[0] = 0;
         sprite->invisible = TRUE;
-        sprite->callback = SpriteCB_SafariBaitOrRock_Finish;
+        sprite->callback = SpriteCB_SafariBaitOrRock_Free;
     }
 }
 
 // Destroy after end of player animation
-static void SpriteCB_SafariBaitOrRock_Finish(struct Sprite *sprite)
+static void SpriteCB_SafariBaitOrRock_Free(struct Sprite *sprite)
 {
     if (gSprites[gBattlerSpriteIds[gBattleAnimAttacker]].animEnded)
     {

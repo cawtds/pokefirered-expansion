@@ -36,7 +36,7 @@ enum {
 };
 
 static const u16 sMarkerPal[] = INCBIN_U16("graphics/pokedex/area_markers/marker.gbapal");
-static const u32 sMarkerTiles[] = INCBIN_U32("graphics/pokedex/area_markers/marker.4bpp.lz");
+static const u32 sMarkerTiles[] = INCBIN_U32("graphics/pokedex/area_markers/marker.4bpp.smol");
 
 static const struct Subsprite sSubsprite_Circular = {
     .size = SPRITE_SIZE(8x8),

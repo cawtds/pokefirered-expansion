@@ -50,14 +50,14 @@ static void SpriteCB_LevelUpVertical(struct Sprite *sprite);
 
 static const u16 sBg_Pal[] = INCBIN_U16("graphics/pokemon_special_anim/bg.gbapal");
 static const u16 sBg_TmHm_Pal[] = INCBIN_U16("graphics/pokemon_special_anim/bg_tm_hm.gbapal");
-static const u32 sBg_Gfx[] = INCBIN_U32("graphics/pokemon_special_anim/bg.4bpp.lz");
-static const u32 sBg_Tilemap[] = INCBIN_U32("graphics/pokemon_special_anim/bg.bin.lz");
+static const u32 sBg_Gfx[] = INCBIN_U32("graphics/pokemon_special_anim/bg.4bpp.smol");
+static const u32 sBg_Tilemap[] = INCBIN_U32("graphics/pokemon_special_anim/bg.bin.smolTM");
 static const u16 sLevelUp_Pal[] = INCBIN_U16("graphics/pokemon_special_anim/level_up.gbapal");
-static const u32 sLevelUp_Gfx[] = INCBIN_U32("graphics/pokemon_special_anim/level_up.4bpp.lz");
+static const u32 sLevelUp_Gfx[] = INCBIN_U32("graphics/pokemon_special_anim/level_up.4bpp.smol");
 static const u16 sStar_Pal[] = INCBIN_U16("graphics/pokemon_special_anim/star.gbapal");
-static const u32 sStar_Gfx[] = INCBIN_U32("graphics/pokemon_special_anim/star.4bpp.lz");
+static const u32 sStar_Gfx[] = INCBIN_U32("graphics/pokemon_special_anim/star.4bpp.smol");
 static const u16 sOutwardSpiralDots_Pal[] = INCBIN_U16("graphics/pokemon_special_anim/outward_spiral_dots.gbapal");
-static const u32 sOutwardSpiralDots_Gfx[] = INCBIN_U32("graphics/pokemon_special_anim/outward_spiral_dots.4bpp.lz");
+static const u32 sOutwardSpiralDots_Gfx[] = INCBIN_U32("graphics/pokemon_special_anim/outward_spiral_dots.4bpp.smol");
 
 static const struct BgTemplate sBgTemplates[] = {
     {

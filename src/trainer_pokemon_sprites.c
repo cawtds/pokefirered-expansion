@@ -61,7 +61,7 @@ static bool16 DecompressPic(u16 species, u32 personality, bool8 isFrontPic, u8 *
     else
     {
         if (isFrontPic)
-            DecompressPicFromTable(&gTrainerSprites[species].frontPic, dest);
+            DecompressDataWithHeaderWram(GetTrainerFrontPicData(species), dest);
         else
             CopyTrainerBackspriteFramesToDest(species, dest);
     }
@@ -88,12 +88,12 @@ void LoadPicPaletteByTagOrSlot(u16 species, bool32 isShiny, u32 personality, u8 
         if (paletteTag == TAG_NONE)
         {
             sCreatingSpriteTemplate.paletteTag = TAG_NONE;
-            LoadPalette(gTrainerSprites[species].palette.data, OBJ_PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
+            LoadPalette(GetTrainerFrontPicPalette(species), OBJ_PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
         }
         else
         {
             sCreatingSpriteTemplate.paletteTag = paletteTag;
-            LoadSpritePalette(&gTrainerSprites[species].palette);
+            LoadSpritePaletteWithTag(GetTrainerFrontPicPalette(species), species);
         }
     }
 }
@@ -103,7 +103,7 @@ void LoadPicPaletteBySlot(u16 species, bool32 isShiny, u32 personality, u8 palet
     if (!isTrainer)
         LoadPalette(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), BG_PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
     else
-        LoadPalette(gTrainerSprites[species].palette.data, BG_PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
+        LoadPalette(GetTrainerFrontPicPalette(species), BG_PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
 }
 
 void AssignSpriteAnimsTable(bool8 isTrainer)
@@ -349,8 +349,8 @@ u16 PlayerGenderToFrontTrainerPicId_Debug(u8 gender, bool8 getClass)
 
 void CopyTrainerBackspriteFramesToDest(u8 trainerPicId, u8 *dest)
 {
-    const struct SpriteFrameImage *frame = &gTrainerBacksprites[trainerPicId].backPic;
+    const struct SpriteFrameImage *frame = GetTrainerBackPicImage(trainerPicId);
     // y_offset is repurposed to indicates how many frames does the trainer pic have.
-    u32 size = (frame->size * gTrainerBacksprites[trainerPicId].coordinates.y_offset);
+    u32 size = (frame->size * GetTrainerBackPicCoords(trainerPicId)->y_offset);
     CpuSmartCopy16(frame->data, dest, size);
 }

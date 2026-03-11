@@ -158,15 +158,15 @@ static void InitTrainerCardData(void);
 static u8 GetCardType(void);
 static void CreateTrainerCardTrainerPic(void);
 
-static const u32 sTrainerCardStickers_Gfx[]           = INCBIN_U32("graphics/trainer_card/stickers.4bpp.lz");
-static const u32 sHoennTrainerCardFront_Tilemap[]     = INCBIN_U32("graphics/trainer_card/rse/front.bin.lz");
-static const u32 sKantoTrainerCardFront_Tilemap[]     = INCBIN_U32("graphics/trainer_card/front.bin.lz");
-static const u32 sHoennTrainerCardBack_Tilemap[]      = INCBIN_U32("graphics/trainer_card/rse/back.bin.lz");
-static const u32 sKantoTrainerCardBack_Tilemap[]      = INCBIN_U32("graphics/trainer_card/back.bin.lz");
-static const u32 sHoennTrainerCardFrontLink_Tilemap[] = INCBIN_U32("graphics/trainer_card/rse/front_link.bin.lz");
-static const u32 sKantoTrainerCardFrontLink_Tilemap[] = INCBIN_U32("graphics/trainer_card/front_link.bin.lz");
-static const u32 sHoennTrainerCardBg_Tilemap[]        = INCBIN_U32("graphics/trainer_card/rse/bg.bin.lz");
-static const u32 sKantoTrainerCardBg_Tilemap[]        = INCBIN_U32("graphics/trainer_card/bg.bin.lz");
+static const u32 sTrainerCardStickers_Gfx[]           = INCBIN_U32("graphics/trainer_card/stickers.4bpp.smol");
+static const u32 sHoennTrainerCardFront_Tilemap[]     = INCBIN_U32("graphics/trainer_card/rse/front.bin.smolTM");
+static const u32 sKantoTrainerCardFront_Tilemap[]     = INCBIN_U32("graphics/trainer_card/front.bin.smolTM");
+static const u32 sHoennTrainerCardBack_Tilemap[]      = INCBIN_U32("graphics/trainer_card/rse/back.bin.smolTM");
+static const u32 sKantoTrainerCardBack_Tilemap[]      = INCBIN_U32("graphics/trainer_card/back.bin.smolTM");
+static const u32 sHoennTrainerCardFrontLink_Tilemap[] = INCBIN_U32("graphics/trainer_card/rse/front_link.bin.smolTM");
+static const u32 sKantoTrainerCardFrontLink_Tilemap[] = INCBIN_U32("graphics/trainer_card/front_link.bin.smolTM");
+static const u32 sHoennTrainerCardBg_Tilemap[]        = INCBIN_U32("graphics/trainer_card/rse/bg.bin.smolTM");
+static const u32 sKantoTrainerCardBg_Tilemap[]        = INCBIN_U32("graphics/trainer_card/bg.bin.smolTM");
 static const u16 sUnused_Pal[]                        = INCBIN_U16("graphics/trainer_card/unused.gbapal");
 static const u16 sHoennTrainerCardBronze_Pal[]        = INCBIN_U16("graphics/trainer_card/rse/bronze.gbapal");
 static const u16 sKantoTrainerCardGreen_Pal[]         = INCBIN_U16("graphics/trainer_card/green.gbapal");
@@ -185,8 +185,8 @@ static const u16 sTrainerCardStickerPal1[]            = INCBIN_U16("graphics/tra
 static const u16 sTrainerCardStickerPal2[]            = INCBIN_U16("graphics/trainer_card/stickers2.gbapal");
 static const u16 sTrainerCardStickerPal3[]            = INCBIN_U16("graphics/trainer_card/stickers3.gbapal");
 static const u16 sTrainerCardStickerPal4[]            = INCBIN_U16("graphics/trainer_card/stickers4.gbapal");
-static const u32 sHoennTrainerCardBadges_Gfx[]        = INCBIN_U32("graphics/trainer_card/rse/badges.4bpp.lz");
-static const u32 sKantoTrainerCardBadges_Gfx[]        = INCBIN_U32("graphics/trainer_card/badges.4bpp.lz");
+static const u32 sHoennTrainerCardBadges_Gfx[]        = INCBIN_U32("graphics/trainer_card/rse/badges.4bpp.smol");
+static const u32 sKantoTrainerCardBadges_Gfx[]        = INCBIN_U32("graphics/trainer_card/badges.4bpp.smol");
 
 static const struct BgTemplate sTrainerCardBgTemplates[4] =
 {

@@ -13,13 +13,13 @@
 #include "palette.h"
 #include "party_menu.h"
 #include "pokeball.h"
-// #include "pokeblock.h"
 #include "pokemon.h"
 #include "reshow_battle_screen.h"
 #include "sound.h"
 #include "strings.h"
 #include "task.h"
 #include "text.h"
+#include "trainer.h"
 #include "util.h"
 #include "window.h"
 #include "line_break.h"
@@ -241,10 +241,10 @@ void SafariBufferExecCompleted(enum BattlerId battler)
 
 static void SafariHandleDrawTrainerPic(enum BattlerId battler)
 {
-    enum TrainerPicID trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_RED;
+    enum TrainerPicID trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, FALSE,
-                                       80, 80 + 4 * (8 - gTrainerBacksprites[trainerPicId].coordinates.size),
+                                       80, 80 + 4 * (8 - GetTrainerBackPicCoords(trainerPicId)->size),
                                        30);
 }
 

@@ -2670,7 +2670,6 @@ static void Task_ShowTourneyInfoCard(u8 taskId)
         LoadCompressedSpriteSheet(sTourneyTreeButtonsSpriteSheet);
         LoadPalette(gDomeTourneyTree_Pal, BG_PLTT_OFFSET, BG_PLTT_SIZE);
         LoadPalette(gDomeTourneyTreeButtons_Pal, OBJ_PLTT_OFFSET, OBJ_PLTT_SIZE);
-        // LoadPalette(gBattleWindowTextPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
         if (mode == INFOCARD_MATCH)
             LoadPalette(gDomeTourneyMatchCardBg_Pal, BG_PLTT_ID(5), PLTT_SIZE_4BPP); // Changes the moving info card bg to orange when in match card mode
         CpuFill32(0, gPlttBufferFaded, PLTT_SIZE);
@@ -3880,9 +3879,9 @@ static bool32 IsDomeHealingMove(enum Move move)
     // Check extra effects not considered plain healing by AI
     switch (GetMoveEffect(move))
     {
-        case EFFECT_INGRAIN:
-        case EFFECT_REFRESH:
-        case EFFECT_AQUA_RING:
+    case EFFECT_INGRAIN:
+    case EFFECT_REFRESH:
+    case EFFECT_AQUA_RING:
         return TRUE;
     default:
         return FALSE;
@@ -3891,7 +3890,7 @@ static bool32 IsDomeHealingMove(enum Move move)
 
 static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
 {
-    switch(effect)
+    switch (effect)
     {
     case EFFECT_REFLECT_DAMAGE:
     case EFFECT_EVASION_UP:
@@ -3922,7 +3921,7 @@ static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
 
 static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
 {
-    switch(effect)
+    switch (effect)
     {
     // TODO: Bring back Misty Explosion and Explosion. Also non of those functions have been updated from gen3
     case EFFECT_SPITE:
@@ -3938,7 +3937,7 @@ static bool32 IsDomeLuckyMove(enum Move move)
 {
     if (GetMoveAccuracy(move) <= 50 && GetMoveAccuracy(move) != 0)
         return TRUE;
-    switch(GetMoveEffect(move))
+    switch (GetMoveEffect(move))
     {
     case EFFECT_REFLECT_DAMAGE:
         if (GetMoveReflectDamage_DamageCategories(move) != (1u << DAMAGE_CATEGORY_PHYSICAL)) // if not Counter
@@ -3975,7 +3974,7 @@ static bool32 IsDomePopularMove(enum Move move)
     if (GetMovePower(move) >= 90)
         return TRUE;
 
-    switch(GetMoveEffect(move))
+    switch (GetMoveEffect(move))
     {
     case EFFECT_PROTECT:
     case EFFECT_MAT_BLOCK:
@@ -3990,7 +3989,7 @@ static bool32 IsDomePopularMove(enum Move move)
 
 static bool32 IsDomeStatusMoveEffect(enum Move move)
 {
-    switch(GetMoveEffect(move))
+    switch (GetMoveEffect(move))
     {
     case EFFECT_CONFUSE:
     case EFFECT_DISABLE:
@@ -4018,12 +4017,12 @@ static bool32 IsDomeRareMove(enum Move move)
 {
     u16 i, j;
     u16 species = 0;
-    for(i = 0; i < NUM_SPECIES; i++)
+    for (i = 0; i < NUM_SPECIES; i++)
     {
         if (!IsSpeciesEnabled(i))
             continue;
         const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(i);
-        for(j = 0; learnset[j].move != LEVEL_UP_MOVE_END; j++)
+        for (j = 0; learnset[j].move != LEVEL_UP_MOVE_END; j++)
         {
             if (learnset[j].move == move)
             {
@@ -4040,7 +4039,7 @@ static bool32 IsDomeRareMove(enum Move move)
 static bool32 IsDomeComboMove(enum Move move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
-    switch(effect)
+    switch (effect)
     {
     // Weather moves
     case EFFECT_WEATHER:
@@ -4112,7 +4111,7 @@ static bool32 IsDomeComboMove(enum Move move)
         return TRUE;
 
     // Inflicting sleep & related effects
-    switch(GetMoveNonVolatileStatus(move))
+    switch (GetMoveNonVolatileStatus(move))
     {
     case MOVE_EFFECT_SLEEP:
         return TRUE;
@@ -5119,7 +5118,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
                 movePower = 40;
             else if (movePower == 1)
                 movePower = 60;
-            else if (GetConfig(CONFIG_EXPLOSION_DEFENSE) < GEN_5 && IsExplosionMove(move))
+            else if (GetConfig(B_EXPLOSION_DEFENSE) < GEN_5 && IsExplosionMove(move))
                 movePower /= 2;
 
             for (k = 0; k < FRONTIER_PARTY_SIZE; k++)
@@ -5259,7 +5258,6 @@ static void Task_ShowTourneyTree(u8 taskId)
         DecompressAndLoadBgGfxUsingHeap(3, gDomeTourneyLineUp_Tilemap, 0x2000, 0, 1);
         LoadPalette(gDomeTourneyTree_Pal, BG_PLTT_OFFSET, BG_PLTT_SIZE);
         LoadPalette(gDomeTourneyTreeButtons_Pal, OBJ_PLTT_OFFSET, OBJ_PLTT_SIZE);
-        // LoadPalette(gBattleWindowTextPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
         CpuFill32(0, gPlttBufferFaded, PLTT_SIZE);
         ShowBg(0);
         ShowBg(1);

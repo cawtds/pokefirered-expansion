@@ -62,9 +62,9 @@ static void RestoreBgAfterAnim(void);
 
 // const data
 static const u16 sUnusedPal[] = INCBIN_U16("graphics/evolution_scene/unused.gbapal");
-static const u32 sMovingBackgroundTiles[] = INCBIN_U32("graphics/evolution_scene/bg.4bpp.lz");
-static const u32 sMovingBackgroundMap1[] = INCBIN_U32("graphics/evolution_scene/bg.bin.lz");
-static const u32 sMovingBackgroundMap2[] = INCBIN_U32("graphics/evolution_scene/bg2.bin.lz");
+static const u32 sMovingBackgroundTiles[] = INCBIN_U32("graphics/evolution_scene/bg.4bpp.smol");
+static const u32 sMovingBackgroundMap1[] = INCBIN_U32("graphics/evolution_scene/bg.bin.smolTM");
+static const u32 sMovingBackgroundMap2[] = INCBIN_U32("graphics/evolution_scene/bg2.bin.smolTM");
 static const u16 sBlackPalette[] = INCBIN_U16("graphics/evolution_scene/gray_transition_intro.gbapal");
 static const u16 sUnusedTilemap[] = INCBIN_U16("graphics/evolution_scene/unused_tilemap.bin");
 static const u16 sBgAnim_Pal[] = INCBIN_U16("graphics/evolution_scene/transition.gbapal");

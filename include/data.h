@@ -30,23 +30,28 @@ struct MonCoords
     u8 y_offset;
 };
 
-struct TrainerSprite
+struct TrainerFrontPicInfo
 {
-    u8 y_offset;
-    struct CompressedSpriteSheet frontPic;
-    struct SpritePalette palette;
+    const u32 *imageData;
+    const u16 *paletteData;
     const union AnimCmd *const *const animation;
     const struct Coords16 mugshotCoords;
     s16 mugshotRotation;
-    struct MonCoords frontPicCoords;
+    u16 imageSize;
 };
 
-struct TrainerBacksprite
+struct TrainerBackPicInfo
 {
     const struct MonCoords coordinates;
-    const struct SpriteFrameImage backPic;
-    const struct SpritePalette palette;
+    const struct SpriteFrameImage image;
+    const u16 *paletteData;
     const union AnimCmd *const *const animation;
+};
+
+struct TrainerPicInfo
+{
+    const struct TrainerFrontPicInfo *frontPic;
+    const struct TrainerBackPicInfo *backPic;
 };
 
 #define MON_COORDS_SIZE(width, height) (DIV_ROUND_UP(width, 8) << 4 | DIV_ROUND_UP(height, 8))
@@ -132,7 +137,6 @@ struct Trainer
     u8 poolPickIndex;
     u8 poolPruneIndex;
     u16 overrideTrainer;
-    enum TrainerPicID trainerBackPic;
 };
 
 struct TrainerClass
@@ -198,8 +202,7 @@ extern const union AnimCmd sAnim_GeneralFrame0[];
 extern const union AnimCmd sAnim_GeneralFrame3[];
 extern const union AnimCmd *const gAnims_MonPic[];
 extern const union AnimCmd *const gAnims_Trainer[];
-extern const struct TrainerSprite gTrainerSprites[];
-extern const struct TrainerBacksprite gTrainerBacksprites[];
+extern const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT];
 
 extern const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT];
 extern const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT];
@@ -300,16 +303,6 @@ static inline const enum TrainerPicID GetTrainerPicFromId(u16 trainerId)
     return GetTrainerStructFromId(trainerId)->trainerPic;
 }
 
-static inline const u8 GetTrainerBackPicFromId(u16 trainerId)
-{
-    enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
-
-    if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
-        return gBattlePartners[partnerDifficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerBackPic;
-
-    return GetTrainerStructFromId(trainerId)->trainerBackPic;
-}
-
 static inline const struct StartingStatuses GetTrainerStartingStatusFromId(u16 trainerId)
 {
     return GetTrainerStructFromId(trainerId)->startingStatus;
@@ -348,6 +341,80 @@ static inline const struct TrainerMon *GetTrainerPartyFromId(u16 trainerId)
 static inline const u64 GetTrainerAIFlagsFromId(u16 trainerId)
 {
     return GetTrainerStructFromId(trainerId)->aiFlags;
+}
+
+static inline enum TrainerPicID SanitizeTrainerPic(enum TrainerPicID trainerPicID)
+{
+    assertf(trainerPicID < TRAINER_PIC_COUNT, "trainerPicID %d out of range", trainerPicID)
+    {
+        return TRAINER_PIC_NONE;
+    };
+    return trainerPicID;
+}
+
+static inline enum TrainerPicID SanitizeFrontTrainerPic(enum TrainerPicID trainerPicID)
+{
+    trainerPicID = SanitizeTrainerPic(trainerPicID);
+    assertf(gTrainerPicInfo[trainerPicID].frontPic != NULL, "trainerPicID %d does not have a front pic defined", trainerPicID)
+    {
+        return TRAINER_PIC_NONE;
+    }
+    return trainerPicID;
+}
+
+static inline enum TrainerPicID SanitizeBackTrainerPic(enum TrainerPicID trainerPicID)
+{
+    trainerPicID = SanitizeTrainerPic(trainerPicID);
+    assertf(gTrainerPicInfo[trainerPicID].backPic != NULL, "trainerPicID %d does not have a back pic defined", trainerPicID)
+    {
+        return TRAINER_PIC_NONE;
+    }
+    return trainerPicID;
+}
+
+static inline const u32 *GetTrainerFrontPicData(enum TrainerPicID trainerPic)
+{
+    return gTrainerPicInfo[SanitizeFrontTrainerPic(trainerPic)].frontPic->imageData;
+}
+
+static inline u16 GetTrainerFrontPicSize(enum TrainerPicID trainerPic)
+{
+    return gTrainerPicInfo[SanitizeFrontTrainerPic(trainerPic)].frontPic->imageSize;
+}
+
+static inline const u16 *GetTrainerFrontPicPalette(enum TrainerPicID trainerPic)
+{
+    return gTrainerPicInfo[SanitizeFrontTrainerPic(trainerPic)].frontPic->paletteData;
+}
+
+static inline const struct Coords16 GetTrainerFrontPicMugshotCoords(enum TrainerPicID trainerPic)
+{
+    return gTrainerPicInfo[SanitizeFrontTrainerPic(trainerPic)].frontPic->mugshotCoords;
+}
+
+static inline s16 GetTrainerFrontPicMugshotRotation(enum TrainerPicID trainerPic)
+{
+    return gTrainerPicInfo[SanitizeFrontTrainerPic(trainerPic)].frontPic->mugshotRotation;
+}
+
+static inline const struct MonCoords *GetTrainerBackPicCoords(enum TrainerPicID trainerPic)
+{
+    return &gTrainerPicInfo[SanitizeBackTrainerPic(trainerPic)].backPic->coordinates;
+}
+
+static inline const struct SpriteFrameImage *GetTrainerBackPicImage(enum TrainerPicID trainerPic)
+{
+    return &gTrainerPicInfo[SanitizeBackTrainerPic(trainerPic)].backPic->image;
+}
+
+static inline const union AnimCmd *const *GetTrainerBackPicAnims(enum TrainerPicID trainerPic)
+{
+    return gTrainerPicInfo[SanitizeBackTrainerPic(trainerPic)].backPic->animation;
+}
+
+static inline const u16 *GetTrainerBackPicPalette(enum TrainerPicID trainerPic)
+{
+    return gTrainerPicInfo[SanitizeBackTrainerPic(trainerPic)].backPic->paletteData;
 }
 
 #endif // GUARD_DATA_H

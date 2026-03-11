@@ -2322,7 +2322,7 @@ static void PrepareBagForTutorial(void)
         sBackupPlayerBag->scrollPosition[i] = gBagPosition.scrollPosition[i];
     }
     memset(gSaveBlock1Ptr->bag.items, 0, sizeof(gSaveBlock1Ptr->bag.items));
-    memset(gSaveBlock1Ptr->bag.pokeBalls, 0, sizeof(gSaveBlock1Ptr->bag.pokeBalls));
+    memset(gSaveBlock1Ptr->bag.keyItems, 0, sizeof(gSaveBlock1Ptr->bag.keyItems));
     memset(gSaveBlock1Ptr->bag.pokeBalls, 0, sizeof(gSaveBlock1Ptr->bag.pokeBalls));
     gSaveBlock1Ptr->registeredItem = ITEM_NONE;
     ResetBagScrollPositions();

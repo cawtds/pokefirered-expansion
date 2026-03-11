@@ -70,7 +70,7 @@ static const struct WindowTemplate sWindowTemplates[] = {
         .tilemapTop = 1,
         .width = 25,
         .height = 4,
-        .paletteNum = 15, 
+        .paletteNum = 15,
         .baseBlock = 0x29c
     },
     [WIN_BODY] = {
@@ -79,7 +79,7 @@ static const struct WindowTemplate sWindowTemplates[] = {
         .tilemapTop = 6,
         .width = 28,
         .height = 8,
-        .paletteNum = 15, 
+        .paletteNum = 15,
         .baseBlock = 0x1bc
     },
     [WIN_FOOTER] = {
@@ -88,7 +88,7 @@ static const struct WindowTemplate sWindowTemplates[] = {
         .tilemapTop = 14,
         .width = 28,
         .height = 5,
-        .paletteNum = 15, 
+        .paletteNum = 15,
         .baseBlock = 0x130
     }
 };
@@ -101,16 +101,16 @@ const u16 gCard4Pal[] = INCBIN_U16("graphics/wonder_card/bg4.gbapal");
 const u16 gCard5Pal[] = INCBIN_U16("graphics/wonder_card/bg5.gbapal");
 static const u16 sCard6Pal[] = INCBIN_U16("graphics/wonder_card/bg6.gbapal");
 static const u16 sCard7Pal[] = INCBIN_U16("graphics/wonder_card/bg7.gbapal");
-static const u32 sCard0Gfx[] = INCBIN_U32("graphics/wonder_card/bg0.4bpp.lz");
-static const u32 sCard0Map[] = INCBIN_U32("graphics/wonder_card/bg0.bin.lz");
-static const u32 sCard1Gfx[] = INCBIN_U32("graphics/wonder_card/bg1.4bpp.lz");
-static const u32 sCard1Map[] = INCBIN_U32("graphics/wonder_card/bg1.bin.lz");
-static const u32 sCard2Gfx[] = INCBIN_U32("graphics/wonder_card/bg2.4bpp.lz");
-static const u32 sCard2Map[] = INCBIN_U32("graphics/wonder_card/bg2.bin.lz");
-static const u32 sCard6Gfx[] = INCBIN_U32("graphics/wonder_card/bg6.4bpp.lz");
-static const u32 sCard6Map[] = INCBIN_U32("graphics/wonder_card/bg6.bin.lz");
-static const u32 sCard7Gfx[] = INCBIN_U32("graphics/wonder_card/bg7.4bpp.lz");
-static const u32 sCard7Map[] = INCBIN_U32("graphics/wonder_card/bg7.bin.lz");
+static const u32 sCard0Gfx[] = INCBIN_U32("graphics/wonder_card/bg0.4bpp.smol");
+static const u32 sCard0Map[] = INCBIN_U32("graphics/wonder_card/bg0.bin.smolTM");
+static const u32 sCard1Gfx[] = INCBIN_U32("graphics/wonder_card/bg1.4bpp.smol");
+static const u32 sCard1Map[] = INCBIN_U32("graphics/wonder_card/bg1.bin.smolTM");
+static const u32 sCard2Gfx[] = INCBIN_U32("graphics/wonder_card/bg2.4bpp.smol");
+static const u32 sCard2Map[] = INCBIN_U32("graphics/wonder_card/bg2.bin.smolTM");
+static const u32 sCard6Gfx[] = INCBIN_U32("graphics/wonder_card/bg6.4bpp.smol");
+static const u32 sCard6Map[] = INCBIN_U32("graphics/wonder_card/bg6.bin.smolTM");
+static const u32 sCard7Gfx[] = INCBIN_U32("graphics/wonder_card/bg7.4bpp.smol");
+static const u32 sCard7Map[] = INCBIN_U32("graphics/wonder_card/bg7.bin.smolTM");
 static const u16 sStampShadowPal0[] = INCBIN_U16("graphics/wonder_card/stamp_shadow_0.gbapal");
 static const u16 sStampShadowPal1[] = INCBIN_U16("graphics/wonder_card/stamp_shadow_1.gbapal");
 static const u16 sStampShadowPal2[] = INCBIN_U16("graphics/wonder_card/stamp_shadow_2.gbapal");
@@ -119,7 +119,7 @@ static const u16 sStampShadowPal4[] = INCBIN_U16("graphics/wonder_card/stamp_sha
 static const u16 sStampShadowPal5[] = INCBIN_U16("graphics/wonder_card/stamp_shadow_5.gbapal");
 static const u16 sStampShadowPal6[] = INCBIN_U16("graphics/wonder_card/stamp_shadow_6.gbapal");
 static const u16 sStampShadowPal7[] = INCBIN_U16("graphics/wonder_card/stamp_shadow_7.gbapal");
-static const u32 sStampShadowGfx[] = INCBIN_U32("graphics/wonder_card/stamp_shadow.4bpp.lz");
+static const u32 sStampShadowGfx[] = INCBIN_U32("graphics/wonder_card/stamp_shadow.4bpp.smol");
 
 static const struct CompressedSpriteSheet sSpriteSheet_StampShadow = {
     sStampShadowGfx, 0x100, TAG_STAMP_SHADOW
@@ -325,7 +325,7 @@ static void BufferCardText(void)
     // Copy footer line 1
     memcpy(sWonderCardData->footerLine1Text, sWonderCardData->card.footerLine1Text, WONDER_CARD_TEXT_LENGTH);
     sWonderCardData->footerLine1Text[WONDER_CARD_TEXT_LENGTH] = EOS;
-    
+
     // Copy footer line 2
     switch (sWonderCardData->card.type)
     {
@@ -338,12 +338,12 @@ static void BufferCardText(void)
         break;
     case CARD_TYPE_LINK_STAT:
         sWonderCardData->footerLine2Text[0] = EOS;
-        
+
         // Load stats
         stats[0] = sWonderCardData->cardMetadata.battlesWon < MAX_WONDER_CARD_STAT ? sWonderCardData->cardMetadata.battlesWon : MAX_WONDER_CARD_STAT;
         stats[1] = sWonderCardData->cardMetadata.battlesLost < MAX_WONDER_CARD_STAT ? sWonderCardData->cardMetadata.battlesLost : MAX_WONDER_CARD_STAT;
         stats[2] = sWonderCardData->cardMetadata.numTrades < MAX_WONDER_CARD_STAT ? sWonderCardData->cardMetadata.numTrades : MAX_WONDER_CARD_STAT;
-        
+
         // Init stat text arrays
         for (i = 0; i < ARRAY_COUNT(sWonderCardData->statTextData); i++)
         {
@@ -403,7 +403,7 @@ static void DrawCardWindow(u8 whichWindow)
         if (x < 0)
             x = 0;
         AddTextPrinterParameterized3(windowId, FONT_NORMAL_COPY_2, x, 17, sTextColorTable[sWonderCardData->gfx->titleTextPal], 0, sWonderCardData->subtitleText);
-        
+
         // Print id number
         if (sWonderCardData->card.idNumber != 0)
             AddTextPrinterParameterized3(windowId, FONT_NORMAL, 166, 17, sTextColorTable[sWonderCardData->gfx->titleTextPal], 0, sWonderCardData->idNumberText);
@@ -420,7 +420,7 @@ static void DrawCardWindow(u8 whichWindow)
                                      sFooterTextOffsets[sWonderCardData->card.type],
                                      sTextColorTable[sWonderCardData->gfx->footerTextPal],
                                      0, sWonderCardData->footerLine1Text);
-        
+
         // Print footer line 2
         if (sWonderCardData->card.type != CARD_TYPE_LINK_STAT)
         {
@@ -460,14 +460,14 @@ static void CreateCardSprites(void)
 {
     u8 i = 0;
     sWonderCardData->monIconSpriteId = SPRITE_NONE;
-    
+
     // Create icon sprite
     if (sWonderCardData->cardMetadata.iconSpecies != SPECIES_NONE)
     {
         sWonderCardData->monIconSpriteId = CreateMonIconNoPersonality(GetIconSpeciesNoPersonality(sWonderCardData->cardMetadata.iconSpecies), SpriteCallbackDummy, 220, 20, 0);
         gSprites[sWonderCardData->monIconSpriteId].oam.priority = 2;
     }
-    
+
     // Create stamp sprites
     if (sWonderCardData->card.maxStamps != 0 && sWonderCardData->card.type == CARD_TYPE_STAMP)
     {
@@ -490,11 +490,11 @@ static void CreateCardSprites(void)
 static void DestroyCardSprites(void)
 {
     u8 i = 0;
-    
+
     // Destroy icon sprite
     if (sWonderCardData->monIconSpriteId != SPRITE_NONE)
         FreeAndDestroyMonIconSprite(&gSprites[sWonderCardData->monIconSpriteId]);
-    
+
     // Destroy stamp sprites
     if (sWonderCardData->card.maxStamps != 0 && sWonderCardData->card.type == CARD_TYPE_STAMP)
     {

@@ -517,8 +517,6 @@ extern const u8 gText_PkmnTransferredSomeonesPC[];
 extern const u8 gText_PkmnTransferredBillsPC[];
 extern const u8 gText_PkmnTransferredSomeonesPCBoxFull[];
 extern const u8 gText_PkmnTransferredBillsPCBoxFull[];
-extern const u8 gText_PkmnTransferredLanettesPCBoxFull[];
-extern const u8 gText_PkmnTransferredLanettesPC[];
 extern const u8 gText_PkmnSentToPCAfterCatch[];
 
 extern const u8 EventScript_SelectWithoutRegisteredItem[];

@@ -32,7 +32,7 @@ struct RfuUnusedQueue
 static EWRAM_DATA u8 sWirelessStatusIndicatorSpriteId = 0;
 
 static const u16 sWirelessLinkIconPalette[] = INCBIN_U16("graphics/link/wireless_icon.gbapal");
-static const u32 sWirelessLinkIconPic[] = INCBIN_U32("graphics/link/wireless_icon.4bpp.lz");
+static const u32 sWirelessLinkIconPic[] = INCBIN_U32("graphics/link/wireless_icon.4bpp.smol");
 
 // Most of the below two tables won't make sense with ASCII encoding.
 static const u8 sWireless_ASCIItoRSETable[] = {

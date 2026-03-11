@@ -646,14 +646,14 @@ static const u16 sBerryCrushCorePal[] = INCBIN_U16("graphics/berry_crush/crusher
 static const u16 sBerryCrushImpactAndSparklesPal[] = INCBIN_U16("graphics/berry_crush/impact.gbapal");
 static const u16 sBerryCrushTimerPal[] = INCBIN_U16("graphics/berry_crush/timer_digits.gbapal");
 
-static const u32 sBerryCrushCoreTiles[] = INCBIN_U32("graphics/berry_crush/crusher_base.4bpp.lz");
-static const u32 sBerryCrushImpactTiles[] = INCBIN_U32("graphics/berry_crush/impact.4bpp.lz");
-static const u32 sBerryCrushPowderSparklesTiles[] = INCBIN_U32("graphics/berry_crush/sparkle.4bpp.lz");
-static const u32 sBerryCrushTimerTiles[] = INCBIN_U32("graphics/berry_crush/timer_digits.4bpp.lz");
+static const u32 sBerryCrushCoreTiles[] = INCBIN_U32("graphics/berry_crush/crusher_base.4bpp.smol");
+static const u32 sBerryCrushImpactTiles[] = INCBIN_U32("graphics/berry_crush/impact.4bpp.smol");
+static const u32 sBerryCrushPowderSparklesTiles[] = INCBIN_U32("graphics/berry_crush/sparkle.4bpp.smol");
+static const u32 sBerryCrushTimerTiles[] = INCBIN_U32("graphics/berry_crush/timer_digits.4bpp.smol");
 
-static const u32 sCrusherTop_Tilemap[] = INCBIN_U32("graphics/berry_crush/crusher_top.bin.lz");
-static const u32 sContainerCap_Tilemap[] = INCBIN_U32("graphics/berry_crush/container_cap.bin.lz");
-static const u32 sBg_Tilemap[] = INCBIN_U32("graphics/berry_crush/bg.bin.lz");
+static const u32 sCrusherTop_Tilemap[] = INCBIN_U32("graphics/berry_crush/crusher_top.bin.smolTM");
+static const u32 sContainerCap_Tilemap[] = INCBIN_U32("graphics/berry_crush/container_cap.bin.smolTM");
+static const u32 sBg_Tilemap[] = INCBIN_U32("graphics/berry_crush/bg.bin.smolTM");
 
 // Takes the number of players - 2 and a player id and returns the
 // index into sPlayerCoords where that player should be seated
