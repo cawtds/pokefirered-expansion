@@ -33,28 +33,29 @@ enum
     HP_BAR_FULL,
 };
 
-#define TAG_HEALTHBOX_PLAYER1_TILE              55039
-#define TAG_HEALTHBOX_PLAYER2_TILE              55040
-#define TAG_HEALTHBOX_OPPONENT1_TILE            55041
-#define TAG_HEALTHBOX_OPPONENT2_TILE            55042
+#define TAG_HEALTHBOX_PLAYER1_TILE      0xD6FF
+#define TAG_HEALTHBOX_PLAYER2_TILE      0xD700
+#define TAG_HEALTHBOX_OPPONENT1_TILE    0xD701
+#define TAG_HEALTHBOX_OPPONENT2_TILE    0xD702
 
-#define TAG_HEALTHBAR_PLAYER1_TILE              55044
-#define TAG_HEALTHBAR_OPPONENT1_TILE            55045
-#define TAG_HEALTHBAR_PLAYER2_TILE              55046
-#define TAG_HEALTHBAR_OPPONENT2_TILE            55047
+#define TAG_HEALTHBAR_PLAYER1_TILE      0xD704
+#define TAG_HEALTHBAR_OPPONENT1_TILE    0xD705
+#define TAG_HEALTHBAR_PLAYER2_TILE      0xD706
+#define TAG_HEALTHBAR_OPPONENT2_TILE    0xD707
 
-#define TAG_HEALTHBOX_PALS_1                    55049
-#define TAG_HEALTHBOX_PALS_2                    55050
-#define TAG_HEALTHBOX_SAFARI_TILE               55051
-#define TAG_STATUS_SUMMARY_BAR_TILE             55052
+#define TAG_HEALTHBOX_PALS_1            0xD709
+#define TAG_HEALTHBOX_PALS_2            0xD70A
+#define TAG_HEALTHBOX_SAFARI_TILE       0xD70B
+#define TAG_STATUS_SUMMARY_BAR_TILE     0xD70C
 
-#define TAG_STATUS_SUMMARY_BAR_PAL              55056
-#define TAG_STATUS_SUMMARY_BALLS_PAL            55058
-#define TAG_STATUS_SUMMARY_BALLS_TILE           55060
+#define TAG_STATUS_SUMMARY_BAR_PAL      0xD710
+#define TAG_STATUS_SUMMARY_BALLS_PAL    0xD712
 
-#define TAG_HEALTHBOX_PAL                       TAG_HEALTHBOX_PLAYER1_TILE
-#define TAG_HEALTHBAR_PAL                       TAG_HEALTHBAR_PLAYER1_TILE
-#define TAG_SHADOW_PAL                          TAG_HEALTHBOX_PLAYER1_TILE
+#define TAG_STATUS_SUMMARY_BALLS_TILE   0xD714
+
+#define TAG_HEALTHBAR_PAL               TAG_HEALTHBAR_PLAYER1_TILE
+#define TAG_HEALTHBOX_PAL               TAG_HEALTHBOX_PLAYER1_TILE
+#define TAG_SHADOW_PAL                  TAG_HEALTHBOX_PLAYER1_TILE
 
 #define TAG_SHADOW_TILE                 0xD759
 
@@ -107,39 +108,37 @@ enum
     HEALTHBOX_SAFARI_BALLS_TEXT
 };
 
-enum BattleCoordTypes GetBattlerCoordsIndex(u32 battler);
-u8 CreateBattlerHealthboxSprites(u8 battler);
+enum BattleCoordTypes GetBattlerCoordsIndex(enum BattlerId battler);
+u8 CreateBattlerHealthboxSprites(enum BattlerId battler);
 u8 CreateSafariPlayerHealthboxSprites(void);
-void SetBattleBarStruct(u8 battler, u8 healthboxSpriteId, s32 maxVal, s32 oldVal, s32 receivedValue);
+void SetBattleBarStruct(enum BattlerId battler, u8 healthboxSpriteId, s32 maxVal, s32 oldVal, s32 receivedValue);
 void SetHealthboxSpriteInvisible(u8 healthboxSpriteId);
 void SetHealthboxSpriteVisible(u8 healthboxSpriteId);
 void DummyBattleInterfaceFunc(u8 healthboxSpriteId, bool8 isDoubleBattleBattlerOnly);
 void UpdateOamPriorityInAllHealthboxes(u8 priority, bool32 hideHpBoxes);
-void InitBattlerHealthboxCoords(u8 battler);
-void GetBattlerHealthboxCoords(u8 battler, s16 *x, s16 *y);
+void InitBattlerHealthboxCoords(enum BattlerId battler);
+void GetBattlerHealthboxCoords(enum BattlerId battler, s16 *x, s16 *y);
 void UpdateHpTextInHealthbox(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp, s16 maxHp);
 void SwapHpBarsWithHpText(void);
 u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *partyInfo, bool8 skipPlayer, bool8 isBattleStart);
 void Task_HidePartyStatusSummary(u8 taskId);
 void UpdateHealthboxAttribute(u8 healthboxSpriteId, struct Pokemon *mon, u8 elementId);
-s32 MoveBattleBar(u8 battler, u8 healthboxSpriteId, u8 whichBar, u8 unused);
+s32 MoveBattleBar(enum BattlerId battler, u8 healthboxSpriteId, u8 whichBar, u8 unused);
 u8 GetScaledHPFraction(s16 hp, s16 maxhp, u8 scale);
 u8 GetHPBarLevel(s16 hp, s16 maxhp);
-void CreateAbilityPopUp(u8 battlerId, enum Ability ability, bool32 isDoubleBattle);
-void DestroyAbilityPopUp(u8 battlerId);
+void CreateAbilityPopUp(enum BattlerId battlerId, enum Ability ability, bool32 isDoubleBattle);
+void DestroyAbilityPopUp(enum BattlerId battlerId);
 bool32 CanThrowLastUsedBall(void);
 void TryHideLastUsedBall(void);
 void TryRestoreLastUsedBall(void);
 void TryAddLastUsedBallItemSprites(void);
 void SwapBallToDisplay(bool32 sameBall);
 void ArrowsChangeColorLastBallCycle(bool32 showArrows);
-void UpdateAbilityPopup(u8 battlerId);
+void UpdateAbilityPopup(enum BattlerId battlerId);
 void CategoryIcons_LoadSpritesGfx(void);
 void TryToAddMoveInfoWindow(void);
 void TryToHideMoveInfoWindow(void);
-
-// frlg
-void UpdateNickInHealthbox(u8 spriteId, struct Pokemon *mon);
-void TryAddPokeballIconToHealthbox(u8 spriteId, u8);
+void TryAddPokeballIconToHealthbox(u8 healthboxSpriteId, bool8 noStatus);
+void UpdateNickInHealthbox(u8 healthboxSpriteId, struct Pokemon *mon);
 
 #endif // GUARD_BATTLE_INTERFACE_H
