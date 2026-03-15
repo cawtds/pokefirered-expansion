@@ -185,6 +185,29 @@ $(MASKSGFXDIR)/unused_level_up.4bpp: %.4bpp: %.png
 $(BATTRANSGFXDIR)/vs_frame.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 16 -Wnum_tiles
 
+
+$(BATTRANSGFXDIR)/regis.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -num_tiles 53 -Wnum_tiles
+
+$(BATTRANSGFXDIR)/rayquaza.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -num_tiles 938 -Wnum_tiles
+
+$(BATTRANSGFXDIR)/frontier_square_1.4bpp: $(BATTRANSGFXDIR)/frontier_squares_blanktiles.4bpp \
+                                          $(BATTRANSGFXDIR)/frontier_squares_1.4bpp
+	@cat $^ >$@
+
+$(BATTRANSGFXDIR)/frontier_square_2.4bpp: $(BATTRANSGFXDIR)/frontier_squares_blanktiles.4bpp \
+                                          $(BATTRANSGFXDIR)/frontier_squares_2.4bpp
+	@cat $^ >$@
+
+$(BATTRANSGFXDIR)/frontier_square_3.4bpp: $(BATTRANSGFXDIR)/frontier_squares_blanktiles.4bpp \
+                                          $(BATTRANSGFXDIR)/frontier_squares_3.4bpp
+	@cat $^ >$@
+
+$(BATTRANSGFXDIR)/frontier_square_4.4bpp: $(BATTRANSGFXDIR)/frontier_squares_blanktiles.4bpp \
+                                          $(BATTRANSGFXDIR)/frontier_squares_4.4bpp
+	@cat $^ >$@
+
 $(PARTYMENUGFXDIR)/bg.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 62 -Wnum_tiles
 

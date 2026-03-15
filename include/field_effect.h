@@ -136,7 +136,6 @@ u32 FldEff_ShortGrass(void);
 u32 FldEff_HotSpringsWater(void);
 u32 FldEff_UseWaterfall(void);
 u32 FldEff_UseDive(void);
-u32 FldEff_Pokeball(void);
 u32 FldEff_XIcon(void);
 u32 FldEff_PopOutOfAsh(void);
 u32 FldEff_LavaridgeGymWarp(void);

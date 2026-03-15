@@ -1,5 +1,6 @@
 #include "global.h"
 #include "gflib.h"
+#include "battle_transition.h"
 #include "data.h"
 #include "decompress.h"
 #include "event_data.h"
@@ -118,7 +119,7 @@ static const u32 (*const sFieldEffectFuncs[FLDEFF_COUNT]) (void) =
     [FLDEFF_HOT_SPRINGS_WATER]            = FldEff_HotSpringsWater,
     [FLDEFF_USE_WATERFALL]                = FldEff_UseWaterfall,
     [FLDEFF_USE_DIVE]                     = FldEff_UseDive,
-    [FLDEFF_POKEBALL]                     = FldEff_Pokeball,
+    [FLDEFF_POKEBALL_TRAIL]               = FldEff_PokeballTrail,
     [FLDEFF_X_ICON]                       = FldEff_XIcon,
     [FLDEFF_NOP_47]                       = FldEff_Nop,
     [FLDEFF_NOP_48]                       = FldEff_Nop,
