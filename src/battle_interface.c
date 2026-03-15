@@ -468,17 +468,17 @@ static const struct SubspriteTable sStatusSummaryBar_SubspriteTable_Exit[] =
 
 static const struct CompressedSpriteSheet sStatusSummaryBarSpriteSheet =
 {
-    gBattleInterface_PartySummaryBar_Gfx, 0x200, TAG_STATUS_SUMMARY_BAR_TILE
+    gBattleInterface_BallStatusBarGfx, 0x200, TAG_STATUS_SUMMARY_BAR_TILE
 };
 
 static const struct SpritePalette sStatusSummaryBarSpritePal =
 {
-    gBattleInterface_Healthbox_Pal, TAG_STATUS_SUMMARY_BAR_PAL
+    gBattleInterface_BallStatusBarPal, TAG_STATUS_SUMMARY_BAR_PAL
 };
 
 static const struct SpritePalette sStatusSummaryBallsSpritePal =
 {
-    gBattleInterface_Healthbar_Pal, TAG_STATUS_SUMMARY_BALLS_PAL
+    gBattleInterface_BallDisplayPal, TAG_STATUS_SUMMARY_BALLS_PAL
 };
 
 static const struct SpriteSheet sStatusSummaryBallsSpriteSheet =
@@ -1664,10 +1664,6 @@ static void SpriteCB_StatusSummaryBalls_OnSwitchout(struct Sprite *sprite)
     sprite->x2 = gSprites[barSpriteId].x2;
     sprite->y2 = gSprites[barSpriteId].y2;
 }
-
-const u8 gText_HealthboxGender_Male[] = _("{COLOR DYNAMIC_COLOR2}♂");
-const u8 gText_HealthboxGender_Female[] = _("{COLOR DYNAMIC_COLOR1}♀");
-const u8 gText_HealthboxGender_None[] = _("{COLOR DYNAMIC_COLOR2}");
 
 void UpdateNickInHealthbox(u8 healthboxSpriteId, struct Pokemon *mon)
 {

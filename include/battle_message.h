@@ -293,6 +293,9 @@ extern const u8 gText_BattleYesNoChoice[];
 
 extern const u8 gText_SafariBalls[];
 extern const u8 gText_HighlightRed_Left[];
+extern const u8 gText_HealthboxGender_Male[];
+extern const u8 gText_HealthboxGender_Female[];
+extern const u8 gText_HealthboxGender_None[];
 
 extern const u8 gText_Win[];
 extern const u8 gText_Loss[];

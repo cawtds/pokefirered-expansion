@@ -115,11 +115,11 @@ static const struct CompressedSpriteSheet sSpriteSheets_HealthBar[MAX_BATTLERS_C
 const struct SpritePalette sSpritePalettes_HealthBoxHealthBar[2] =
 {
     {
-        .data = gBattleInterface_Healthbox_Pal,
+        .data = gBattleInterface_BallStatusBarPal,
         .tag = TAG_HEALTHBOX_PAL,
     },
     {
-        .data = gBattleInterface_Healthbar_Pal,
+        .data = gBattleInterface_BallDisplayPal,
         .tag = TAG_HEALTHBAR_PAL,
     },
 };
@@ -787,7 +787,6 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
         {
             LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[0]);
             LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[1]);
-            LoadIndicatorSpritesGfx();
             CategoryIcons_LoadSpritesGfx();
         }
         else if (!IsDoubleBattle())
