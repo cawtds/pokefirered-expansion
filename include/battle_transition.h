@@ -73,8 +73,8 @@ enum BattleTransitionGroup
 
 extern const struct SpritePalette gSpritePalette_Pokeball;
 
-void BattleTransition_StartOnField(u8 transitionId);
-void BattleTransition_Start(u8 transitionId);
+void BattleTransition_StartOnField(enum BattleTransition transitionId);
+void BattleTransition_Start(enum BattleTransition transitionId);
 bool8 IsBattleTransitionDone(void);
 u32 FldEff_PokeballTrail(void);
 void Task_BattleTransition_Intro(u8 taskId);

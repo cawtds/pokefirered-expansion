@@ -95,7 +95,7 @@ static bool8 Transition_WaitForIntro(struct Task *);
 static bool8 Transition_StartMain(struct Task *);
 static bool8 Transition_WaitForMain(struct Task *);
 
-static void LaunchBattleTransitionTask(u8);
+static void LaunchBattleTransitionTask(enum BattleTransition transition);
 static void Task_BattleTransition(u8);
 static void Task_Intro(u8);
 static void Task_Blur(u8);
@@ -337,12 +337,6 @@ static const u32 sFrontierSquares_EmptyBg_Tileset[] = INCBIN_U32("graphics/battl
 static const u32 sFrontierSquares_Shrink1_Tileset[] = INCBIN_U32("graphics/battle_transitions/frontier_square_3.4bpp.smol");
 static const u32 sFrontierSquares_Shrink2_Tileset[] = INCBIN_U32("graphics/battle_transitions/frontier_square_4.4bpp.smol");
 static const u32 sFrontierSquares_Tilemap[] = INCBIN_U32("graphics/battle_transitions/frontier_squares.bin");
-
-// All battle transitions use the same intro
-static const TaskFunc sTasks_Intro[B_TRANSITION_COUNT] =
-{
-    [0 ... B_TRANSITION_COUNT - 1] = &Task_Intro
-};
 
 // After the intro each transition has a unique main task.
 // This task will call the functions that do the transition effects.
@@ -1031,13 +1025,13 @@ static void UNUSED TestBattleTransition(u8 transitionId)
     SetMainCallback2(CB2_TestBattleTransition);
 }
 
-void BattleTransition_StartOnField(u8 transitionId)
+void BattleTransition_StartOnField(enum BattleTransition transitionId)
 {
     gMain.callback2 = CB2_OverworldBasic;
     LaunchBattleTransitionTask(transitionId);
 }
 
-void BattleTransition_Start(u8 transitionId)
+void BattleTransition_Start(enum BattleTransition transitionId)
 {
     LaunchBattleTransitionTask(transitionId);
 }
@@ -1061,7 +1055,7 @@ bool8 IsBattleTransitionDone(void)
     }
 }
 
-static void LaunchBattleTransitionTask(u8 transitionId)
+static void LaunchBattleTransitionTask(enum BattleTransition transitionId)
 {
     u8 taskId = CreateTask(Task_BattleTransition, 2);
     gTasks[taskId].tTransitionId = transitionId;
@@ -1080,22 +1074,16 @@ static bool8 Transition_StartIntro(struct Task *task)
     // freeing up sprite slots for the transition
     gWeatherPtr->noShadows = TRUE;
     CpuCopy32(gPlttBufferFaded, gPlttBufferUnfaded, PLTT_SIZE);
-    if (sTasks_Intro[task->tTransitionId] != NULL)
-    {
-        CreateTask(sTasks_Intro[task->tTransitionId], 4);
-        task->tState++;
-        return FALSE;
-    }
-    else
-    {
-        task->tState = 2;
-        return TRUE;
-    }
+
+    CreateTask(Task_Intro, 4);
+    task->tState++;
+
+    return FALSE;
 }
 
 static bool8 Transition_WaitForIntro(struct Task *task)
 {
-    if (FindTaskIdByFunc(sTasks_Intro[task->tTransitionId]) == TASK_NONE)
+    if (FindTaskIdByFunc(Task_Intro) == TASK_NONE)
     {
         task->tState++;
         return TRUE;
