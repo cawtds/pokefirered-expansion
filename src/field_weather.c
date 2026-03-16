@@ -1,20 +1,21 @@
 #include "global.h"
-#include "gflib.h"
 #include "event_object_movement.h"
 #include "field_camera.h"
 #include "field_effect.h"
-#include "field_weather.h"
 #include "field_weather_effects.h"
+#include "field_weather.h"
+#include "gpu_regs.h"
 #include "overworld.h"
+#include "palette.h"
+#include "quest_log.h"
+#include "sound.h"
 #include "task.h"
 #include "trig.h"
 #include "util.h"
 #include "constants/field_weather.h"
-#include "constants/weather.h"
-#include "constants/songs.h"
-
-#include "quest_log.h"
 #include "constants/quest_log.h"
+#include "constants/songs.h"
+#include "constants/weather.h"
 
 #define DROUGHT_COLOR_INDEX(color) ((((color) >> 1) & 0xF) | (((color) >> 2) & 0xF0) | (((color) >> 3) & 0xF00))
 

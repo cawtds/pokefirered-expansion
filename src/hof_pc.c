@@ -1,9 +1,10 @@
 #include "global.h"
-#include "gflib.h"
+#include "bg.h"
 #include "hall_of_fame.h"
 #include "overworld.h"
-#include "script.h"
+#include "palette.h"
 #include "script_menu.h"
+#include "script.h"
 #include "task.h"
 
 static void ReshowPCMenuAfterHallOfFamePC(void);

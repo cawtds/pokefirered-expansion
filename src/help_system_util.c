@@ -1,11 +1,15 @@
 #include "global.h"
-#include "gflib.h"
 #include "decompress.h"
-#include "m4a.h"
+#include "dma3.h"
 #include "event_data.h"
+#include "gpu_regs.h"
 #include "help_system.h"
 #include "list_menu.h"
+#include "m4a.h"
+#include "malloc.h"
+#include "sound.h"
 #include "strings.h"
+#include "text.h"
 #include "constants/songs.h"
 
 #define ZERO 0

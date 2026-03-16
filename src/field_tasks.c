@@ -1,5 +1,4 @@
 #include "global.h"
-#include "gflib.h"
 #include "bike.h"
 #include "clock.h"
 #include "event_data.h"
@@ -11,6 +10,7 @@
 #include "overworld.h"
 #include "quest_log.h"
 #include "script.h"
+#include "sound.h"
 #include "task.h"
 #include "constants/field_tasks.h"
 #include "constants/metatile_labels.h"

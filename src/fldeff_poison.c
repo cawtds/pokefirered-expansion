@@ -1,5 +1,6 @@
 #include "global.h"
-#include "gflib.h"
+#include "bg.h"
+#include "sound.h"
 #include "task.h"
 #include "constants/songs.h"
 

@@ -1,16 +1,20 @@
 #include "global.h"
+#include "bg.h"
 #include "decompress.h"
-#include "gflib.h"
 #include "event_data.h"
 #include "event_scripts.h"
-#include "fldeff.h"
 #include "field_effect.h"
+#include "fldeff.h"
+#include "gpu_regs.h"
 #include "map_preview_screen.h"
 #include "overworld.h"
+#include "palette.h"
 #include "party_menu.h"
 #include "script.h"
-#include "constants/songs.h"
+#include "sound.h"
+#include "window.h"
 #include "constants/map_types.h"
+#include "constants/songs.h"
 
 struct FlashStruct
 {

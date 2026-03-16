@@ -1,5 +1,4 @@
 #include "global.h"
-#include "gflib.h"
 #include "cable_club.h"
 #include "event_object_lock.h"
 #include "event_object_movement.h"
@@ -17,14 +16,16 @@
 #include "map_preview_screen.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
+#include "palette.h"
 #include "quest_log.h"
 #include "script.h"
+#include "sound.h"
 #include "start_menu.h"
 #include "task.h"
-#include "constants/songs.h"
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
 #include "constants/field_weather.h"
+#include "constants/songs.h"
 
 static void ExitWarpFadeInScreen(u8 playerNotMoving);
 static void Task_ExitDoor(u8 taskId);
