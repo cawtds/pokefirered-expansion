@@ -1,7 +1,7 @@
 #include "global.h"
-#include "gflib.h"
 #include "decompress.h"
 #include "digit_obj_util.h"
+#include "malloc.h"
 
 struct DigitPrinterAlloc
 {

@@ -1,10 +1,14 @@
 #include "global.h"
-#include "gflib.h"
+#include "bg.h"
 #include "dynamic_placeholder_text_util.h"
+#include "gpu_regs.h"
+#include "malloc.h"
 #include "menu.h"
 #include "overworld.h"
+#include "palette.h"
 #include "pokedex.h"
 #include "scanline_effect.h"
+#include "sound.h"
 #include "strings.h"
 #include "task.h"
 #include "constants/sound.h"
@@ -14,7 +18,7 @@ struct Diploma
     u8 mainState;
     u8 gfxState;
     u8 initState;
-    u16 tilemapBuffer[0x800];
+    u16 tilemapBuffer[BG_SCREEN_SIZE];
 };
 
 enum {

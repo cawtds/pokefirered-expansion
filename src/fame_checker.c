@@ -1,22 +1,26 @@
 #include "global.h"
-#include "gflib.h"
-#include "constants/songs.h"
-#include "event_data.h"
-#include "event_scripts.h"
-#include "graphics.h"
-#include "battle.h"
 #include "battle_setup.h"
-#include "menu.h"
-#include "trainer_pokemon_sprites.h"
-#include "scanline_effect.h"
+#include "battle.h"
+#include "event_data.h"
+#include "event_object_movement.h"
+#include "event_scripts.h"
+#include "fame_checker.h"
+#include "gpu_regs.h"
+#include "graphics.h"
 #include "item_menu.h"
 #include "list_menu.h"
-#include "task.h"
-#include "event_object_movement.h"
-#include "text_window.h"
-#include "fame_checker.h"
+#include "malloc.h"
+#include "menu.h"
+#include "palette.h"
+#include "scanline_effect.h"
+#include "sound.h"
+#include "string_util.h"
 #include "strings.h"
+#include "task.h"
+#include "text_window.h"
+#include "trainer_pokemon_sprites.h"
 #include "constants/event_objects.h"
+#include "constants/songs.h"
 
 #define SPRITETAG_SELECTOR_CURSOR 1000
 #define SPRITETAG_QUESTION_MARK 1001
@@ -1233,7 +1237,7 @@ void UpdatePickStateFromSpecialVar8005(void)
     {
         if (gSpecialVar_0x8005 == FCPICKSTATE_NO_DRAW)
             return;
-        if (   gSpecialVar_0x8005 == FCPICKSTATE_SILHOUETTE 
+        if (   gSpecialVar_0x8005 == FCPICKSTATE_SILHOUETTE
             && gSaveBlock1Ptr->fameChecker[gSpecialVar_0x8004].pickState == FCPICKSTATE_COLORED
            )
             return;

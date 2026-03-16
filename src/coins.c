@@ -1,9 +1,9 @@
 #include "global.h"
-#include "gflib.h"
-#include "string_util.h"
 #include "menu.h"
-#include "text_window.h"
+#include "palette.h"
+#include "string_util.h"
 #include "strings.h"
+#include "text_window.h"
 #include "constants/coins.h"
 
 EWRAM_DATA static u8 sCoinsWindowId = 0;

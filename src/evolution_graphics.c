@@ -1,11 +1,12 @@
 #include "global.h"
-#include "gflib.h"
-#include "trig.h"
-#include "random.h"
 #include "decompress.h"
-#include "task.h"
-#include "evolution_scene.h"
 #include "evolution_graphics.h"
+#include "evolution_scene.h"
+#include "palette.h"
+#include "random.h"
+#include "sound.h"
+#include "task.h"
+#include "trig.h"
 #include "constants/songs.h"
 
 static void SpriteCallbackDummy_EvoSparkles(struct Sprite *sprite);

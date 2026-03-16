@@ -1,8 +1,8 @@
 #include "global.h"
-#include "gflib.h"
-#include "util.h"
-#include "save.h"
 #include "cereader_tool.h"
+#include "malloc.h"
+#include "save.h"
+#include "util.h"
 
 #define SEC30_SIZE  (offsetof(struct EReaderTrainerTowerSet, floors[4]))
 #define SEC31_SIZE  (sizeof(struct EReaderTrainerTowerSet) - SEC30_SIZE)

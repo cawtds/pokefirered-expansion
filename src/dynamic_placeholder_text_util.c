@@ -1,5 +1,6 @@
 #include "global.h"
-#include "gflib.h"
+#include "string_util.h"
+#include "constants/characters.h"
 #include "constants/event_objects.h"
 
 static EWRAM_DATA const u8 *sStringPointers[8] = {0};
@@ -92,7 +93,7 @@ void DynamicPlaceholderTextUtil_Reset(void)
     const u8 **ptr = sStringPointers;
     u8 *fillval = NULL;
     const u8 **ptr2 = ptr + (NELEMS(sStringPointers) - 1);
-    
+
     do
     {
         *ptr2-- = fillval;
