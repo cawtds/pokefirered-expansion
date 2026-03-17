@@ -1,8 +1,10 @@
 #include "global.h"
-#include "gflib.h"
-#include "decompress.h"
 #include "data.h"
+#include "decompress.h"
+#include "malloc.h"
+#include "palette.h"
 #include "trainer_pokemon_sprites.h"
+#include "window.h"
 
 #define PICS_COUNT 8
 

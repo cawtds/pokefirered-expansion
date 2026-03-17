@@ -1,14 +1,19 @@
 #include "global.h"
-#include "gflib.h"
+#include "bg.h"
+#include "dma3.h"
 #include "dynamic_placeholder_text_util.h"
+#include "gpu_regs.h"
 #include "graphics.h"
+#include "malloc.h"
 #include "menu.h"
+#include "palette.h"
 #include "scanline_effect.h"
+#include "string_util.h"
 #include "strings.h"
 #include "text_window.h"
-#include "union_room_chat.h"
 #include "union_room_chat_display.h"
 #include "union_room_chat_objects.h"
+#include "union_room_chat.h"
 
 #define STDMESSAGE_QUIT_CHATTING 0
 #define STDMESSAGE_REGISTER_WHERE 1
@@ -226,7 +231,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .x = 0,
         .y = 0,
         .letterSpacing = 1,
-        .lineSpacing = 2, 
+        .lineSpacing = 2,
         .expandPlaceholders = FALSE,
         .widerBox = FALSE
     },
@@ -236,7 +241,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .x = 0,
         .y = 0,
         .letterSpacing = 1,
-        .lineSpacing = 2, 
+        .lineSpacing = 2,
         .expandPlaceholders = FALSE,
         .widerBox = FALSE
     },
@@ -246,7 +251,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .x = 0,
         .y = 0,
         .letterSpacing = 1,
-        .lineSpacing = 2, 
+        .lineSpacing = 2,
         .expandPlaceholders = FALSE,
         .widerBox = FALSE
     },
@@ -256,7 +261,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .x = 0,
         .y = 0,
         .letterSpacing = 1,
-        .lineSpacing = 2, 
+        .lineSpacing = 2,
         .expandPlaceholders = FALSE,
         .widerBox = FALSE
     },
@@ -266,7 +271,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .x = 0,
         .y = 0,
         .letterSpacing = 1,
-        .lineSpacing = 2, 
+        .lineSpacing = 2,
         .expandPlaceholders = FALSE,
         .widerBox = FALSE
     },
@@ -276,7 +281,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .x = 0,
         .y = 0,
         .letterSpacing = 0,
-        .lineSpacing = 2, 
+        .lineSpacing = 2,
         .expandPlaceholders = TRUE,
         .widerBox = FALSE
     },
@@ -286,7 +291,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .x = 0,
         .y = 0,
         .letterSpacing = 1,
-        .lineSpacing = 2, 
+        .lineSpacing = 2,
         .expandPlaceholders = FALSE,
         .widerBox = TRUE
     },
@@ -296,7 +301,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .x = 0,
         .y = 0,
         .letterSpacing = 1,
-        .lineSpacing = 2, 
+        .lineSpacing = 2,
         .expandPlaceholders = FALSE,
         .widerBox = TRUE
     },
@@ -306,7 +311,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .x = 0,
         .y = 0,
         .letterSpacing = 1,
-        .lineSpacing = 2, 
+        .lineSpacing = 2,
         .expandPlaceholders = FALSE,
         .widerBox = TRUE
     },
@@ -316,7 +321,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .x = 0,
         .y = 0,
         .letterSpacing = 1,
-        .lineSpacing = 2, 
+        .lineSpacing = 2,
         .expandPlaceholders = TRUE,
         .widerBox = TRUE
     },
@@ -326,7 +331,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .x = 0,
         .y = 0,
         .letterSpacing = 1,
-        .lineSpacing = 2, 
+        .lineSpacing = 2,
         .expandPlaceholders = FALSE,
         .widerBox = TRUE
     }

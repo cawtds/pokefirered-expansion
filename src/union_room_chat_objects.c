@@ -1,7 +1,8 @@
 #include "global.h"
-#include "gflib.h"
 #include "decompress.h"
 #include "graphics.h"
+#include "malloc.h"
+#include "palette.h"
 #include "union_room_chat.h"
 
 enum {
