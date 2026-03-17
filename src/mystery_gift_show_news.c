@@ -1,11 +1,14 @@
 #include "global.h"
+#include "bg.h"
 #include "decompress.h"
-#include "gflib.h"
-#include "mystery_gift.h"
-#include "mystery_gift_menu.h"
-#include "menu.h"
+#include "gpu_regs.h"
 #include "link_rfu.h"
 #include "list_menu.h"
+#include "malloc.h"
+#include "menu.h"
+#include "mystery_gift_menu.h"
+#include "mystery_gift.h"
+#include "palette.h"
 #include "constants/mystery_gift.h"
 
 enum {

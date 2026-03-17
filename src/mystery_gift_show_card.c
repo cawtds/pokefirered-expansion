@@ -1,11 +1,13 @@
 #include "global.h"
-#include "gflib.h"
+#include "battle_anim.h"
 #include "decompress.h"
+#include "malloc.h"
 #include "menu.h"
-#include "pokemon_icon.h"
 #include "mystery_gift_menu.h"
 #include "mystery_gift.h"
-#include "battle_anim.h"
+#include "palette.h"
+#include "pokemon_icon.h"
+#include "string_util.h"
 #include "constants/mystery_gift.h"
 
 enum {

@@ -1,11 +1,12 @@
 #include "global.h"
-#include "gflib.h"
 #include "event_data.h"
 #include "field_specials.h"
 #include "menu.h"
 #include "money.h"
-#include "text_window.h"
+#include "palette.h"
+#include "string_util.h"
 #include "strings.h"
+#include "text_window.h"
 
 EWRAM_DATA static u8 sMoneyBoxWindowId = 0;
 

@@ -1,5 +1,4 @@
 #include "global.h"
-#include "gflib.h"
 #include "event_data.h"
 #include "event_object_lock.h"
 #include "event_scripts.h"
@@ -8,6 +7,7 @@
 #include "fieldmap.h"
 #include "menu.h"
 #include "script.h"
+#include "sound.h"
 #include "strings.h"
 #include "task.h"
 #include "constants/songs.h"

@@ -1,8 +1,8 @@
 #include "global.h"
-#include "gflib.h"
 #include "mail.h"
-#include "constants/items.h"
 #include "pokemon_icon.h"
+#include "constants/characters.h"
+#include "constants/items.h"
 
 #define UNOWN_OFFSET 30000
 

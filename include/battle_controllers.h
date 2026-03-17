@@ -1,6 +1,8 @@
 #ifndef GUARD_BATTLE_CONTROLLERS_H
 #define GUARD_BATTLE_CONTROLLERS_H
 
+#include "battle.h"
+
 typedef void (*BattleControllerFunc)(enum BattlerId battler);
 
 enum {

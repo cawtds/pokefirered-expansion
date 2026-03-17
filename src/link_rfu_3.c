@@ -1,10 +1,12 @@
 #include "global.h"
-#include "gflib.h"
 #include "decompress.h"
 #include "event_data.h"
-#include "link.h"
 #include "link_rfu.h"
+#include "link.h"
+#include "malloc.h"
 #include "random.h"
+#include "string_util.h"
+#include "constants/characters.h"
 
 enum {
     WIRELESS_STATUS_ANIM_3_BARS,

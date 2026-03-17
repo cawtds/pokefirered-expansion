@@ -1,5 +1,5 @@
 #include "global.h"
-#include "gflib.h"
+#include "gpu_regs.h"
 #include "task.h"
 #include "wild_encounter.h"
 

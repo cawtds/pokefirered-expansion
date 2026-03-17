@@ -1,8 +1,8 @@
 #include "global.h"
-#include "gflib.h"
-#include "script.h"
-#include "mystery_gift.h"
+#include "malloc.h"
 #include "mystery_gift_server.h"
+#include "mystery_gift.h"
+#include "script.h"
 
 // Assert statements use the original GF names, which are defined below.
 // Note that their name "flag" is especially misleading,

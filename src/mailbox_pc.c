@@ -1,8 +1,10 @@
 #include "global.h"
-#include "gflib.h"
-#include "menu.h"
 #include "list_menu.h"
+#include "malloc.h"
+#include "menu.h"
 #include "player_pc.h"
+#include "sound.h"
+#include "string_util.h"
 #include "strings.h"
 #include "constants/songs.h"
 

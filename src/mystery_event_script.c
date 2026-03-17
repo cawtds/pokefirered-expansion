@@ -1,18 +1,18 @@
 #include "global.h"
-#include "gflib.h"
-#include "berry.h"
 #include "battle_special.h"
+#include "berry.h"
 #include "easy_chat.h"
 #include "event_data.h"
 #include "mail.h"
+#include "mystery_event_msg.h"
 #include "mystery_event_script.h"
 #include "pokedex.h"
 #include "pokemon_size_record.h"
+#include "pokemon_storage_system.h"
 #include "script.h"
+#include "string_util.h"
 #include "strings.h"
 #include "util.h"
-#include "mystery_event_msg.h"
-#include "pokemon_storage_system.h"
 
 extern ScrCmdFunc gMysteryEventScriptCmdTable[];
 extern ScrCmdFunc gMysteryEventScriptCmdTableEnd[];

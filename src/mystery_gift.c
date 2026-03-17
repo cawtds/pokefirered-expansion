@@ -1,5 +1,4 @@
 #include "global.h"
-#include "gflib.h"
 #include "battle_special.h"
 #include "easy_chat.h"
 #include "event_data.h"
@@ -10,6 +9,7 @@
 #include "mystery_gift.h"
 #include "new_game.h"
 #include "script.h"
+#include "string_util.h"
 #include "strings.h"
 #include "task.h"
 #include "util.h"
