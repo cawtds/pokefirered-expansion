@@ -1,5 +1,6 @@
 #include "global.h"
-#include "gflib.h"
+#include "gpu_regs.h"
+#include "palette.h"
 #include "task.h"
 
 /*

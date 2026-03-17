@@ -1,10 +1,10 @@
 #include "global.h"
-#include "gflib.h"
 #include "data.h"
 #include "event_data.h"
 #include "pokedex.h"
-#include "text.h"
+#include "string_util.h"
 #include "strings.h"
+#include "text.h"
 
 #define DEFAULT_MAX_SIZE 0 // was 0x8100 in Ruby/Sapphire, 0x8000 in Emerald
 

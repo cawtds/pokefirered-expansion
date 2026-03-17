@@ -1,5 +1,4 @@
 #include "global.h"
-#include "gflib.h"
 #include "battle_records.h"
 #include "berry_pouch.h"
 #include "berry_powder.h"
@@ -28,6 +27,7 @@
 #include "rtc.h"
 #include "save.h"
 #include "script.h"
+#include "string_util.h"
 #include "tm_case.h"
 #include "trainer_tower.h"
 #include "union_room_chat.h"

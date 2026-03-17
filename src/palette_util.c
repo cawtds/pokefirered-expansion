@@ -1,7 +1,7 @@
 #include "global.h"
-#include "gflib.h"
 #include "overworld.h"
 #include "palette_util.h"
+#include "palette.h"
 #include "util.h"
 
 // "RouletteFlash" is more accurately a general flashing/fading util.
@@ -237,7 +237,7 @@ int InitPulseBlendPaletteSettings(struct PulseBlend *pulseBlend, const struct Pu
 
     if (pulseBlendPalette == NULL)
         return 0xFF;
-    
+
     pulseBlendPalette->blendCoeff = 0;
     pulseBlendPalette->fadeDirection = 0;
     pulseBlendPalette->available = 1;
@@ -312,7 +312,7 @@ void MarkUsedPulseBlendPalettes(struct PulseBlend *pulseBlend, u16 pulseBlendPal
                 pulseBlend->usedPulseBlendPalettes |= 1 << i;
             }
         }
-    }    
+    }
 }
 
 void UnmarkUsedPulseBlendPalettes(struct PulseBlend *pulseBlend, u16 pulseBlendPaletteSelector, u8 multiSelection)
@@ -414,7 +414,7 @@ void UpdatePulseBlend(struct PulseBlend *pulseBlend)
                             pulseBlendPalette->blendCoeff = 0;
                         else
                             pulseBlendPalette->blendCoeff = pulseBlendPalette->pulseBlendSettings.maxBlendCoeff & 0xF;
-                        
+
                         pulseBlendPalette->fadeDirection ^= 1;
                         pulseBlendPalette->fadeCycleCounter++;
                         break;

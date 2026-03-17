@@ -1,14 +1,18 @@
 #include "global.h"
-#include "gflib.h"
 #include "data.h"
-#include "party_menu.h"
-#include "pokemon_special_anim_internal.h"
 #include "item_use.h"
 #include "item.h"
-#include "task.h"
+#include "malloc.h"
 #include "move.h"
-#include "constants/songs.h"
+#include "palette.h"
+#include "party_menu.h"
+#include "pokemon_special_anim_internal.h"
+#include "sound.h"
+#include "string_util.h"
+#include "task.h"
+#include "text.h"
 #include "constants/items.h"
+#include "constants/songs.h"
 
 // Functions related to the special anims Pokemon
 // make when using an item on them in the field.

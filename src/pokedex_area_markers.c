@@ -1,10 +1,13 @@
 #include "global.h"
-#include "gflib.h"
+#include "bg.h"
 #include "decompress.h"
-#include "task.h"
-#include "wild_pokemon_area.h"
+#include "gpu_regs.h"
+#include "malloc.h"
+#include "palette.h"
 #include "pokedex_area_markers.h"
 #include "pokedex.h"
+#include "task.h"
+#include "wild_pokemon_area.h"
 
 /*
     Controls the red ellipse markers that appear on the pokedex maps to show where a species is found.
