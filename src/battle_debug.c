@@ -839,10 +839,9 @@ static void Task_ShowAiPoints(u8 taskId)
         }
         mon = GetBattlerMon(data->aiBattlerId);
 
-        data->aiMonSpriteId = CreateMonPicSprite(gBattleMons[data->aiBattlerId].species,
+        data->aiMonSpriteId = CreateMonFrontPicSprite(gBattleMons[data->aiBattlerId].species,
                                                  GetMonData(mon, MON_DATA_IS_SHINY),
                                                  gBattleMons[data->aiBattlerId].personality,
-                                                 TRUE,
                                                  39, 135, 15, TAG_NONE);
         data->aiViewState++;
         break;
@@ -1020,10 +1019,9 @@ static void Task_ShowAiKnowledge(u8 taskId)
 
         mon = GetBattlerMon(data->aiBattlerId);
 
-        data->aiMonSpriteId = CreateMonPicSprite(gBattleMons[data->aiBattlerId].species,
+        data->aiMonSpriteId = CreateMonFrontPicSprite(gBattleMons[data->aiBattlerId].species,
                                                  GetMonData(mon, MON_DATA_IS_SHINY),
                                                  gBattleMons[data->aiBattlerId].personality,
-                                                 TRUE,
                                                  39, 130, 15, TAG_NONE);
         data->aiViewState++;
         break;

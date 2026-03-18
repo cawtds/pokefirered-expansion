@@ -1974,5 +1974,5 @@ static void CreateTrainerCardTrainerPic(void)
         }
     }
 
-    LoadTrainerPicInWindow(trainerPicId, destX, destY, 8, 2);
+    LoadTrainerFrontPicInWindow(trainerPicId, destX, destY, 8, 2);
 }

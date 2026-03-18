@@ -4092,7 +4092,7 @@ void Task_DisplayCaughtMonDexPage(u8 taskId)
         gTasks[taskId].tState++;
         break;
     case 4:
-        // We're using a different mon sprite creation method, because we don't have enough memory to safely use CreateMonPicSprite.
+        // We're using a different mon sprite creation method, because we don't have enough memory to safely use CreateMonFrontPicSprite.
         spriteId = Pokedex_CreateCaughtMonSprite(species, MON_PAGE_X, MON_PAGE_Y);
         gTasks[taskId].tMonSpriteId = spriteId;
         LoadDexMonPalette(taskId, FALSE);
@@ -4759,7 +4759,7 @@ static u32 GetPokedexMonPersonality(u16 species)
 u16 CreateMonSpriteFromNationalDexNumber(enum NationalDexOrder nationalNum, s16 x, s16 y, u16 paletteSlot)
 {
     nationalNum = NationalPokedexNumToSpecies(nationalNum);
-    return CreateMonPicSprite(nationalNum, FALSE, GetPokedexMonPersonality(nationalNum), TRUE, x, y, paletteSlot, TAG_NONE);
+    return CreateMonFrontPicSprite(nationalNum, FALSE, GetPokedexMonPersonality(nationalNum), x, y, paletteSlot, TAG_NONE);
 }
 
 static u16 GetPokemonScaleFromNationalDexNumber(u16 nationalNum)
@@ -4788,7 +4788,7 @@ static u16 GetTrainerOffsetFromNationalDexNumber(u16 nationalNum)
 
 static u16 CreateSizeScreenTrainerPic(u16 species, s16 x, s16 y, s8 paletteSlot)
 {
-    return CreateFrontTrainerPicSprite(species, x, y, paletteSlot, TAG_NONE);
+    return CreateFrontTrainerPicSprite(species, x, y, paletteSlot);
 }
 
 static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bodyColor, enum Type type1, enum Type type2)
