@@ -1954,27 +1954,25 @@ static u8 GetCardType(void)
 
 static void CreateTrainerCardTrainerPic(void)
 {
-    u8 facilityClass = sTrainerPicFacilityClasses[sTrainerCardDataPtr->cardType][sTrainerCardDataPtr->trainerCard.rse.gender];
+    enum TrainerPicID trainerPicId;
+    u16 destX = sTrainerPicOffsets[sTrainerCardDataPtr->cardType][sTrainerCardDataPtr->trainerCard.rse.gender][0];
+    u16 destY = sTrainerPicOffsets[sTrainerCardDataPtr->cardType][sTrainerCardDataPtr->trainerCard.rse.gender][1];
 
     if (InUnionRoom() == TRUE && gReceivedRemoteLinkPlayers == 1)
     {
-        facilityClass = sTrainerCardDataPtr->trainerCard.facilityClass;
-        CreateTrainerCardTrainerPicSprite(FacilityClassToPicIndex(facilityClass), TRUE, sTrainerPicOffsets[sTrainerCardDataPtr->cardType][sTrainerCardDataPtr->trainerCard.rse.gender][0],
-                    sTrainerPicOffsets[sTrainerCardDataPtr->cardType][sTrainerCardDataPtr->trainerCard.rse.gender][1], 8, 2);
+        trainerPicId = FacilityClassToPicIndex(sTrainerCardDataPtr->trainerCard.facilityClass);
     }
     else
     {
         if (sTrainerCardDataPtr->cardType != CARD_TYPE_FRLG)
         {
-            CreateTrainerCardTrainerPicSprite(FacilityClassToPicIndex(facilityClass), TRUE, sTrainerPicOffsets[sTrainerCardDataPtr->cardType][sTrainerCardDataPtr->trainerCard.rse.gender][0],
-                    sTrainerPicOffsets[sTrainerCardDataPtr->cardType][sTrainerCardDataPtr->trainerCard.rse.gender][1], 8, 2);
+            trainerPicId = FacilityClassToPicIndex(sTrainerPicFacilityClasses[sTrainerCardDataPtr->cardType][sTrainerCardDataPtr->trainerCard.rse.gender]);
         }
         else
         {
-            CreateTrainerCardTrainerPicSprite(PlayerGenderToFrontTrainerPicId(sTrainerCardDataPtr->trainerCard.rse.gender), TRUE,
-                    sTrainerPicOffsets[sTrainerCardDataPtr->cardType][sTrainerCardDataPtr->trainerCard.rse.gender][0],
-                    sTrainerPicOffsets[sTrainerCardDataPtr->cardType][sTrainerCardDataPtr->trainerCard.rse.gender][1],
-                    8, 2);
+            trainerPicId = PlayerGenderToFrontTrainerPicId(sTrainerCardDataPtr->trainerCard.rse.gender);
         }
     }
+
+    LoadTrainerPicInWindow(trainerPicId, destX, destY, 8, 2);
 }

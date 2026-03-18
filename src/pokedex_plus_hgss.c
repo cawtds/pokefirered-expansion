@@ -4564,7 +4564,7 @@ static u16 GetTrainerOffsetFromNationalDexNumber(u16 nationalNum)
 
 static u16 CreateSizeScreenTrainerPic(u16 species, s16 x, s16 y, s8 paletteSlot)
 {
-    return CreateTrainerPicSprite(species, TRUE, x, y, paletteSlot, TAG_NONE);
+    return CreateFrontTrainerPicSprite(species, x, y, paletteSlot, TAG_NONE);
 }
 
 
