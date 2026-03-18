@@ -4,8 +4,8 @@
 #include "easy_chat.h"
 #include "event_data.h"
 #include "frontier_pass.h"
-#include "graphics.h"
 #include "gpu_regs.h"
+#include "graphics.h"
 #include "help_system.h"
 #include "link.h"
 #include "malloc.h"
@@ -22,9 +22,10 @@
 #include "task.h"
 #include "trainer_card.h"
 #include "trainer_pokemon_sprites.h"
+#include "trainer.h"
 #include "constants/battle_frontier.h"
-#include "constants/songs.h"
 #include "constants/game_stat.h"
+#include "constants/songs.h"
 #include "constants/trainers.h"
 
 // Trainer Card Strings
@@ -284,18 +285,34 @@ static const u8 sTrainerCardStatColors[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_R
 static const u8 sTimeColonInvisibleTextColors[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_TRANSPARENT, TEXT_COLOR_TRANSPARENT};
 static const u8 sTrainerCardFontIds[] = {FONT_SMALL, FONT_NORMAL, FONT_SMALL};
 
-static const u8 sTrainerPicOffsets[2][GENDER_COUNT][2] =
+static const struct UCoords8 sTrainerPicOffsets[2][GENDER_COUNT] =
 {
     // Kanto
     {
-        [MALE]   = {13, 4},
-        [FEMALE] = {13, 4}
+        [MALE] =
+        {
+            .x = 13,
+            .y = 4.
+        },
+        [FEMALE] =
+        {
+            .x = 13,
+            .y = 4,
+        },
     },
     // Hoenn
     {
-        [MALE]   = {1, 0},
-        [FEMALE] = {1, 0}
-    }
+        [MALE] =
+        {
+            .x = 1,
+            .y = 0,
+        },
+        [FEMALE] =
+        {
+            .x = 1,
+            .y = 0,
+        },
+    },
 };
 
 static const u8 sTrainerPicFacilityClasses[][2] =
@@ -1925,10 +1942,7 @@ static void InitTrainerCardData(void)
     sTrainerCardDataPtr->timeColonInvisible = FALSE;
     sTrainerCardDataPtr->onBack = FALSE;
     sTrainerCardDataPtr->flipBlendY = 0;
-    if (GetCardType() == CARD_TYPE_RSE)
-        sTrainerCardDataPtr->cardType = CARD_TYPE_RSE;
-    else
-        sTrainerCardDataPtr->cardType = CARD_TYPE_FRLG;
+    sTrainerCardDataPtr->cardType = GetCardType();
 
     for (i = 0; i < TRAINER_CARD_PROFILE_LENGTH; i++)
         CopyEasyChatWord(sTrainerCardDataPtr->easyChatProfile[i], sTrainerCardDataPtr->trainerCard.rse.easyChatProfile[i]);
@@ -1936,18 +1950,14 @@ static void InitTrainerCardData(void)
 
 static u8 GetCardType(void)
 {
-    if (sTrainerCardDataPtr == NULL)
+    u8 version = sTrainerCardDataPtr == NULL ? gGameVersion : sTrainerCardDataPtr->trainerCard.version;
+
+    switch (version)
     {
-        if (gGameVersion == VERSION_FIRE_RED || gGameVersion == VERSION_LEAF_GREEN)
+        case VERSION_FIRE_RED:
+        case VERSION_LEAF_GREEN:
             return CARD_TYPE_FRLG;
-        else
-            return CARD_TYPE_RSE;
-    }
-    else
-    {
-        if (sTrainerCardDataPtr->trainerCard.version == VERSION_FIRE_RED || sTrainerCardDataPtr->trainerCard.version == VERSION_LEAF_GREEN)
-            return CARD_TYPE_FRLG;
-        else
+        default:
             return CARD_TYPE_RSE;
     }
 }
@@ -1955,8 +1965,9 @@ static u8 GetCardType(void)
 static void CreateTrainerCardTrainerPic(void)
 {
     enum TrainerPicID trainerPicId;
-    u16 destX = sTrainerPicOffsets[sTrainerCardDataPtr->cardType][sTrainerCardDataPtr->trainerCard.rse.gender][0];
-    u16 destY = sTrainerPicOffsets[sTrainerCardDataPtr->cardType][sTrainerCardDataPtr->trainerCard.rse.gender][1];
+    enum Gender gender = sTrainerCardDataPtr->trainerCard.rse.gender;
+    u8 cardType = sTrainerCardDataPtr->cardType;
+    struct UCoords8 coords = sTrainerPicOffsets[cardType][gender];
 
     if (InUnionRoom() == TRUE && gReceivedRemoteLinkPlayers == 1)
     {
@@ -1964,15 +1975,11 @@ static void CreateTrainerCardTrainerPic(void)
     }
     else
     {
-        if (sTrainerCardDataPtr->cardType != CARD_TYPE_FRLG)
-        {
-            trainerPicId = FacilityClassToPicIndex(sTrainerPicFacilityClasses[sTrainerCardDataPtr->cardType][sTrainerCardDataPtr->trainerCard.rse.gender]);
-        }
+        if (cardType != CARD_TYPE_FRLG)
+            trainerPicId = FacilityClassToPicIndex(sTrainerPicFacilityClasses[cardType][gender]);
         else
-        {
-            trainerPicId = PlayerGenderToFrontTrainerPicId(sTrainerCardDataPtr->trainerCard.rse.gender);
-        }
+            trainerPicId = GetPlayerTrainerPic(gender, GAME_VERSION);
     }
 
-    LoadTrainerFrontPicInWindow(trainerPicId, destX, destY, 8, 2);
+    LoadTrainerFrontPicInWindow(trainerPicId, coords.x, coords.y, 8, 2);
 }

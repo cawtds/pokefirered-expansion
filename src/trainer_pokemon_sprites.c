@@ -37,20 +37,17 @@ static const struct OamData sOamData_Affine =
 
 void DummyPicSpriteCallback(struct Sprite *sprite)
 {
-
 }
 
-bool16 ResetAllPicSprites(void)
+void ResetAllPicSprites(void)
 {
-    int i;
+    u32 i;
 
     for (i = 0; i < PICS_COUNT; i ++)
         sSpritePics[i] = sDummyPicData;
-
-    return FALSE;
 }
 
-void LoadPicPaletteByTagOrSlot(u16 species, bool32 isShiny, u32 personality, u8 paletteSlot, u16 paletteTag)
+static void LoadMonPicPaletteByTagOrSlot(u16 species, bool32 isShiny, u32 personality, u8 paletteSlot, u16 paletteTag)
 {
     if (paletteTag == TAG_NONE)
     {
@@ -60,8 +57,34 @@ void LoadPicPaletteByTagOrSlot(u16 species, bool32 isShiny, u32 personality, u8 
     else
     {
         sCreatingSpriteTemplate.paletteTag = paletteTag;
-        LoadSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), species);
+        LoadSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), paletteTag);
     }
+}
+
+void LoadMonFrontPicInWindow(u16 species, bool32 isShiny, u32 personality, u8 paletteSlot, u8 windowId)
+{
+    u8 *framePics = Alloc(TRAINER_PIC_SIZE * MAX_TRAINER_PIC_FRAMES);
+
+    if (!framePics)
+        return;
+
+    LoadSpecialPokePic(framePics, species, personality, TRUE);
+    BlitBitmapRectToWindow(windowId, framePics, 0, 0, MON_PIC_WIDTH, MON_PIC_HEIGHT, 0, 0, MON_PIC_WIDTH, MON_PIC_HEIGHT);
+    LoadPalette(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), BG_PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
+    Free(framePics);
+}
+
+void LoadTrainerFrontPicInWindow(enum TrainerPicID trainerPicId, u16 destX, u16 destY, u8 paletteSlot, u8 windowId)
+{
+    u8 *framePics = Alloc(TRAINER_PIC_SIZE * MAX_TRAINER_PIC_FRAMES);
+
+    if (!framePics)
+        return;
+
+    DecompressDataWithHeaderWram(GetTrainerFrontPicData(trainerPicId), framePics);
+    BlitBitmapRectToWindow(windowId, framePics, 0, 0, TRAINER_PIC_WIDTH, TRAINER_PIC_HEIGHT, destX, destY, TRAINER_PIC_WIDTH, TRAINER_PIC_HEIGHT);
+    LoadPalette(GetTrainerFrontPicPalette(trainerPicId), BG_PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
+    Free(framePics);
 }
 
 u16 CreateMonFrontPicSprite(u16 species, bool32 isShiny, u32 personality, s16 x, s16 y, u8 paletteSlot, u16 paletteTag)
@@ -106,7 +129,7 @@ u16 CreateMonFrontPicSprite(u16 species, bool32 isShiny, u32 personality, s16 x,
     sCreatingSpriteTemplate.affineAnims = gDummySpriteAffineAnimTable;
     sCreatingSpriteTemplate.callback = DummyPicSpriteCallback;
 
-    LoadPicPaletteByTagOrSlot(species, isShiny, personality, paletteSlot, paletteTag);
+    LoadMonPicPaletteByTagOrSlot(species, isShiny, personality, paletteSlot, paletteTag);
     spriteId = CreateSprite(&sCreatingSpriteTemplate, x, y, 0);
     if (paletteTag == TAG_NONE)
         gSprites[spriteId].oam.paletteNum = paletteSlot;
@@ -182,77 +205,18 @@ u16 CreateMonPicSprite_Affine(u16 species, bool8 isShiny, u32 personality, u8 fl
         sCreatingSpriteTemplate.affineAnims = gDummySpriteAffineAnimTable;
     }
     sCreatingSpriteTemplate.callback = DummyPicSpriteCallback;
-    LoadPicPaletteByTagOrSlot(species, isShiny, personality, paletteSlot, paletteTag);
+
+    LoadMonPicPaletteByTagOrSlot(species, isShiny, personality, paletteSlot, paletteTag);
     spriteId = CreateSprite(&sCreatingSpriteTemplate, x, y, 0);
     if (paletteTag == TAG_NONE)
         gSprites[spriteId].oam.paletteNum = paletteSlot;
+
     sSpritePics[i].frames = framePics;
     sSpritePics[i].images = images;
     sSpritePics[i].paletteTag = paletteTag;
     sSpritePics[i].spriteId = spriteId;
     sSpritePics[i].active = TRUE;
     return spriteId;
-}
-
-static u16 FreeAndDestroyPicSpriteInternal(u16 spriteId, bool8 clearPalette)
-{
-    u8 i;
-    u8 *framePics;
-    struct SpriteFrameImage *images;
-
-    for (i = 0; i < PICS_COUNT; i ++)
-    {
-        if (sSpritePics[i].spriteId == spriteId)
-            break;
-    }
-    if (i == PICS_COUNT)
-        return 0xFFFF;
-
-    framePics = sSpritePics[i].frames;
-    images = sSpritePics[i].images;
-    if (clearPalette && sSpritePics[i].paletteTag != TAG_NONE)
-        FreeSpritePaletteByTag(GetSpritePaletteTagByPaletteNum(gSprites[spriteId].oam.paletteNum));
-    DestroySprite(&gSprites[spriteId]);
-    Free(framePics);
-    Free(images);
-    sSpritePics[i] = sDummyPicData;
-    return 0;
-}
-
-u16 FreeAndDestroyMonPicSprite(u16 spriteId)
-{
-    return FreeAndDestroyPicSpriteInternal(spriteId, TRUE);
-}
-
-u16 FreeAndDestroyMonPicSpriteNoPalette(u16 spriteId)
-{
-    return FreeAndDestroyPicSpriteInternal(spriteId, FALSE);
-}
-
-void LoadMonFrontPicInWindow(u16 species, bool32 isShiny, u32 personality, u8 paletteSlot, u8 windowId)
-{
-    u8 *framePics = Alloc(TRAINER_PIC_SIZE * MAX_TRAINER_PIC_FRAMES);
-
-    if (!framePics)
-        return;
-
-    LoadSpecialPokePic(framePics, species, personality, TRUE);
-    BlitBitmapRectToWindow(windowId, framePics, 0, 0, MON_PIC_WIDTH, MON_PIC_HEIGHT, 0, 0, MON_PIC_WIDTH, MON_PIC_HEIGHT);
-    LoadPalette(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), BG_PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
-    Free(framePics);
-}
-
-void LoadTrainerFrontPicInWindow(enum TrainerPicID trainerPicId, u16 destX, u16 destY, u8 paletteSlot, u8 windowId)
-{
-    u8 *framePics = Alloc(TRAINER_PIC_SIZE * MAX_TRAINER_PIC_FRAMES);
-
-    if (!framePics)
-        return;
-
-    DecompressDataWithHeaderWram(GetTrainerFrontPicData(trainerPicId), framePics);
-    BlitBitmapRectToWindow(windowId, framePics, 0, 0, TRAINER_PIC_WIDTH, TRAINER_PIC_HEIGHT, destX, destY, TRAINER_PIC_WIDTH, TRAINER_PIC_HEIGHT);
-    LoadPalette(GetTrainerFrontPicPalette(trainerPicId), BG_PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
-    Free(framePics);
 }
 
 u16 CreateFrontTrainerPicSprite(enum TrainerPicID trainerPicId, s16 x, s16 y, u8 paletteSlot)
@@ -310,9 +274,45 @@ u16 CreateFrontTrainerPicSprite(enum TrainerPicID trainerPicId, s16 x, s16 y, u8
     return spriteId;
 }
 
-u16 FreeAndDestroyTrainerPicSprite(u16 spriteId)
+static void FreeAndDestroyPicSpriteInternal(u16 spriteId, bool8 clearPalette)
 {
-    return FreeAndDestroyPicSpriteInternal(spriteId, TRUE);
+    u8 i;
+    u8 *framePics;
+    struct SpriteFrameImage *images;
+
+    for (i = 0; i < PICS_COUNT; i ++)
+    {
+        if (sSpritePics[i].spriteId == spriteId)
+            break;
+    }
+
+    if (i == PICS_COUNT)
+        return;
+
+    framePics = sSpritePics[i].frames;
+    images = sSpritePics[i].images;
+    if (clearPalette && sSpritePics[i].paletteTag != TAG_NONE)
+        FreeSpritePaletteByTag(GetSpritePaletteTagByPaletteNum(gSprites[spriteId].oam.paletteNum));
+
+    DestroySprite(&gSprites[spriteId]);
+    Free(framePics);
+    Free(images);
+    sSpritePics[i] = sDummyPicData;
+}
+
+void FreeAndDestroyMonPicSprite(u16 spriteId)
+{
+    FreeAndDestroyPicSpriteInternal(spriteId, TRUE);
+}
+
+void FreeAndDestroyMonPicSpriteNoPalette(u16 spriteId)
+{
+    FreeAndDestroyPicSpriteInternal(spriteId, FALSE);
+}
+
+void FreeAndDestroyTrainerPicSprite(u16 spriteId)
+{
+    FreeAndDestroyPicSpriteInternal(spriteId, TRUE);
 }
 
 void CopyTrainerBackspriteFramesToDest(u8 trainerPicId, u8 *dest)
