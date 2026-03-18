@@ -1370,7 +1370,7 @@ static u8 CreatePersonPicSprite(u8 fcPersonIdx)
     }
     else
     {
-        spriteId = CreateFrontTrainerPicSprite(sFameCheckerTrainerPicIdxs[fcPersonIdx], PERSON_X, PERSON_Y, PERSON_PAL_NUM);
+        spriteId = CreateTrainerFrontPicSprite(sFameCheckerTrainerPicIdxs[fcPersonIdx], PERSON_X, PERSON_Y, PERSON_PAL_NUM);
     }
     gSprites[spriteId].callback = SpriteCB_FCSpinningPokeball;
     if (gSaveBlock1Ptr->fameChecker[fcPersonIdx].pickState == FCPICKSTATE_SILHOUETTE)

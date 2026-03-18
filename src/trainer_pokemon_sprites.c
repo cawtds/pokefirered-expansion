@@ -219,7 +219,7 @@ u16 CreateMonPicSprite_Affine(u16 species, bool8 isShiny, u32 personality, u8 fl
     return spriteId;
 }
 
-u16 CreateFrontTrainerPicSprite(enum TrainerPicID trainerPicId, s16 x, s16 y, u8 paletteSlot)
+u16 CreateTrainerFrontPicSprite(enum TrainerPicID trainerPicId, s16 x, s16 y, u8 paletteSlot)
 {
 
     u8 i;
