@@ -1273,76 +1273,76 @@ void ShowScrollableMultichoice(void)
     switch ((enum ScrollMulti) gSpecialVar_0x8004)
     {
     case LISTMENU_BADGES:
-        task->data[0] = 4;
-        task->data[1] = 9;
-        task->data[2] = 1;
-        task->data[3] = 1;
-        task->data[4] = 12;
-        task->data[5] = 7;
-        task->data[6] = 1;
-        task->data[15] = taskId;
+        task->tMaxItemsOnScreen = 4;
+        task->tNumItems = 9;
+        task->tLeft = 1;
+        task->tTop = 1;
+        task->tWidth = 12;
+        task->tHeight = 7;
+        task->tKeepOpenAfterSelect = TRUE;
+        task->tTaskId = taskId;
         break;
     case LISTMENU_SILPHCO_FLOORS:
-        task->data[0] = 7;
-        task->data[1] = 12;
-        task->data[2] = 1;
-        task->data[3] = 1;
-        task->data[4] = 8;
-        task->data[5] = 12;
-        task->data[6] = 0;
-        task->data[15] = taskId;
-        task->data[7] = sElevatorScroll;
-        task->data[8] = sElevatorCursorPos;
+        task->tMaxItemsOnScreen = 7;
+        task->tNumItems = 12;
+        task->tLeft = 1;
+        task->tTop = 1;
+        task->tWidth = 8;
+        task->tHeight = 12;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
+        task->tScrollOffset = sElevatorScroll;
+        task->tSelectedRow = sElevatorCursorPos;
         break;
     case LISTMENU_ROCKET_HIDEOUT_FLOORS: // Multichoice used instead
-        task->data[0] = 4;
-        task->data[1] = 4;
-        task->data[2] = 1;
-        task->data[3] = 1;
-        task->data[4] = 8;
-        task->data[5] = 8;
-        task->data[6] = 0;
-        task->data[15] = taskId;
+        task->tMaxItemsOnScreen = 4;
+        task->tNumItems = 4;
+        task->tLeft = 1;
+        task->tTop = 1;
+        task->tWidth = 8;
+        task->tHeight = 8;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
         break;
     case LISTMENU_DEPT_STORE_FLOORS: // Multichoice used instead
-        task->data[0] = 4;
-        task->data[1] = 6;
-        task->data[2] = 1;
-        task->data[3] = 1;
-        task->data[4] = 8;
-        task->data[5] = 8;
-        task->data[6] = 0;
-        task->data[15] = taskId;
+        task->tMaxItemsOnScreen = 4;
+        task->tNumItems = 6;
+        task->tLeft = 1;
+        task->tTop = 1;
+        task->tWidth = 8;
+        task->tHeight = 8;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
         break;
     case LISTMENU_WIRELESS_LECTURE_HEADERS: // Multichoice used instead
-        task->data[0] = 4;
-        task->data[1] = 4;
-        task->data[2] = 1;
-        task->data[3] = 1;
-        task->data[4] = 17;
-        task->data[5] = 8;
-        task->data[6] = 1;
-        task->data[15] = taskId;
+        task->tMaxItemsOnScreen = 4;
+        task->tNumItems = 4;
+        task->tLeft = 1;
+        task->tTop = 1;
+        task->tWidth = 17;
+        task->tHeight = 8;
+        task->tKeepOpenAfterSelect = TRUE;
+        task->tTaskId = taskId;
         break;
     case LISTMENU_BERRY_POWDER:
-        task->data[0] = 7;
-        task->data[1] = 12;
-        task->data[2] = 16;
-        task->data[3] = 1;
-        task->data[4] = 17;
-        task->data[5] = 12;
-        task->data[6] = 0;
-        task->data[15] = taskId;
+        task->tMaxItemsOnScreen = 7;
+        task->tNumItems = 12;
+        task->tLeft = 16;
+        task->tTop = 1;
+        task->tWidth = 17;
+        task->tHeight = 12;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
         break;
     case LISTMENU_TRAINER_TOWER_FLOORS: // Mulitchoice used instead
-        task->data[0] = 3;
-        task->data[1] = 3;
-        task->data[2] = 1;
-        task->data[3] = 1;
-        task->data[4] = 8;
-        task->data[5] = 6;
-        task->data[6] = 0;
-        task->data[15] = taskId;
+        task->tMaxItemsOnScreen = 3;
+        task->tNumItems = 3;
+        task->tLeft = 1;
+        task->tTop = 1;
+        task->tWidth = 8;
+        task->tHeight = 6;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
         break;
     case SCROLL_MULTI_BF_RECEPTIONIST:
         task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN - 1;
@@ -1410,7 +1410,7 @@ void ShowScrollableMultichoice(void)
     case SCROLL_MULTI_NONE:
         break;
     default:
-        gSpecialVar_Result = 0x7F;
+        gSpecialVar_Result = MULTI_B_PRESSED;
         DestroyTask(taskId);
         break;
     }
@@ -1592,10 +1592,10 @@ static void Task_CreateScriptListMenu(u8 taskId)
         gScrollableMultichoice_ScrollOffset = 0;
     FillFrontierExchangeCornerWindowAndItemIcon(task->tScrollMultiId, 0);
     ShowBattleFrontierTutorWindow(task->tScrollMultiId, 0);
-    sListMenuItems = AllocZeroed(task->data[1] * sizeof(struct ListMenuItem));
+    sListMenuItems = AllocZeroed(task->tNumItems * sizeof(struct ListMenuItem));
     InitScrollableMultichoice();
     mwidth = 0;
-    for (i = 0; i < task->data[1]; i++)
+    for (i = 0; i < task->tNumItems; i++)
     {
         sListMenuItems[i].name = sListMenuLabels[gSpecialVar_0x8004][i];
         sListMenuItems[i].id = i;
@@ -1603,19 +1603,19 @@ static void Task_CreateScriptListMenu(u8 taskId)
         if (width > mwidth)
             mwidth = width;
     }
-    task->data[4] = (mwidth + 9) / 8 + 1;
-    if (task->data[2] + task->data[4] > 29)
-        task->data[2] = 29 - task->data[4];
-    template = CreateWindowTemplate(0, task->data[2], task->data[3], task->data[4], task->data[5], 15, 0x64);
-    task->data[13] = windowId = AddWindow(&template);
-    SetStandardWindowBorderStyle(task->data[13], 0);
-    gScrollableMultichoice_ListMenuTemplate.totalItems = task->data[1];
-    gScrollableMultichoice_ListMenuTemplate.maxShowed = task->data[0];
-    gScrollableMultichoice_ListMenuTemplate.windowId = task->data[13];
+    task->tWidth = (mwidth + 9) / 8 + 1;
+    if (task->tLeft + task->tWidth > 29)
+        task->tLeft = 29 - task->tWidth;
+    template = CreateWindowTemplate(0, task->tLeft, task->tTop, task->tWidth, task->tHeight, 15, 0x64);
+    task->tWindowId = windowId = AddWindow(&template);
+    SetStandardWindowBorderStyle(task->tWindowId, 0);
+    gScrollableMultichoice_ListMenuTemplate.totalItems = task->tNumItems;
+    gScrollableMultichoice_ListMenuTemplate.maxShowed = task->tMaxItemsOnScreen;
+    gScrollableMultichoice_ListMenuTemplate.windowId = task->tWindowId;
     Task_CreateMenuRemoveScrollIndicatorArrowPair(taskId);
-    task->data[14] = ListMenuInit(&gScrollableMultichoice_ListMenuTemplate, task->data[7], task->data[8]);
-    PutWindowTilemap(task->data[13]);
-    CopyWindowToVram(task->data[13], COPYWIN_FULL);
+    task->tListTaskId = ListMenuInit(&gScrollableMultichoice_ListMenuTemplate, task->tScrollOffset, task->tSelectedRow);
+    PutWindowTilemap(task->tWindowId);
+    CopyWindowToVram(task->tWindowId, COPYWIN_FULL);
     gTasks[taskId].func = ScrollableMultichoice_ProcessInput;
 }
 
@@ -1651,7 +1651,7 @@ static void ScrollableMultichoice_MoveCursor(s32 nothing, bool8 is, struct ListM
     {
         u16 selection;
         task = &gTasks[taskId];
-        ListMenuGetScrollAndRow(task->data[14], &sFieldSpecialsListMenuScrollBuffer, NULL);
+        ListMenuGetScrollAndRow(task->tListTaskId, &sFieldSpecialsListMenuScrollBuffer, NULL);
         gScrollableMultichoice_ScrollOffset = sFieldSpecialsListMenuScrollBuffer;
         ListMenuGetCurrentItemArrayId(task->tListTaskId, &selection);
         HideFrontierExchangeCornerItemIcon(task->tScrollMultiId);
@@ -1667,7 +1667,7 @@ static void ScrollableMultichoice_ProcessInput(u8 taskId)
 
     task = &gTasks[taskId];
     task++;task--;
-    input = ListMenu_ProcessInput(task->data[14]);
+    input = ListMenu_ProcessInput(task->tListTaskId);
     switch (input)
     {
     case -1:
@@ -1680,7 +1680,7 @@ static void ScrollableMultichoice_ProcessInput(u8 taskId)
     default:
         gSpecialVar_Result = input;
         PlaySE(SE_SELECT);
-        if (task->data[6] == 0 || input == task->data[1] - 1)
+        if (task->tKeepOpenAfterSelect == 0 || input == task->tNumItems - 1)
         {
             CloseScrollableMultichoice(taskId);
         }
@@ -1700,25 +1700,25 @@ static void CloseScrollableMultichoice(u8 taskId)
 
     HideFrontierExchangeCornerItemIcon(task->tScrollMultiId);
     Task_ListMenuRemoveScrollIndicatorArrowPair(taskId);
-    DestroyListMenuTask(task->data[14], NULL, NULL);
+    DestroyListMenuTask(task->tListTaskId, NULL, NULL);
     Free(sListMenuItems);
-    ClearStdWindowAndFrameToTransparent(task->data[13], TRUE);
-    FillWindowPixelBuffer(task->data[13], PIXEL_FILL(0));
-    ClearWindowTilemap(task->data[13]);
-    CopyWindowToVram(task->data[13], COPYWIN_GFX);
-    RemoveWindow(task->data[13]);
+    ClearStdWindowAndFrameToTransparent(task->tWindowId, TRUE);
+    FillWindowPixelBuffer(task->tWindowId, PIXEL_FILL(0));
+    ClearWindowTilemap(task->tWindowId);
+    CopyWindowToVram(task->tWindowId, COPYWIN_GFX);
+    RemoveWindow(task->tWindowId);
     DestroyTask(taskId);
     ScriptContext_Enable();
 }
 
 static void Task_SuspendListMenu(u8 taskId)
 {
-    switch (gTasks[taskId].data[6])
+    switch (gTasks[taskId].tKeepOpenAfterSelect)
     {
     case 1:
         break;
     case 2:
-        gTasks[taskId].data[6] = 1;
+        gTasks[taskId].tKeepOpenAfterSelect = 1;
         gTasks[taskId].func = Task_RedrawScrollArrowsAndWaitInput;
         break;
     }
@@ -1727,10 +1727,10 @@ static void Task_SuspendListMenu(u8 taskId)
 void ReturnToListMenu(void)
 {
     u8 taskId = FindTaskIdByFunc(Task_SuspendListMenu);
-    if (taskId == 0xFF)
+    if (taskId == TASK_NONE)
         ScriptContext_Enable();
     else
-        gTasks[taskId].data[6]++;
+        gTasks[taskId].tKeepOpenAfterSelect++;
 }
 
 static void Task_RedrawScrollArrowsAndWaitInput(u8 taskId)
@@ -1749,23 +1749,23 @@ static void Task_CreateMenuRemoveScrollIndicatorArrowPair(u8 taskId)
         .tileTag = 2000,
         .palTag = 100
     };
-    if (task->data[0] != task->data[1])
+    if (task->tMaxItemsOnScreen != task->tNumItems)
     {
-        template.firstX = 4 * task->data[4] + 8 * task->data[2];
+        template.firstX = 4 * task->tWidth + 8 * task->tLeft;
         template.firstY = 8;
-        template.secondX = 4 * task->data[4] + 8 * task->data[2];
-        template.secondY = 8 * task->data[5] + 10;
+        template.secondX = 4 * task->tWidth + 8 * task->tLeft;
+        template.secondY = 8 * task->tHeight + 10;
         template.fullyUpThreshold = 0;
-        template.fullyDownThreshold = task->data[1] - task->data[0];
-        task->data[12] = AddScrollIndicatorArrowPair(&template, &gScrollableMultichoice_ScrollOffset);
+        template.fullyDownThreshold = task->tNumItems - task->tMaxItemsOnScreen;
+        task->tScrollArrowId = AddScrollIndicatorArrowPair(&template, &gScrollableMultichoice_ScrollOffset);
     }
 }
 
 static void Task_ListMenuRemoveScrollIndicatorArrowPair(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
-    if (task->data[0] != task->data[1])
-        RemoveScrollIndicatorArrowPair(task->data[12]);
+    if (task->tMaxItemsOnScreen != task->tNumItems)
+        RemoveScrollIndicatorArrowPair(task->tScrollArrowId);
 }
 
 // Undefine Scrollable Multichoice task data macros
