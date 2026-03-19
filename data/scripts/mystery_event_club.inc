@@ -17,7 +17,7 @@ EventScript_AlreadyGaveProfile:
 EventScript_AskForProfile:
 	message Text_TellMeWhatsYourProfile
 	waitmessage
-	multichoice 18, 6, MULTI_YES_NO_INFO_2, FALSE
+	multichoice 18, 6, MULTI_YES_NO_INFO, FALSE
 	switch VAR_RESULT
 	case 0, EventScript_AcceptGiveProfile
 	case 1, EventScript_DeclineGiveProfile
@@ -64,7 +64,7 @@ EventScript_GivenProfileBefore:
 EventScript_AskForNewProfile:
 	message Text_ChangeYourProfile
 	waitmessage
-	multichoice 18, 6, MULTI_YES_NO_INFO_2, FALSE
+	multichoice 18, 6, MULTI_YES_NO_INFO, FALSE
 	switch VAR_RESULT
 	case 0, EventScript_AcceptGiveNewProfile
 	case 1, EventScript_DeclineGiveNewProfile
