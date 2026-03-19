@@ -1958,7 +1958,7 @@ bool8 ScrCmd_multichoice(struct ScriptContext * ctx)
 {
     u8 left = ScriptReadByte(ctx);
     u8 top = ScriptReadByte(ctx);
-    u8 multichoiceId = ScriptReadByte(ctx);
+    enum MultichoiceID multichoiceId = ScriptReadByte(ctx);
     bool8 ignoreBPress = ScriptReadByte(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
@@ -1978,7 +1978,7 @@ bool8 ScrCmd_multichoicedefault(struct ScriptContext * ctx)
 {
     u8 left = ScriptReadByte(ctx);
     u8 top = ScriptReadByte(ctx);
-    u8 multichoiceId = ScriptReadByte(ctx);
+    enum MultichoiceID multichoiceId = ScriptReadByte(ctx);
     u8 defaultChoice = ScriptReadByte(ctx);
     bool8 ignoreBPress = ScriptReadByte(ctx);
 
@@ -2004,7 +2004,7 @@ bool8 ScrCmd_multichoicegrid(struct ScriptContext * ctx)
 {
     u8 left = ScriptReadByte(ctx);
     u8 top = ScriptReadByte(ctx);
-    u8 multichoiceId = ScriptReadByte(ctx);
+    enum MultichoiceID multichoiceId = ScriptReadByte(ctx);
     u8 numColumns = ScriptReadByte(ctx);
     bool8 ignoreBPress = ScriptReadByte(ctx);
 

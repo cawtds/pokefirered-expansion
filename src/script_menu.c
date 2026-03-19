@@ -22,8 +22,6 @@
 
 #define GFXTAG_FOSSIL 7000
 
-#define MULTICHOICE(name) {.list = name, .count = ARRAY_COUNT(name)}
-
 struct DynamicListMenuEventArgs
 {
     struct ListMenuTemplate *list;
@@ -51,11 +49,11 @@ static void Task_HandleMultichoiceInput(u8 taskId);
 // static void Task_HandleYesNoInput(u8 taskId);
 // static void Task_HandleMultichoiceGridInput(u8 taskId);
 static void DrawMultichoiceMenuDynamic(u8 left, u8 top, u8 argc, struct ListMenuItem *items, bool8 ignoreBPress, u32 initialRow, u8 maxBeforeScroll, u32 callbackSet);
-static void DrawMultichoiceMenu(u8 left, u8 top, u8 mcId, u8 ignoreBpress, u8 initPos);
+static void DrawMultichoiceMenu(u8 left, u8 top, enum MultichoiceID mcId, u8 ignoreBpress, u8 initPos);
 static u8 GetMCWindowHeight(u8 count);
-static void InitMultichoiceCheckWrap(u8 ignoreBpress, u8 count, u8 windowId, u8 mcId);
+static void InitMultichoiceCheckWrap(u8 ignoreBpress, u8 count, u8 windowId, enum MultichoiceID mcId);
 static void Task_HandleMultichoiceInput(u8 taskId);
-static void DrawLinkServicesMultichoiceMenu(u8 mcId);
+static void DrawLinkServicesMultichoiceMenu(enum MultichoiceID mcId);
 static void Task_YesNoMenu_HandleInput(u8 taskId);
 static void Hask_MultichoiceGridMenu_HandleInput(u8 taskId);
 static void CreatePCMenuWindow(void);
@@ -976,10 +974,11 @@ bool8 ScriptMenu_MultichoiceDynamic(u8 left, u8 top, u8 argc, struct ListMenuIte
     }
 }
 
-bool8 ScriptMenu_Multichoice(u8 left, u8 top, u8 mcId, u8 ignoreBpress)
+bool8 ScriptMenu_Multichoice(u8 left, u8 top, enum MultichoiceID mcId, u8 ignoreBpress)
 {
     if (FuncIsActiveTask(Task_HandleMultichoiceInput) == TRUE)
         return FALSE;
+
     gSpecialVar_Result = SCR_MENU_UNSET;
     DrawMultichoiceMenu(left, top, mcId, ignoreBpress, 0);
     return TRUE;
@@ -1064,10 +1063,11 @@ static void FreeListMenuItems(struct ListMenuItem *items, u32 count)
     Free(items);
 }
 
-bool8 ScriptMenu_MultichoiceWithDefault(u8 left, u8 top, u8 mcId, u8 ignoreBpress, u8 cursorPos)
+bool8 ScriptMenu_MultichoiceWithDefault(u8 left, u8 top, enum MultichoiceID mcId, u8 ignoreBpress, u8 cursorPos)
 {
     if (FuncIsActiveTask(Task_HandleMultichoiceInput) == TRUE)
         return FALSE;
+
     gSpecialVar_Result = SCR_MENU_UNSET;
     DrawMultichoiceMenu(left, top, mcId, ignoreBpress, cursorPos);
     return TRUE;
@@ -1259,7 +1259,7 @@ static void DrawMultichoiceMenuDynamic(u8 left, u8 top, u8 argc, struct ListMenu
     }
 }
 
-void DrawMultichoiceMenuInternal(u8 left, u8 top, u8 multichoiceId, bool8 ignoreBPress, u8 cursorPos, const struct MenuAction *actions, int count)
+void DrawMultichoiceMenuInternal(u8 left, u8 top, enum MultichoiceID multichoiceId, bool8 ignoreBPress, u8 cursorPos, const struct MenuAction *actions, int count)
 {
     s32 i;
     s32 strWidth;
@@ -1291,7 +1291,7 @@ void DrawMultichoiceMenuInternal(u8 left, u8 top, u8 multichoiceId, bool8 ignore
     }
 }
 
-static void DrawMultichoiceMenu(u8 left, u8 top, u8 mcId, u8 ignoreBpress, u8 initPos)
+static void DrawMultichoiceMenu(u8 left, u8 top, enum MultichoiceID mcId, u8 ignoreBpress, u8 initPos)
 {
     DrawMultichoiceMenuInternal(left, top, mcId, ignoreBpress, initPos, sMultichoiceLists[mcId].list, sMultichoiceLists[mcId].count);
 }
@@ -1329,7 +1329,7 @@ static u8 GetMCWindowHeight(u8 count)
 #define tWindowId      data[6]
 #define tMultichoiceId data[7]
 
-static void InitMultichoiceCheckWrap(bool8 ignoreBPress, u8 count, u8 windowId, u8 multichoiceId)
+static void InitMultichoiceCheckWrap(bool8 ignoreBPress, u8 count, u8 windowId, enum MultichoiceID multichoiceId)
 {
     u8 taskId;
     sProcessInputDelay = 0;
@@ -1446,7 +1446,7 @@ static void Task_HandleMultichoiceInput(u8 taskId)
     }
 }
 
-static void DrawLinkServicesMultichoiceMenu(u8 mcId)
+static void DrawLinkServicesMultichoiceMenu(enum MultichoiceID mcId)
 {
     switch (mcId)
     {
@@ -1462,6 +1462,8 @@ static void DrawLinkServicesMultichoiceMenu(u8 mcId)
         FillWindowPixelBuffer(0, PIXEL_FILL(1));
         AddTextPrinterParameterized2(0, FONT_NORMAL, sDescriptionPtrs_WirelessCenter_TradeBattleCancel[Menu_GetCursorPos()], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
         break;
+    default:
+        return;
     }
 }
 
@@ -1507,7 +1509,7 @@ static void Task_YesNoMenu_HandleInput(u8 taskId)
     }
 }
 
-bool8 ScriptMenu_MultichoiceGrid(u8 left, u8 top, u8 multichoiceId, bool8 ignoreBpress, u8 columnCount)
+bool8 ScriptMenu_MultichoiceGrid(u8 left, u8 top, enum MultichoiceID multichoiceId, bool8 ignoreBpress, u8 columnCount)
 {
     const struct MenuAction * list;
     u8 count;
