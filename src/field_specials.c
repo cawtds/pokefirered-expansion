@@ -129,6 +129,144 @@ static u8 *const sStringVarPtrs[] = {
     gStringVar3
 };
 
+static const u8 *const sScrollMultiLabels_Badges[] =
+{
+    gText_BoulderBadge,
+    gText_CascadeBadge,
+    gText_ThunderBadge,
+    gText_RainbowBadge,
+    gText_SoulBadge,
+    gText_MarshBadge,
+    gText_VolcanoBadge,
+    gText_EarthBadge,
+    gOtherText_Exit,
+};
+
+static const u8 *const sScrollMultiLabels_SilphCoFloors[] =
+{
+    gText_11F,
+    gText_10F,
+    gText_9F,
+    gText_8F,
+    gText_7F,
+    gText_6F,
+    gText_5F,
+    gText_4F,
+    gText_3F,
+    gText_2F,
+    gText_1F,
+    gOtherText_Exit,
+};
+
+static const u8 *const sScrollMultiLabels_BerryPowder[] =
+{
+    gText_Energypowder_50,
+    gText_EnergyRoot_80,
+    gText_HealPowder_50,
+    gText_RevivalHerb_300,
+    gText_Protein_1000,
+    gText_Iron_1000,
+    gText_Carbos_1000,
+    gText_Calcium_1000,
+    gText_Zinc_1000,
+    gText_HpUp_1000,
+    gText_PpUp_3000,
+    gOtherText_Exit,
+};
+
+static const u8 *const sScrollMultiLabels_BFReceptionist[] =
+{
+    gText_BattleTower2,
+    gText_BattleDome,
+    gText_BattlePalace,
+    gText_BattleArena,
+    gText_BattleFactory,
+    gText_BattlePike,
+    gText_BattlePyramid,
+    gText_RankingHall,
+    gText_ExchangeService,
+    gText_Exit
+};
+
+static const u8 *const sScrollMultiLabels_BFMoveTutor1[] =
+{
+    COMPOUND_STRING("SOFTBOILED{CLEAR_TO 0x4E}16BP"),
+    COMPOUND_STRING("SEISMIC TOSS{CLEAR_TO 0x4E}24BP"),
+    COMPOUND_STRING("DREAM EATER{CLEAR_TO 0x4E}24BP"),
+    COMPOUND_STRING("MEGA PUNCH{CLEAR_TO 0x4E}24BP"),
+    COMPOUND_STRING("MEGA KICK{CLEAR_TO 0x4E}48BP"),
+    COMPOUND_STRING("BODY SLAM{CLEAR_TO 0x4E}48BP"),
+    COMPOUND_STRING("ROCK SLIDE{CLEAR_TO 0x4E}48BP"),
+    COMPOUND_STRING("COUNTER{CLEAR_TO 0x4E}48BP"),
+    COMPOUND_STRING("THUNDER WAVE{CLEAR_TO 0x4E}48BP"),
+    COMPOUND_STRING("SWORDS DANCE{CLEAR_TO 0x4E}48BP"),
+    gText_Exit
+};
+
+static const u8 *const sScrollMultiLabels_BFMoveTutor2[] =
+{
+    COMPOUND_STRING("DEFENSE CURL{CLEAR_TO 0x4E}16BP"),
+    COMPOUND_STRING("SNORE{CLEAR_TO 0x4E}24BP"),
+    COMPOUND_STRING("MUD-SLAP{CLEAR_TO 0x4E}24BP"),
+    COMPOUND_STRING("SWIFT{CLEAR_TO 0x4E}24BP"),
+    COMPOUND_STRING("ICY WIND{CLEAR_TO 0x4E}24BP"),
+    COMPOUND_STRING("ENDURE{CLEAR_TO 0x4E}48BP"),
+    COMPOUND_STRING("PSYCH UP{CLEAR_TO 0x4E}48BP"),
+    COMPOUND_STRING("ICE PUNCH{CLEAR_TO 0x4E}48BP"),
+    COMPOUND_STRING("THUNDERPUNCH{CLEAR_TO 0x4E}48BP"),
+    COMPOUND_STRING("FIRE PUNCH{CLEAR_TO 0x4E}48BP"),
+    gText_Exit
+};
+
+static const u8 *const sScrollMultiLabels_BFDecorVendor1[] =
+{
+    gText_Exit
+};
+
+static const u8 *const sScrollMultiLabels_BFDecorVendor2[] =
+{
+    gText_Exit
+};
+
+static const u8 *const sScrollMultiLabels_BFVitaminVendor[] =
+{
+    COMPOUND_STRING("PROTEIN{CLEAR_TO 0x64}1BP"),
+    COMPOUND_STRING("CALCIUM{CLEAR_TO 0x64}1BP"),
+    COMPOUND_STRING("IRON{CLEAR_TO 0x64}1BP"),
+    COMPOUND_STRING("ZINC{CLEAR_TO 0x64}1BP"),
+    COMPOUND_STRING("CARBOS{CLEAR_TO 0x64}1BP"),
+    COMPOUND_STRING("HP UP{CLEAR_TO 0x64}1BP"),
+    gText_Exit
+};
+
+static const u8 *const sScrollMultiLabels_BFItemVendor[] =
+{
+    COMPOUND_STRING("LEFTOVERS{CLEAR_TO 0x5E}48BP"),
+    COMPOUND_STRING("WHITE HERB{CLEAR_TO 0x5E}48BP"),
+    COMPOUND_STRING("QUICK CLAW{CLEAR_TO 0x5E}48BP"),
+    COMPOUND_STRING("MENTAL HERB{CLEAR_TO 0x5E}48BP"),
+    COMPOUND_STRING("BRIGHTPOWDER{CLEAR_TO 0x5E}64BP"),
+    COMPOUND_STRING("CHOICE BAND{CLEAR_TO 0x5E}64BP"),
+    COMPOUND_STRING("KING'S ROCK{CLEAR_TO 0x5E}64BP"),
+    COMPOUND_STRING("FOCUS BAND{CLEAR_TO 0x5E}64BP"),
+    COMPOUND_STRING("SCOPE LENS{CLEAR_TO 0x5E}64BP"),
+    gText_Exit
+};
+
+static const u8 *const *sListMenuLabels[] =
+{
+    [SCROLL_MULTI_BADGES]                              = sScrollMultiLabels_Badges,
+    [SCROLL_MULTI_SILPHCO_FLOORS]                      = sScrollMultiLabels_SilphCoFloors,
+    [SCROLL_MULTI_BERRY_POWDER]                        = sScrollMultiLabels_BerryPowder,
+    [SCROLL_MULTI_BF_RECEPTIONIST]                     = sScrollMultiLabels_BFReceptionist,
+    [SCROLL_MULTI_BF_MOVE_TUTOR_1]                     = sScrollMultiLabels_BFMoveTutor1,
+    [SCROLL_MULTI_BF_MOVE_TUTOR_2]                     = sScrollMultiLabels_BFMoveTutor2,
+    [SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_1]   = sScrollMultiLabels_BFDecorVendor1,
+    [SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_2]   = sScrollMultiLabels_BFDecorVendor2,
+    [SCROLL_MULTI_BF_EXCHANGE_CORNER_VITAMIN_VENDOR]   = sScrollMultiLabels_BFVitaminVendor,
+    [SCROLL_MULTI_BF_EXCHANGE_CORNER_HOLD_ITEM_VENDOR] = sScrollMultiLabels_BFItemVendor,
+};
+
 void ShowDiploma(void)
 {
     QuestLog_CutRecording();
@@ -1272,9 +1410,9 @@ void ShowScrollableMultichoice(void)
 
     switch ((enum ScrollMulti) gSpecialVar_0x8004)
     {
-    case LISTMENU_BADGES:
+    case SCROLL_MULTI_BADGES:
         task->tMaxItemsOnScreen = 4;
-        task->tNumItems = 9;
+        task->tNumItems = ARRAY_COUNT(sScrollMultiLabels_Badges);
         task->tLeft = 1;
         task->tTop = 1;
         task->tWidth = 12;
@@ -1282,9 +1420,9 @@ void ShowScrollableMultichoice(void)
         task->tKeepOpenAfterSelect = TRUE;
         task->tTaskId = taskId;
         break;
-    case LISTMENU_SILPHCO_FLOORS:
+    case SCROLL_MULTI_SILPHCO_FLOORS:
         task->tMaxItemsOnScreen = 7;
-        task->tNumItems = 12;
+        task->tNumItems = ARRAY_COUNT(sScrollMultiLabels_SilphCoFloors);
         task->tLeft = 1;
         task->tTop = 1;
         task->tWidth = 8;
@@ -1294,39 +1432,9 @@ void ShowScrollableMultichoice(void)
         task->tScrollOffset = sElevatorScroll;
         task->tSelectedRow = sElevatorCursorPos;
         break;
-    case LISTMENU_ROCKET_HIDEOUT_FLOORS: // Multichoice used instead
-        task->tMaxItemsOnScreen = 4;
-        task->tNumItems = 4;
-        task->tLeft = 1;
-        task->tTop = 1;
-        task->tWidth = 8;
-        task->tHeight = 8;
-        task->tKeepOpenAfterSelect = FALSE;
-        task->tTaskId = taskId;
-        break;
-    case LISTMENU_DEPT_STORE_FLOORS: // Multichoice used instead
-        task->tMaxItemsOnScreen = 4;
-        task->tNumItems = 6;
-        task->tLeft = 1;
-        task->tTop = 1;
-        task->tWidth = 8;
-        task->tHeight = 8;
-        task->tKeepOpenAfterSelect = FALSE;
-        task->tTaskId = taskId;
-        break;
-    case LISTMENU_WIRELESS_LECTURE_HEADERS: // Multichoice used instead
-        task->tMaxItemsOnScreen = 4;
-        task->tNumItems = 4;
-        task->tLeft = 1;
-        task->tTop = 1;
-        task->tWidth = 17;
-        task->tHeight = 8;
-        task->tKeepOpenAfterSelect = TRUE;
-        task->tTaskId = taskId;
-        break;
-    case LISTMENU_BERRY_POWDER:
+    case SCROLL_MULTI_BERRY_POWDER:
         task->tMaxItemsOnScreen = 7;
-        task->tNumItems = 12;
+        task->tNumItems = ARRAY_COUNT(sScrollMultiLabels_BerryPowder);
         task->tLeft = 16;
         task->tTop = 1;
         task->tWidth = 17;
@@ -1334,30 +1442,24 @@ void ShowScrollableMultichoice(void)
         task->tKeepOpenAfterSelect = FALSE;
         task->tTaskId = taskId;
         break;
-    case LISTMENU_TRAINER_TOWER_FLOORS: // Mulitchoice used instead
-        task->tMaxItemsOnScreen = 3;
-        task->tNumItems = 3;
-        task->tLeft = 1;
-        task->tTop = 1;
-        task->tWidth = 8;
-        task->tHeight = 6;
-        task->tKeepOpenAfterSelect = FALSE;
-        task->tTaskId = taskId;
-        break;
     case SCROLL_MULTI_BF_RECEPTIONIST:
-        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN - 1;
-        task->tNumItems = 8;
-        task->tLeft = 1;
+        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
+        task->tNumItems = ARRAY_COUNT(sScrollMultiLabels_BFReceptionist);
+        task->tLeft = 17;
         task->tTop = 1;
-        task->tWidth = 9;
-        task->tHeight = 10;
+        task->tWidth = 11;
+        task->tHeight = 12;
         task->tKeepOpenAfterSelect = FALSE;
         task->tTaskId = taskId;
         break;
     case SCROLL_MULTI_BF_MOVE_TUTOR_1:
     case SCROLL_MULTI_BF_MOVE_TUTOR_2:
         task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
-        task->tNumItems = 11;
+        if (task->tScrollMultiId == SCROLL_MULTI_BF_MOVE_TUTOR_1)
+            task->tNumItems = ARRAY_COUNT(sScrollMultiLabels_BFMoveTutor1);
+        else
+            task->tNumItems = ARRAY_COUNT(sScrollMultiLabels_BFMoveTutor2);
+
         task->tLeft = 15;
         task->tTop = 1;
         task->tWidth = 14;
@@ -1367,8 +1469,7 @@ void ShowScrollableMultichoice(void)
         break;
     case SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_1:
         task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
-        task->tNumItems = 1;
-        // task->tNumItems = 11;
+        task->tNumItems = ARRAY_COUNT(sScrollMultiLabels_BFDecorVendor1);
         task->tLeft = 14;
         task->tTop = 1;
         task->tWidth = 15;
@@ -1378,8 +1479,7 @@ void ShowScrollableMultichoice(void)
         break;
     case SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_2:
         task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
-        task->tNumItems = 1;
-        // task->tNumItems = 6;
+        task->tNumItems = ARRAY_COUNT(sScrollMultiLabels_BFDecorVendor2);
         task->tLeft = 14;
         task->tTop = 1;
         task->tWidth = 15;
@@ -1389,7 +1489,7 @@ void ShowScrollableMultichoice(void)
         break;
     case SCROLL_MULTI_BF_EXCHANGE_CORNER_VITAMIN_VENDOR:
         task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
-        task->tNumItems = 7;
+        task->tNumItems = ARRAY_COUNT(sScrollMultiLabels_BFVitaminVendor);
         task->tLeft = 14;
         task->tTop = 1;
         task->tWidth = 15;
@@ -1399,7 +1499,7 @@ void ShowScrollableMultichoice(void)
         break;
     case SCROLL_MULTI_BF_EXCHANGE_CORNER_HOLD_ITEM_VENDOR:
         task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
-        task->tNumItems = 10;
+        task->tNumItems = ARRAY_COUNT(sScrollMultiLabels_BFItemVendor);
         task->tLeft = 14;
         task->tTop = 1;
         task->tWidth = 15;
@@ -1416,167 +1516,6 @@ void ShowScrollableMultichoice(void)
     }
 }
 
-static const u8 *const sListMenuLabels[][12] = {
-    [LISTMENU_BADGES] =
-    {
-        gText_BoulderBadge,
-        gText_CascadeBadge,
-        gText_ThunderBadge,
-        gText_RainbowBadge,
-        gText_SoulBadge,
-        gText_MarshBadge,
-        gText_VolcanoBadge,
-        gText_EarthBadge,
-        gOtherText_Exit,
-    },
-    [LISTMENU_SILPHCO_FLOORS] =
-    {
-        gText_11F,
-        gText_10F,
-        gText_9F,
-        gText_8F,
-        gText_7F,
-        gText_6F,
-        gText_5F,
-        gText_4F,
-        gText_3F,
-        gText_2F,
-        gText_1F,
-        gOtherText_Exit,
-    },
-    [LISTMENU_ROCKET_HIDEOUT_FLOORS] = // Unncessary, MULTI_ROCKET_HIDEOUT_ELEVATOR is used instead
-    {
-        gText_B1F,
-        gText_B2F,
-        gText_B4F,
-        gOtherText_Exit,
-    },
-    [LISTMENU_DEPT_STORE_FLOORS] = // Unncessary, MULTI_DEPT_STORE_ELEVATOR is used instead
-    {
-        gText_5F,
-        gText_4F,
-        gText_3F,
-        gText_2F,
-        gText_1F,
-        gOtherText_Exit,
-    },
-    [LISTMENU_WIRELESS_LECTURE_HEADERS] = // Unnecessary, MULTI_LINKED_DIRECT_UNION is used instead
-    {
-        gText_LinkedGamePlay,
-        gText_DirectCorner,
-        gText_UnionRoom,
-        gOtherText_Quit,
-    },
-    [LISTMENU_BERRY_POWDER] =
-    {
-        gText_Energypowder_50,
-        gText_EnergyRoot_80,
-        gText_HealPowder_50,
-        gText_RevivalHerb_300,
-        gText_Protein_1000,
-        gText_Iron_1000,
-        gText_Carbos_1000,
-        gText_Calcium_1000,
-        gText_Zinc_1000,
-        gText_HpUp_1000,
-        gText_PpUp_3000,
-        gOtherText_Exit,
-    },
-    [LISTMENU_TRAINER_TOWER_FLOORS] = // Unnecessary, MULTI_ROOFTOP_B1F is used instead
-    {
-        gText_Rooftop,
-        gText_B1F,
-        gOtherText_Exit,
-    },
-    [SCROLL_MULTI_BF_RECEPTIONIST] =
-    {
-        gText_BattleTower2,
-        gText_BattleDome,
-        gText_BattlePalace,
-        gText_BattleArena,
-        gText_BattleFactory,
-        gText_BattlePike,
-        gText_BattlePyramid,
-        gText_RankingHall,
-        gText_ExchangeService,
-        gText_Exit
-    },
-    [SCROLL_MULTI_BF_MOVE_TUTOR_1] =
-    {
-        COMPOUND_STRING("SOFTBOILED{CLEAR_TO 0x4E}16BP"),
-        COMPOUND_STRING("SEISMIC TOSS{CLEAR_TO 0x4E}24BP"),
-        COMPOUND_STRING("DREAM EATER{CLEAR_TO 0x4E}24BP"),
-        COMPOUND_STRING("MEGA PUNCH{CLEAR_TO 0x4E}24BP"),
-        COMPOUND_STRING("MEGA KICK{CLEAR_TO 0x4E}48BP"),
-        COMPOUND_STRING("BODY SLAM{CLEAR_TO 0x4E}48BP"),
-        COMPOUND_STRING("ROCK SLIDE{CLEAR_TO 0x4E}48BP"),
-        COMPOUND_STRING("COUNTER{CLEAR_TO 0x4E}48BP"),
-        COMPOUND_STRING("THUNDER WAVE{CLEAR_TO 0x4E}48BP"),
-        COMPOUND_STRING("SWORDS DANCE{CLEAR_TO 0x4E}48BP"),
-        gText_Exit
-    },
-    [SCROLL_MULTI_BF_MOVE_TUTOR_2] =
-    {
-        COMPOUND_STRING("DEFENSE CURL{CLEAR_TO 0x4E}16BP"),
-        COMPOUND_STRING("SNORE{CLEAR_TO 0x4E}24BP"),
-        COMPOUND_STRING("MUD-SLAP{CLEAR_TO 0x4E}24BP"),
-        COMPOUND_STRING("SWIFT{CLEAR_TO 0x4E}24BP"),
-        COMPOUND_STRING("ICY WIND{CLEAR_TO 0x4E}24BP"),
-        COMPOUND_STRING("ENDURE{CLEAR_TO 0x4E}48BP"),
-        COMPOUND_STRING("PSYCH UP{CLEAR_TO 0x4E}48BP"),
-        COMPOUND_STRING("ICE PUNCH{CLEAR_TO 0x4E}48BP"),
-        COMPOUND_STRING("THUNDERPUNCH{CLEAR_TO 0x4E}48BP"),
-        COMPOUND_STRING("FIRE PUNCH{CLEAR_TO 0x4E}48BP"),
-        gText_Exit
-    },
-    [SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_1] =
-    {
-        // COMPOUND_STRING("KISS POSTER{CLEAR_TO 0x5E}16BP"),
-        // COMPOUND_STRING("KISS CUSHION{CLEAR_TO 0x5E}32BP"),
-        // COMPOUND_STRING("SMOOCHUM DOLL{CLEAR_TO 0x5E}32BP"),
-        // COMPOUND_STRING("TOGEPI DOLL{CLEAR_TO 0x5E}48BP"),
-        // COMPOUND_STRING("MEOWTH DOLL{CLEAR_TO 0x5E}48BP"),
-        // COMPOUND_STRING("CLEFAIRY DOLL{CLEAR_TO 0x5E}48BP"),
-        // COMPOUND_STRING("DITTO DOLL{CLEAR_TO 0x5E}48BP"),
-        // COMPOUND_STRING("CYNDAQUIL DOLL{CLEAR_TO 0x5E}80BP"),
-        // COMPOUND_STRING("CHIKORITA DOLL{CLEAR_TO 0x5E}80BP"),
-        // COMPOUND_STRING("TOTODILE DOLL{CLEAR_TO 0x5E}80BP"),
-        gText_Exit
-    },
-    [SCROLL_MULTI_BF_EXCHANGE_CORNER_DECOR_VENDOR_2] =
-    {
-        // COMPOUND_STRING("LAPRAS DOLL{CLEAR_TO 0x58}128BP"),
-        // COMPOUND_STRING("SNORLAX DOLL{CLEAR_TO 0x58}128BP"),
-        // COMPOUND_STRING("VENUSAUR DOLL{CLEAR_TO 0x58}256BP"),
-        // COMPOUND_STRING("CHARIZARD DOLL{CLEAR_TO 0x58}256BP"),
-        // COMPOUND_STRING("BLASTOISE DOLL{CLEAR_TO 0x58}256BP"),
-        gText_Exit
-    },
-    [SCROLL_MULTI_BF_EXCHANGE_CORNER_VITAMIN_VENDOR] =
-    {
-        COMPOUND_STRING("PROTEIN{CLEAR_TO 0x64}1BP"),
-        COMPOUND_STRING("CALCIUM{CLEAR_TO 0x64}1BP"),
-        COMPOUND_STRING("IRON{CLEAR_TO 0x64}1BP"),
-        COMPOUND_STRING("ZINC{CLEAR_TO 0x64}1BP"),
-        COMPOUND_STRING("CARBOS{CLEAR_TO 0x64}1BP"),
-        COMPOUND_STRING("HP UP{CLEAR_TO 0x64}1BP"),
-        gText_Exit
-    },
-    [SCROLL_MULTI_BF_EXCHANGE_CORNER_HOLD_ITEM_VENDOR] =
-    {
-        COMPOUND_STRING("LEFTOVERS{CLEAR_TO 0x5E}48BP"),
-        COMPOUND_STRING("WHITE HERB{CLEAR_TO 0x5E}48BP"),
-        COMPOUND_STRING("QUICK CLAW{CLEAR_TO 0x5E}48BP"),
-        COMPOUND_STRING("MENTAL HERB{CLEAR_TO 0x5E}48BP"),
-        COMPOUND_STRING("BRIGHTPOWDER{CLEAR_TO 0x5E}64BP"),
-        COMPOUND_STRING("CHOICE BAND{CLEAR_TO 0x5E}64BP"),
-        COMPOUND_STRING("KING'S ROCK{CLEAR_TO 0x5E}64BP"),
-        COMPOUND_STRING("FOCUS BAND{CLEAR_TO 0x5E}64BP"),
-        COMPOUND_STRING("SCOPE LENS{CLEAR_TO 0x5E}64BP"),
-        gText_Exit
-    },
-};
-
 static void Task_CreateScriptListMenu(u8 taskId)
 {
     struct WindowTemplate template;
@@ -1586,7 +1525,7 @@ static void Task_CreateScriptListMenu(u8 taskId)
     struct Task *task = &gTasks[taskId];
     u8 windowId;
     LockPlayerFieldControls();
-    if (gSpecialVar_0x8004 == LISTMENU_SILPHCO_FLOORS)
+    if (gSpecialVar_0x8004 == SCROLL_MULTI_SILPHCO_FLOORS)
         gScrollableMultichoice_ScrollOffset = sElevatorScroll;
     else
         gScrollableMultichoice_ScrollOffset = 0;

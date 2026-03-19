@@ -9,7 +9,7 @@ SilphCo_Elevator_EventScript_FloorSelect::
 	special DrawElevatorCurrentFloorWindow
 	message Text_WantWhichFloor
 	waitmessage
-	setvar VAR_0x8004, LISTMENU_SILPHCO_FLOORS
+	setvar VAR_0x8004, SCROLL_MULTI_SILPHCO_FLOORS
 	specialvar VAR_RESULT, InitElevatorFloorSelectMenuPos
 	special ShowScrollableMultichoice
 	waitstate

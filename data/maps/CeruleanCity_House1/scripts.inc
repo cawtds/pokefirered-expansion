@@ -7,7 +7,7 @@ CeruleanCity_House1_EventScript_BadgeGuy::
 	msgbox CeruleanCity_House1_Text_BadgesHaveAmazingSecrets
 	message CeruleanCity_House1_Text_DescribeWhichBadge
 	waitmessage
-	setvar VAR_0x8004, LISTMENU_BADGES
+	setvar VAR_0x8004, SCROLL_MULTI_BADGES
 	special ShowScrollableMultichoice
 	waitstate
 	switch VAR_RESULT
