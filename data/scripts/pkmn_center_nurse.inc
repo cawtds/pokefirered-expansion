@@ -6,7 +6,7 @@ EventScript_PkmnCenterNurse::
 	switch VAR_RESULT
 	case 0, EventScript_PkmnCenterNurse_HealPkmn
 	case 1 EventScript_PkmnCenterNurse_Goodbye
-	case SCR_MENU_CANCEL, EventScript_PkmnCenterNurse_Goodbye
+	case MULTI_B_PRESSED, EventScript_PkmnCenterNurse_Goodbye
 	end
 
 EventScript_PkmnCenterNurse_HealPkmn::

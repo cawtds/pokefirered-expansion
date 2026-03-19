@@ -217,7 +217,7 @@ CableClub_EventScript_SelectCableClubRoom::
 	case 0, CableClub_EventScript_TradeCenter
 	case 1, CableClub_EventScript_Colosseum
 	case 2, CableClub_EventScript_AbortLink
-	case SCR_MENU_CANCEL, CableClub_EventScript_AbortLink
+	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink
 	end
 
 CableClub_EventScript_Colosseum::
@@ -235,7 +235,7 @@ CableClub_EventScript_SelectBattleMode::
 	case 2, CableClub_EventScript_MultiBattleMode
 	case 3, CableClub_EventScript_BattleModeInfo
 	case 4, CableClub_EventScript_AbortLink
-	case SCR_MENU_CANCEL, CableClub_EventScript_AbortLink
+	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink
 	end
 
 CableClub_EventScript_BattleModeInfo::
@@ -757,7 +757,7 @@ CableClub_EventScript_AskEnterUnionRoom::
 	case 0, CableClub_EventScript_EnterUnionRoom
 	case 1, CableClub_EventScript_AbortLink
 	case 2, CableClub_EventScript_UnionRoomInfo
-	case SCR_MENU_CANCEL, CableClub_EventScript_AbortLink
+	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink
 	end
 
 CableClub_EventScript_UnionRoomInfo::
@@ -862,7 +862,7 @@ CableClub_EventScript_DirectCornerSelectService::
 	case 1, CableClub_EventScript_WirelessBattleSelect
 	case 2, CableClub_EventScript_WirelessBerryCrush
 	case 3, CableClub_EventScript_AbortLink
-	case SCR_MENU_CANCEL, CableClub_EventScript_AbortLink
+	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink
 	end
 
 CableClub_EventScript_DirectCornerNoBerry::
@@ -871,7 +871,7 @@ CableClub_EventScript_DirectCornerNoBerry::
 	case 0, CableClub_EventScript_WirelessTrade
 	case 1, CableClub_EventScript_WirelessBattleSelect
 	case 2, CableClub_EventScript_AbortLink
-	case SCR_MENU_CANCEL, CableClub_EventScript_AbortLink
+	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink
 	end
 
 CableClub_EventScript_WirelessTrade::
@@ -893,7 +893,7 @@ CableClub_EventScript_WirelessBattleSelect::
 	case 2, CableClub_EventScript_WirelessMultiBattle
 	case 3, CableClub_EventScript_WirelessBattleInfo
 	case 4, CableClub_EventScript_AbortLink
-	case SCR_MENU_CANCEL, CableClub_EventScript_AbortLink
+	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink
 	end
 
 CableClub_EventScript_WirelessSingleBattle::
@@ -958,7 +958,7 @@ CableClub_EventScript_ChooseLinkLeaderFrom2::
 	case 0, CableClub_EventScript_TryJoinGroup2Players
 	case 1, CableClub_EventScript_TryLeadGroup2Players
 	case 2, CableClub_EventScript_AbortLink
-	case SCR_MENU_CANCEL, CableClub_EventScript_AbortLink
+	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink
 	end
 
 CableClub_EventScript_TryLeadGroup2Players::
@@ -987,7 +987,7 @@ CableClub_EventScript_ChooseLinkLeaderFrom4::
 	case 0, CableClub_EventScript_TryJoinGroup4Players
 	case 1, CableClub_EventScript_TryLeadGroup4Players
 	case 2, CableClub_EventScript_AbortLink
-	case SCR_MENU_CANCEL, CableClub_EventScript_AbortLink
+	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink
 	end
 
 CableClub_EventScript_TryLeadGroup4Players::
@@ -1016,7 +1016,7 @@ CableClub_EventScript_ChooseLinkLeader::
 	case 0, CableClub_EventScript_TryJoinGroupXPlayers
 	case 1, CableClub_EventScript_TryLeadGroupXPlayers
 	case 2, CableClub_EventScript_AbortLink
-	case SCR_MENU_CANCEL, CableClub_EventScript_AbortLink
+	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink
 	end
 
 CableClub_EventScript_TryLeadGroupXPlayers::
@@ -1133,7 +1133,7 @@ JoyfulGameCorner_EventScript_InfoMan2::
 	case 0, CableClub_EventScript_PokemonJumpInfo
 	case 1, CableClub_EventScript_DodrioBerryPickingInfo
 	case 2, CableClub_EventScript_MinigameInfoExit
-	case SCR_MENU_CANCEL, CableClub_EventScript_MinigameInfoExit
+	case MULTI_B_PRESSED, CableClub_EventScript_MinigameInfoExit
 	end
 
 CableClub_EventScript_PokemonJumpInfo::
@@ -1169,7 +1169,7 @@ JoyfulGameCorner_EventScript_MinigameAttendant::
 	case 0, CableClub_EventScript_PlayPokemonJump
 	case 1, CableClub_EventScript_PlayDodrioBerryPicking
 	case 2, CableClub_EventScript_AbortMinigame
-	case SCR_MENU_CANCEL, CableClub_EventScript_AbortMinigame
+	case MULTI_B_PRESSED, CableClub_EventScript_AbortMinigame
 	end
 
 CableClub_EventScript_PlayPokemonJump::
@@ -1212,7 +1212,7 @@ CableClub_EventScript_ChooseLinkLeaderMinigame::
 	case 0, CableClub_EventScript_TryJoinMinigameLinkGroup
 	case 1, CableClub_EventScript_TryBecomeMinigameLinkLeader
 	case 2, CableClub_EventScript_AbortMinigame
-	case SCR_MENU_CANCEL, CableClub_EventScript_AbortMinigame
+	case MULTI_B_PRESSED, CableClub_EventScript_AbortMinigame
 	end
 
 CableClub_EventScript_TryBecomeMinigameLinkLeader::

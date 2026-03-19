@@ -32,7 +32,7 @@ EventScript_ChoosePCMenu::
 	case 2, EventScript_AccessProfOaksPC
 	case 3, EventScript_AccessHallOfFame
 	case 4, EventScript_TurnOffPC
-	case SCR_MENU_CANCEL, EventScript_TurnOffPC
+	case MULTI_B_PRESSED, EventScript_TurnOffPC
 	end
 
 EventScript_AccessPlayersPC::

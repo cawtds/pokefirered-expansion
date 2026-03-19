@@ -1,13 +1,6 @@
 #ifndef GUARD_CONSTANTS_MENU_H
 #define GUARD_CONSTANTS_MENU_H
 
-#define MULTI_B_PRESSED  127
-#define SCR_MENU_CANCEL 127
-#define SCR_MENU_UNSET  255
-
-#define MAX_MULTICHOICE_WIDTH 28
-
-
 enum ScrollMulti
 {
     LISTMENU_BADGES,

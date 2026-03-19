@@ -3,6 +3,12 @@
 
 #define MULTICHOICE(name) {.list = name, .count = ARRAY_COUNT(name)}
 
+#define MAX_MULTICHOICE_WIDTH 28
+
+#define MULTI_B_PRESSED 127
+#define SCR_MENU_UNSET  255
+
+
 // Multichoice Ids
 enum MultichoiceID
 {

@@ -22,7 +22,7 @@ EventScript_AskForProfile:
 	case 0, EventScript_AcceptGiveProfile
 	case 1, EventScript_DeclineGiveProfile
 	case 2, EventScript_ProfileInfo
-	case SCR_MENU_CANCEL, EventScript_DeclineGiveProfile
+	case MULTI_B_PRESSED, EventScript_DeclineGiveProfile
 	end
 
 EventScript_ProfileInfo:
@@ -69,7 +69,7 @@ EventScript_AskForNewProfile:
 	case 0, EventScript_AcceptGiveNewProfile
 	case 1, EventScript_DeclineGiveNewProfile
 	case 2, EventScript_ProfileInfo2
-	case SCR_MENU_CANCEL, EventScript_DeclineGiveNewProfile
+	case MULTI_B_PRESSED, EventScript_DeclineGiveNewProfile
 	end
 
 EventScript_ProfileInfo2:

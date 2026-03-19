@@ -968,7 +968,7 @@ bool8 ScriptMenu_MultichoiceDynamic(u8 left, u8 top, u8 argc, struct ListMenuIte
     }
     else
     {
-        gSpecialVar_Result = 0xFF;
+        gSpecialVar_Result = SCR_MENU_UNSET;
         DrawMultichoiceMenuDynamic(left, top, argc, items, ignoreBPress, initialRow, maxBeforeScroll, callbackSet);
         return TRUE;
     }
@@ -1433,7 +1433,7 @@ static void Task_HandleMultichoiceInput(u8 taskId)
                 if (tIgnoreBPress)
                     return;
                 PlaySE(SE_SELECT);
-                gSpecialVar_Result = SCR_MENU_CANCEL;
+                gSpecialVar_Result = MULTI_B_PRESSED;
                 break;
             default:
                 gSpecialVar_Result = input;
@@ -1550,7 +1550,7 @@ static void Hask_MultichoiceGridMenu_HandleInput(u8 taskId)
         if (tIgnoreBPress)
             return;
         PlaySE(SE_SELECT);
-        gSpecialVar_Result = SCR_MENU_CANCEL;
+        gSpecialVar_Result = MULTI_B_PRESSED;
         break;
     default:
         gSpecialVar_Result = input;
@@ -1890,8 +1890,8 @@ u16 GetSelectedSeagallopDestination(void)
 {
     // 8004 = Starting location
     // 8005 = Page (0: Verm, One, Two, Three, Four, Other, Exit; 1: Four, Five, Six, Seven, Other, Exit)
-    if (gSpecialVar_Result == SCR_MENU_CANCEL)
-        return SCR_MENU_CANCEL;
+    if (gSpecialVar_Result == MULTI_B_PRESSED)
+        return MULTI_B_PRESSED;
     if (gSpecialVar_0x8005 == 1)
     {
         if (gSpecialVar_Result == 3)
@@ -1900,7 +1900,7 @@ u16 GetSelectedSeagallopDestination(void)
         }
         else if (gSpecialVar_Result == 4)
         {
-            return SCR_MENU_CANCEL;
+            return MULTI_B_PRESSED;
         }
         else if (gSpecialVar_Result == 0)
         {
@@ -1929,7 +1929,7 @@ u16 GetSelectedSeagallopDestination(void)
         if (gSpecialVar_Result == 4)
             return SEAGALLOP_MORE;
         else if (gSpecialVar_Result == 5)
-            return SCR_MENU_CANCEL;
+            return MULTI_B_PRESSED;
         else if (gSpecialVar_Result >= gSpecialVar_0x8004)
             return gSpecialVar_Result + 1;
         else
