@@ -16,7 +16,7 @@ BattleFrontier_OutsideWest_EventScript_FerryAttendant::
 	message BattleFrontier_OutsideWest_Text_WhereWouldYouLikeToGo
 	waitmessage
 	setvar VAR_0x8004, SEAGALLOP_NAVEL_ROCK
-	multichoice 20, 8, MULTICHOICE_SEAGALLOP_VERMILION, FALSE
+	multichoice 20, 8, MULTI_SEAGALLOP_VERMILION, FALSE
 	switch VAR_RESULT
 	case 0, EventScript_SailToVermilionCity
 	case 1, EventScript_CancelSail

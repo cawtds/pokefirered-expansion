@@ -53,7 +53,7 @@ ViridianCity_School_EventScript_Blackboard::
 ViridianCity_School_EventScript_ChooseBlackboardTopic::
 	message ViridianCity_School_Text_ReadWhichTopic
 	waitmessage
-	multichoicegrid 7, 1, MULTICHOICE_TRAINER_SCHOOL_WHITEBOARD, 3, FALSE
+	multichoicegrid 7, 1, MULTI_TRAINER_SCHOOL_WHITEBOARD, 3, FALSE
 	switch VAR_RESULT
 	case 0, ViridianCity_School_EventScript_ReadSleep
 	case 1, ViridianCity_School_EventScript_ReadPoison

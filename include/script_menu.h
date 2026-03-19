@@ -10,10 +10,10 @@
 
 // The default size the stack for dynamic multichoice is initialized to
 // If you try to push an element when the stack is full, it will be reallocated
-// With increasing capacity of MULTICHOICE_DYNAMIC_STACK_INC
+// With increasing capacity of MULTI_DYNAMIC_STACK_INC
 
-#define MULTICHOICE_DYNAMIC_STACK_SIZE 5
-#define MULTICHOICE_DYNAMIC_STACK_INC 5
+#define MULTI_DYNAMIC_STACK_SIZE 5
+#define MULTI_DYNAMIC_STACK_INC 5
 
 extern const u8 *const gStdStringPtrs[];
 

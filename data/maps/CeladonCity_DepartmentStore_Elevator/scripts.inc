@@ -20,27 +20,27 @@ CeladonCity_DepartmentStore_Elevator_EventScript_FloorSelect::
 	end
 
 CeladonCity_DepartmentStore_Elevator_EventScript_FloorSelectFrom5F::
-	multichoicedefault 0, 0, MULTICHOICE_DEPT_STORE_ELEVATOR, 0, FALSE
+	multichoicedefault 0, 0, MULTI_DEPT_STORE_ELEVATOR, 0, FALSE
 	goto CeladonCity_DepartmentStore_Elevator_EventScript_ChooseFloor
 	end
 
 CeladonCity_DepartmentStore_Elevator_EventScript_FloorSelectFrom4F::
-	multichoicedefault 0, 0, MULTICHOICE_DEPT_STORE_ELEVATOR, 1, FALSE
+	multichoicedefault 0, 0, MULTI_DEPT_STORE_ELEVATOR, 1, FALSE
 	goto CeladonCity_DepartmentStore_Elevator_EventScript_ChooseFloor
 	end
 
 CeladonCity_DepartmentStore_Elevator_EventScript_FloorSelectFrom3F::
-	multichoicedefault 0, 0, MULTICHOICE_DEPT_STORE_ELEVATOR, 2, FALSE
+	multichoicedefault 0, 0, MULTI_DEPT_STORE_ELEVATOR, 2, FALSE
 	goto CeladonCity_DepartmentStore_Elevator_EventScript_ChooseFloor
 	end
 
 CeladonCity_DepartmentStore_Elevator_EventScript_FloorSelectFrom2F::
-	multichoicedefault 0, 0, MULTICHOICE_DEPT_STORE_ELEVATOR, 3, FALSE
+	multichoicedefault 0, 0, MULTI_DEPT_STORE_ELEVATOR, 3, FALSE
 	goto CeladonCity_DepartmentStore_Elevator_EventScript_ChooseFloor
 	end
 
 CeladonCity_DepartmentStore_Elevator_EventScript_FloorSelectFrom1F::
-	multichoicedefault 0, 0, MULTICHOICE_DEPT_STORE_ELEVATOR, 4, FALSE
+	multichoicedefault 0, 0, MULTI_DEPT_STORE_ELEVATOR, 4, FALSE
 	goto CeladonCity_DepartmentStore_Elevator_EventScript_ChooseFloor
 	end
 

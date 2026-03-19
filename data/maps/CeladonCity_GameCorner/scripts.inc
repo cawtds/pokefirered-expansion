@@ -26,7 +26,7 @@ CeladonCity_GameCorner_EventScript_CoinsClerk::
 	showcoinsbox 0, 5
 	message CeladonCity_GameCorner_Text_WelcomeBuySomeCoins
 	waitmessage
-	multichoice 13, 0, MULTICHOICE_GAME_CORNER_COIN_PURCHASE_COUNTER, FALSE
+	multichoice 13, 0, MULTI_GAME_CORNER_COIN_PURCHASE_COUNTER, FALSE
 	copyvar VAR_0x8009, VAR_RESULT
 	switch VAR_RESULT
 	case 0, CeladonCity_GameCorner_EventScript_BuyCoins

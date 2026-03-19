@@ -22,7 +22,7 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_PrizeClerkMons::
 CeladonCity_GameCorner_PrizeRoom_EventScript_ChoosePrizeMon::
 	message CeladonCity_GameCorner_PrizeRoom_Text_WhichPrize
 	waitmessage
-	multichoice 11, 0, MULTICHOICE_GAME_CORNER_POKEMON_PRIZES, FALSE
+	multichoice 11, 0, MULTI_GAME_CORNER_POKEMON_PRIZES, FALSE
 	switch VAR_RESULT
 	case 0, CeladonCity_GameCorner_PrizeRoom_EventScript_Abra
 	case 1, CeladonCity_GameCorner_PrizeRoom_EventScript_Clefairy
@@ -250,7 +250,7 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_PrizeClerkTMs::
 CeladonCity_GameCorner_PrizeRoom_EventScript_ChoosePrizeTM::
 	message CeladonCity_GameCorner_PrizeRoom_Text_WhichPrize
 	waitmessage
-	multichoice 11, 0, MULTICHOICE_GAME_CORNER_TMPRIZES, FALSE
+	multichoice 11, 0, MULTI_GAME_CORNER_TMPRIZES, FALSE
 	switch VAR_RESULT
 	case 0, CeladonCity_GameCorner_PrizeRoom_EventScript_TM13
 	case 1, CeladonCity_GameCorner_PrizeRoom_EventScript_TM23
@@ -341,7 +341,7 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_PrizeClerkItems::
 CeladonCity_GameCorner_PrizeRoom_EventScript_ChoosePrizeItem::
 	message CeladonCity_GameCorner_PrizeRoom_Text_WhichPrize
 	waitmessage
-	multichoice 10, 0, MULTICHOICE_GAME_CORNER_BATTLE_ITEM_PRIZES, FALSE
+	multichoice 10, 0, MULTI_GAME_CORNER_BATTLE_ITEM_PRIZES, FALSE
 	switch VAR_RESULT
 	case 0, CeladonCity_GameCorner_PrizeRoom_EventScript_SmokeBall
 	case 1, CeladonCity_GameCorner_PrizeRoom_EventScript_MiracleSeed

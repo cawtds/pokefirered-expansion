@@ -24,12 +24,6 @@
 
 #define MULTICHOICE(name) {.list = name, .count = ARRAY_COUNT(name)}
 
-struct MultichoiceListStruct
-{
-    const struct MenuAction * list;
-    u8 count;
-};
-
 struct DynamicListMenuEventArgs
 {
     struct ListMenuTemplate *list;
@@ -727,97 +721,105 @@ static const struct MenuAction sMultichoiceList_Satisfaction[] =
     {COMPOUND_STRING("Dissatisfied")},
 };
 
-static const struct MenuAction sMultichoiceList_Exit[] = {
+static const struct MenuAction sMultichoiceList_Exit[] =
+{
     { gOtherText_Exit }
 };
 
-static const struct MultichoiceListStruct sMultichoiceLists[] = {
-    [MULTI_YESNO]                                               = MULTICHOICE(sMultichoiceList_YesNo),
-    [MULTICHOICE_EEVEELUTIONS]                                  = MULTICHOICE(sMultichoiceList_Eeveelutions),
-    [MULTICHOICE_TRAINER_CARD_ICON_TINT]                        = MULTICHOICE(sMultichoiceList_TrainerCardIconTint),
-    [MULTICHOICE_HOF_QUIT]                                      = MULTICHOICE(sMultichoiceList_HOF_Quit),
-    [MULTICHOICE_EGGS_QUIT]                                     = MULTICHOICE(sMultichoiceList_Eggs_Quit),
-    [MULTICHOICE_VICTORIES_QUIT]                                = MULTICHOICE(sMultichoiceList_Victories_Quit),
-    [MULTICHOICE_HOF_EGGS_QUIT]                                 = MULTICHOICE(sMultichoiceList_HOF_Eggs_Quit),
-    [MULTICHOICE_HOF_VICTORIES_QUIT]                            = MULTICHOICE(sMultichoiceList_HOF_Victories_Quit),
-    [MULTICHOICE_EGGS_VICTORIES_QUIT]                           = MULTICHOICE(sMultichoiceList_Eggs_Victories_Quit),
-    [MULTICHOICE_HOF_EGGS_VICTORIES_QUIT]                       = MULTICHOICE(sMultichoiceList_HOF_Eggs_Victories_Quit),
-    [MULTICHOICE_EXIT]                                          = MULTICHOICE(sMultichoiceList_Exit),
-    [MULTICHOICE_EXIT_2]                                        = MULTICHOICE(sMultichoiceList_Exit),
-    [MULTICHOICE_EXIT_3]                                        = MULTICHOICE(sMultichoiceList_Exit),
-    [MULTICHOICE_BIKE_SHOP]                                     = MULTICHOICE(sMultichoiceList_BikeShop),
-    [MULTICHOICE_GAME_CORNER_POKEMON_PRIZES]                    = MULTICHOICE(sMultichoiceList_GameCornerPokemonPrizes),
-    [MULTICHOICE_TRAINER_SCHOOL_WHITEBOARD]                     = MULTICHOICE(sMultichoiceList_TrainerSchoolWhiteboard),
-    [MULTICHOICE_YES_NO_INFO]                                   = MULTICHOICE(sMultichoiceList_YesNoInfo),
-    [MULTICHOICE_SINGLE_DOUBLE_MULTI_INFO_EXIT]                 = MULTICHOICE(sMultichoiceList_SingleDoubleMultiInfoExit),
-    [MULTICHOICE_YES_NO_INFO_2]                                 = MULTICHOICE(sMultichoiceList_YesNoInfo2),
-    [MULTI_CHALLENGEINFO]                                       = MULTICHOICE(sMultichoiceList_ChallengeInfoExit),
-    [MULTICHOICE_ROOFTOP_B1F]                                   = MULTICHOICE(sMultichoiceList_RooftopB1F),
-    [MULTICHOICE_HELIX]                                         = MULTICHOICE(sMultichoiceList_Helix),
-    [MULTICHOICE_DOME]                                          = MULTICHOICE(sMultichoiceList_Dome),
-    [MULTICHOICE_AMBER]                                         = MULTICHOICE(sMultichoiceList_Amber),
-    [MULTICHOICE_HELIX_AMBER]                                   = MULTICHOICE(sMultichoiceList_HelixAmber),
-    [MULTICHOICE_DOME_AMBER]                                    = MULTICHOICE(sMultichoiceList_DomeAmber),
-    [MULTICHOICE_CELADON_VENDING_MACHINE]                       = MULTICHOICE(sMultichoiceList_CeladonVendingMachine),
-    [MULTICHOICE_GAME_CORNER_COIN_PURCHASE_COUNTER]             = MULTICHOICE(sMultichoiceList_GameCornerCoinPurchaseCounter),
-    [MULTICHOICE_EXCELLENT_NOT_SO_BAD]                          = MULTICHOICE(sMultichoiceList_Excellent_NotSoBad),
-    [MULTICHOICE_RIGHT_LEFT]                                    = MULTICHOICE(sMultichoiceList_RightLeft),
-    [MULTICHOICE_GAME_CORNER_TMPRIZES]                          = MULTICHOICE(sMultichoiceList_GameCornerTMPrizes),
-    [MULTICHOICE_DEPT_STORE_ELEVATOR]                           = MULTICHOICE(sMultichoiceList_DeptStoreElevator),
-    [MULTICHOICE_THIRSTY_GIRL_FRESH_WATER]                      = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWater),
-    [MULTICHOICE_THIRSTY_GIRL_SODA_POP]                         = MULTICHOICE(sMultichoiceList_ThirstyGirlSodaPop),
-    [MULTICHOICE_THIRSTY_GIRL_FRESH_WATER_SODA_POP]             = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWaterSodaPop),
-    [MULTICHOICE_THIRSTY_GIRL_LEMONADE]                         = MULTICHOICE(sMultichoiceList_ThirstyGirlLemonade),
-    [MULTICHOICE_THIRSTY_GIRL_FRESH_WATER_LEMONADE]             = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWaterLemonade),
-    [MULTICHOICE_THIRSTY_GIRL_SODA_POP_LEMONADE]                = MULTICHOICE(sMultichoiceList_ThirstyGirlSodaPopLemonade),
-    [MULTICHOICE_THIRSTY_GIRL_FRESH_WATER_SODA_POP_LEMONADE]    = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWaterSodaPopLemonade),
-    [MULTICHOICE_TRADE_CENTER_COLOSSEUM]                        = MULTICHOICE(sMultichoiceList_TradeCenter_Colosseum),
-    [MULTICHOICE_LINK_WIRELESS]                                 = MULTICHOICE(sMultichoiceList_Link_Wireless),
-    [MULTICHOICE_GAME_CORNER_BATTLE_ITEM_PRIZES]                = MULTICHOICE(sMultichoiceList_GameCornerBattleItemPrizes),
-    [MULTICHOICE_ROCKET_HIDEOUT_ELEVATOR]                       = MULTICHOICE(sMultichoiceList_RocketHideoutElevator),
-    [MULTICHOICE_LINKED_DIRECT_UNION]                           = MULTICHOICE(sMultichoiceList_LinkedDirectUnion),
-    [MULTICHOICE_ISLAND_23]                                     = MULTICHOICE(sMultichoiceList_Island23),
-    [MULTICHOICE_ISLAND_13]                                     = MULTICHOICE(sMultichoiceList_Island13),
-    [MULTICHOICE_ISLAND_12]                                     = MULTICHOICE(sMultichoiceList_Island12),
-    [MULTICHOICE_TRADE_COLOSSEUM_CRUSH]                         = MULTICHOICE(sMultichoiceList_TradeColosseumCrush),
-    [MULTICHOICE_48]                                            = MULTICHOICE(sMultichoiceList_48),
-    [MULTICHOICE_POKEJUMP_DODRIO]                               = MULTICHOICE(sMultichoiceList_PokejumpDodrio),
-    [MULTICHOICE_TRADE_COLOSSEUM_2]                             = MULTICHOICE(sMultichoiceList_TradeColosseum_2),
-    [MULTICHOICE_MUSHROOMS]                                     = MULTICHOICE(sMultichoiceList_Mushrooms),
-    [MULTICHOICE_TRADE_COLOSSEUM_BLANK_CRUSH]                   = MULTICHOICE(sMultichoiceList_TradeColosseumBlankCrush),
-    [MULTICHOICE_TRADE_COLOSSEUM_BLANK]                         = MULTICHOICE(sMultichoiceList_TradeColosseumBlank),
-    [MULTICHOICE_SEVII_NAVEL]                                   = MULTICHOICE(sMultichoiceList_SeviiNavel),
-    [MULTICHOICE_SEVII_BIRTH]                                   = MULTICHOICE(sMultichoiceList_SeviiBirth),
-    [MULTICHOICE_SEVII_NAVEL_BIRTH]                             = MULTICHOICE(sMultichoiceList_SeviiNavelBirth),
-    [MULTICHOICE_SEAGALLOP_123]                                 = MULTICHOICE(sMultichoiceList_Seagallop123),
-    [MULTICHOICE_SEAGALLOP_V23]                                 = MULTICHOICE(sMultichoiceList_SeagallopV23),
-    [MULTICHOICE_SEAGALLOP_V13]                                 = MULTICHOICE(sMultichoiceList_SeagallopV13),
-    [MULTICHOICE_SEAGALLOP_V12]                                 = MULTICHOICE(sMultichoiceList_SeagallopV12),
-    [MULTICHOICE_SEAGALLOP_VERMILION]                           = MULTICHOICE(sMultichoiceList_SeagallopVermilion),
-    [MULTI_SSTIDAL_BATTLE_FRONTIER]                             = MULTICHOICE(sMultichoiceList_62),
-    [MULTICHOICE_JOIN_OR_LEAD]                                  = MULTICHOICE(sMultichoiceList_JoinOrLead),
-    [MULTICHOICE_TRAINER_TOWER_MODE]                            = MULTICHOICE(sMultichoiceList_TrainerTowerMode),
-    [MULTI_FRONTIER_RULES]                                      = MULTICHOICE(sMultichoiceList_FrontierRules),
-    [MULTI_FRONTIER_PASS_INFO]                                  = MULTICHOICE(sMultichoiceList_FrontierPassInfo),
-    [MULTI_FRONTIER_GAMBLER_BET]                                = MULTICHOICE(sMultichoiceList_FrontierGamblerBet),
-    [MULTI_LEVEL_MODE]                                          = MULTICHOICE(sMultichoiceList_LevelMode),
-    [MULTI_BATTLE_FACTORY_RULES]                                = MULTICHOICE(sMultichoiceList_BattleFactoryRules),
-    [MULTI_GO_ON_RECORD_REST_RETIRE]                            = MULTICHOICE(sMultichoiceList_GoOnRecordRestRetire),
-    [MULTI_GO_ON_REST_RETIRE]                                   = MULTICHOICE(sMultichoiceList_GoOnRestRetire),
-    [MULTI_GO_ON_RECORD_RETIRE]                                 = MULTICHOICE(sMultichoiceList_GoOnRecordRetire),
-    [MULTI_GO_ON_RETIRE]                                        = MULTICHOICE(sMultichoiceList_GoOnRetire),
-    [MULTI_BATTLE_ARENA_RULES]                                  = MULTICHOICE(sMultichoiceList_BattleArenaRules),
-    [MULTI_BATTLE_DOME_RULES]                                   = MULTICHOICE(sMultichoiceList_BattleDomeRules),
-    [MULTI_TOURNEY_WITH_RECORD]                                 = MULTICHOICE(sMultichoiceList_TourneyWithRecord),
-    [MULTI_TOURNEY_NO_RECORD]                                   = MULTICHOICE(sMultichoiceList_TourneyNoRecord),
-    [MULTI_BATTLE_PALACE_RULES]                                 = MULTICHOICE(sMultichoiceList_BattlePalaceRules),
-    [MULTI_BATTLE_PYRAMID_RULES]                                = MULTICHOICE(sMultichoiceList_BattlePyramidRules),
-    [MULTI_BATTLE_PIKE_RULES]                                   = MULTICHOICE(sMultichoiceList_BattlePikeRules),
-    [MULTI_FRONTIER_ITEM_CHOOSE]                                = MULTICHOICE(sMultichoiceList_FrontierItemChoose),
-    [MULTI_BATTLE_TOWER_RULES]                                  = MULTICHOICE(sMultichoiceList_BattleTowerRules),
-    [MULTI_BATTLE_TOWER_FEELINGS]                               = MULTICHOICE(sMultichoiceList_BattleTowerFeelings),
-    [MULTI_LINK_LEADER]                                         = MULTICHOICE(sMultichoiceList_LinkLeader),
-    [MULTI_SATISFACTION]                                        = MULTICHOICE(sMultichoiceList_Satisfaction),
+struct MultichoiceListStruct
+{
+    const struct MenuAction *list;
+    u8 count;
+};
+
+static const struct MultichoiceListStruct sMultichoiceLists[] =
+{
+    [MULTI_YESNO]                                      = MULTICHOICE(sMultichoiceList_YesNo),
+    [MULTI_EEVEELUTIONS]                               = MULTICHOICE(sMultichoiceList_Eeveelutions),
+    [MULTI_TRAINER_CARD_ICON_TINT]                     = MULTICHOICE(sMultichoiceList_TrainerCardIconTint),
+    [MULTI_HOF_QUIT]                                   = MULTICHOICE(sMultichoiceList_HOF_Quit),
+    [MULTI_EGGS_QUIT]                                  = MULTICHOICE(sMultichoiceList_Eggs_Quit),
+    [MULTI_VICTORIES_QUIT]                             = MULTICHOICE(sMultichoiceList_Victories_Quit),
+    [MULTI_HOF_EGGS_QUIT]                              = MULTICHOICE(sMultichoiceList_HOF_Eggs_Quit),
+    [MULTI_HOF_VICTORIES_QUIT]                         = MULTICHOICE(sMultichoiceList_HOF_Victories_Quit),
+    [MULTI_EGGS_VICTORIES_QUIT]                        = MULTICHOICE(sMultichoiceList_Eggs_Victories_Quit),
+    [MULTI_HOF_EGGS_VICTORIES_QUIT]                    = MULTICHOICE(sMultichoiceList_HOF_Eggs_Victories_Quit),
+    [MULTI_EXIT]                                       = MULTICHOICE(sMultichoiceList_Exit),
+    [MULTI_EXIT_2]                                     = MULTICHOICE(sMultichoiceList_Exit),
+    [MULTI_EXIT_3]                                     = MULTICHOICE(sMultichoiceList_Exit),
+    [MULTI_BIKE_SHOP]                                  = MULTICHOICE(sMultichoiceList_BikeShop),
+    [MULTI_GAME_CORNER_POKEMON_PRIZES]                 = MULTICHOICE(sMultichoiceList_GameCornerPokemonPrizes),
+    [MULTI_TRAINER_SCHOOL_WHITEBOARD]                  = MULTICHOICE(sMultichoiceList_TrainerSchoolWhiteboard),
+    [MULTI_YES_NO_INFO]                                = MULTICHOICE(sMultichoiceList_YesNoInfo),
+    [MULTI_SINGLE_DOUBLE_MULTI_INFO_EXIT]              = MULTICHOICE(sMultichoiceList_SingleDoubleMultiInfoExit),
+    [MULTI_YES_NO_INFO_2]                              = MULTICHOICE(sMultichoiceList_YesNoInfo2),
+    [MULTI_CHALLENGEINFO]                              = MULTICHOICE(sMultichoiceList_ChallengeInfoExit),
+    [MULTI_ROOFTOP_B1F]                                = MULTICHOICE(sMultichoiceList_RooftopB1F),
+    [MULTI_HELIX]                                      = MULTICHOICE(sMultichoiceList_Helix),
+    [MULTI_DOME]                                       = MULTICHOICE(sMultichoiceList_Dome),
+    [MULTI_AMBER]                                      = MULTICHOICE(sMultichoiceList_Amber),
+    [MULTI_HELIX_AMBER]                                = MULTICHOICE(sMultichoiceList_HelixAmber),
+    [MULTI_DOME_AMBER]                                 = MULTICHOICE(sMultichoiceList_DomeAmber),
+    [MULTI_CELADON_VENDING_MACHINE]                    = MULTICHOICE(sMultichoiceList_CeladonVendingMachine),
+    [MULTI_GAME_CORNER_COIN_PURCHASE_COUNTER]          = MULTICHOICE(sMultichoiceList_GameCornerCoinPurchaseCounter),
+    [MULTI_EXCELLENT_NOT_SO_BAD]                       = MULTICHOICE(sMultichoiceList_Excellent_NotSoBad),
+    [MULTI_RIGHT_LEFT]                                 = MULTICHOICE(sMultichoiceList_RightLeft),
+    [MULTI_GAME_CORNER_TMPRIZES]                       = MULTICHOICE(sMultichoiceList_GameCornerTMPrizes),
+    [MULTI_DEPT_STORE_ELEVATOR]                        = MULTICHOICE(sMultichoiceList_DeptStoreElevator),
+    [MULTI_THIRSTY_GIRL_FRESH_WATER]                   = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWater),
+    [MULTI_THIRSTY_GIRL_SODA_POP]                      = MULTICHOICE(sMultichoiceList_ThirstyGirlSodaPop),
+    [MULTI_THIRSTY_GIRL_FRESH_WATER_SODA_POP]          = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWaterSodaPop),
+    [MULTI_THIRSTY_GIRL_LEMONADE]                      = MULTICHOICE(sMultichoiceList_ThirstyGirlLemonade),
+    [MULTI_THIRSTY_GIRL_FRESH_WATER_LEMONADE]          = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWaterLemonade),
+    [MULTI_THIRSTY_GIRL_SODA_POP_LEMONADE]             = MULTICHOICE(sMultichoiceList_ThirstyGirlSodaPopLemonade),
+    [MULTI_THIRSTY_GIRL_FRESH_WATER_SODA_POP_LEMONADE] = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWaterSodaPopLemonade),
+    [MULTI_TRADE_CENTER_COLOSSEUM]                     = MULTICHOICE(sMultichoiceList_TradeCenter_Colosseum),
+    [MULTI_LINK_WIRELESS]                              = MULTICHOICE(sMultichoiceList_Link_Wireless),
+    [MULTI_GAME_CORNER_BATTLE_ITEM_PRIZES]             = MULTICHOICE(sMultichoiceList_GameCornerBattleItemPrizes),
+    [MULTI_ROCKET_HIDEOUT_ELEVATOR]                    = MULTICHOICE(sMultichoiceList_RocketHideoutElevator),
+    [MULTI_LINKED_DIRECT_UNION]                        = MULTICHOICE(sMultichoiceList_LinkedDirectUnion),
+    [MULTI_ISLAND_23]                                  = MULTICHOICE(sMultichoiceList_Island23),
+    [MULTI_ISLAND_13]                                  = MULTICHOICE(sMultichoiceList_Island13),
+    [MULTI_ISLAND_12]                                  = MULTICHOICE(sMultichoiceList_Island12),
+    [MULTI_TRADE_COLOSSEUM_CRUSH]                      = MULTICHOICE(sMultichoiceList_TradeColosseumCrush),
+    [MULTI_48]                                         = MULTICHOICE(sMultichoiceList_48),
+    [MULTI_POKEJUMP_DODRIO]                            = MULTICHOICE(sMultichoiceList_PokejumpDodrio),
+    [MULTI_TRADE_COLOSSEUM_2]                          = MULTICHOICE(sMultichoiceList_TradeColosseum_2),
+    [MULTI_MUSHROOMS]                                  = MULTICHOICE(sMultichoiceList_Mushrooms),
+    [MULTI_TRADE_COLOSSEUM_BLANK_CRUSH]                = MULTICHOICE(sMultichoiceList_TradeColosseumBlankCrush),
+    [MULTI_TRADE_COLOSSEUM_BLANK]                      = MULTICHOICE(sMultichoiceList_TradeColosseumBlank),
+    [MULTI_SEVII_NAVEL]                                = MULTICHOICE(sMultichoiceList_SeviiNavel),
+    [MULTI_SEVII_BIRTH]                                = MULTICHOICE(sMultichoiceList_SeviiBirth),
+    [MULTI_SEVII_NAVEL_BIRTH]                          = MULTICHOICE(sMultichoiceList_SeviiNavelBirth),
+    [MULTI_SEAGALLOP_123]                              = MULTICHOICE(sMultichoiceList_Seagallop123),
+    [MULTI_SEAGALLOP_V23]                              = MULTICHOICE(sMultichoiceList_SeagallopV23),
+    [MULTI_SEAGALLOP_V13]                              = MULTICHOICE(sMultichoiceList_SeagallopV13),
+    [MULTI_SEAGALLOP_V12]                              = MULTICHOICE(sMultichoiceList_SeagallopV12),
+    [MULTI_SEAGALLOP_VERMILION]                        = MULTICHOICE(sMultichoiceList_SeagallopVermilion),
+    [MULTI_SSTIDAL_BATTLE_FRONTIER]                    = MULTICHOICE(sMultichoiceList_62),
+    [MULTI_JOIN_OR_LEAD]                               = MULTICHOICE(sMultichoiceList_JoinOrLead),
+    [MULTI_TRAINER_TOWER_MODE]                         = MULTICHOICE(sMultichoiceList_TrainerTowerMode),
+    [MULTI_FRONTIER_RULES]                             = MULTICHOICE(sMultichoiceList_FrontierRules),
+    [MULTI_FRONTIER_PASS_INFO]                         = MULTICHOICE(sMultichoiceList_FrontierPassInfo),
+    [MULTI_FRONTIER_GAMBLER_BET]                       = MULTICHOICE(sMultichoiceList_FrontierGamblerBet),
+    [MULTI_LEVEL_MODE]                                 = MULTICHOICE(sMultichoiceList_LevelMode),
+    [MULTI_BATTLE_FACTORY_RULES]                       = MULTICHOICE(sMultichoiceList_BattleFactoryRules),
+    [MULTI_GO_ON_RECORD_REST_RETIRE]                   = MULTICHOICE(sMultichoiceList_GoOnRecordRestRetire),
+    [MULTI_GO_ON_REST_RETIRE]                          = MULTICHOICE(sMultichoiceList_GoOnRestRetire),
+    [MULTI_GO_ON_RECORD_RETIRE]                        = MULTICHOICE(sMultichoiceList_GoOnRecordRetire),
+    [MULTI_GO_ON_RETIRE]                               = MULTICHOICE(sMultichoiceList_GoOnRetire),
+    [MULTI_BATTLE_ARENA_RULES]                         = MULTICHOICE(sMultichoiceList_BattleArenaRules),
+    [MULTI_BATTLE_DOME_RULES]                          = MULTICHOICE(sMultichoiceList_BattleDomeRules),
+    [MULTI_TOURNEY_WITH_RECORD]                        = MULTICHOICE(sMultichoiceList_TourneyWithRecord),
+    [MULTI_TOURNEY_NO_RECORD]                          = MULTICHOICE(sMultichoiceList_TourneyNoRecord),
+    [MULTI_BATTLE_PALACE_RULES]                        = MULTICHOICE(sMultichoiceList_BattlePalaceRules),
+    [MULTI_BATTLE_PYRAMID_RULES]                       = MULTICHOICE(sMultichoiceList_BattlePyramidRules),
+    [MULTI_BATTLE_PIKE_RULES]                          = MULTICHOICE(sMultichoiceList_BattlePikeRules),
+    [MULTI_FRONTIER_ITEM_CHOOSE]                       = MULTICHOICE(sMultichoiceList_FrontierItemChoose),
+    [MULTI_BATTLE_TOWER_RULES]                         = MULTICHOICE(sMultichoiceList_BattleTowerRules),
+    [MULTI_BATTLE_TOWER_FEELINGS]                      = MULTICHOICE(sMultichoiceList_BattleTowerFeelings),
+    [MULTI_LINK_LEADER]                                = MULTICHOICE(sMultichoiceList_LinkLeader),
+    [MULTI_SATISFACTION]                               = MULTICHOICE(sMultichoiceList_Satisfaction),
 };
 
 // From Cool to Berries goes unused
@@ -865,9 +867,9 @@ const u8 *const gStdStringPtrs[] = {
 
 static const u8 sLinkServicesMultichoiceIds[] =
 {
-    MULTICHOICE_TRADE_CENTER_COLOSSEUM,
-    MULTICHOICE_TRADE_COLOSSEUM_CRUSH,
-    MULTICHOICE_TRADE_COLOSSEUM_2
+    MULTI_TRADE_CENTER_COLOSSEUM,
+    MULTI_TRADE_COLOSSEUM_CRUSH,
+    MULTI_TRADE_COLOSSEUM_2
 };
 
 static const u8 *const sDescriptionPtrs_CableClub_TradeBattleCancel[] = {
@@ -1115,9 +1117,9 @@ u32 MultichoiceDynamic_StackSize(void)
 void MultichoiceDynamic_PushElement(struct ListMenuItem item)
 {
     if (sDynamicMultiChoiceStack == NULL)
-        MultichoiceDynamic_InitStack(MULTICHOICE_DYNAMIC_STACK_SIZE);
+        MultichoiceDynamic_InitStack(MULTI_DYNAMIC_STACK_SIZE);
     if (MultichoiceDynamic_StackFull())
-        MultichoiceDynamic_ReallocStack(sDynamicMultiChoiceStack->capacity + MULTICHOICE_DYNAMIC_STACK_INC);
+        MultichoiceDynamic_ReallocStack(sDynamicMultiChoiceStack->capacity + MULTI_DYNAMIC_STACK_INC);
     sDynamicMultiChoiceStack->elements[++sDynamicMultiChoiceStack->top] = item;
 }
 
@@ -1448,15 +1450,15 @@ static void DrawLinkServicesMultichoiceMenu(u8 mcId)
 {
     switch (mcId)
     {
-    case MULTICHOICE_TRADE_CENTER_COLOSSEUM:
+    case MULTI_TRADE_CENTER_COLOSSEUM:
         FillWindowPixelBuffer(0, PIXEL_FILL(1));
         AddTextPrinterParameterized2(0, FONT_NORMAL, sDescriptionPtrs_CableClub_TradeBattleCancel[Menu_GetCursorPos()], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
         break;
-    case MULTICHOICE_TRADE_COLOSSEUM_CRUSH:
+    case MULTI_TRADE_COLOSSEUM_CRUSH:
         FillWindowPixelBuffer(0, PIXEL_FILL(1));
         AddTextPrinterParameterized2(0, FONT_NORMAL, sDescriptionPtrs_WirelessCenter_TradeBattleCrushCancel[Menu_GetCursorPos()], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
         break;
-    case MULTICHOICE_TRADE_COLOSSEUM_2:
+    case MULTI_TRADE_COLOSSEUM_2:
         FillWindowPixelBuffer(0, PIXEL_FILL(1));
         AddTextPrinterParameterized2(0, FONT_NORMAL, sDescriptionPtrs_WirelessCenter_TradeBattleCancel[Menu_GetCursorPos()], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
         break;
@@ -1624,7 +1626,7 @@ static void CreatePCMenuWindow(void)
     StringExpandPlaceholders(gStringVar4, gText_SPc);
     PrintPlayerNameOnWindow(windowId, gStringVar4, cursorWidth, 18);
     InitMenuNormal(windowId, FONT_NORMAL, 0, 2, 16, numItems, 0);
-    InitMultichoiceCheckWrap(FALSE, numItems, windowId, MULTICHOICE_NONE);
+    InitMultichoiceCheckWrap(FALSE, numItems, windowId, MULTI_NONE);
     ScheduleBgCopyTilemapToVram(0);
 }
 
@@ -1878,7 +1880,7 @@ void DrawSeagallopDestinationMenu(void)
     i++;
     AddTextPrinterParameterized(windowId, FONT_NORMAL, gOtherText_Exit, cursorWidth, i * 16 + 2, TEXT_SKIP_DRAW, NULL);
     InitMenuNormal(windowId, FONT_NORMAL, 0, 2, 16, numItems, 0);
-    InitMultichoiceCheckWrap(FALSE, numItems, windowId, MULTICHOICE_NONE);
+    InitMultichoiceCheckWrap(FALSE, numItems, windowId, MULTI_NONE);
     ScheduleBgCopyTilemapToVram(0);
 }
 
