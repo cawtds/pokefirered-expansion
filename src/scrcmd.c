@@ -53,6 +53,7 @@
 #include "constants/field_move.h"
 #include "constants/items.h"
 #include "constants/maps.h"
+#include "constants/menu.h"
 #include "constants/sound.h"
 
 typedef void (*NativeFunc)(struct ScriptContext *ctx);
@@ -2238,11 +2239,11 @@ bool8 ScrCmd_buffernumberstring(struct ScriptContext * ctx)
 bool8 ScrCmd_bufferstdstring(struct ScriptContext * ctx)
 {
     u8 stringVarIndex = ScriptReadByte(ctx);
-    u16 index = VarGet(ScriptReadHalfword(ctx));
+    enum StdStringID stringID = VarGet(ScriptReadHalfword(ctx));
 
     Script_RequestEffects(SCREFF_V1);
 
-    StringCopy(sScriptStringVars[stringVarIndex], gStdStringPtrs[index]);
+    StringCopy(sScriptStringVars[stringVarIndex], gStdStringPtrs[stringID]);
     return FALSE;
 }
 

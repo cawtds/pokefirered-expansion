@@ -82,6 +82,15 @@ static const u8 sText_OldAmber[] = _("OLD AMBER");
 static const u8 sText_FreshWater[] = _("FRESH WATER");
 static const u8 sText_SodaPop[] = _("SODA POP");
 static const u8 sText_Lemonade[] = _("LEMONADE");
+static const u8 sText_Vermilion[] = _("VERMILION");
+static const u8 sText_OneIsland[] = _("ONE ISLAND");
+static const u8 sText_TwoIsland[] = _("TWO ISLAND");
+static const u8 sText_ThreeIsland[] = _("THREE ISLAND");
+static const u8 sText_SeviiIslands[] = _("SEVII ISLANDS");
+static const u8 sText_NavelRock[] = _("NAVEL ROCK");
+static const u8 sText_BirthIsland[] = _("BIRTH ISLAND");
+static const u8 sText_Retire[] = _("RETIRE");
+static const u8 sText_Other[] = _("OTHER");
 static const u8 sText_NoThanks[] = _("NO THANKS");
 static const u8 sText_Quit[] = _("QUIT");
 
@@ -359,20 +368,20 @@ static const struct MenuAction sMultichoiceList_LinkedDirectUnion[] = {
 };
 
 static const struct MenuAction sMultichoiceList_Island23[] = {
-    { gText_TwoIsland },
-    { gText_ThreeIsland },
+    { sText_TwoIsland },
+    { sText_ThreeIsland },
     { gOtherText_Exit }
 };
 
 static const struct MenuAction sMultichoiceList_Island13[] = {
-    { gText_OneIsland },
-    { gText_ThreeIsland },
+    { sText_OneIsland },
+    { sText_ThreeIsland },
     { gOtherText_Exit }
 };
 
 static const struct MenuAction sMultichoiceList_Island12[] = {
-    { gText_OneIsland },
-    { gText_TwoIsland },
+    { sText_OneIsland },
+    { sText_TwoIsland },
     { gOtherText_Exit }
 };
 
@@ -401,54 +410,54 @@ static const struct MenuAction sMultichoiceList_Mushrooms[] = {
 };
 
 static const struct MenuAction sMultichoiceList_SeviiNavel[] = {
-    { gText_SeviiIslands },
-    { gText_NavelRock },
+    { sText_SeviiIslands },
+    { sText_NavelRock },
     { gOtherText_Exit }
 };
 
 static const struct MenuAction sMultichoiceList_SeviiBirth[] = {
-    { gText_SeviiIslands },
-    { gText_BirthIsland },
+    { sText_SeviiIslands },
+    { sText_BirthIsland },
     { gOtherText_Exit }
 };
 
 static const struct MenuAction sMultichoiceList_SeviiNavelBirth[] = {
-    { gText_SeviiIslands },
-    { gText_NavelRock },
-    { gText_BirthIsland },
+    { sText_SeviiIslands },
+    { sText_NavelRock },
+    { sText_BirthIsland },
     { gOtherText_Exit }
 };
 
 static const struct MenuAction sMultichoiceList_Seagallop123[] = {
-    { gText_OneIsland },
-    { gText_TwoIsland },
-    { gText_ThreeIsland },
+    { sText_OneIsland },
+    { sText_TwoIsland },
+    { sText_ThreeIsland },
     { gOtherText_Exit }
 };
 
 static const struct MenuAction sMultichoiceList_SeagallopV23[] = {
-    { gText_Vermilion },
-    { gText_TwoIsland },
-    { gText_ThreeIsland },
+    { sText_Vermilion },
+    { sText_TwoIsland },
+    { sText_ThreeIsland },
     { gOtherText_Exit }
 };
 
 static const struct MenuAction sMultichoiceList_SeagallopV13[] = {
-    { gText_Vermilion },
-    { gText_OneIsland },
-    { gText_ThreeIsland },
+    { sText_Vermilion },
+    { sText_OneIsland },
+    { sText_ThreeIsland },
     { gOtherText_Exit }
 };
 
 static const struct MenuAction sMultichoiceList_SeagallopV12[] = {
-    { gText_Vermilion },
-    { gText_OneIsland },
-    { gText_TwoIsland },
+    { sText_Vermilion },
+    { sText_OneIsland },
+    { sText_TwoIsland },
     { gOtherText_Exit }
 };
 
 static const struct MenuAction sMultichoiceList_SeagallopVermilion[] = {
-    { gText_Vermilion },
+    { sText_Vermilion },
     { gOtherText_Exit }
 };
 
@@ -514,27 +523,27 @@ static const struct MenuAction sMultichoiceList_GoOnRecordRestRetire[] =
     {sText_GoOn},
     {gText_Record},
     {gText_Rest},
-    {gText_Retire},
+    {sText_Retire},
 };
 
 static const struct MenuAction sMultichoiceList_GoOnRestRetire[] =
 {
     {sText_GoOn},
     {gText_Rest},
-    {gText_Retire},
+    {sText_Retire},
 };
 
 static const struct MenuAction sMultichoiceList_GoOnRecordRetire[] =
 {
     {sText_GoOn},
     {gText_Record},
-    {gText_Retire},
+    {sText_Retire},
 };
 
 static const struct MenuAction sMultichoiceList_GoOnRetire[] =
 {
     {sText_GoOn},
-    {gText_Retire},
+    {sText_Retire},
 };
 
 static const struct MenuAction sMultichoiceList_BattleArenaRules[] =
@@ -561,7 +570,7 @@ static const struct MenuAction sMultichoiceList_TourneyWithRecord[] =
     {sText_ReadyToStart},
     {gText_Record},
     {gText_Rest},
-    {gText_Retire},
+    {sText_Retire},
 };
 
 static const struct MenuAction sMultichoiceList_TourneyNoRecord[] =
@@ -570,7 +579,7 @@ static const struct MenuAction sMultichoiceList_TourneyNoRecord[] =
     {sText_Tourney_Tree},
     {sText_ReadyToStart},
     {gText_Rest},
-    {gText_Retire},
+    {sText_Retire},
 };
 
 static const struct MenuAction sMultichoiceList_BattlePalaceRules[] =
@@ -724,35 +733,20 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
 
 // From Cool to Berries goes unused
 const u8 *const gStdStringPtrs[] = {
-    [STDSTRING_COOL]             = gText_Cool,
-    [STDSTRING_BEAUTY]           = gText_Beauty,
-    [STDSTRING_CUTE]             = gText_Cute,
-    [STDSTRING_SMART]            = gText_Smart,
-    [STDSTRING_TOUGH]            = gText_Tough,
-    [STDSTRING_COOL2]            = gText_Cool_2,
-    [STDSTRING_BEAUTY2]          = gText_Beauty_2,
-    [STDSTRING_CUTE2]            = gText_Cute_2,
-    [STDSTRING_SMART2]           = gText_Smart_2,
-    [STDSTRING_TOUGH2]           = gText_Tough_2,
-    [STDSTRING_ITEMS]            = gText_Items,
-    [STDSTRING_KEY_ITEMS]        = gText_KeyItems,
-    [STDSTRING_POKEBALLS]        = gText_PokeBalls,
-    [STDSTRING_TMHMS]            = gText_TMsAndHMs,
-    [STDSTRING_BERRIES]          = gText_Berries,
-    [STDSTRING_BOULDER_BADGE]    = gText_Boulderbadge,
-    [STDSTRING_CASCADE_BADGE]    = gText_Cascadebadge,
-    [STDSTRING_THUNDER_BADGE]    = gText_Thunderbadge,
-    [STDSTRING_RAINBOW_BADGE]    = gText_Rainbowbadge,
-    [STDSTRING_SOUL_BADGE]       = gText_Soulbadge,
-    [STDSTRING_MARSH_BADGE]      = gText_Marshbadge,
-    [STDSTRING_VOLCANO_BADGE]    = gText_Volcanobadge,
-    [STDSTRING_EARTH_BADGE]      = gText_Earthbadge,
-    [STDSTRING_COINS]            = gText_Coins_2,
-    [STDSTRING_ITEMS_POCKET]     = gText_ItemsPocket,
-    [STDSTRING_KEY_ITEMS_POCKET] = gText_KeyItemsPocket,
-    [STDSTRING_POKEBALLS_POCKET] = gText_PokeBallsPocket,
-    [STDSTRING_TM_CASE]          = gText_TmCase,
-    [STDSTRING_BERRY_POUCH]      = gText_BerryPouch_2,
+    [STDSTRING_BOULDER_BADGE]    = COMPOUND_STRING("BOULDERBADGE"),
+    [STDSTRING_CASCADE_BADGE]    = COMPOUND_STRING("CASCADEBADGE"),
+    [STDSTRING_THUNDER_BADGE]    = COMPOUND_STRING("THUNDERBADGE"),
+    [STDSTRING_RAINBOW_BADGE]    = COMPOUND_STRING("RAINBOWBADGE"),
+    [STDSTRING_SOUL_BADGE]       = COMPOUND_STRING("SOULBADGE"),
+    [STDSTRING_MARSH_BADGE]      = COMPOUND_STRING("MARSHBADGE"),
+    [STDSTRING_VOLCANO_BADGE]    = COMPOUND_STRING("VOLCANOBADGE"),
+    [STDSTRING_EARTH_BADGE]      = COMPOUND_STRING("EARTHBADGE"),
+    [STDSTRING_COINS]            = gText_Coins,
+    [STDSTRING_ITEMS_POCKET]     = COMPOUND_STRING("ITEMS POCKET"),
+    [STDSTRING_KEY_ITEMS_POCKET] = COMPOUND_STRING("KEY ITEMS POCKET"),
+    [STDSTRING_POKEBALLS_POCKET] = COMPOUND_STRING("POKé BALLS POCKET"),
+    [STDSTRING_TM_CASE]          = gText_TMCase,
+    [STDSTRING_BERRY_POUCH]      = gText_BerryPouch,
     [STDSTRING_SINGLE]           = gOtherText_Single,
     [STDSTRING_DOUBLE]           = gOtherText_Double,
     [STDSTRING_MULTI]            = COMPOUND_STRING("MULTI"),
@@ -829,16 +823,15 @@ static const struct SpriteSheet sMuseumAerodactylSprSheets[] = {
     {}
 };
 
-
 static const u8 *const sSeagallopDestStrings[] = {
-    [SEAGALLOP_VERMILION_CITY] = gText_Vermilion,
-    [SEAGALLOP_ONE_ISLAND]     = gText_OneIsland,
-    [SEAGALLOP_TWO_ISLAND]     = gText_TwoIsland,
-    [SEAGALLOP_THREE_ISLAND]   = gText_ThreeIsland,
-    [SEAGALLOP_FOUR_ISLAND]    = gText_FourIsland,
-    [SEAGALLOP_FIVE_ISLAND]    = gText_FiveIsland,
-    [SEAGALLOP_SIX_ISLAND]     = gText_SixIsland,
-    [SEAGALLOP_SEVEN_ISLAND]   = gText_SevenIsland,
+    [SEAGALLOP_VERMILION_CITY] = sText_Vermilion,
+    [SEAGALLOP_ONE_ISLAND]     = sText_OneIsland,
+    [SEAGALLOP_TWO_ISLAND]     = sText_TwoIsland,
+    [SEAGALLOP_THREE_ISLAND]   = sText_ThreeIsland,
+    [SEAGALLOP_FOUR_ISLAND]    = COMPOUND_STRING("FOUR ISLAND"),
+    [SEAGALLOP_FIVE_ISLAND]    = COMPOUND_STRING("FIVE ISLAND"),
+    [SEAGALLOP_SIX_ISLAND]     = COMPOUND_STRING("SIX ISLAND"),
+    [SEAGALLOP_SEVEN_ISLAND]   = COMPOUND_STRING("SEVEN ISLAND"),
 };
 
 static u16 GetStringTilesWide(const u8 *str)
@@ -1780,7 +1773,7 @@ void DrawSeagallopDestinationMenu(void)
         if (destinationId == SEAGALLOP_SEVEN_ISLAND + 1)
             destinationId = SEAGALLOP_VERMILION_CITY;
     }
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_Other, cursorWidth, i * 16 + 2, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_Other, cursorWidth, i * 16 + 2, TEXT_SKIP_DRAW, NULL);
     i++;
     AddTextPrinterParameterized(windowId, FONT_NORMAL, gOtherText_Exit, cursorWidth, i * 16 + 2, TEXT_SKIP_DRAW, NULL);
     InitMenuNormal(windowId, FONT_NORMAL, 0, 2, 16, numItems, 0);

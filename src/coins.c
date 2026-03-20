@@ -8,6 +8,8 @@
 
 EWRAM_DATA static u8 sCoinsWindowId = 0;
 
+const u8 sText_XCoins[] = _("{STR_VAR_1} COINS");
+
 u16 GetCoins(void)
 {
     return gSaveBlock1Ptr->coins;
@@ -55,7 +57,7 @@ void PrintCoinsString(u32 coinAmount)
     int width;
 
     ConvertIntToDecimalStringN(gStringVar1, coinAmount, STR_CONV_MODE_RIGHT_ALIGN, 4);
-    StringExpandPlaceholders(gStringVar4, gText_Coins);
+    StringExpandPlaceholders(gStringVar4, sText_XCoins);
     width = GetStringWidth(FONT_SMALL, gStringVar4, 0);
     windowId = sCoinsWindowId;
     AddTextPrinterParameterized(windowId, FONT_SMALL, gStringVar4, 64 - width, 0xC, 0, NULL);
@@ -71,7 +73,7 @@ void ShowCoinsWindow(u32 coinAmount, u8 x, u8 y)
     PutWindowTilemap(sCoinsWindowId);
     LoadStdWindowGfx(sCoinsWindowId, 0x21D, BG_PLTT_ID(13));
     DrawStdFrameWithCustomTileAndPalette(sCoinsWindowId, FALSE, 0x21D, 13);
-    AddTextPrinterParameterized(sCoinsWindowId, FONT_NORMAL, gText_Coins_2, 0, 0, 0xFF, 0);
+    AddTextPrinterParameterized(sCoinsWindowId, FONT_NORMAL, gText_Coins, 0, 0, 0xFF, 0);
     PrintCoinsString(coinAmount);
 }
 

@@ -14,11 +14,6 @@ extern const u8 gText_Lv50[];
 extern const u8 gText_OpenLevel[];
 extern const u8 gText_Mom[];
 extern const u8 gText_Dad[];
-extern const u8 gText_Cool[];
-extern const u8 gText_Beauty[];
-extern const u8 gText_Cute[];
-extern const u8 gText_Smart[];
-extern const u8 gText_Tough[];
 extern const u8 gText_Single[];
 extern const u8 gText_Double[];
 extern const u8 gText_Spicy2[];
@@ -83,7 +78,6 @@ extern const u8 gText_Confirm3[];
 extern const u8 gText_Cancel4[];
 extern const u8 gText_IsThisTheCorrectTime[];
 extern const u8 gText_PkmnFainted_FldPsn[];
-extern const u8 gText_Coins[];
 extern const u8 gText_EggNickname[];
 extern const u8 gText_MenuPokemon[];
 
@@ -748,37 +742,7 @@ extern const u8 gText_ThreeIsland[];
 extern const u8 gText_Vermilion[];
 extern const u8 gText_BerryCrush[];
 extern const u8 gText_PokemonJump[];
-extern const u8 gText_SeviiIslands[];
-extern const u8 gText_NavelRock[];
-extern const u8 gText_BirthIsland[];
-extern const u8 gText_Cool_2[];
-extern const u8 gText_Beauty_2[];
-extern const u8 gText_Cute_2[];
-extern const u8 gText_Smart_2[];
-extern const u8 gText_Tough_2[];
-extern const u8 gText_Items[];
-extern const u8 gText_KeyItems[];
-extern const u8 gText_PokeBalls[];
-extern const u8 gText_TMsAndHMs[];
-extern const u8 gText_Berries[];
-extern const u8 gText_Boulderbadge[];
-extern const u8 gText_Cascadebadge[];
-extern const u8 gText_Thunderbadge[];
-extern const u8 gText_Rainbowbadge[];
-extern const u8 gText_Soulbadge[];
-extern const u8 gText_Marshbadge[];
-extern const u8 gText_Volcanobadge[];
-extern const u8 gText_Earthbadge[];
-extern const u8 gText_Coins_2[];
-extern const u8 gText_ItemsPocket[];
-extern const u8 gText_KeyItemsPocket[];
-extern const u8 gText_PokeBallsPocket[];
-extern const u8 gText_TmCase[];
-extern const u8 gText_BerryPouch_2[];
-extern const u8 gText_FourIsland[];
-extern const u8 gText_FiveIsland[];
-extern const u8 gText_SixIsland[];
-extern const u8 gText_SevenIsland[];
+extern const u8 gText_Coins[];
 
 // trade
 extern const u8 gText_IsThisTradeOkay[];
@@ -1756,7 +1720,6 @@ extern const u8 gText_SamePkmnInPartyAlready[];
 extern const u8 gText_Cancel3[];
 
 extern const u8 gText_Rest[];
-extern const u8 gText_Retire[];
 
 // Frontier records
 extern const u8 gText_WinStreak[];
