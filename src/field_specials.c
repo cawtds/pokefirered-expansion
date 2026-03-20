@@ -53,6 +53,7 @@
 #include "constants/battle_pyramid.h"
 #include "constants/battle_tower.h"
 #include "constants/event_objects.h"
+#include "constants/field_specials.h"
 #include "constants/items.h"
 #include "constants/maps.h"
 #include "constants/menu.h"

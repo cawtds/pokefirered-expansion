@@ -1,15 +1,15 @@
 static const u8 *const sLinkGroupActivityNameTexts[] = {
     [ACTIVITY_NONE]            = gText_UR_EmptyString,
-    [ACTIVITY_BATTLE_SINGLE]   = gText_UR_SingleBattle,
-    [ACTIVITY_BATTLE_DOUBLE]   = gText_UR_DoubleBattle,
-    [ACTIVITY_BATTLE_MULTI]    = gText_UR_MultiBattle,
+    [ACTIVITY_BATTLE_SINGLE]   = gText_SingleBattle,
+    [ACTIVITY_BATTLE_DOUBLE]   = gText_DoubleBattle,
+    [ACTIVITY_BATTLE_MULTI]    = gText_MultiBattle,
     [ACTIVITY_TRADE]           = gText_UR_PokemonTrades,
     [ACTIVITY_CHAT]            = gText_UR_Chat,
     [ACTIVITY_WONDER_CARD_DUP] = gText_UR_WonderCards,
     [ACTIVITY_WONDER_NEWS_DUP] = gText_UR_WonderNews,
     [ACTIVITY_CARD]            = gText_UR_Cards,
-    [ACTIVITY_POKEMON_JUMP]    = gText_UR_PokemonJump,
-    [ACTIVITY_BERRY_CRUSH]     = gText_UR_BerryCrush,
+    [ACTIVITY_POKEMON_JUMP]    = gText_PokemonJump,
+    [ACTIVITY_BERRY_CRUSH]     = gText_BerryCrush,
     [ACTIVITY_BERRY_PICK]      = gText_UR_BerryPicking,
     [ACTIVITY_SEARCH]          = gText_UR_Search,
     [ACTIVITY_SPIN_TRADE]      = gText_UR_SpinTrade,
@@ -216,7 +216,7 @@ static const struct WindowTemplate sWindowTemplate_RegisterForTrade = {
 
 static const struct ListMenuItem sListMenuItems_RegisterForTrade[] = {
     {gText_Register,  1},
-    {gText_UR_Info,   2},
+    {gText_Info,   2},
     {gText_UR_Exit,   3}
 };
 

@@ -33,6 +33,7 @@
 #include "constants/sound.h"
 #include "constants/species.h"
 #include "constants/vars.h"
+#include "constants/field_specials.h"
 #include "constants/battle.h"
 #include "constants/heal_locations.h"
 #include "constants/field_effects.h"

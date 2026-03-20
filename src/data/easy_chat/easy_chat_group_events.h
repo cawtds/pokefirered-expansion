@@ -8,7 +8,6 @@ static const u8 sEasyChatWord_Mc[] = _("MC");
 static const u8 sEasyChatWord_Judge[] = _("JUDGE");
 static const u8 sEasyChatWord_Super[] = _("SUPER");
 static const u8 sEasyChatWord_Stage[] = _("STAGE");
-static const u8 sEasyChatWord_HallOfFame[] = _("HALL OF FAME");
 static const u8 sEasyChatWord_Evolution[] = _("EVOLUTION");
 static const u8 sEasyChatWord_Hyper[] = _("HYPER");
 static const u8 sEasyChatWord_BattleTower[] = _("BATTLE TOWER");
@@ -75,7 +74,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Events[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_HallOfFame,
+        .text = gText_HallOfFame,
         .alphabeticalOrder = 10,
         .enabled = TRUE
     },

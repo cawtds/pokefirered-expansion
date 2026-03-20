@@ -159,7 +159,7 @@ static const struct MenuAction sStartMenuActionTable[] = {
     [MENU_ACTION_EXIT]              = {gText_MenuExit,    {.u8_void = StartMenuExitCallback}},
     [MENU_ACTION_RETIRE_SAFARI]     = {gText_MenuRetire,  {.u8_void = StartMenuSafariZoneRetireCallback}},
     [MENU_ACTION_PLAYER_LINK]       = {gText_MenuPlayer,  {.u8_void = StartMenuLinkPlayerCallback}},
-    [MENU_ACTION_REST_FRONTIER]     = {gText_MenuRest,    {.u8_void = StartMenuSaveCallback}},
+    [MENU_ACTION_REST_FRONTIER]     = {gText_Rest,        {.u8_void = StartMenuSaveCallback}},
     [MENU_ACTION_RETIRE_FRONTIER]   = {gText_MenuRetire,  {.u8_void = StartMenuBattlePyramidRetireCallback}},
     [MENU_ACTION_PYRAMID_BAG]       = {gText_MenuBag,     {.u8_void = StartMenuBattlePyramidBagCallback}},
     [MENU_ACTION_DEBUG]             = {sText_MenuDebug,   {.u8_void = StartMenuDebugCallback}},

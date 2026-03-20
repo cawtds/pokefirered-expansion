@@ -3109,7 +3109,7 @@ static void Task_ShowBerryCrushRankings(u8 taskId)
         DrawStdFrameWithCustomTileAndPalette(tWindowId, 0, 0x21D, 13);
         break;
     case 1:
-        xPos = 96 - GetStringWidth(FONT_NORMAL, gText_BerryCrush2, -1) / 2u;
+        xPos = 96 - GetStringWidth(FONT_NORMAL, gText_BerryCrush, -1) / 2u;
         AddTextPrinterParameterized3(
             tWindowId,
             FONT_NORMAL,
@@ -3117,7 +3117,7 @@ static void Task_ShowBerryCrushRankings(u8 taskId)
             2,
             sBerryCrushTextColorTable[COLORID_BLUE],
             0,
-            gText_BerryCrush2
+            gText_BerryCrush
         );
         xPos = 96 - GetStringWidth(FONT_NORMAL, gText_PressingSpeedRankings, -1) / 2u;
         AddTextPrinterParameterized3(

@@ -274,7 +274,7 @@ static u8 *MapNamePopupAppendFloorNum(u8 *dest, s8 floorNum)
         return dest;
     *dest++ = CHAR_SPACE;
     if (floorNum == FLOOR_ROOFTOP)
-        return StringCopy(dest, gText_Rooftop2);
+        return StringCopy(dest, gText_Rooftop);
     if (floorNum < 0)
     {
         *dest++ = CHAR_B;
