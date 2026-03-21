@@ -38,7 +38,7 @@ static void ReshowPCMenuAfterHallOfFamePC(void)
 {
     LockPlayerFieldControls();
     Overworld_PlaySpecialMapMusic();
-    CreatePCMenu();
+    ScriptMenu_CreatePCMultichoice();
     ScriptMenu_DisplayPCStartupPrompt();
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0x10, 0, RGB_BLACK);
     CreateTask(Task_WaitForPaletteFade, 10);

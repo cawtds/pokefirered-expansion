@@ -13,7 +13,7 @@
 #define MULTI_DYNAMIC_STACK_SIZE 5
 #define MULTI_DYNAMIC_STACK_INC 5
 
-extern const u8 *const gStdStringPtrs[];
+extern const u8 *const gStdStrings[];
 
 struct DynamicMultichoiceStack
 {
@@ -24,12 +24,12 @@ struct DynamicMultichoiceStack
 
 bool32 MultichoiceDynamic_StackEmpty(void);
 bool32 MultichoiceDynamic_StackFull(void);
+bool32 ScriptMenu_CreatePCMultichoice(void);
+bool32 ScriptMenu_MultichoiceWithDefault(u8 left, u8 top, enum MultichoiceID multichoiceId, bool32 ignoreBPress, u8 defaultChoice);
 bool8 (*ScriptMenu_HidePokemonPic(void))(void);
-bool8 CreatePCMenu(void);
 bool8 ScriptMenu_Multichoice(u8 left, u8 top, enum MultichoiceID multichoiceId, bool8 ignoreBPress);
 bool8 ScriptMenu_MultichoiceDynamic(u8 left, u8 top, u8 argc, struct ListMenuItem *items, bool8 ignoreBPress, u8 maxBeforeScroll, u32 initialRow, u32 callbackSet);
 bool8 ScriptMenu_MultichoiceGrid(u8 left, u8 top, enum MultichoiceID multichoiceId, bool8 ignoreBpress, u8 columnCount);
-bool8 ScriptMenu_MultichoiceWithDefault(u8 left, u8 top, enum MultichoiceID multichoiceId, bool8 ignoreBPress, u8 defaultChoice);
 bool8 ScriptMenu_ShowPokemonPic(u16 var1, u8 var2, u8 var3);
 bool8 ScriptMenu_YesNo(u8 var1, u8 var2);
 int ConvertPixelWidthToTileWidth(int width);

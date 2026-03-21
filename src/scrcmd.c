@@ -1985,7 +1985,7 @@ bool8 ScrCmd_multichoicedefault(struct ScriptContext * ctx)
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
-    if (ScriptMenu_MultichoiceWithDefault(left, top, multichoiceId, ignoreBPress, defaultChoice) == TRUE)
+    if (ScriptMenu_MultichoiceWithDefault(left, top, multichoiceId, ignoreBPress, defaultChoice))
     {
         ScriptContext_Stop();
         return TRUE;
@@ -2243,7 +2243,7 @@ bool8 ScrCmd_bufferstdstring(struct ScriptContext * ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    StringCopy(sScriptStringVars[stringVarIndex], gStdStringPtrs[stringID]);
+    StringCopy(sScriptStringVars[stringVarIndex], gStdStrings[stringID]);
     return FALSE;
 }
 

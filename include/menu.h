@@ -59,7 +59,7 @@ void ListMenuLoadStdPalAt(u8 palOffset, u8 palId);
 void BlitMenuInfoIcon(u8 windowId, u8 iconId, u16 x, u16 y);
 
 // menu
-s8 Menu_ProcessInputGridLayout(void);
+s8 Menu_ProcessGridInput(void);
 u8 MultichoiceGrid_InitCursor(u8 windowId, u8 fontId, u8 left, u8 top, u8 optionWidth, u8 cols, u8 rows, u8 cursorPos);
 void MultichoiceGrid_PrintItems(u8 windowId, u8 fontId, u8 itemWidth, u8 itemHeight, u8 cols, u8 rows, const struct MenuAction *strs);
 void DestroyYesNoMenu(void);

@@ -1,7 +1,7 @@
 Text_BootedUpPC::
 	.string "{PLAYER} booted up the PC.$"
 
-Text_AccessWhichPC::
+gText_WhichPCShouldBeAccessed::
 	.string "Which PC should be accessed?$"
 
 Text_AccessedSomeonesPC::

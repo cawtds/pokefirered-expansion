@@ -18,9 +18,9 @@ EventScript_PCDisabled::
 	end
 
 EventScript_PCMainMenu::
-	message Text_AccessWhichPC
+	message gText_WhichPCShouldBeAccessed
 	waitmessage
-	special CreatePCMenu
+	special ScriptMenu_CreatePCMultichoice
 	waitstate
 	goto EventScript_ChoosePCMenu
 	end

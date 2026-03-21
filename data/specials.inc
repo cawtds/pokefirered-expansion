@@ -263,7 +263,7 @@ gSpecials::
 	def_special NullFieldSpecial
 	def_special NullFieldSpecial
 	def_special NullFieldSpecial
-	def_special CreatePCMenu
+	def_special ScriptMenu_CreatePCMultichoice
 	def_special HallOfFamePCBeginFade
 	def_special ShowDiploma
 	def_special NullFieldSpecial  @ Check lead mon Contest strength specials
