@@ -173,7 +173,8 @@ static const struct OamData sOamData_8x8 =
     .affineParam = 0
 };
 
-static const struct OamData sOamData_16x16 = {
+static const struct OamData sOamData_16x16 =
+{
     .y = 0,
     .affineMode = ST_OAM_AFFINE_OFF,
     .objMode = ST_OAM_OBJ_NORMAL,
@@ -189,15 +190,18 @@ static const struct OamData sOamData_16x16 = {
     .affineParam = 0
 };
 
-const struct SpritePalette gSpritePalette_PokeballGlow = {
-    sPokeballGlow_Pal, 4103
+const struct SpritePalette gSpritePalette_PokeballGlow =
+{
+    sPokeballGlow_Pal, FLDEFF_PAL_TAG_POKEBALL_GLOW
 };
 
-const struct SpritePalette gSpritePalette_HofMonitor = {
-    sHofMonitor_Pal, 4112
+const struct SpritePalette gSpritePalette_HofMonitor =
+{
+    sHofMonitor_Pal, FLDEFF_PAL_TAG_HOF_MONITOR
 };
 
-static const struct OamData sOamData_32x16 = {
+static const struct OamData sOamData_32x16 =
+{
     .y = 0,
     .affineMode = ST_OAM_AFFINE_OFF,
     .objMode = ST_OAM_OBJ_NORMAL,
@@ -213,18 +217,21 @@ static const struct OamData sOamData_32x16 = {
     .affineParam = 0
 };
 
-static const struct SpriteFrameImage sPicTable_PokeballGlow[] = {
+static const struct SpriteFrameImage sPicTable_PokeballGlow[] =
+{
     {sPokeballGlow_Gfx, 0x20}
 };
 
-static const struct SpriteFrameImage sPicTable_PokecenterMonitor[] = {
+static const struct SpriteFrameImage sPicTable_PokecenterMonitor[] =
+{
     {sPokecenterMonitor_Gfx + 0x000, 0x100},
     {sPokecenterMonitor_Gfx + 0x080, 0x100},
     {sPokecenterMonitor_Gfx + 0x100, 0x100},
     {sPokecenterMonitor_Gfx + 0x180, 0x100}
 };
 
-static const struct SpriteFrameImage sPicTable_HofMonitor[] = {
+static const struct SpriteFrameImage sPicTable_HofMonitor[] =
+{
     {sHofMonitor_Gfx + 0x00, 0x80},
     {sHofMonitor_Gfx + 0x40, 0x80},
     {sHofMonitor_Gfx + 0x80, 0x80},
@@ -236,7 +243,8 @@ static const union AnimCmd sAnim_Static[] = {
     ANIMCMD_JUMP(0)
 };
 
-static const union AnimCmd sAnim_Flicker[] = {
+static const union AnimCmd sAnim_Flicker[] =
+{
     ANIMCMD_FRAME(1, 5),
     ANIMCMD_FRAME(2, 5),
     ANIMCMD_FRAME(3, 7),
@@ -247,12 +255,14 @@ static const union AnimCmd sAnim_Flicker[] = {
     ANIMCMD_END
 };
 
-static const union AnimCmd *const sAnims_Flicker[] = {
+static const union AnimCmd *const sAnims_Flicker[] =
+{
     sAnim_Static,
     sAnim_Flicker
 };
 
-static const union AnimCmd sAnim_HofMonitor[] = {
+static const union AnimCmd sAnim_HofMonitor[] =
+{
     ANIMCMD_FRAME(3, 8),
     ANIMCMD_FRAME(2, 8),
     ANIMCMD_FRAME(1, 8),
@@ -265,13 +275,15 @@ static const union AnimCmd sAnim_HofMonitor[] = {
     ANIMCMD_END
 };
 
-static const union AnimCmd *const sAnims_HofMonitor[] = {
+static const union AnimCmd *const sAnims_HofMonitor[] =
+{
     sAnim_HofMonitor
 };
 
-static const struct SpriteTemplate sSpriteTemplate_PokeballGlow = {
+static const struct SpriteTemplate sSpriteTemplate_PokeballGlow =
+{
     .tileTag = TAG_NONE,
-    .paletteTag = 4103,
+    .paletteTag = FLDEFF_PAL_TAG_POKEBALL_GLOW,
     .oam = &sOamData_8x8,
     .anims = sAnims_Flicker,
     .images = sPicTable_PokeballGlow,
@@ -279,9 +291,10 @@ static const struct SpriteTemplate sSpriteTemplate_PokeballGlow = {
     .callback = SpriteCB_PokeballGlow
 };
 
-static const struct SpriteTemplate sSpriteTemplate_PokecenterMonitor = {
+static const struct SpriteTemplate sSpriteTemplate_PokecenterMonitor =
+{
     .tileTag = TAG_NONE,
-    .paletteTag = 4103,
+    .paletteTag = FLDEFF_PAL_TAG_POKEBALL_GLOW,
     .oam = &sOamData_32x16,
     .anims = sAnims_Flicker,
     .images = sPicTable_PokecenterMonitor,
@@ -289,9 +302,10 @@ static const struct SpriteTemplate sSpriteTemplate_PokecenterMonitor = {
     .callback = SpriteCB_PokecenterMonitor
 };
 
-static const struct SpriteTemplate sSpriteTemplate_HofMonitor = {
+static const struct SpriteTemplate sSpriteTemplate_HofMonitor =
+{
     .tileTag = TAG_NONE,
-    .paletteTag = 4112,
+    .paletteTag = FLDEFF_PAL_TAG_HOF_MONITOR,
     .oam = &sOamData_16x16,
     .anims = sAnims_HofMonitor,
     .images = sPicTable_HofMonitor,
