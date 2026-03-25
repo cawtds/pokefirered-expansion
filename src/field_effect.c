@@ -81,6 +81,15 @@ static void Task_UseFly(u8 taskId);
 static void FieldCallback_FlyIntoMap(void);
 static void Task_FlyIntoMap(u8 taskId);
 
+static void Task_FallWarpFieldEffect(u8 taskId);
+static bool32 FallWarpEffect_Init(struct Task *task);
+static bool32 FallWarpEffect_WaitWeather(struct Task *task);
+static bool32 FallWarpEffect_StartFall(struct Task *task);
+static bool32 FallWarpEffect_Fall(struct Task *task);
+static bool32 FallWarpEffect_Land(struct Task *task);
+static bool32 FallWarpEffect_CameraShake(struct Task *task);
+static bool32 FallWarpEffect_End(struct Task *task);
+
 
 static const u16 sPokeballGlow_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.4bpp");
 static const u16 sPokeballGlow_Pal[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.gbapal");
@@ -1062,23 +1071,34 @@ static void Task_FlyIntoMap(u8 taskId)
 #undef tNPCFollowerFacePlayer
 #undef tTaskEnd
 
-static void Task_FallWarpFieldEffect(u8 taskId);
-static bool8 FallWarpEffect_1(struct Task *task);
-static bool8 FallWarpEffect_2(struct Task *task);
-static bool8 FallWarpEffect_3(struct Task *task);
-static bool8 FallWarpEffect_4(struct Task *task);
-static bool8 FallWarpEffect_5(struct Task *task);
-static bool8 FallWarpEffect_6(struct Task *task);
-static bool8 FallWarpEffect_7(struct Task *task);
+#define tState      data[0]
+#define tFallOffset data[1]
+#define tTotalFall  data[2]
+#define tSetTrigger data[3]
+#define tSubsprMode data[4]
 
-static bool8 (*const sFallWarpEffectCBPtrs[])(struct Task *task) = {
-    FallWarpEffect_1,
-    FallWarpEffect_2,
-    FallWarpEffect_3,
-    FallWarpEffect_4,
-    FallWarpEffect_5,
-    FallWarpEffect_6,
-    FallWarpEffect_7
+#define tVertShake  data[1] // re-used
+#define tNumShakes  data[2]
+
+enum FallWarpEffectState
+{
+    FALL_WARP_EFFECT_INIT,
+    FALL_WARP_EFFECT_WAIT_WEATHER,
+    FALL_WARP_EFFECT_START_FALL,
+    FALL_WARP_EFFECT_FALL,
+    FALL_WARP_EFFECT_LAND,
+    FALL_WARP_EFFECT_CAMERA_SHAKE,
+    FALL_WARP_EFFECT_END,
+};
+
+static bool32 (*const sFallWarpEffectCBPtrs[])(struct Task *task) = {
+    [FALL_WARP_EFFECT_INIT]         = FallWarpEffect_Init,
+    [FALL_WARP_EFFECT_WAIT_WEATHER] = FallWarpEffect_WaitWeather,
+    [FALL_WARP_EFFECT_START_FALL]   = FallWarpEffect_StartFall,
+    [FALL_WARP_EFFECT_FALL]         = FallWarpEffect_Fall,
+    [FALL_WARP_EFFECT_LAND]         = FallWarpEffect_Land,
+    [FALL_WARP_EFFECT_CAMERA_SHAKE] = FallWarpEffect_CameraShake,
+    [FALL_WARP_EFFECT_END]          = FallWarpEffect_End
 };
 
 void FieldCB_FallWarpExit(void)
@@ -1095,73 +1115,70 @@ void FieldCB_FallWarpExit(void)
 static void Task_FallWarpFieldEffect(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
-    while (sFallWarpEffectCBPtrs[task->data[0]](task))
+    while (sFallWarpEffectCBPtrs[task->tState](task))
         ;
 }
 
-static bool8 FallWarpEffect_1(struct Task *task)
+static bool32 FallWarpEffect_Init(struct Task *task)
 {
-    struct ObjectEvent * playerObject;
-    struct Sprite *playerSprite;
-    playerObject = &gObjectEvents[gPlayerAvatar.objectEventId];
-    playerSprite = &gSprites[gPlayerAvatar.spriteId];
+    struct ObjectEvent *playerObject = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct Sprite *playerSprite = &gSprites[gPlayerAvatar.spriteId];
+
     CameraObjectFreeze();
     gObjectEvents[gPlayerAvatar.objectEventId].invisible = TRUE;
     gPlayerAvatar.preventStep = TRUE;
     ObjectEventSetHeldMovement(playerObject, GetFaceDirectionMovementAction(GetPlayerFacingDirection()));
-    task->data[4] = playerSprite->subspriteMode;
+    task->tSubsprMode = playerSprite->subspriteMode;
     playerObject->fixedPriority = TRUE;
     playerSprite->oam.priority = 1;
     playerSprite->subspriteMode = SUBSPRITES_IGNORE_PRIORITY;
-    task->data[0]++;
+    task->tState = FALL_WARP_EFFECT_WAIT_WEATHER;
+
     return TRUE;
 }
 
-static bool8 FallWarpEffect_2(struct Task *task)
+static bool32 FallWarpEffect_WaitWeather(struct Task *task)
 {
     if (IsWeatherNotFadingIn())
-    {
-        task->data[0]++;
-    }
+        task->tState = FALL_WARP_EFFECT_START_FALL;
+
     return FALSE;
 }
 
-static bool8 FallWarpEffect_3(struct Task *task)
+static bool32 FallWarpEffect_StartFall(struct Task *task)
 {
-    struct Sprite *sprite;
-    s16 centerToCornerVecY;
-    sprite = &gSprites[gPlayerAvatar.spriteId];
-    centerToCornerVecY = -(sprite->centerToCornerVecY << 1);
+    struct Sprite *sprite = &gSprites[gPlayerAvatar.spriteId];
+    s16 centerToCornerVecY = -(sprite->centerToCornerVecY << 1);
+
     sprite->y2 = -(sprite->y + sprite->centerToCornerVecY + gSpriteCoordOffsetY + centerToCornerVecY);
-    task->data[1] = 1;
-    task->data[2] = 0;
+    task->tFallOffset = 1;
+    task->tTotalFall = 0;
     gObjectEvents[gPlayerAvatar.objectEventId].invisible = FALSE;
     PlaySE(SE_FALL);
-    task->data[0]++;
+    task->tState = FALL_WARP_EFFECT_FALL;
+
     return FALSE;
 }
 
-static bool8 FallWarpEffect_4(struct Task *task)
+static bool32 FallWarpEffect_Fall(struct Task *task)
 {
     struct ObjectEvent * objectEvent;
     struct Sprite *sprite;
 
     objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
     sprite = &gSprites[gPlayerAvatar.spriteId];
-    sprite->y2 += task->data[1];
-    if (task->data[1] < 8)
+    sprite->y2 += task->tFallOffset;
+    if (task->tFallOffset < 8)
     {
-        task->data[2] += task->data[1];
-        if (task->data[2] & 0xf)
-        {
-            task->data[1] <<= 1;
-        }
+        task->tTotalFall += task->tFallOffset;
+        if (task->tTotalFall & 0xf)
+            task->tFallOffset <<= 1;
     }
-    if (task->data[3] == 0 && sprite->y2 >= -16)
+    if (!task->tSetTrigger && sprite->y2 >= -16)
     {
-        task->data[3]++;
+        task->tSetTrigger = TRUE;
         objectEvent->fixedPriority = FALSE;
-        sprite->subspriteMode = task->data[4];
+        sprite->subspriteMode = task->tSubsprMode;
         objectEvent->triggerGroundEffectsOnMove = TRUE;
     }
     if (sprite->y2 >= 0)
@@ -1170,39 +1187,40 @@ static bool8 FallWarpEffect_4(struct Task *task)
         objectEvent->triggerGroundEffectsOnStop = TRUE;
         objectEvent->landingJump = TRUE;
         sprite->y2 = 0;
-        task->data[0]++;
+        task->tState = FALL_WARP_EFFECT_LAND;
     }
+
     return FALSE;
 }
 
-static bool8 FallWarpEffect_5(struct Task *task)
+static bool32 FallWarpEffect_Land(struct Task *task)
 {
-    task->data[0]++;
-    task->data[1] = 4;
-    task->data[2] = 0;
+    task->tState = FALL_WARP_EFFECT_CAMERA_SHAKE;
+    task->tVertShake = 4;
+    task->tNumShakes = 0;
     SetCameraPanningCallback(NULL);
+
     return TRUE;
 }
 
-static bool8 FallWarpEffect_6(struct Task *task)
+static bool32 FallWarpEffect_CameraShake(struct Task *task)
 {
-    SetCameraPanning(0, task->data[1]);
-    task->data[1] = -task->data[1];
-    task->data[2]++;
-    if ((task->data[2] & 3) == 0)
-    {
-        task->data[1] >>= 1;
-    }
-    if (task->data[1] == 0)
-    {
-        task->data[0]++;
-    }
+    SetCameraPanning(0, task->tVertShake);
+    task->tVertShake = -task->tVertShake;
+    task->tNumShakes++;
+    if ((task->tNumShakes & 3) == 0)
+        task->tVertShake >>= 1;
+
+    if (task->tVertShake == 0)
+        task->tState = FALL_WARP_EFFECT_END;
+
     return FALSE;
 }
 
-static bool8 FallWarpEffect_7(struct Task *task)
+static bool32 FallWarpEffect_End(struct Task *task)
 {
     s16 x, y;
+
     gPlayerAvatar.preventStep = FALSE;
     UnlockPlayerFieldControls();
     CameraObjectReset();
