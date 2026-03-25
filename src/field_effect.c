@@ -77,6 +77,11 @@ static void SpriteCB_PokeballGlow(struct Sprite *sprite);
 static void SpriteCB_PokeballGlowEffect(struct Sprite *sprite);
 static void SpriteCB_PokecenterMonitor(struct Sprite *sprite);
 
+static void Task_UseFly(u8 taskId);
+static void FieldCallback_FlyIntoMap(void);
+static void Task_FlyIntoMap(u8 taskId);
+
+
 static const u16 sPokeballGlow_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.4bpp");
 static const u16 sPokeballGlow_Pal[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.gbapal");
 static const u16 sPokecenterMonitor_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokemoncenter_monitor.4bpp");
@@ -130,7 +135,7 @@ static const u32 (*const sFieldEffectFuncs[FLDEFF_COUNT]) (void) =
     [FLDEFF_TREE_DISGUISE]                = FldEff_TreeDisguise,
     [FLDEFF_MOUNTAIN_DISGUISE]            = FldEff_MountainDisguise,
     [FLDEFF_NPCFLY_OUT]                   = FldEff_NpcFlyOut,
-    [FLDEFF_FLY_OUT]                      = FldEff_FlyOut,
+    [FLDEFF_USE_FLY]                      = FldEff_UseFly,
     [FLDEFF_FLY_IN]                       = FldEff_FlyIn,
     [FLDEFF_QUESTION_MARK_ICON_AND_EMOTE] = FldEff_QuestionMarkIcon,
     [FLDEFF_FEET_IN_FLOWING_WATER]        = FldEff_FeetInFlowingWater,
@@ -591,7 +596,7 @@ void MultiplyInvertedPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b)
 #define tFirstBallY         data[3]
 #define tMonitorX           data[4]
 #define tMonitorY           data[5]
-#define tGlowEffectSpriteId data[6]
+#define tBallSpriteId       data[6]
 #define tMonitorSpriteId    data[7]
 
 // Sprite data for SpriteCB_PokeballGlowEffect
@@ -604,7 +609,7 @@ void MultiplyInvertedPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b)
 #define sSpriteId   data[7]
 
 // Sprite data for SpriteCB_PokeballGlow
-#define sGlowEffectSpriteId data[0]
+#define sEffectSpriteId data[0]
 
 // Sprite data for SpriteCB_PokecenterMonitor
 #define sStartFlash data[0]
@@ -635,13 +640,13 @@ static void Task_PokecenterHeal(u8 taskId)
 static void PokecenterHealEffect_Init(struct Task *task)
 {
     task->tState = POKECENTER_HEAL_EFFECT_WAIT_PLACEMENT;
-    task->tGlowEffectSpriteId = CreateGlowingPokeballsEffect(task->tNumMons, task->tFirstBallX, task->tFirstBallY, TRUE);
+    task->tBallSpriteId = CreateGlowingPokeballsEffect(task->tNumMons, task->tFirstBallX, task->tFirstBallY, TRUE);
     task->tMonitorSpriteId = CreatePokecenterMonitorSprite(task->tMonitorX, task->tMonitorY);
 }
 
 static void PokecenterHealEffect_WaitForBallPlacement(struct Task *task)
 {
-    if (gSprites[task->tGlowEffectSpriteId].sState >= 2)
+    if (gSprites[task->tBallSpriteId].sState >= 2)
     {
         gSprites[task->tMonitorSpriteId].sStartFlash++;
         task->tState = POKECENTER_HEAL_EFFECT_WAIT_FLASHING;
@@ -650,15 +655,15 @@ static void PokecenterHealEffect_WaitForBallPlacement(struct Task *task)
 
 static void PokecenterHealEffect_WaitForBallFlashing(struct Task *task)
 {
-    if (gSprites[task->tGlowEffectSpriteId].sState > 4)
+    if (gSprites[task->tBallSpriteId].sState > 4)
         task->tState = POKECENTER_HEAL_EFFECT_END;
 }
 
 static void PokecenterHealEffect_WaitForSoundAndEnd(struct Task *task)
 {
-    if (gSprites[task->tGlowEffectSpriteId].sState > 6)
+    if (gSprites[task->tBallSpriteId].sState > 6)
     {
-        DestroySprite(&gSprites[task->tGlowEffectSpriteId]);
+        DestroySprite(&gSprites[task->tBallSpriteId]);
         FieldEffectActiveListRemove(FLDEFF_POKECENTER_HEAL);
         DestroyTask(FindTaskIdByFunc(Task_PokecenterHeal));
     }
@@ -689,12 +694,12 @@ static void Task_HallOfFameRecord(u8 taskId)
 static void HallOfFameRecordEffect_Init(struct Task *task)
 {
     task->tState = HOF_RECORD_EFFECT_WAIT_PLACEMENT;
-    task->tGlowEffectSpriteId = CreateGlowingPokeballsEffect(task->tNumMons, task->tFirstBallX, task->tFirstBallY, FALSE);
+    task->tBallSpriteId = CreateGlowingPokeballsEffect(task->tNumMons, task->tFirstBallX, task->tFirstBallY, FALSE);
 }
 
 static void HallOfFameRecordEffect_WaitForBallPlacement(struct Task *task)
 {
-    if (gSprites[task->tGlowEffectSpriteId].sState > 1)
+    if (gSprites[task->tBallSpriteId].sState > 1)
     {
         CreateHofMonitorSprite(120, 25);
         task->data[15]++; // unused, leftover from RSE
@@ -704,28 +709,19 @@ static void HallOfFameRecordEffect_WaitForBallPlacement(struct Task *task)
 
 static void HallOfFameRecordEffect_WaitForBallFlashing(struct Task *task)
 {
-    if (gSprites[task->tGlowEffectSpriteId].sState > 4)
+    if (gSprites[task->tBallSpriteId].sState > 4)
         task->tState = HOF_RECORD_EFFECT_END;
 }
 
 static void HallOfFameRecordEffect_WaitForSoundAndEnd(struct Task *task)
 {
-    if (gSprites[task->tGlowEffectSpriteId].sState > 6)
+    if (gSprites[task->tBallSpriteId].sState > 6)
     {
-        DestroySprite(&gSprites[task->tGlowEffectSpriteId]);
+        DestroySprite(&gSprites[task->tBallSpriteId]);
         FieldEffectActiveListRemove(FLDEFF_HALL_OF_FAME_RECORD);
         DestroyTask(FindTaskIdByFunc(Task_HallOfFameRecord));
     }
 }
-
-#undef tState
-#undef tNumMons
-#undef tFirstBallX
-#undef tFirstBallY
-#undef tMonitorX
-#undef tMonitorY
-#undef tGlowEffectSpriteId
-#undef tMonitorSpriteId
 
 static u8 CreateGlowingPokeballsEffect(s16 numMons, s16 x, s16 y, bool16 playHealSe)
 {
@@ -768,7 +764,7 @@ static void PokeballGlowEffect_PlaceBalls(struct Sprite *sprite)
         sprite->sTimer = 25;
         spriteId = CreateSpriteAtEnd(&sSpriteTemplate_PokeballGlow, sPokeballCoordOffsets[sprite->sCounter].x + sprite->x2, sPokeballCoordOffsets[sprite->sCounter].y + sprite->y2, 0xFF);
         gSprites[spriteId].oam.priority = 2;
-        gSprites[spriteId].sGlowEffectSpriteId = sprite->sSpriteId;
+        gSprites[spriteId].sEffectSpriteId = sprite->sSpriteId;
         sprite->sCounter++;
         sprite->sNumMons--;
         PlaySE(SE_BALL);
@@ -866,19 +862,9 @@ static void PokeballGlowEffect_Idle(struct Sprite *sprite)
 
 static void SpriteCB_PokeballGlow(struct Sprite *sprite)
 {
-    if (gSprites[sprite->sGlowEffectSpriteId].sState > 4)
+    if (gSprites[sprite->sEffectSpriteId].sState > 4)
         FieldEffectFreeGraphicsResources(sprite);
 }
-
-#undef sState
-#undef sTimer
-#undef sCounter
-#undef sNumFlashed
-#undef sPlayHealSe
-#undef sNumMons
-#undef sSpriteId
-
-#undef sGlowEffectSpriteId
 
 static u8 CreatePokecenterMonitorSprite(s32 x, s32 y)
 {
@@ -903,7 +889,6 @@ static void SpriteCB_PokecenterMonitor(struct Sprite *sprite)
         FieldEffectFreeGraphicsResources(sprite);
 }
 
-#undef sStartFlash
 
 static void CreateHofMonitorSprite(s32 x, s32 y)
 {
@@ -916,9 +901,25 @@ static void SpriteCB_HallOfFameMonitor(struct Sprite *sprite)
         FieldEffectFreeGraphicsResources(sprite);
 }
 
-static void Task_UseFly(u8 taskId);
-static void FieldCallback_FlyIntoMap(void);
-static void Task_FlyIntoMap(u8 taskId);
+#undef tState
+#undef tNumMons
+#undef tFirstBallX
+#undef tFirstBallY
+#undef tMonitorX
+#undef tMonitorY
+#undef tBallSpriteId
+#undef tMonitorSpriteId
+
+#undef sState
+#undef sTimer
+#undef sCounter
+#undef sNumFlashed
+#undef sPlayHealSe
+#undef sNumMons
+#undef sSpriteId
+
+#undef sEffectSpriteId
+#undef sStartFlash
 
 void ReturnToFieldFromFlyMapSelect(void)
 {
@@ -969,13 +970,15 @@ static void Task_UseFly(u8 taskId)
         {
             if (!IsWeatherNotFadingIn())
                 return;
+
             gFieldEffectArguments[0] = GetCursorSelectionMonId();
             if ((int)gFieldEffectArguments[0] >= PARTY_SIZE)
                 gFieldEffectArguments[0] = 0;
-            FieldEffectStart(FLDEFF_FLY_OUT);
+
+            FieldEffectStart(FLDEFF_USE_FLY);
             fieldEffectStarted = TRUE;
         }
-        if (!FieldEffectActiveListContains(FLDEFF_FLY_OUT))
+        if (!FieldEffectActiveListContains(FLDEFF_USE_FLY))
         {
             Overworld_ResetStateAfterFly();
             WarpIntoMap();
@@ -997,6 +1000,7 @@ static void FieldCallback_FlyIntoMap(void)
     gObjectEvents[gPlayerAvatar.objectEventId].invisible = TRUE;
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
         ObjectEventTurn(&gObjectEvents[gPlayerAvatar.objectEventId], DIR_WEST);
+
     LockPlayerFieldControls();
     FreezeObjectEvents();
     gFieldCallback = NULL;
@@ -3239,7 +3243,7 @@ static void (*const sFlyOutFieldEffectFuncs[])(struct Task *) =
     FlyOutFieldEffect_End
 };
 
-u32 FldEff_FlyOut(void)
+u32 FldEff_UseFly(void)
 {
     u8 taskId = CreateTask(Task_FlyOut, 0xFE);
     gTasks[taskId].tMonPartyId = gFieldEffectArguments[0];
@@ -3357,7 +3361,7 @@ static void FlyOutFieldEffect_End(struct Task *task)
 {
     if (!gPaletteFade.active)
     {
-        FieldEffectActiveListRemove(FLDEFF_FLY_OUT);
+        FieldEffectActiveListRemove(FLDEFF_USE_FLY);
         DestroyTask(FindTaskIdByFunc(Task_FlyOut));
     }
 }
