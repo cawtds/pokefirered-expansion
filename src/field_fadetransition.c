@@ -846,6 +846,7 @@ static void Task_StairWarp(u8 taskId)
         LockPlayerFieldControls();
         FreezeObjectEvents();
         CameraObjectFreeze();
+        HideFollowerForFieldEffect();
         data[0]++;
         break;
     case 1:
