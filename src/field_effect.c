@@ -129,7 +129,7 @@ static bool32 DiveFieldEffect_Init(struct Task *task);
 static bool32 DiveFieldEffect_ShowMon(struct Task *task);
 static bool32 DiveFieldEffect_TryWarp(struct Task *task);
 
-//
+// Lavaridge 1BF warp
 static void Task_LavaridgeGymB1FWarp(u8 taskId);
 static bool32 LavaridgeGymB1FWarpEffect_Init(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
 static bool32 LavaridgeGymB1FWarpEffect_CameraShake(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
@@ -137,12 +137,14 @@ static bool32 LavaridgeGymB1FWarpEffect_Launch(struct Task *task, struct ObjectE
 static bool32 LavaridgeGymB1FWarpEffect_Rise(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
 static bool32 LavaridgeGymB1FWarpEffect_FadeOut(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
 static bool32 LavaridgeGymB1FWarpEffect_Warp(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+
+// Lavaridge 1BF warp exit
 static void FieldCB_LavaridgeGymB1FWarpExit(void);
 static void Task_LavaridgeGymB1FWarpExit(u8 taskId);
-static bool8 LavaridgeGymB1FWarpExitEffect_1(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static bool8 LavaridgeGymB1FWarpExitEffect_2(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static bool8 LavaridgeGymB1FWarpExitEffect_3(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static bool8 LavaridgeGymB1FWarpExitEffect_4(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGymB1FWarpExitEffect_Init(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGymB1FWarpExitEffect_StartPopOut(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGymB1FWarpExitEffect_PopOut(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGymB1FWarpExitEffect_End(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
 
 
 static const u16 sPokeballGlow_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.4bpp");
@@ -1953,12 +1955,24 @@ static bool32 LavaridgeGymB1FWarpEffect_Warp(struct Task *task, struct ObjectEve
 #undef tYMovementFinished
 #undef tSetTrigger
 
-static bool8 (*const sLavaridgeGymB1FWarpExitEffectFuncs[])(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite) = {
-    LavaridgeGymB1FWarpExitEffect_1,
-    LavaridgeGymB1FWarpExitEffect_2,
-    LavaridgeGymB1FWarpExitEffect_3,
-    LavaridgeGymB1FWarpExitEffect_4
+enum LavaridgeB1FWarpExitState
+{
+    LAVARIDGE_B1F_WARP_EXIT_INIT,
+    LAVARIDGE_B1F_WARP_EXIT_START_POP_OUT,
+    LAVARIDGE_B1F_WARP_EXIT_POP_OUT,
+    LAVARIDGE_B1F_WARP_EXIT_END,
 };
+
+static bool32 (*const sLavaridgeGymB1FWarpExitEffectFuncs[])(struct Task *task, struct ObjectEvent *objectEvent, struct Sprite *sprite) =
+{
+    [LAVARIDGE_B1F_WARP_EXIT_INIT]          = LavaridgeGymB1FWarpExitEffect_Init,
+    [LAVARIDGE_B1F_WARP_EXIT_START_POP_OUT] = LavaridgeGymB1FWarpExitEffect_StartPopOut,
+    [LAVARIDGE_B1F_WARP_EXIT_POP_OUT]       = LavaridgeGymB1FWarpExitEffect_PopOut,
+    [LAVARIDGE_B1F_WARP_EXIT_END]           = LavaridgeGymB1FWarpExitEffect_End,
+};
+
+#define tState    data[0]
+#define tSpriteId data[1]
 
 static void FieldCB_LavaridgeGymB1FWarpExit(void)
 {
@@ -1972,20 +1986,20 @@ static void FieldCB_LavaridgeGymB1FWarpExit(void)
 
 static void Task_LavaridgeGymB1FWarpExit(u8 taskId)
 {
-    while (sLavaridgeGymB1FWarpExitEffectFuncs[gTasks[taskId].data[0]](&gTasks[taskId], &gObjectEvents[gPlayerAvatar.objectEventId], &gSprites[gPlayerAvatar.spriteId]));
+    while (sLavaridgeGymB1FWarpExitEffectFuncs[gTasks[taskId].tState](&gTasks[taskId], &gObjectEvents[gPlayerAvatar.objectEventId], &gSprites[gPlayerAvatar.spriteId]));
 }
 
-static bool8 LavaridgeGymB1FWarpExitEffect_1(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGymB1FWarpExitEffect_Init(struct Task *task, struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     CameraObjectFreeze();
     FreezeObjectEvents();
     gPlayerAvatar.preventStep = TRUE;
     objectEvent->invisible = TRUE;
-    task->data[0]++;
+    task->tState = LAVARIDGE_B1F_WARP_EXIT_START_POP_OUT;
     return FALSE;
 }
 
-static bool8 LavaridgeGymB1FWarpExitEffect_2(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGymB1FWarpExitEffect_StartPopOut(struct Task *task, struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     if (IsWeatherNotFadingIn())
     {
@@ -1993,18 +2007,18 @@ static bool8 LavaridgeGymB1FWarpExitEffect_2(struct Task *task, struct ObjectEve
         gFieldEffectArguments[1] = objectEvent->currentCoords.y;
         gFieldEffectArguments[2] = sprite->subpriority - 1;
         gFieldEffectArguments[3] = sprite->oam.priority;
-        task->data[1] = FieldEffectStart(FLDEFF_POP_OUT_OF_ASH);
-        task->data[0]++;
+        task->tSpriteId = FieldEffectStart(FLDEFF_POP_OUT_OF_ASH);
+        task->tState = LAVARIDGE_B1F_WARP_EXIT_POP_OUT;
     }
     return FALSE;
 }
 
-static bool8 LavaridgeGymB1FWarpExitEffect_3(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGymB1FWarpExitEffect_PopOut(struct Task *task, struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    sprite = &gSprites[task->data[1]];
+    sprite = &gSprites[task->tSpriteId];
     if (sprite->animCmdIndex > 1)
     {
-        task->data[0]++;
+        task->tState = LAVARIDGE_B1F_WARP_EXIT_END;
         objectEvent->invisible = FALSE;
         CameraObjectReset();
         PlaySE(SE_M_DIG);
@@ -2013,7 +2027,7 @@ static bool8 LavaridgeGymB1FWarpExitEffect_3(struct Task *task, struct ObjectEve
     return FALSE;
 }
 
-static bool8 LavaridgeGymB1FWarpExitEffect_4(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGymB1FWarpExitEffect_End(struct Task *task, struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     if (ObjectEventClearHeldMovementIfFinished(objectEvent))
     {
