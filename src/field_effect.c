@@ -2385,6 +2385,13 @@ static bool32 WarpOutObjectEventUpwards(struct ObjectEvent *playerObj, s16 *movi
 #undef tOffsetY
 #undef tDirection
 
+
+enum EscapeRopeWarpInState
+{
+    ESCAPE_ROPE_WARP_IN_INIT,
+    ESCAPE_ROPE_WARP_IN_SPIN,
+};
+
 // Task data for Task_EscapeRopeWarpIn
 #define tState         data[0]
 #define tMovingState   data[1]
@@ -2398,12 +2405,13 @@ static bool32 WarpOutObjectEventUpwards(struct ObjectEvent *playerObj, s16 *movi
 #define tSpinDelay     data[9]
 #define tNumTurns      data[10]
 #define tState2        data[11]
-#define tOriginalDir   data[15]
+#define tStartDir   data[15]
+
 
 static void (*const sEscapeRopeWarpInEffectFuncs[])(struct Task *task) =
 {
-    EscapeRopeWarpInEffect_Init,
-    EscapeRopeWarpInEffect_Spin
+    [ESCAPE_ROPE_WARP_IN_INIT] = EscapeRopeWarpInEffect_Init,
+    [ESCAPE_ROPE_WARP_IN_SPIN] = EscapeRopeWarpInEffect_Spin
 };
 
 static bool32 WarpInObjectEventDownwards(struct ObjectEvent *playerObj, s16 *movingState, s16 *offsetY, s16 *priority, s16 *subpriority, s16 *subspriteMode)
@@ -2471,32 +2479,36 @@ static void Task_EscapeRopeWarpIn(u8 taskId)
 
 static void EscapeRopeWarpInEffect_Init(struct Task *task)
 {
-    if (IsWeatherNotFadingIn())
-    {
-        PlaySE(SE_WARP_OUT);
-        task->tOriginalDir = GetPlayerFacingDirection();
-        task->tState++;
-        task->tState2 = 0;
-    }
+    if (!IsWeatherNotFadingIn())
+        return;
+
+    PlaySE(SE_WARP_OUT);
+    task->tStartDir = GetPlayerFacingDirection();
+    task->tState = ESCAPE_ROPE_WARP_IN_SPIN;
+    task->tState2 = 0;
+
 }
 
 static void EscapeRopeWarpInEffect_Spin(struct Task *task)
 {
-    s16 *data = task->data;
     struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
-    bool32 moving = WarpInObjectEventDownwards(playerObj, &tMovingState, &tOffsetY, &tPriority, &tSubpriority, &tSubspriteMode);
+    bool32 moving = WarpInObjectEventDownwards(playerObj, &task->tMovingState, &task->tOffsetY, &task->tPriority, &task->tSubpriority, &task->tSubspriteMode);
+
     playerObj->invisible = FALSE;
     // TODO: Follower NPC?
-    if (tTimer < 8)
-        tTimer++;
-    else if (tSpinEnded == FALSE)
+    if (task->tTimer < 8)
     {
-        tTimer++;
-        tCurrentDir = SpinObjectEvent(playerObj, &tSpinDelay, &tNumTurns);
-        if (tTimer >= 50 && tCurrentDir == tOriginalDir)
-            tSpinEnded = TRUE;
+        task->tTimer++;
     }
-    if (!moving && tCurrentDir == tOriginalDir && ObjectEventCheckHeldMovementStatus(playerObj) == TRUE)
+    else if (task->tSpinEnded == FALSE)
+    {
+        task->tTimer++;
+        task->tCurrentDir = SpinObjectEvent(playerObj, &task->tSpinDelay, &task->tNumTurns);
+        if (task->tTimer >= 50 && task->tCurrentDir == task->tStartDir)
+            task->tSpinEnded = TRUE;
+    }
+
+    if (!moving && task->tCurrentDir == task->tStartDir && ObjectEventCheckHeldMovementStatus(playerObj) == TRUE)
     {
         playerObj->invisible = FALSE;
         playerObj->fixedPriority = FALSE;
@@ -2517,7 +2529,7 @@ static void EscapeRopeWarpInEffect_Spin(struct Task *task)
 #undef tCurrentDir
 #undef tSpinDelay
 #undef tNumTurns
-#undef tOriginalDir
+#undef tStartDir
 
 static void Task_DoTeleportFieldEffect(u8 taskId);
 static void TeleportFieldEffectTask1(struct Task *task);
