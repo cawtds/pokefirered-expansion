@@ -154,6 +154,17 @@ static bool32 LavaridgeGym1FWarpEffect_Disappear(struct Task *task, struct Objec
 static bool32 LavaridgeGym1FWarpEffect_FadeOut(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
 static bool32 LavaridgeGym1FWarpEffect_Warp(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
 
+// Escape Rope warp
+static void Task_EscapeRopeWarpOut(u8 taskId);
+static void EscapeRopeWarpOutEffect_Init(struct Task *task);
+static void EscapeRopeWarpOutEffect_HideFollowerNPC(struct Task *);
+static void EscapeRopeWarpOutEffect_Spin(struct Task *task);
+static u8 SpinObjectEvent(struct ObjectEvent *playerObj, s16 *timer, s16 *numTurns);
+static bool32 WarpOutObjectEventUpwards(struct ObjectEvent *playerObj, s16 *movingState, s16 *offsetY);
+static void FieldCallback_EscapeRopeExit(void);
+static void Task_EscapeRopeWarpIn(u8 taskId);
+static void EscapeRopeWarpInEffect_Init(struct Task *task);
+static void EscapeRopeWarpInEffect_Spin(struct Task *task);
 
 static const u16 sPokeballGlow_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.4bpp");
 static const u16 sPokeballGlow_Pal[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.gbapal");
@@ -2192,32 +2203,19 @@ u32 FldEff_PopOutOfAsh(void)
 void SpriteCB_PopOutOfAsh(struct Sprite *sprite)
 {
     if (sprite->animEnded)
-    {
         FieldEffectStop(sprite, FLDEFF_POP_OUT_OF_ASH);
-    }
 }
 
 // Task data for Task_EscapeRopeWarpOut
-#define tState       data[0]
-#define tSpinDelay   data[1]
-#define tNumTurns    data[2]
-#define tTimer       data[3]
-#define tOffscreen   data[4]
-#define tMovingState data[5]
-#define tOffsetY     data[6]
+#define tState        data[0]
+#define tSpinDelay    data[1]
+#define tNumTurns     data[2]
+#define tTimer        data[3]
+#define tOffscreen    data[4]
+#define tMovingState  data[5]
+#define tOffsetY      data[6]
 #define tHideFollower data[7]
-#define tDirection   data[15]
-
-static void Task_EscapeRopeWarpOut(u8 taskId);
-static void EscapeRopeWarpOutEffect_Init(struct Task *task);
-static void EscapeRopeWarpOutEffect_HideFollowerNPC(struct Task *);
-static void EscapeRopeWarpOutEffect_Spin(struct Task *task);
-static u8 SpinObjectEvent(struct ObjectEvent *playerObj, s16 *timer, s16 *numTurns);
-static bool32 WarpOutObjectEventUpwards(struct ObjectEvent *playerObj, s16 *movingState, s16 *offsetY);
-static void FieldCallback_EscapeRopeExit(void);
-static void Task_EscapeRopeWarpIn(u8 taskId);
-static void EscapeRopeWarpInEffect_Init(struct Task *task);
-static void EscapeRopeWarpInEffect_Spin(struct Task *task);
+#define tDirection    data[15]
 
 enum
 {
@@ -2225,11 +2223,18 @@ enum
     WAIT_MOVEMENT_END
 };
 
+enum EscapeRopeWarpOutState
+{
+    ESCAPE_ROPE_WARP_OUT_INIT,
+    ESCAPE_ROPE_WARP_OUT_HIDE_FOLLOWER,
+    ESCAPE_ROPE_WARP_OUT_SPIN,
+};
+
 static void (*const sEscapeRopeWarpOutEffectFuncs[])(struct Task *task) =
 {
-    EscapeRopeWarpOutEffect_Init,
-    EscapeRopeWarpOutEffect_HideFollowerNPC,
-    EscapeRopeWarpOutEffect_Spin
+    [ESCAPE_ROPE_WARP_OUT_INIT]          = EscapeRopeWarpOutEffect_Init,
+    [ESCAPE_ROPE_WARP_OUT_HIDE_FOLLOWER] = EscapeRopeWarpOutEffect_HideFollowerNPC,
+    [ESCAPE_ROPE_WARP_OUT_SPIN]          = EscapeRopeWarpOutEffect_Spin
 };
 
 void StartEscapeRopeFieldEffect(void)
@@ -2248,9 +2253,9 @@ static void Task_EscapeRopeWarpOut(u8 taskId)
 static void EscapeRopeWarpOutEffect_Init(struct Task *task)
 {
     if (PlayerHasFollowerNPC())
-        task->tState++;
+        task->tState = ESCAPE_ROPE_WARP_OUT_HIDE_FOLLOWER;
     else
-        task->tState += 2;
+        task->tState = ESCAPE_ROPE_WARP_OUT_SPIN;
 
     task->data[13] = 64; // unused
     task->data[14] = GetPlayerFacingDirection(); // unused
@@ -2264,42 +2269,43 @@ static void EscapeRopeWarpOutEffect_HideFollowerNPC(struct Task *task)
     {
         if (!PlayerHasFollowerNPC())
         {
-            task->tState++;
+            task->tState = ESCAPE_ROPE_WARP_OUT_SPIN;
+            return;
         }
-        else
-        {
-            FollowerNPCWalkIntoPlayerForLeaveMap();
-            task->tHideFollower = WAIT_MOVEMENT_END;
-        }
+
+        FollowerNPCWalkIntoPlayerForLeaveMap();
+        task->tHideFollower = WAIT_MOVEMENT_END;
     }
+
     if (task->tHideFollower == WAIT_MOVEMENT_END)
     {
-        if (ObjectEventClearHeldMovementIfFinished(follower))
-        {
-            FollowerNPCHideForLeaveMap(follower);
-            task->tState++;
-        }
+        if (!ObjectEventClearHeldMovementIfFinished(follower))
+            return;
+
+        FollowerNPCHideForLeaveMap(follower);
+        task->tState = ESCAPE_ROPE_WARP_OUT_SPIN;
     }
 }
 
 static void EscapeRopeWarpOutEffect_Spin(struct Task *task)
 {
     struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
-    s16 *data = task->data;
+
     SpinObjectEvent(playerObj, &task->tSpinDelay, &task->tNumTurns);
-    if (tTimer < 60)
+    if (task->tTimer < 60)
     {
-        tTimer++;
-        if (tTimer == 20)
+        task->tTimer++;
+        if (task->tTimer == 20)
             PlaySE(SE_WARP_IN);
     }
-    else if (tOffscreen == FALSE && !WarpOutObjectEventUpwards(playerObj, &task->tMovingState, &task->tOffsetY))
+    else if (task->tOffscreen == FALSE && !WarpOutObjectEventUpwards(playerObj, &task->tMovingState, &task->tOffsetY))
     {
         TryFadeOutOldMapMusic();
         WarpFadeOutScreen();
-        tOffscreen = TRUE;
+        task->tOffscreen = TRUE;
     }
-    if (tOffscreen == TRUE && !gPaletteFade.active && BGMusicStopped() == TRUE)
+
+    if (task->tOffscreen == TRUE && !gPaletteFade.active && BGMusicStopped() == TRUE)
     {
         SetObjectEventDirection(playerObj, task->tDirection); // always DIR_NONE
         SetWarpDestinationToEscapeWarp();
