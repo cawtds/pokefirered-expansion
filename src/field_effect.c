@@ -146,6 +146,14 @@ static bool32 LavaridgeGymB1FWarpExitEffect_StartPopOut(struct Task *task, struc
 static bool32 LavaridgeGymB1FWarpExitEffect_PopOut(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
 static bool32 LavaridgeGymB1FWarpExitEffect_End(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
 
+// Lavaridge 1F warp
+static void Task_LavaridgeGym1FWarp(u8 taskId);
+static bool32 LavaridgeGym1FWarpEffect_Init(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGym1FWarpEffect_AshPuff(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGym1FWarpEffect_Disappear(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGym1FWarpEffect_FadeOut(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGym1FWarpEffect_Warp(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+
 
 static const u16 sPokeballGlow_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.4bpp");
 static const u16 sPokeballGlow_Pal[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.gbapal");
@@ -2039,19 +2047,24 @@ static bool32 LavaridgeGymB1FWarpExitEffect_End(struct Task *task, struct Object
     return FALSE;
 }
 
-static void Task_LavaridgeGym1FWarp(u8 taskId);
-static bool8 LavaridgeGym1FWarpEffect_1(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static bool8 LavaridgeGym1FWarpEffect_2(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static bool8 LavaridgeGym1FWarpEffect_3(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static bool8 LavaridgeGym1FWarpEffect_4(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static bool8 LavaridgeGym1FWarpEffect_5(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+#undef tState
+#undef tSpriteId
 
-static bool8 (*const sLavaridgeGym1FWarpEffectFuncs[])(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite) = {
-    LavaridgeGym1FWarpEffect_1,
-    LavaridgeGym1FWarpEffect_2,
-    LavaridgeGym1FWarpEffect_3,
-    LavaridgeGym1FWarpEffect_4,
-    LavaridgeGym1FWarpEffect_5
+enum LavaridgeBFWarpState
+{
+    LAVARIDGE_1F_WARP_INIT,
+    LAVARIDGE_1F_WARP_ASH_PUFF,
+    LAVARIDGE_1F_WARP_DISAPPEAR,
+    LAVARIDGE_1F_WARP_FADE_OUT,
+    LAVARIDGE_1F_WARP_WARP,
+};
+
+static bool32 (*const sLavaridgeGym1FWarpEffectFuncs[])(struct Task *task, struct ObjectEvent *objectEvent, struct Sprite *sprite) = {
+    [LAVARIDGE_1F_WARP_INIT]      = LavaridgeGym1FWarpEffect_Init,
+    [LAVARIDGE_1F_WARP_ASH_PUFF]  = LavaridgeGym1FWarpEffect_AshPuff,
+    [LAVARIDGE_1F_WARP_DISAPPEAR] = LavaridgeGym1FWarpEffect_Disappear,
+    [LAVARIDGE_1F_WARP_FADE_OUT]  = LavaridgeGym1FWarpEffect_FadeOut,
+    [LAVARIDGE_1F_WARP_WARP]      = LavaridgeGym1FWarpEffect_Warp
 };
 
 // For the ash puff effect when warping off the B1F ash tiles
@@ -2071,10 +2084,12 @@ u32 FldEff_LavaridgeGymWarp(void)
 void SpriteCB_AshLaunch(struct Sprite *sprite)
 {
     if (sprite->animEnded)
-    {
         FieldEffectStop(sprite, FLDEFF_LAVARIDGE_GYM_WARP);
-    }
 }
+
+#define tState    data[0]
+#define tTimer    data[1]
+#define tSpriteId data[1] // reused
 
 void StartLavaridgeGym1FWarp(u8 priority)
 {
@@ -2083,73 +2098,83 @@ void StartLavaridgeGym1FWarp(u8 priority)
 
 static void Task_LavaridgeGym1FWarp(u8 taskId)
 {
-    while(sLavaridgeGym1FWarpEffectFuncs[gTasks[taskId].data[0]](&gTasks[taskId], &gObjectEvents[gPlayerAvatar.objectEventId], &gSprites[gPlayerAvatar.spriteId]));
+    while(sLavaridgeGym1FWarpEffectFuncs[gTasks[taskId].tState](&gTasks[taskId], &gObjectEvents[gPlayerAvatar.objectEventId], &gSprites[gPlayerAvatar.spriteId]));
 }
 
-static bool8 LavaridgeGym1FWarpEffect_1(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGym1FWarpEffect_Init(struct Task *task, struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
     FreezeObjectEvents();
     CameraObjectFreeze();
     gPlayerAvatar.preventStep = TRUE;
-    objectEvent->fixedPriority = TRUE;
-    task->data[0]++;
+    objEvent->fixedPriority = TRUE;
+    task->tState = LAVARIDGE_1F_WARP_ASH_PUFF;
+
     return FALSE;
 }
 
-static bool8 LavaridgeGym1FWarpEffect_2(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGym1FWarpEffect_AshPuff(struct Task *task, struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
-    if (ObjectEventClearHeldMovementIfFinished(objectEvent))
+    if (!ObjectEventClearHeldMovementIfFinished(objEvent))
+        return FALSE;
+
+    if (task->tTimer > 3)
     {
-        if (task->data[1] > 3)
-        {
-            gFieldEffectArguments[0] = objectEvent->currentCoords.x;
-            gFieldEffectArguments[1] = objectEvent->currentCoords.y;
-            gFieldEffectArguments[2] = sprite->subpriority - 1;
-            gFieldEffectArguments[3] = sprite->oam.priority;
-            task->data[1] = FieldEffectStart(FLDEFF_POP_OUT_OF_ASH);
-            task->data[0]++;
-        } else
-        {
-            task->data[1]++;
-            ObjectEventSetHeldMovement(objectEvent, GetWalkInPlaceFasterMovementAction(objectEvent->facingDirection));
-            PlaySE(SE_LAVARIDGE_FALL_WARP);
-        }
+        gFieldEffectArguments[0] = objEvent->currentCoords.x;
+        gFieldEffectArguments[1] = objEvent->currentCoords.y;
+        gFieldEffectArguments[2] = sprite->subpriority - 1;
+        gFieldEffectArguments[3] = sprite->oam.priority;
+        task->tSpriteId = FieldEffectStart(FLDEFF_POP_OUT_OF_ASH);
+        task->tState = LAVARIDGE_1F_WARP_DISAPPEAR;
     }
+    else
+    {
+        task->tTimer++;
+        ObjectEventSetHeldMovement(objEvent, GetWalkInPlaceFasterMovementAction(objEvent->facingDirection));
+        PlaySE(SE_LAVARIDGE_FALL_WARP);
+    }
+
     return FALSE;
 }
 
-static bool8 LavaridgeGym1FWarpEffect_3(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGym1FWarpEffect_Disappear(struct Task *task, struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
-    if (gSprites[task->data[1]].animCmdIndex == 2)
-    {
-        objectEvent->invisible = TRUE;
-        task->data[0]++;
-    }
+    if (gSprites[task->tSpriteId].animCmdIndex != 2)
+        return FALSE;
+
+    objEvent->invisible = TRUE;
+    task->tState = LAVARIDGE_1F_WARP_FADE_OUT;
+
     return FALSE;
 }
 
-static bool8 LavaridgeGym1FWarpEffect_4(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGym1FWarpEffect_FadeOut(struct Task *task, struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
-    if (!FieldEffectActiveListContains(FLDEFF_POP_OUT_OF_ASH))
-    {
-        TryFadeOutOldMapMusic();
-        WarpFadeOutScreen();
-        task->data[0]++;
-    }
+    if (FieldEffectActiveListContains(FLDEFF_POP_OUT_OF_ASH))
+        return FALSE;
+
+    TryFadeOutOldMapMusic();
+    WarpFadeOutScreen();
+    task->tState = LAVARIDGE_1F_WARP_WARP;
+
     return FALSE;
 }
 
-static bool8 LavaridgeGym1FWarpEffect_5(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGym1FWarpEffect_Warp(struct Task *task, struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
-    if (!gPaletteFade.active && BGMusicStopped() == TRUE)
-    {
-        WarpIntoMap();
-        gFieldCallback = FieldCB_FallWarpExit;
-        SetMainCallback2(CB2_LoadMap);
-        DestroyTask(FindTaskIdByFunc(Task_LavaridgeGym1FWarp));
-    }
+    if (gPaletteFade.active || !BGMusicStopped())
+        return FALSE;
+
+    WarpIntoMap();
+    gFieldCallback = FieldCB_FallWarpExit;
+    SetMainCallback2(CB2_LoadMap);
+    DestroyTask(FindTaskIdByFunc(Task_LavaridgeGym1FWarp));
+
     return FALSE;
 }
+
+#undef tState
+#undef tTimer
+#undef tSpriteId
 
 u32 FldEff_PopOutOfAsh(void)
 {
