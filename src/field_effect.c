@@ -131,12 +131,12 @@ static bool32 DiveFieldEffect_TryWarp(struct Task *task);
 
 //
 static void Task_LavaridgeGymB1FWarp(u8 taskId);
-static bool8 LavaridgeGymB1FWarpEffect_Init(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static bool8 LavaridgeGymB1FWarpEffect_CameraShake(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static bool8 LavaridgeGymB1FWarpEffect_Launch(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static bool8 LavaridgeGymB1FWarpEffect_Rise(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static bool8 LavaridgeGymB1FWarpEffect_FadeOut(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static bool8 LavaridgeGymB1FWarpEffect_Warp(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGymB1FWarpEffect_Init(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGymB1FWarpEffect_CameraShake(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGymB1FWarpEffect_Launch(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGymB1FWarpEffect_Rise(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGymB1FWarpEffect_FadeOut(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static bool32 LavaridgeGymB1FWarpEffect_Warp(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
 static void FieldCB_LavaridgeGymB1FWarpExit(void);
 static void Task_LavaridgeGymB1FWarpExit(u8 taskId);
 static bool8 LavaridgeGymB1FWarpExitEffect_1(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite);
@@ -1806,7 +1806,7 @@ enum LavaridgeB1FWarpState
     LAVARIDGE_B1F_WARP_WARP,
 };
 
-static bool8 (*const sLavaridgeGymB1FWarpEffectFuncs[])(struct Task *task, struct ObjectEvent *objectEvent, struct Sprite *sprite) =
+static bool32 (*const sLavaridgeGymB1FWarpEffectFuncs[])(struct Task *task, struct ObjectEvent *objectEvent, struct Sprite *sprite) =
 {
     [LAVARIDGE_B1F_WARP_INIT]         = LavaridgeGymB1FWarpEffect_Init,
     [LAVARIDGE_B1F_WARP_CAMERA_SHAKE] = LavaridgeGymB1FWarpEffect_CameraShake,
@@ -1830,22 +1830,27 @@ void StartLavaridgeGymB1FWarp(u8 priority)
 
 static void Task_LavaridgeGymB1FWarp(u8 taskId)
 {
-    while (sLavaridgeGymB1FWarpEffectFuncs[gTasks[taskId].tState](&gTasks[taskId], &gObjectEvents[gPlayerAvatar.objectEventId], &gSprites[gPlayerAvatar.spriteId]));
+    struct Task *task = &gTasks[taskId];
+    struct Sprite *sprite = &gSprites[gPlayerAvatar.spriteId];
+    struct ObjectEvent *objEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    while (sLavaridgeGymB1FWarpEffectFuncs[task->tState](task, objEvent, sprite));
 }
 
-static bool8 LavaridgeGymB1FWarpEffect_Init(struct Task *task, struct ObjectEvent *objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGymB1FWarpEffect_Init(struct Task *task, struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
     FreezeObjectEvents();
     CameraObjectFreeze();
     SetCameraPanningCallback(NULL);
     gPlayerAvatar.preventStep = TRUE;
-    objectEvent->fixedPriority = TRUE;
+    objEvent->fixedPriority = TRUE;
     task->tVertShake = 1;
-    task->tState++;
+    task->tState = LAVARIDGE_B1F_WARP_CAMERA_SHAKE;
+
     return TRUE;
 }
 
-static bool8 LavaridgeGymB1FWarpEffect_CameraShake(struct Task *task, struct ObjectEvent *objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGymB1FWarpEffect_CameraShake(struct Task *task, struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
     SetCameraPanning(0, task->tVertShake);
     task->tVertShake = -task->tVertShake;
@@ -1853,27 +1858,28 @@ static bool8 LavaridgeGymB1FWarpEffect_CameraShake(struct Task *task, struct Obj
     if (task->tTimer > 7)
     {
         task->tTimer = 0;
-        task->tState++;
+        task->tState = LAVARIDGE_B1F_WARP_LAUNCH;
     }
+
     return FALSE;
 }
 
-static bool8 LavaridgeGymB1FWarpEffect_Launch(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGymB1FWarpEffect_Launch(struct Task *task, struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
     sprite->y2 = 0;
     task->tSpriteY = 1;
-    gFieldEffectArguments[0] = objectEvent->currentCoords.x;
-    gFieldEffectArguments[1] = objectEvent->currentCoords.y;
+    gFieldEffectArguments[0] = objEvent->currentCoords.x;
+    gFieldEffectArguments[1] = objEvent->currentCoords.y;
     gFieldEffectArguments[2] = sprite->subpriority - 1;
     gFieldEffectArguments[3] = sprite->oam.priority;
     FieldEffectStart(FLDEFF_LAVARIDGE_GYM_WARP);
     PlaySE(SE_M_EXPLOSION);
-    task->tState++;
+    task->tState = LAVARIDGE_B1F_WARP_RISE;
 
     return TRUE;
 }
 
-static bool8 LavaridgeGymB1FWarpEffect_Rise(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGymB1FWarpEffect_Rise(struct Task *task, struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
     s16 centerToCornerVecY;
     SetCameraPanning(0, task->tVertShake);
@@ -1907,27 +1913,27 @@ static bool8 LavaridgeGymB1FWarpEffect_Rise(struct Task *task, struct ObjectEven
     if (!task->tSetTrigger && sprite->y2 < -16)
     {
         task->tSetTrigger = TRUE;
-        objectEvent->fixedPriority = TRUE;
+        objEvent->fixedPriority = TRUE;
         sprite->oam.priority = 1;
         sprite->subspriteMode = SUBSPRITES_IGNORE_PRIORITY;
     }
 
     if (task->tVertShake == 0 && task->tYMovementFinished)
-        task->tState++;
+        task->tState = LAVARIDGE_B1F_WARP_FADE_OUT;
 
     return FALSE;
 }
 
-static bool8 LavaridgeGymB1FWarpEffect_FadeOut(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGymB1FWarpEffect_FadeOut(struct Task *task, struct ObjectEvent * objEvent, struct Sprite *sprite)
 {
     TryFadeOutOldMapMusic();
     WarpFadeOutScreen();
-    task->tState++;
+    task->tState = LAVARIDGE_B1F_WARP_WARP;
 
     return FALSE;
 }
 
-static bool8 LavaridgeGymB1FWarpEffect_Warp(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite)
+static bool32 LavaridgeGymB1FWarpEffect_Warp(struct Task *task, struct ObjectEvent * objEvent, struct Sprite *sprite)
 {
     if (!gPaletteFade.active && BGMusicStopped() == TRUE)
     {
@@ -1936,12 +1942,16 @@ static bool8 LavaridgeGymB1FWarpEffect_Warp(struct Task *task, struct ObjectEven
         SetMainCallback2(CB2_LoadMap);
         DestroyTask(FindTaskIdByFunc(Task_LavaridgeGymB1FWarp));
     }
+
     return FALSE;
 }
 
 #undef tState
 #undef tVertShake
 #undef tTimer
+#undef tSpriteY
+#undef tYMovementFinished
+#undef tSetTrigger
 
 static bool8 (*const sLavaridgeGymB1FWarpExitEffectFuncs[])(struct Task *task, struct ObjectEvent * objectEvent, struct Sprite *sprite) = {
     LavaridgeGymB1FWarpExitEffect_1,
