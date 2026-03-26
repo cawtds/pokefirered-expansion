@@ -1212,7 +1212,7 @@ static const struct BgEvent *GetBackgroundEventAtPosition(struct MapHeader *mapH
     return NULL;
 }
 
-bool8 dive_warp(struct MapPosition *position, u16 metatileBehavior)
+bool8 TryDoDiveWarp(struct MapPosition *position, u16 metatileBehavior)
 {
     if (gMapHeader.mapType == MAP_TYPE_UNDERWATER && !MetatileBehavior_IsUnableToEmerge(metatileBehavior))
     {
