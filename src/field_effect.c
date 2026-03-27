@@ -2684,7 +2684,7 @@ static void FieldCallback_TeleportWarpIn(void)
     CreateTask(Task_TeleportWarpIn, 0);
 }
 
-#define tState data[0]
+#define tState      data[0]
 #define tFallOffset data[1]
 #define tSpinTimer2 data[1] // reused
 #define tSpinTimer  data[2]
@@ -2708,7 +2708,7 @@ static void TeleportWarpInFieldEffect_Init(struct Task *task)
         centerToCornerVecY = -(sprite->centerToCornerVecY << 1);
         sprite->y2 = -(sprite->y + sprite->centerToCornerVecY + gSpriteCoordOffsetY + centerToCornerVecY);
         gObjectEvents[gPlayerAvatar.objectEventId].invisible = FALSE;
-        task->tState++;
+        task->tState = TELEPORT_WARP_IN_SPIN_ENTER;
         task->tFallOffset = 8;
         task->tSpinTimer = 1;
         task->tSubsprMode = sprite->subspriteMode;
@@ -2751,7 +2751,7 @@ static void TeleportWarpInFieldEffect_SpinEnter(struct Task *task)
     if (sprite->y2 >= 0)
     {
         sprite->y2 = 0;
-        task->tState++;
+        task->tState = TELEPORT_WARP_IN_SPIN_GROUND;
         task->tSpinTimer2 = 1;
         task->tSpinCount = 0;
     }
@@ -2759,11 +2759,10 @@ static void TeleportWarpInFieldEffect_SpinEnter(struct Task *task)
 
 static void TeleportWarpInFieldEffect_SpinGround(struct Task *task)
 {
-    u8 spinDirections[5] = {1, 3, 4, 2, 1};
     struct ObjectEvent * objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
     if ((--task->tSpinTimer2) == 0)
     {
-        ObjectEventTurn(objectEvent, spinDirections[objectEvent->facingDirection]);
+        ObjectEventTurn(objectEvent, sSpinDirections[objectEvent->facingDirection]);
         task->tSpinTimer2 = 8;
         if ((++task->tSpinCount) > 4 && task->tSubsprMode == objectEvent->facingDirection)
         {
