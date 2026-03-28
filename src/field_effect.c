@@ -3679,41 +3679,44 @@ static void Task_FlyOut(u8 taskId)
 static void FlyOutFieldEffect_FieldMovePose(struct Task *task)
 {
     struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-    if (!ObjectEventIsMovementOverridden(objectEvent) || ObjectEventClearHeldMovementIfFinished(objectEvent))
-    {
-        task->tAvatarFlags = gPlayerAvatar.flags;
-        gPlayerAvatar.preventStep = TRUE;
-        SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_ON_FOOT);
-        StartPlayerAvatarSummonMonForFieldMoveAnim();
-        ObjectEventSetHeldMovement(objectEvent, MOVEMENT_ACTION_START_ANIM_IN_DIRECTION);
-        task->tState++;
-    }
+
+    if (ObjectEventIsMovementOverridden(objectEvent) && !ObjectEventClearHeldMovementIfFinished(objectEvent))
+        return;
+
+    task->tAvatarFlags = gPlayerAvatar.flags;
+    gPlayerAvatar.preventStep = TRUE;
+    SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_ON_FOOT);
+    StartPlayerAvatarSummonMonForFieldMoveAnim();
+    ObjectEventSetHeldMovement(objectEvent, MOVEMENT_ACTION_START_ANIM_IN_DIRECTION);
+    task->tState = FLY_OUT_SHOW_MON;
 }
 
 static void FlyOutFieldEffect_ShowMon(struct Task *task)
 {
     struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-    if (ObjectEventClearHeldMovementIfFinished(objectEvent))
-    {
-        task->tState++;
-        gFieldEffectArguments[0] = task->tMonPartyId;
-        FieldEffectStart(FLDEFF_FIELD_MOVE_SHOW_MON_INIT);
-    }
+
+    if (!ObjectEventClearHeldMovementIfFinished(objectEvent))
+        return;
+
+    task->tState = FLY_OUT_BIRD_LEAVE_BALL;
+    gFieldEffectArguments[0] = task->tMonPartyId;
+    FieldEffectStart(FLDEFF_FIELD_MOVE_SHOW_MON_INIT);
 }
 
 static void FlyOutFieldEffect_BirdLeaveBall(struct Task *task)
 {
-    if (!FieldEffectActiveListContains(FLDEFF_FIELD_MOVE_SHOW_MON))
+    if (FieldEffectActiveListContains(FLDEFF_FIELD_MOVE_SHOW_MON))
+        return;
+
+    if (task->tAvatarFlags & PLAYER_AVATAR_FLAG_SURFING)
     {
         struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-        if (task->tAvatarFlags & PLAYER_AVATAR_FLAG_SURFING)
-        {
-            SetSurfBlob_BobState(objectEvent->fieldEffectSpriteId, BOB_MON_ONLY);
-            SetSurfBlob_DontSyncAnim(objectEvent->fieldEffectSpriteId, FALSE);
-        }
-        task->tBirdSpriteId = CreateFlyBirdSprite();
-        task->tState++;
+
+        SetSurfBlob_BobState(objectEvent->fieldEffectSpriteId, BOB_MON_ONLY);
+        SetSurfBlob_DontSyncAnim(objectEvent->fieldEffectSpriteId, FALSE);
     }
+    task->tBirdSpriteId = CreateFlyBirdSprite();
+    task->tState = FLY_OUT_WAIT_BIRD_LEAVE;
 }
 
 static void FlyOutFieldEffect_WaitBirdLeave(struct Task *task)
@@ -3721,7 +3724,7 @@ static void FlyOutFieldEffect_WaitBirdLeave(struct Task *task)
     if (!GetFlyBirdAnimCompleted(task->tBirdSpriteId))
         return;
 
-    task->tState++;
+    task->tState = FLY_OUT_BIRD_SWOOP_DOWN;
     task->tTimer = 16;
     SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
     ObjectEventSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], MOVEMENT_ACTION_FACE_LEFT);
@@ -3730,61 +3733,66 @@ static void FlyOutFieldEffect_WaitBirdLeave(struct Task *task)
 static void FlyOutFieldEffect_BirdSwoopDown(struct Task *task)
 {
     struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-    if ((task->tTimer == 0 || (--task->tTimer) == 0) && ObjectEventClearHeldMovementIfFinished(objectEvent))
-    {
-        task->tState++;
-        PlaySE(SE_M_FLY);
-        StartFlyBirdSwoopDown(task->tBirdSpriteId);
-    }
+
+    if ((task->tTimer != 0 && --task->tTimer != 0) || !ObjectEventClearHeldMovementIfFinished(objectEvent))
+        return;
+
+    task->tState = FLY_OUT_JUMP_ON_BIRD;
+    PlaySE(SE_M_FLY);
+    StartFlyBirdSwoopDown(task->tBirdSpriteId);
 }
 
 static void FlyOutFieldEffect_JumpOnBird(struct Task *task)
 {
-    if ((++task->tTimer) >= 8)
-    {
-        struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-        ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
-        StartSpriteAnim(&gSprites[objectEvent->spriteId], ANIM_GET_ON_OFF_POKEMON_WEST);
-        objectEvent->inanimate = TRUE;
-        ObjectEventSetHeldMovement(objectEvent, MOVEMENT_ACTION_JUMP_IN_PLACE_LEFT);
-        task->tState++;
-        task->tTimer = 0;
-    }
+    struct ObjectEvent *objectEvent;
+
+    if ((++task->tTimer) < 8)
+        return;
+
+    objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+    StartSpriteAnim(&gSprites[objectEvent->spriteId], ANIM_GET_ON_OFF_POKEMON_WEST);
+    objectEvent->inanimate = TRUE;
+    ObjectEventSetHeldMovement(objectEvent, MOVEMENT_ACTION_JUMP_IN_PLACE_LEFT);
+    task->tState = FLY_OUT_FLY_OFF_WITH_BIRD;
+    task->tTimer = 0;
 }
 
 static void FlyOutFieldEffect_FlyOffWithBird(struct Task *task)
 {
-    if ((++task->tTimer) >= 10)
-    {
-        struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-        ObjectEventClearHeldMovementIfActive(objectEvent);
-        objectEvent->inanimate = FALSE;
-        objectEvent->noShadow = TRUE;
-        SetFlyBirdPlayerSpriteId(task->tBirdSpriteId, objectEvent->spriteId);
-        StartSpriteAnim(&gSprites[task->tBirdSpriteId], gSaveBlock2Ptr->playerGender * 2 + 1);
-        DoBirdSpriteWithPlayerAffineAnim(&gSprites[task->tBirdSpriteId], 0);
-        gSprites[task->tBirdSpriteId].callback = SpriteCB_FlyBirdWithPlayer;
-        CameraObjectFreeze();
-        task->tState++;
-    }
+    struct ObjectEvent *objectEvent;
+
+    if ((++task->tTimer) < 10)
+        return;
+
+    objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    ObjectEventClearHeldMovementIfActive(objectEvent);
+    objectEvent->inanimate = FALSE;
+    objectEvent->noShadow = TRUE;
+    SetFlyBirdPlayerSpriteId(task->tBirdSpriteId, objectEvent->spriteId);
+    StartSpriteAnim(&gSprites[task->tBirdSpriteId], gSaveBlock2Ptr->playerGender * 2 + 1);
+    DoBirdSpriteWithPlayerAffineAnim(&gSprites[task->tBirdSpriteId], 0);
+    gSprites[task->tBirdSpriteId].callback = SpriteCB_FlyBirdWithPlayer;
+    CameraObjectFreeze();
+    task->tState = FLY_OUT_WAIT_FLY_OFF;
 }
 
 static void FlyOutFieldEffect_WaitFlyOff(struct Task *task)
 {
-    if (GetFlyBirdAnimCompleted(task->tBirdSpriteId))
-    {
-        WarpFadeOutScreen();
-        task->tState++;
-    }
+    if (!GetFlyBirdAnimCompleted(task->tBirdSpriteId))
+        return;
+
+    WarpFadeOutScreen();
+    task->tState = FLY_OUT_END;
 }
 
 static void FlyOutFieldEffect_End(struct Task *task)
 {
-    if (!gPaletteFade.active)
-    {
+    if (gPaletteFade.active)
+        return;
+
         FieldEffectActiveListRemove(FLDEFF_USE_FLY);
         DestroyTask(FindTaskIdByFunc(Task_FlyOut));
-    }
 }
 
 #undef tState
@@ -3987,49 +3995,51 @@ static void Task_FlyIn(u8 taskId)
 
 static void FlyInFieldEffect_BirdSwoopDown(struct Task *task)
 {
-    struct ObjectEvent *playerObj;
-    playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
-    if (!ObjectEventIsMovementOverridden(playerObj) || ObjectEventClearHeldMovementIfFinished(playerObj))
-    {
-        task->tState++;
-        task->tTimer2 = 33;
-        task->tAvatarFlags = gPlayerAvatar.flags;
-        gPlayerAvatar.preventStep = TRUE;
-        SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_ON_FOOT);
-        if (task->tAvatarFlags & PLAYER_AVATAR_FLAG_SURFING)
-            SetSurfBlob_BobState(playerObj->fieldEffectSpriteId, BOB_NONE);
-        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
-        CameraObjectFreeze();
-        ObjectEventTurn(playerObj, DIR_WEST);
-        StartSpriteAnim(&gSprites[playerObj->spriteId], ANIM_GET_ON_OFF_POKEMON_WEST);
-        playerObj->invisible = FALSE;
-        playerObj->noShadow = TRUE;
-        task->tBirdSpriteId = CreateFlyBirdSprite();
-        StartFlyBirdSwoopDown(task->tBirdSpriteId);
-        SetFlyBirdPlayerSpriteId(task->tBirdSpriteId, playerObj->spriteId);
-        StartSpriteAnim(&gSprites[task->tBirdSpriteId], gSaveBlock2Ptr->playerGender * 2 + 2);
-        DoBirdSpriteWithPlayerAffineAnim(&gSprites[task->tBirdSpriteId], 1);
-        gSprites[task->tBirdSpriteId].callback = SpriteCB_FlyBirdWithPlayer;
-    }
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    if (ObjectEventIsMovementOverridden(playerObj) && !ObjectEventClearHeldMovementIfFinished(playerObj))
+        return;
+
+    task->tState = FLY_IN_FLY_IN_WITH_BIRD;
+    task->tTimer2 = 33;
+    task->tAvatarFlags = gPlayerAvatar.flags;
+    gPlayerAvatar.preventStep = TRUE;
+    SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_ON_FOOT);
+    if (task->tAvatarFlags & PLAYER_AVATAR_FLAG_SURFING)
+        SetSurfBlob_BobState(playerObj->fieldEffectSpriteId, BOB_NONE);
+    ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+    CameraObjectFreeze();
+    ObjectEventTurn(playerObj, DIR_WEST);
+    StartSpriteAnim(&gSprites[playerObj->spriteId], ANIM_GET_ON_OFF_POKEMON_WEST);
+    playerObj->invisible = FALSE;
+    playerObj->noShadow = TRUE;
+    task->tBirdSpriteId = CreateFlyBirdSprite();
+    StartFlyBirdSwoopDown(task->tBirdSpriteId);
+    SetFlyBirdPlayerSpriteId(task->tBirdSpriteId, playerObj->spriteId);
+    StartSpriteAnim(&gSprites[task->tBirdSpriteId], gSaveBlock2Ptr->playerGender * 2 + 2);
+    DoBirdSpriteWithPlayerAffineAnim(&gSprites[task->tBirdSpriteId], 1);
+    gSprites[task->tBirdSpriteId].callback = SpriteCB_FlyBirdWithPlayer;
 }
 
 static void FlyInFieldEffect_FlyInWithBird(struct Task *task)
 {
     struct ObjectEvent *playerObj;
     struct Sprite *playerSprite;
+
     TryChangeBirdSprite(&gSprites[task->tBirdSpriteId]);
-    if (task->tTimer2 == 0 || (--task->tTimer2) == 0)
-    {
-        playerObj= &gObjectEvents[gPlayerAvatar.objectEventId];
-        playerSprite = &gSprites[playerObj->spriteId];
-        SetFlyBirdPlayerSpriteId(task->tBirdSpriteId, MAX_SPRITES);
-        playerSprite->x += playerSprite->x2;
-        playerSprite->y += playerSprite->y2;
-        playerSprite->x2 = 0;
-        playerSprite->y2 = 0;
-        task->tState++;
-        task->tTimer2 = 0;
-    }
+
+    if (task->tTimer2 != 0 && --task->tTimer2 != 0)
+        return;
+
+    playerObj= &gObjectEvents[gPlayerAvatar.objectEventId];
+    playerSprite = &gSprites[playerObj->spriteId];
+    SetFlyBirdPlayerSpriteId(task->tBirdSpriteId, MAX_SPRITES);
+    playerSprite->x += playerSprite->x2;
+    playerSprite->y += playerSprite->y2;
+    playerSprite->x2 = 0;
+    playerSprite->y2 = 0;
+    task->tState = FLY_IN_JUMP_OFF_BIRD;
+    task->tTimer2 = 0;
 }
 
 static void FlyInFieldEffect_JumpOffBird(struct Task *task)
@@ -4037,67 +4047,72 @@ static void FlyInFieldEffect_JumpOffBird(struct Task *task)
     s16 yOffsets[18] = {-2, -4, -5, -6, -7, -8, -8, -8, -7, -7, -6, -5, -3, -2, 0, 2, 4, 8};
     struct Sprite *sprite = &gSprites[gPlayerAvatar.spriteId];
     sprite->y2 = yOffsets[task->tTimer2];
+
     if ((++task->tTimer2) >= 18)
-        task->tState++;
+        task->tState = FLY_IN_FIELD_MOVE_POSE;
 }
 
 static void FlyInFieldEffect_FieldMovePose(struct Task *task)
 {
     struct ObjectEvent *playerObj;
     struct Sprite *playerSprite;
-    if (GetFlyBirdAnimCompleted(task->tBirdSpriteId))
-    {
-        playerObj= &gObjectEvents[gPlayerAvatar.objectEventId];
-        playerSprite = &gSprites[playerObj->spriteId];
-        playerObj->inanimate = FALSE;
-        MoveObjectEventToMapCoords(playerObj, playerObj->currentCoords.x, playerObj->currentCoords.y);
-        playerSprite->x2 = 0;
-        playerSprite->y2 = 0;
-        playerSprite->coordOffsetEnabled = TRUE;
-        StartPlayerAvatarSummonMonForFieldMoveAnim();
-        ObjectEventSetHeldMovement(playerObj, MOVEMENT_ACTION_START_ANIM_IN_DIRECTION);
-        task->tState++;
-    }
+
+    if (!GetFlyBirdAnimCompleted(task->tBirdSpriteId))
+        return;
+
+    playerObj= &gObjectEvents[gPlayerAvatar.objectEventId];
+    playerSprite = &gSprites[playerObj->spriteId];
+    playerObj->inanimate = FALSE;
+    MoveObjectEventToMapCoords(playerObj, playerObj->currentCoords.x, playerObj->currentCoords.y);
+    playerSprite->x2 = 0;
+    playerSprite->y2 = 0;
+    playerSprite->coordOffsetEnabled = TRUE;
+    StartPlayerAvatarSummonMonForFieldMoveAnim();
+    ObjectEventSetHeldMovement(playerObj, MOVEMENT_ACTION_START_ANIM_IN_DIRECTION);
+    task->tState = FLY_IN_BIRD_RETURN_TO_BALL;
 }
 
 static void FlyInFieldEffect_BirdReturnToBall(struct Task *task)
 {
-    if (ObjectEventClearHeldMovementIfFinished(&gObjectEvents[gPlayerAvatar.objectEventId]))
-    {
-        task->tState++;
-        StartFlyBirdReturnToBall(task->tBirdSpriteId);
-    }
+    if (!ObjectEventClearHeldMovementIfFinished(&gObjectEvents[gPlayerAvatar.objectEventId]))
+        return;
+
+    task->tState = FLY_IN_WAIT_BIRD_RETURN;
+    StartFlyBirdReturnToBall(task->tBirdSpriteId);
 }
 
 static void FlyInFieldEffect_WaitBirdReturn(struct Task *task)
 {
-    if (GetFlyBirdAnimCompleted(task->tBirdSpriteId))
-    {
-        DestroySprite(&gSprites[task->tBirdSpriteId]);
-        task->tState++;
-        task->tTimer1 = 16;
-    }
+    if (!GetFlyBirdAnimCompleted(task->tBirdSpriteId))
+        return;
+
+    DestroySprite(&gSprites[task->tBirdSpriteId]);
+    task->tState = FLY_IN_END;
+    task->tTimer1 = 16;
 }
 
 static void FlyInFieldEffect_End(struct Task *task)
 {
-    if ((--task->tTimer1) == 0)
-    {
-        struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
-        u8 state = PLAYER_AVATAR_STATE_NORMAL;
+    struct ObjectEvent *playerObj;
+    u8 state;
 
-        if (task->tAvatarFlags & PLAYER_AVATAR_FLAG_SURFING)
-        {
-            state = PLAYER_AVATAR_STATE_SURFING;
-            SetSurfBlob_BobState(playerObj->fieldEffectSpriteId, BOB_PLAYER_AND_MON);
-        }
-        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(state));
-        ObjectEventTurn(playerObj, DIR_SOUTH);
-        gPlayerAvatar.flags = task->tAvatarFlags;
-        gPlayerAvatar.preventStep = FALSE;
-        FieldEffectActiveListRemove(FLDEFF_FLY_IN);
-        DestroyTask(FindTaskIdByFunc(Task_FlyIn));
+    if ((--task->tTimer1) != 0)
+        return;
+
+    playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+    state = PLAYER_AVATAR_STATE_NORMAL;
+
+    if (task->tAvatarFlags & PLAYER_AVATAR_FLAG_SURFING)
+    {
+        state = PLAYER_AVATAR_STATE_SURFING;
+        SetSurfBlob_BobState(playerObj->fieldEffectSpriteId, BOB_PLAYER_AND_MON);
     }
+    ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(state));
+    ObjectEventTurn(playerObj, DIR_SOUTH);
+    gPlayerAvatar.flags = task->tAvatarFlags;
+    gPlayerAvatar.preventStep = FALSE;
+    FieldEffectActiveListRemove(FLDEFF_FLY_IN);
+    DestroyTask(FindTaskIdByFunc(Task_FlyIn));
 }
 
 #undef tState
