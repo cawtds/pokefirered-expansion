@@ -260,6 +260,17 @@ static void SpriteCB_FlyBirdSwoopDown(struct Sprite *sprite);
 static void SpriteCB_FlyBirdWithPlayer(struct Sprite *sprite);
 static void StartFlyBirdSwoopDown(u8 flyBlobSpriteId);
 
+// Move Deoxys rock
+static void Task_MoveDeoxysRock(u8 taskId);
+
+// Destroy Deoxys rock
+static void Task_DestroyDeoxysRock(u8 taskId);
+static void DestroyDeoxysRockEffect_CameraShake(s16 *data, u8 taskId);
+static void DestroyDeoxysRockEffect_RockFragments(s16 *data, u8 taskId);
+static void DestroyDeoxysRockEffect_WaitAndEnd(s16 *data, u8 taskId);
+static void CreateDeoxysRockFragments(struct Sprite *sprite);
+static void SpriteCB_DeoxysRockFragment(struct Sprite *sprite);
+
 static const u16 sPokeballGlow_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.4bpp");
 static const u16 sPokeballGlow_Pal[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.gbapal");
 static const u16 sPokecenterMonitor_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokemoncenter_monitor.4bpp");
@@ -557,6 +568,57 @@ static const union AffineAnimCmd *const sAffineAnims_FlyBirdWithPlayer[] =
 {
     sAffineAnim_FlyBirdOutOfMap,
     sAffineAnim_FlyBirdIntoMap
+};
+
+static const struct SpriteFrameImage sImages_DeoxysRockFragment[] =
+{
+    {sRockFragment_TopLeft, 0x20},
+    {sRockFragment_TopRight, 0x20},
+    {sRockFragment_BottomLeft, 0x20},
+    {sRockFragment_BottomRight, 0x20}
+};
+
+static const union AnimCmd sAnim_RockFragment_TopLeft[] =
+{
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_RockFragment_TopRight[] =
+{
+    ANIMCMD_FRAME(1, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_RockFragment_BottomLeft[] =
+{
+    ANIMCMD_FRAME(2, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnim_RockFragment_BottomRight[] =
+{
+    ANIMCMD_FRAME(3, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sAnims_DeoxysRockFragment[] =
+{
+    sAnim_RockFragment_TopLeft,
+    sAnim_RockFragment_TopRight,
+    sAnim_RockFragment_BottomLeft,
+    sAnim_RockFragment_BottomRight
+};
+
+static const struct SpriteTemplate sSpriteTemplate_DeoxysRockFragment =
+{
+    .tileTag = TAG_NONE,
+    .paletteTag = 4371,
+    .oam = &sOamData_8x8,
+    .anims = sAnims_DeoxysRockFragment,
+    .images = sImages_DeoxysRockFragment,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCB_DeoxysRockFragment
 };
 
 enum PokecenterHealEffectState
@@ -4177,63 +4239,84 @@ static void TryChangeBirdSprite(struct Sprite *sprite)
     }
 }
 
-static void Task_MoveDeoxysRock_Step(u8 taskId);
+// Task data for Task_MoveDeoxysRock
+#define tState      data[0]
+#define tSpriteId   data[1]
+#define tTargetX    data[2]
+#define tTargetY    data[3]
+#define tCurX       data[4]
+#define tCurY       data[5]
+#define tVelocityX  data[6]
+#define tVelocityY  data[7]
+#define tMoveSteps  data[8]
+#define tObjEventId data[9]
+
+enum DeoxysMoveRockState
+{
+    DEOXYS_MOVE_ROCK_INIT,
+    DEOXYS_MOVE_ROCK_MOVE,
+};
 
 u32 FldEff_MoveDeoxysRock(void)
 {
+    struct Task *task;
+    s32 x, y;
+    struct ObjectEvent *objectEvent;
     u8 taskId;
     u8 objectEventIdBuffer;
-    s32 x;
-    s32 y;
-    struct ObjectEvent * objectEvent;
-    if (!TryGetObjectEventIdByLocalIdAndMap(gFieldEffectArguments[0], gFieldEffectArguments[1], gFieldEffectArguments[2], &objectEventIdBuffer))
-    {
-        objectEvent = &gObjectEvents[objectEventIdBuffer];
-        x = objectEvent->currentCoords.x - 7;
-        y = objectEvent->currentCoords.y - 7;
-        x = (gFieldEffectArguments[3] - x) * 16;
-        y = (gFieldEffectArguments[4] - y) * 16;
-        ShiftObjectEventCoords(objectEvent, gFieldEffectArguments[3] + 7, gFieldEffectArguments[4] + 7);
-        taskId = CreateTask(Task_MoveDeoxysRock_Step, 0x50);
-        gTasks[taskId].data[1] = objectEvent->spriteId;
-        gTasks[taskId].data[2] = gSprites[objectEvent->spriteId].x + x;
-        gTasks[taskId].data[3] = gSprites[objectEvent->spriteId].y + y;
-        gTasks[taskId].data[8] = gFieldEffectArguments[5];
-        gTasks[taskId].data[9] = objectEventIdBuffer;
-    }
+
+    if (TryGetObjectEventIdByLocalIdAndMap(gFieldEffectArguments[0], gFieldEffectArguments[1], gFieldEffectArguments[2], &objectEventIdBuffer))
+        return FALSE;
+
+    objectEvent = &gObjectEvents[objectEventIdBuffer];
+    x = objectEvent->currentCoords.x - 7;
+    y = objectEvent->currentCoords.y - 7;
+    x = (gFieldEffectArguments[3] - x) * 16;
+    y = (gFieldEffectArguments[4] - y) * 16;
+    ShiftObjectEventCoords(objectEvent, gFieldEffectArguments[3] + 7, gFieldEffectArguments[4] + 7);
+
+    taskId = CreateTask(Task_MoveDeoxysRock, 80);
+    task = &gTasks[taskId];
+    task->tSpriteId = objectEvent->spriteId;
+    task->tTargetX = gSprites[objectEvent->spriteId].x + x;
+    task->tTargetY = gSprites[objectEvent->spriteId].y + y;
+    task->tMoveSteps = gFieldEffectArguments[5];
+    task->tObjEventId = objectEventIdBuffer;
+
     return FALSE;
 }
 
-static void Task_MoveDeoxysRock_Step(u8 taskId)
+static void Task_MoveDeoxysRock(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Sprite *sprite = &gSprites[data[1]];
+    struct Sprite *sprite = &gSprites[tSpriteId];
     struct ObjectEvent * objectEvent;
-    switch (data[0])
+
+    switch (tState)
     {
-    case 0:
-        data[4] = sprite->x << 4;
-        data[5] = sprite->y << 4;
+    case DEOXYS_MOVE_ROCK_INIT:
+        tCurX = sprite->x << 4;
+        tCurY = sprite->y << 4;
 
         // UB: Possible divide by zero
-        data[6] = SAFE_DIV(((data[2] << 4) - data[4]), data[8]);
-        data[7] = SAFE_DIV(((data[3] << 4) - data[5]), data[8]);
-        data[0]++;
+        tVelocityX = SAFE_DIV(((tTargetX << 4) - tCurX), tMoveSteps);
+        tVelocityY = SAFE_DIV(((tTargetY << 4) - tCurY), tMoveSteps);
+        tState = DEOXYS_MOVE_ROCK_MOVE;
         // fallthrough
-    case 1:
-        if (data[8] != 0)
+    case DEOXYS_MOVE_ROCK_MOVE:
+        if (tMoveSteps != 0)
         {
-            data[8]--;
-            data[4] += data[6];
-            data[5] += data[7];
-            sprite->x = data[4] >> 4;
-            sprite->y = data[5] >> 4;
+            tMoveSteps--;
+            tCurX += tVelocityX;
+            tCurY += tVelocityY;
+            sprite->x = tCurX >> 4;
+            sprite->y = tCurY >> 4;
         }
         else
         {
-            objectEvent = &gObjectEvents[data[9]];
-            sprite->x = data[2];
-            sprite->y = data[3];
+            objectEvent = &gObjectEvents[tObjEventId];
+            sprite->x = tTargetX;
+            sprite->y = tTargetY;
             ShiftStillObjectEventCoords(objectEvent);
             objectEvent->triggerGroundEffectsOnStop = TRUE;
             FieldEffectActiveListRemove(FLDEFF_MOVE_DEOXYS_ROCK);
@@ -4242,6 +4325,17 @@ static void Task_MoveDeoxysRock_Step(u8 taskId)
         break;
     }
 }
+
+#undef tState
+#undef tSpriteId
+#undef tTargetX
+#undef tTargetY
+#undef tCurX
+#undef tCurY
+#undef tVelocityX
+#undef tVelocityY
+#undef tMoveSteps
+#undef tObjEventId
 
 u32 FldEff_CaveDust(void)
 {
@@ -4259,69 +4353,11 @@ u32 FldEff_CaveDust(void)
     return spriteId;
 }
 
-static void Task_DestroyDeoxysRock(u8 taskId);
-static void DestroyDeoxysRockEffect_CameraShake(s16 *data, u8 taskId);
-static void DestroyDeoxysRockEffect_RockFragments(s16 *data, u8 taskId);
-static void DestroyDeoxysRockEffect_WaitAndEnd(s16 *data, u8 taskId);
-static void CreateDeoxysRockFragments(struct Sprite *sprite);
-static void SpriteCB_DeoxysRockFragment(struct Sprite *sprite);
-
 static void (*const sDestroyDeoxysRockEffectFuncs[])(s16 *data, u8 taskId) =
 {
     DestroyDeoxysRockEffect_CameraShake,
     DestroyDeoxysRockEffect_RockFragments,
     DestroyDeoxysRockEffect_WaitAndEnd
-};
-
-static const struct SpriteFrameImage sImages_DeoxysRockFragment[] =
-{
-    {sRockFragment_TopLeft, 0x20},
-    {sRockFragment_TopRight, 0x20},
-    {sRockFragment_BottomLeft, 0x20},
-    {sRockFragment_BottomRight, 0x20}
-};
-
-static const union AnimCmd sAnim_RockFragment_TopLeft[] =
-{
-    ANIMCMD_FRAME(0, 0),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnim_RockFragment_TopRight[] =
-{
-    ANIMCMD_FRAME(1, 0),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnim_RockFragment_BottomLeft[] =
-{
-    ANIMCMD_FRAME(2, 0),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sAnim_RockFragment_BottomRight[] =
-{
-    ANIMCMD_FRAME(3, 0),
-    ANIMCMD_END
-};
-
-static const union AnimCmd *const sAnims_DeoxysRockFragment[] =
-{
-    sAnim_RockFragment_TopLeft,
-    sAnim_RockFragment_TopRight,
-    sAnim_RockFragment_BottomLeft,
-    sAnim_RockFragment_BottomRight
-};
-
-static const struct SpriteTemplate sSpriteTemplate_DeoxysRockFragment =
-{
-    .tileTag = TAG_NONE,
-    .paletteTag = 4371,
-    .oam = &sOamData_8x8,
-    .anims = sAnims_DeoxysRockFragment,
-    .images = sImages_DeoxysRockFragment,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCB_DeoxysRockFragment
 };
 
 // Task data for Task_DestroyDeoxysRock
