@@ -23,6 +23,7 @@
 #include "palette.h"
 #include "party_menu.h"
 #include "pokemon_storage_system.h"
+#include "quest_log_player.h"
 #include "quest_log.h"
 #include "rtc.h"
 #include "script.h"
@@ -217,6 +218,13 @@ static void SurfFieldEffect_FieldMovePose(struct Task *task);
 static void SurfFieldEffect_ShowMon(struct Task *task);
 static void SurfFieldEffect_JumpOnSurfBlob(struct Task *task);
 static void SurfFieldEffect_End(struct Task *task);
+
+// Vs Seeker
+static void Task_FldEffUseVsSeeker(u8 taskId);
+static void UseVsSeeker_StopPlayerMovement(struct Task *task);
+static void UseVsSeeker_DoPlayerAnimation(struct Task *task);
+static void UseVsSeeker_ResetPlayerGraphics(struct Task *task);
+static void UseVsSeeker_End(struct Task *task);
 
 static const u16 sPokeballGlow_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.4bpp");
 static const u16 sPokeballGlow_Pal[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.gbapal");
@@ -3428,77 +3436,90 @@ static void SurfFieldEffect_End(struct Task *task)
 #undef tDestY
 #undef tMonId
 
-static void Task_FldEffUseVsSeeker(u8 taskId);
-static void UseVsSeekerEffect_1(struct Task *task);
-static void UseVsSeekerEffect_2(struct Task *task);
-static void UseVsSeekerEffect_3(struct Task *task);
-static void UseVsSeekerEffect_4(struct Task *task);
-
-static void (*const sUseVsSeekerEffectFuncs[])(struct Task *task) = {
-    UseVsSeekerEffect_1,
-    UseVsSeekerEffect_2,
-    UseVsSeekerEffect_3,
-    UseVsSeekerEffect_4
+enum VsSeekerEffectState
+{
+    VS_SEEKER_STOP_PLAYER_MOVEMENT,
+    VS_SEEKER_DO_PLAYER_ANIMATION,
+    VS_SEEKER_RESET_PLAYER_GRAPHICS,
+    VS_SEEKER_END,
 };
+
+static void (*const sUseVsSeekerEffectFuncs[])(struct Task *task) =
+{
+    [VS_SEEKER_STOP_PLAYER_MOVEMENT]  = UseVsSeeker_StopPlayerMovement,
+    [VS_SEEKER_DO_PLAYER_ANIMATION]   = UseVsSeeker_DoPlayerAnimation,
+    [VS_SEEKER_RESET_PLAYER_GRAPHICS] = UseVsSeeker_ResetPlayerGraphics,
+    [VS_SEEKER_END]                   = UseVsSeeker_End,
+};
+
+#define tState data[0]
 
 u32 FldEff_UseVsSeeker(void)
 {
     if (gQuestLogState == QL_STATE_RECORDING)
-        QuestLogRecordPlayerAvatarGfxTransitionWithDuration(8, 89);
+        QuestLogRecordPlayerAvatarGfxTransitionWithDuration(QL_PLAYER_GFX_VSSEEKER, 89);
+
     CreateTask(Task_FldEffUseVsSeeker, 0xFF);
+
     return 0;
 }
 
 static void Task_FldEffUseVsSeeker(u8 taskId)
 {
-    sUseVsSeekerEffectFuncs[gTasks[taskId].data[0]](&gTasks[taskId]);
+    sUseVsSeekerEffectFuncs[gTasks[taskId].tState](&gTasks[taskId]);
 }
 
-static void UseVsSeekerEffect_1(struct Task *task)
+static void UseVsSeeker_StopPlayerMovement(struct Task *task)
 {
     LockPlayerFieldControls();
     FreezeObjectEvents();
     gPlayerAvatar.preventStep = TRUE;
-    task->data[0]++;
+    task->tState = VS_SEEKER_DO_PLAYER_ANIMATION;
 }
 
-static void UseVsSeekerEffect_2(struct Task *task)
+static void UseVsSeeker_DoPlayerAnimation(struct Task *task)
 {
-    struct ObjectEvent * playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+
     if (!ObjectEventIsMovementOverridden(playerObj) || ObjectEventClearHeldMovementIfFinished(playerObj))
     {
         StartPlayerAvatarVsSeekerAnim();
         ObjectEventSetHeldMovement(playerObj, MOVEMENT_ACTION_START_ANIM_IN_DIRECTION);
-        task->data[0]++;
+        task->tState = VS_SEEKER_RESET_PLAYER_GRAPHICS;
     }
 }
 
-static void UseVsSeekerEffect_3(struct Task *task)
+static void UseVsSeeker_ResetPlayerGraphics(struct Task *task)
 {
-    struct ObjectEvent * playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
-    if (ObjectEventClearHeldMovementIfFinished(playerObj))
-    {
-        if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_ACRO_BIKE | PLAYER_AVATAR_FLAG_MACH_BIKE))
-            ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_MACH_BIKE));
-        else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
-            ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
-        else
-            ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL));
-        ObjectEventForceSetHeldMovement(playerObj, GetFaceDirectionMovementAction(playerObj->facingDirection));
-        task->data[0]++;
-    }
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    if (!ObjectEventClearHeldMovementIfFinished(playerObj))
+        return;
+
+    if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_ACRO_BIKE | PLAYER_AVATAR_FLAG_MACH_BIKE))
+        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_MACH_BIKE));
+    else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
+        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+    else
+        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL));
+
+    ObjectEventForceSetHeldMovement(playerObj, GetFaceDirectionMovementAction(playerObj->facingDirection));
+    task->tState = VS_SEEKER_END;
 }
 
-static void UseVsSeekerEffect_4(struct Task *task)
+static void UseVsSeeker_End(struct Task *task)
 {
-    struct ObjectEvent * playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
-    if (ObjectEventClearHeldMovementIfFinished(playerObj))
-    {
-        gPlayerAvatar.preventStep = FALSE;
-        FieldEffectActiveListRemove(FLDEFF_USE_VS_SEEKER);
-        DestroyTask(FindTaskIdByFunc(Task_FldEffUseVsSeeker));
-    }
+    struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    if (!ObjectEventClearHeldMovementIfFinished(playerObj))
+        return;
+
+    gPlayerAvatar.preventStep = FALSE;
+    FieldEffectActiveListRemove(FLDEFF_USE_VS_SEEKER);
+    DestroyTask(FindTaskIdByFunc(Task_FldEffUseVsSeeker));
 }
+
+#undef tState
 
 static void SpriteCB_NPCFlyOut(struct Sprite *sprite);
 
