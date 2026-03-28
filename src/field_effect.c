@@ -2903,7 +2903,7 @@ static void FieldMoveShowMonOutdoorsEffect_Init(struct Task *task)
     SetGpuReg(REG_OFFSET_WININ, task->tWININ);
     SetGpuReg(REG_OFFSET_WINOUT, task->tWINOUT);
     SetVBlankCallback(VBlankCB_ShowMonEffect_Outdoors);
-    task->tState++;
+    task->tState = SHOW_MON_OUTDOORS_LOAD_GFX;
 }
 
 static void FieldMoveShowMonOutdoorsEffect_LoadGfx(struct Task *task)
@@ -2914,7 +2914,7 @@ static void FieldMoveShowMonOutdoorsEffect_LoadGfx(struct Task *task)
     CpuFill32(0, (void *)(VRAM + screenbase), 0x800);
     LoadPalette(sFieldMoveStreaksOutdoors_Pal, BG_PLTT_ID(15), sizeof(sFieldMoveStreaksOutdoors_Pal));
     LoadFieldMoveStreaksTilemapToVram(screenbase);
-    task->tState++;
+    task->tState = SHOW_MON_OUTDOORS_CREATE_BANNER;
 }
 
 static void FieldMoveShowMonOutdoorsEffect_CreateBanner(struct Task *task)
@@ -2945,7 +2945,7 @@ static void FieldMoveShowMonOutdoorsEffect_CreateBanner(struct Task *task)
     if (win0h_lo == 0 && win0v_lo == 40 && win0v_hi == 120)
     {
         gSprites[task->tSpriteId].callback = SpriteCB_FieldMoveMonSlideOnscreen;
-        task->tState++;
+        task->tState = SHOW_MON_OUTDOORS_WAIT_FOR_MON;
     }
 }
 
@@ -2953,7 +2953,7 @@ static void FieldMoveShowMonOutdoorsEffect_WaitForMon(struct Task *task)
 {
     task->tBG0HOFS -= 16;
     if (gSprites[task->tSpriteId].data[7])
-        task->tState++;
+        task->tState = SHOW_MON_OUTDOORS_SHRINK_BANNER;
 }
 
 static void FieldMoveShowMonOutdoorsEffect_ShrinkBanner(struct Task *task)
@@ -2974,7 +2974,7 @@ static void FieldMoveShowMonOutdoorsEffect_ShrinkBanner(struct Task *task)
 
     task->tWIN0V = WIN_RANGE(win0v_lo, win0v_hi);
     if (win0v_lo == 80 && win0v_hi == 81)
-        task->tState++;
+        task->tState = SHOW_MON_OUTDOORS_RESTORE_BG;
 }
 
 static void FieldMoveShowMonOutdoorsEffect_RestoreBg(struct Task *task)
@@ -2985,7 +2985,7 @@ static void FieldMoveShowMonOutdoorsEffect_RestoreBg(struct Task *task)
     task->tWIN0V = WIN_RANGE(0, 161);
     task->tWININ = task->tWININBackup;
     task->tWINOUT = task->tWINOUTBackup;
-    task->tState++;
+    task->tState = SHOW_MON_OUTDOORS_END;
 }
 
 static void FieldMoveShowMonOutdoorsEffect_End(struct Task *task)
