@@ -2353,7 +2353,6 @@ bool8 ScrCmd_checkfieldmoveusable(struct ScriptContext* ctx)
     if (partyIndex != PARTY_SIZE)
     {
         gFieldEffectArguments[0] = partyIndex;
-        gFieldEffectArguments[4] = FALSE;
         gSpecialVar_0x8004 = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES, NULL);
         gSpecialVar_Result = TRUE;
         GetMonData(&gPlayerParty[partyIndex], MON_DATA_NICKNAME, gStringVar1);
@@ -2363,8 +2362,7 @@ bool8 ScrCmd_checkfieldmoveusable(struct ScriptContext* ctx)
     else if (OW_FIELD_MOVES_WITHOUT_HMS)
     {
         u16 species = FieldMove_GetDefaultSpecies(fieldMove);
-        gFieldEffectArguments[0] = species;
-        gFieldEffectArguments[4] = TRUE;
+        gFieldEffectArguments[0] = species | NOT_IN_PARTY_MASK;
         gSpecialVar_0x8004 = species;
         gSpecialVar_Result = TRUE;
         StringCopy(gStringVar1, COMPOUND_STRING("PROF. OAK's "));

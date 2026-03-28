@@ -2835,28 +2835,36 @@ static void (*const sFieldMoveShowMonOutdoorsEffectFuncs[])(struct Task *task) =
     [SHOW_MON_OUTDOORS_END]           = FieldMoveShowMonOutdoorsEffect_End,
 };
 
+// task data
 #define tState        data[0]
-#define tWIN0H        data[1]
-#define tWIN0V        data[2]
-#define tWININ        data[3]
-#define tWINOUT       data[4]
-#define tBG0HOFS      data[5]
-#define tBG0VOFS      data[6]
-#define tWININBackup  data[11]
-#define tWINOUTBackup data[12]
+#define tWinHoriz     data[1]
+#define tWinVert      data[2]
+#define tWinIn        data[3]
+#define tWinOut       data[4]
+#define tBgHoriz      data[5]
+#define tBgVert       data[6]
+#define tWinInBackup  data[11]
+#define tWinOutBackup data[12]
 #define tCallback1    data[13]
 #define tCallback2    data[14] // used indirectly
-#define tSpriteId     data[15]
+#define tMonSpriteId  data[15]
+
+// sprite data
+#define sSpecies   data[0]
+#define sTimer     data[1]
+#define sNoDucking data[6]
+#define sSlideDone data[7]
 
 u32 FldEff_FieldMoveShowMon(void)
 {
     u8 taskId;
+
     if (IsMapTypeOutdoors(GetCurrentMapType()) == TRUE)
         taskId = CreateTask(Task_FieldMoveShowMonOutdoors, 0xFF);
     else
         taskId = CreateTask(Task_FieldMoveShowMonIndoors, 0xFF);
 
-    gTasks[taskId].tSpriteId = InitFieldMoveMonSprite(gFieldEffectArguments[0], gFieldEffectArguments[1], gFieldEffectArguments[2]);
+    gTasks[taskId].tMonSpriteId = InitFieldMoveMonSprite(gFieldEffectArguments[0], gFieldEffectArguments[1], gFieldEffectArguments[2]);
     return 0;
 }
 
@@ -2866,7 +2874,8 @@ u32 FldEff_FieldMoveShowMonInit(void)
 {
     u32 noDucking = gFieldEffectArguments[0] & SHOW_MON_CRY_NO_DUCKING;
     u8 partyIdx = gFieldEffectArguments[0];
-    if (gFieldEffectArguments[4])
+
+    if (gFieldEffectArguments[0] & NOT_IN_PARTY_MASK)
     {
         gFieldEffectArguments[0] &= ~NOT_IN_PARTY_MASK;
         gFieldEffectArguments[1] = FALSE;
@@ -2891,17 +2900,17 @@ static void Task_FieldMoveShowMonOutdoors(u8 taskId)
 
 static void FieldMoveShowMonOutdoorsEffect_Init(struct Task *task)
 {
-    task->tWININBackup = GetGpuReg(REG_OFFSET_WININ);
-    task->tWINOUTBackup = GetGpuReg(REG_OFFSET_WINOUT);
+    task->tWinInBackup = GetGpuReg(REG_OFFSET_WININ);
+    task->tWinOutBackup = GetGpuReg(REG_OFFSET_WINOUT);
     StoreWordInTwoHalfwords((u16 *)&task->tCallback1, (u32)gMain.vblankCallback);
-    task->tWIN0H = WIN_RANGE(240, 241);
-    task->tWIN0V = WIN_RANGE(80, 81);
-    task->tWININ = WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR;
-    task->tWINOUT = WINOUT_WIN01_BG1 | WINOUT_WIN01_BG2 | WINOUT_WIN01_BG3 | WINOUT_WIN01_OBJ | WINOUT_WIN01_CLR;
-    SetGpuReg(REG_OFFSET_WIN0H, task->tWIN0H);
-    SetGpuReg(REG_OFFSET_WIN0V, task->tWIN0V);
-    SetGpuReg(REG_OFFSET_WININ, task->tWININ);
-    SetGpuReg(REG_OFFSET_WINOUT, task->tWINOUT);
+    task->tWinHoriz = WIN_RANGE(240, 241);
+    task->tWinVert = WIN_RANGE(80, 81);
+    task->tWinIn = WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR;
+    task->tWinOut = WINOUT_WIN01_BG1 | WINOUT_WIN01_BG2 | WINOUT_WIN01_BG3 | WINOUT_WIN01_OBJ | WINOUT_WIN01_CLR;
+    SetGpuReg(REG_OFFSET_WIN0H, task->tWinHoriz);
+    SetGpuReg(REG_OFFSET_WIN0V, task->tWinVert);
+    SetGpuReg(REG_OFFSET_WININ, task->tWinIn);
+    SetGpuReg(REG_OFFSET_WINOUT, task->tWinOut);
     SetVBlankCallback(VBlankCB_ShowMonEffect_Outdoors);
     task->tState = SHOW_MON_OUTDOORS_LOAD_GFX;
 }
@@ -2910,6 +2919,7 @@ static void FieldMoveShowMonOutdoorsEffect_LoadGfx(struct Task *task)
 {
     u16 charbase = ((GetGpuReg(REG_OFFSET_BG0CNT) >> 2) << 14);
     u16 screenbase = ((GetGpuReg(REG_OFFSET_BG0CNT) >> 8) << 11);
+
     CpuCopy16(sFieldMoveStreaksOutdoors_Gfx, (void *)(VRAM + charbase), sizeof(sFieldMoveStreaksOutdoors_Gfx));
     CpuFill32(0, (void *)(VRAM + screenbase), 0x800);
     LoadPalette(sFieldMoveStreaksOutdoors_Pal, BG_PLTT_ID(15), sizeof(sFieldMoveStreaksOutdoors_Pal));
@@ -2923,10 +2933,10 @@ static void FieldMoveShowMonOutdoorsEffect_CreateBanner(struct Task *task)
     s16 win0v_lo;
     s16 win0v_hi;
 
-    task->tBG0HOFS -= 16;
-    win0h_lo = ((u16)task->tWIN0H >> 8);
-    win0v_lo = ((u16)task->tWIN0V >> 8);
-    win0v_hi = ((u16)task->tWIN0V & 0xff);
+    task->tBgHoriz -= 16;
+    win0h_lo = ((u16)task->tWinHoriz >> 8);
+    win0v_lo = ((u16)task->tWinVert >> 8);
+    win0v_hi = ((u16)task->tWinVert & 0xff);
     win0h_lo -= 16;
     win0v_lo -= 2;
     win0v_hi += 2;
@@ -2939,20 +2949,20 @@ static void FieldMoveShowMonOutdoorsEffect_CreateBanner(struct Task *task)
     if (win0v_hi > 120)
         win0v_hi = 120;
 
-    task->tWIN0H = WIN_RANGE(win0h_lo, task->tWIN0H & 0xff);
-    task->tWIN0V = WIN_RANGE(win0v_lo, win0v_hi);
+    task->tWinHoriz = WIN_RANGE(win0h_lo, task->tWinHoriz & 0xFF);
+    task->tWinVert = WIN_RANGE(win0v_lo, win0v_hi);
 
     if (win0h_lo == 0 && win0v_lo == 40 && win0v_hi == 120)
     {
-        gSprites[task->tSpriteId].callback = SpriteCB_FieldMoveMonSlideOnscreen;
+        gSprites[task->tMonSpriteId].callback = SpriteCB_FieldMoveMonSlideOnscreen;
         task->tState = SHOW_MON_OUTDOORS_WAIT_FOR_MON;
     }
 }
 
 static void FieldMoveShowMonOutdoorsEffect_WaitForMon(struct Task *task)
 {
-    task->tBG0HOFS -= 16;
-    if (gSprites[task->tSpriteId].data[7])
+    task->tBgHoriz -= 16;
+    if (gSprites[task->tMonSpriteId].sSlideDone)
         task->tState = SHOW_MON_OUTDOORS_SHRINK_BANNER;
 }
 
@@ -2961,9 +2971,9 @@ static void FieldMoveShowMonOutdoorsEffect_ShrinkBanner(struct Task *task)
     s16 win0v_lo;
     s16 win0v_hi;
 
-    task->tBG0HOFS -= 16;
-    win0v_lo = (task->tWIN0V >> 8);
-    win0v_hi = (task->tWIN0V & 0xff);
+    task->tBgHoriz -= 16;
+    win0v_lo = (task->tWinVert >> 8);
+    win0v_hi = (task->tWinVert & 0xFF);
     win0v_lo += 6;
     win0v_hi -= 6;
     if (win0v_lo > 80)
@@ -2972,7 +2982,7 @@ static void FieldMoveShowMonOutdoorsEffect_ShrinkBanner(struct Task *task)
     if (win0v_hi < 81)
         win0v_hi = 81;
 
-    task->tWIN0V = WIN_RANGE(win0v_lo, win0v_hi);
+    task->tWinVert = WIN_RANGE(win0v_lo, win0v_hi);
     if (win0v_lo == 80 && win0v_hi == 81)
         task->tState = SHOW_MON_OUTDOORS_RESTORE_BG;
 }
@@ -2980,11 +2990,12 @@ static void FieldMoveShowMonOutdoorsEffect_ShrinkBanner(struct Task *task)
 static void FieldMoveShowMonOutdoorsEffect_RestoreBg(struct Task *task)
 {
     u16 bg0cnt = (GetGpuReg(REG_OFFSET_BG0CNT) >> 8) << 11;
+
     CpuFill32(0, (void *)VRAM + bg0cnt, 0x800);
-    task->tWIN0H = WIN_RANGE(0, 241);
-    task->tWIN0V = WIN_RANGE(0, 161);
-    task->tWININ = task->tWININBackup;
-    task->tWINOUT = task->tWINOUTBackup;
+    task->tWinHoriz = WIN_RANGE(0, 241);
+    task->tWinVert = WIN_RANGE(0, 161);
+    task->tWinIn = task->tWinInBackup;
+    task->tWinOut = task->tWinOutBackup;
     task->tState = SHOW_MON_OUTDOORS_END;
 }
 
@@ -2996,7 +3007,7 @@ static void FieldMoveShowMonOutdoorsEffect_End(struct Task *task)
     ChangeBgX(0, 0, 0);
     ChangeBgY(0, 0, 0);
     Menu_LoadStdPal();
-    FreeResourcesAndDestroySprite(&gSprites[task->tSpriteId], task->tSpriteId);
+    FreeResourcesAndDestroySprite(&gSprites[task->tMonSpriteId], task->tMonSpriteId);
     FieldEffectActiveListRemove(FLDEFF_FIELD_MOVE_SHOW_MON);
     DestroyTask(FindTaskIdByFunc(Task_FieldMoveShowMonOutdoors));
 }
@@ -3007,12 +3018,12 @@ static void VBlankCB_ShowMonEffect_Outdoors(void)
     struct Task *task = &gTasks[FindTaskIdByFunc(Task_FieldMoveShowMonOutdoors)];
     LoadWordFromTwoHalfwords((u16 *)&task->tCallback1, (u32 *)&callback);
     callback();
-    SetGpuReg(REG_OFFSET_WIN0H, task->tWIN0H);
-    SetGpuReg(REG_OFFSET_WIN0V, task->tWIN0V);
-    SetGpuReg(REG_OFFSET_WININ, task->tWININ);
-    SetGpuReg(REG_OFFSET_WINOUT, task->tWINOUT);
-    SetGpuReg(REG_OFFSET_BG0HOFS, task->tBG0HOFS);
-    SetGpuReg(REG_OFFSET_BG0VOFS, task->tBG0VOFS);
+    SetGpuReg(REG_OFFSET_WIN0H, task->tWinHoriz);
+    SetGpuReg(REG_OFFSET_WIN0V, task->tWinVert);
+    SetGpuReg(REG_OFFSET_WININ, task->tWinIn);
+    SetGpuReg(REG_OFFSET_WINOUT, task->tWinOut);
+    SetGpuReg(REG_OFFSET_BG0HOFS, task->tBgHoriz);
+    SetGpuReg(REG_OFFSET_BG0VOFS, task->tBgVert);
 }
 
 static void LoadFieldMoveStreaksTilemapToVram(u16 screenbase)
@@ -3147,11 +3158,11 @@ static bool8 SlideIndoorBannerOnscreen(struct Task *task)
     {
         return TRUE;
     }
-    dstOffs = (task->data[3] >> 3) & 0x1f;
+    dstOffs = (task->data[3] >> 3) & 0x1F;
     if (dstOffs >= task->data[4])
     {
-        dstOffs = (32 - dstOffs) & 0x1f;
-        srcOffs = (32 - task->data[4]) & 0x1f;
+        dstOffs = (32 - dstOffs) & 0x1F;
+        srcOffs = (32 - task->data[4]) & 0x1F;
         dest = (u16 *)(VRAM + 0x140 + (u16)task->data[12]);
         for (i = 0; i < 10; i++)
         {
@@ -3192,57 +3203,69 @@ static bool8 SlideIndoorBannerOffscreen(struct Task *task)
 
 static u8 InitFieldMoveMonSprite(u32 species, bool32 isShiny, u32 personality)
 {
-    bool16 playCry;
-    u8 monSprite;
+    bool16 playCry = (species & SHOW_MON_CRY_NO_DUCKING) >> 16;
+    u8 monSpriteId;
     struct Sprite *sprite;
-    playCry = (species & SHOW_MON_CRY_NO_DUCKING) >> 16;
+
     species &= ~SHOW_MON_CRY_NO_DUCKING;
-    monSprite = CreateMonSprite_FieldMove(species, isShiny, personality, 320, 80, 0);
-    sprite = &gSprites[monSprite];
+    monSpriteId = CreateMonSprite_FieldMove(species, isShiny, personality, 320, 80, 0);
+    sprite = &gSprites[monSpriteId];
     sprite->callback = SpriteCallbackDummy;
     sprite->oam.priority = 0;
-    sprite->data[0] = species;
-    sprite->data[6] = playCry;
-    return monSprite;
+    sprite->sSpecies = species;
+    sprite->sNoDucking = playCry;
+
+    return monSpriteId;
 }
 
 static void SpriteCB_FieldMoveMonSlideOnscreen(struct Sprite *sprite)
 {
-    if ((sprite->x -= 20) <= 0x78)
+    sprite->x -= 20;
+    if (sprite->x <= 120)
     {
-        sprite->x = 0x78;
-        sprite->data[1] = 30;
+        sprite->x = 120;
+        sprite->sTimer = 30;
         sprite->callback = SpriteCB_FieldMoveMonWaitAfterCry;
-        if (sprite->data[6])
-        {
-            PlayCry_NormalNoDucking(sprite->data[0], 0, CRY_VOLUME_RS, CRY_PRIORITY_NORMAL);
-        }
+        if (sprite->sNoDucking)
+            PlayCry_NormalNoDucking(sprite->sSpecies, 0, CRY_VOLUME_RS, CRY_PRIORITY_NORMAL);
         else
-        {
-            PlayCry_Normal(sprite->data[0], 0);
-        }
+            PlayCry_Normal(sprite->sSpecies, 0);
     }
 }
 
 static void SpriteCB_FieldMoveMonWaitAfterCry(struct Sprite *sprite)
 {
-    if ((--sprite->data[1]) == 0)
-    {
+    if ((--sprite->sTimer) == 0)
         sprite->callback = SpriteCB_FieldMoveMonSlideOffscreen;
-    }
 }
 
 static void SpriteCB_FieldMoveMonSlideOffscreen(struct Sprite *sprite)
 {
-    if (sprite->x < -0x40)
-    {
-        sprite->data[7] = 1;
-    }
+    if (sprite->x < -64)
+        sprite->sSlideDone = TRUE;
     else
-    {
         sprite->x -= 20;
-    }
 }
+
+// task data
+#undef tState
+#undef tWinHoriz
+#undef tWinVert
+#undef tWinIn
+#undef tWinOut
+#undef tBgHoriz
+#undef tBgVert
+#undef tWinInBackup
+#undef tWinOutBackup
+#undef tCallback1
+#undef tCallback2
+#undef tMonSpriteId
+
+// sprite data
+#undef sSpecies
+#undef sTimer
+#undef sNoDucking
+#undef sSlideDone
 
 static void Task_FldEffUseSurf(u8 taskId);
 static void UseSurfEffect_1(struct Task *task);
