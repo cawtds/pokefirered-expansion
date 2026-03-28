@@ -85,6 +85,8 @@ enum FieldEffect
     FLDEFF_SNOW_TRACKS_SPOT,
     FLDEFF_SNOW_TRACKS_BUG,
     FLDEFF_CAVE_DUST,
+    FLDEFF_USE_ROCK_CLIMB,
+    FLDEFF_ROCK_CLIMB_DUST,
     FLDEFF_COUNT,
 };
 
@@ -100,6 +102,7 @@ enum FieldEffect
 #define FLDEFF_PAL_TAG_SMALL_SPARKLE      0x100F
 #define FLDEFF_PAL_TAG_HOF_MONITOR        0x1010
 #define FLDEFF_PAL_TAG_CAVE_DUST          0x1012
+#define FLDEFF_PAL_TAG_DUST_CLOUD         0x1013
 
 // tile tags, for field effects that may have many copies on screen at once
 #define FLDEFF_TILE_TAG_SHADOW_SMALL        0x1400

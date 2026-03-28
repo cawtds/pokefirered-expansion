@@ -94,6 +94,8 @@ void HideFollowerForFieldEffect(void);
 void FieldEffectScript_LoadFadedPal(const struct SpritePalette * spritePalette);
 void FieldEffectScript_LoadPal(const struct SpritePalette * spritePalette);
 
+bool8 IsRockClimbActive(void);
+
 u32 FldEff_ExclamationMarkIcon(void);
 u32 FldEff_UseCutOnGrass(void);
 u32 FldEff_UseCutOnTree(void);
@@ -162,5 +164,7 @@ u32 FldEff_SnowTracksSlither(void);
 u32 FldEff_SnowTracksBug(void);
 u32 FldEff_SnowTracksSpot(void);
 u32 FldEff_CaveDust(void);
+u32 FldEff_UseRockClimb(void);
+u32 FldEff_RockClimbDust(void);
 
 #endif //GUARD_FIELD_EFFECTS_H

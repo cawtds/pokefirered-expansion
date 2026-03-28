@@ -233,6 +233,9 @@ $(FIELDEFFECTSGFXDIR)/pics/bug_tracks.4bpp: %.4bpp: %.png
 $(FIELDEFFECTSGFXDIR)/pics/spot_tracks.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -mwidth 2 -mheight 2
 
+$(FIELDEFFECTSGFXDIR)/pics/rock_climb_dust.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -mwidth 4 -mheight 4
+
 $(FIELDEFFECTSGFXDIR)/pics/sand_disguise.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -mwidth 2 -mheight 4
 

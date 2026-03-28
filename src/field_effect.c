@@ -374,6 +374,8 @@ static const u32 (*const sFieldEffectFuncs[FLDEFF_COUNT]) (void) =
     [FLDEFF_SNOW_TRACKS_BUG]              = FldEff_SnowTracksBug,
     [FLDEFF_SNOW_TRACKS_SPOT]             = FldEff_SnowTracksSpot,
     [FLDEFF_CAVE_DUST]                    = FldEff_CaveDust,
+    [FLDEFF_USE_ROCK_CLIMB]               = FldEff_UseRockClimb,
+    [FLDEFF_ROCK_CLIMB_DUST]              = FldEff_RockClimbDust,
 };
 
 static const struct OamData sOamData_8x8 =
@@ -707,7 +709,7 @@ void ApplyGlobalFieldPaletteTint(u8 paletteIdx)
     CpuFastCopy(&gPlttBufferUnfaded[OBJ_PLTT_ID2(paletteIdx)], &gPlttBufferFaded[OBJ_PLTT_ID2(paletteIdx)], PLTT_SIZE_4BPP);
 }
 
-void FieldEffectScript_LoadFadedPal(const struct SpritePalette * spritePalette)
+void FieldEffectScript_LoadFadedPal(const struct SpritePalette *spritePalette)
 {
     bool32 isTagNew = IndexOfSpritePaletteTag(spritePalette->tag) == 0xFF;
     u32 paletteSlot = LoadSpritePalette(spritePalette);
@@ -718,7 +720,7 @@ void FieldEffectScript_LoadFadedPal(const struct SpritePalette * spritePalette)
     UpdateSpritePaletteWithWeather(paletteSlot, TRUE);
 }
 
-void FieldEffectScript_LoadPal(const struct SpritePalette * spritePalette)
+void FieldEffectScript_LoadPal(const struct SpritePalette *spritePalette)
 {
     u8 idx = IndexOfSpritePaletteTag(spritePalette->tag);
     LoadSpritePalette(spritePalette);
@@ -4581,4 +4583,3 @@ static u32 FldEff_Nop()
 {
     return 0;
 }
-
