@@ -265,11 +265,13 @@ static void Task_MoveDeoxysRock(u8 taskId);
 
 // Destroy Deoxys rock
 static void Task_DestroyDeoxysRock(u8 taskId);
-static void DestroyDeoxysRockEffect_CameraShake(s16 *data, u8 taskId);
-static void DestroyDeoxysRockEffect_RockFragments(s16 *data, u8 taskId);
-static void DestroyDeoxysRockEffect_WaitAndEnd(s16 *data, u8 taskId);
+static void DestroyDeoxysRockEffect_CameraShake(u8 taskId);
+static void DestroyDeoxysRockEffect_RockFragments(u8 taskId);
+static void DestroyDeoxysRockEffect_WaitAndEnd(u8 taskId);
 static void CreateDeoxysRockFragments(struct Sprite *sprite);
 static void SpriteCB_DeoxysRockFragment(struct Sprite *sprite);
+static void Task_DeoxysRockCameraShake(u8 taskId);
+static void StartEndingDeoxysRockCameraShake(u8 taskId);
 
 static const u16 sPokeballGlow_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.4bpp");
 static const u16 sPokeballGlow_Pal[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.gbapal");
@@ -4353,11 +4355,18 @@ u32 FldEff_CaveDust(void)
     return spriteId;
 }
 
-static void (*const sDestroyDeoxysRockEffectFuncs[])(s16 *data, u8 taskId) =
+enum DeoxysDestroyRockState
 {
-    DestroyDeoxysRockEffect_CameraShake,
-    DestroyDeoxysRockEffect_RockFragments,
-    DestroyDeoxysRockEffect_WaitAndEnd
+    DEOXYS_DESTROY_ROCK_CAMERA_SHAKE,
+    DEOXYS_DESTROY_ROCK_ROCK_FRAGMENTS,
+    DEOXYS_DESTROY_ROCK_WAIT_AND_END,
+};
+
+static void (*const sDestroyDeoxysRockEffectFuncs[])(u8 taskId) =
+{
+    [DEOXYS_DESTROY_ROCK_CAMERA_SHAKE]   = DestroyDeoxysRockEffect_CameraShake,
+    [DEOXYS_DESTROY_ROCK_ROCK_FRAGMENTS] = DestroyDeoxysRockEffect_RockFragments,
+    [DEOXYS_DESTROY_ROCK_WAIT_AND_END]   = DestroyDeoxysRockEffect_WaitAndEnd,
 };
 
 // Task data for Task_DestroyDeoxysRock
@@ -4376,16 +4385,78 @@ u32 FldEff_DestroyDeoxysRock(void)
     if (!TryGetObjectEventIdByLocalIdAndMap(gFieldEffectArguments[0], gFieldEffectArguments[1], gFieldEffectArguments[2], &objectEventId))
     {
         taskId = CreateTask(Task_DestroyDeoxysRock, 80);
-        gTasks[taskId].data[2] = objectEventId;
+        gTasks[taskId].tObjectEventId = objectEventId;
         gTasks[taskId].tLocalId = gFieldEffectArguments[0];
         gTasks[taskId].tMapNum = gFieldEffectArguments[1];
         gTasks[taskId].tMapGroup = gFieldEffectArguments[2];
     }
     else
+    {
         FieldEffectActiveListRemove(FLDEFF_DESTROY_DEOXYS_ROCK);
+    }
 
     return FALSE;
 }
+
+static void Task_DestroyDeoxysRock(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    InstallCameraPanAheadCallback();
+    SetCameraPanningCallback(NULL);
+    sDestroyDeoxysRockEffectFuncs[task->tState](taskId);
+}
+
+static void DestroyDeoxysRockEffect_CameraShake(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    u8 newTaskId = CreateTask(Task_DeoxysRockCameraShake, 90);
+
+    PlaySE(SE_THUNDER2);
+    task->tCameraTaskId = newTaskId;
+    task->tState = DEOXYS_DESTROY_ROCK_ROCK_FRAGMENTS;
+}
+
+static void DestroyDeoxysRockEffect_RockFragments(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    struct Sprite *sprite;
+
+    if (++task->tTimer <= 120)
+        return;
+
+    sprite = &gSprites[gObjectEvents[task->tObjectEventId].spriteId];
+    gObjectEvents[task->tObjectEventId].invisible = TRUE;
+    BlendPalettes(PALETTES_BG, 16, RGB_WHITE);
+    BeginNormalPaletteFade(PALETTES_BG, 0, 16, 0, RGB_WHITE);
+    CreateDeoxysRockFragments(sprite);
+    PlaySE(SE_THUNDER);
+    StartEndingDeoxysRockCameraShake(task->tCameraTaskId);
+    task->tTimer = 0;
+    task->tState = DEOXYS_DESTROY_ROCK_WAIT_AND_END;
+}
+
+static void DestroyDeoxysRockEffect_WaitAndEnd(u8 taskId)
+{
+    struct Task *task;
+
+    if (gPaletteFade.active || FuncIsActiveTask(Task_DeoxysRockCameraShake))
+        return;
+
+    task = &gTasks[taskId];
+    InstallCameraPanAheadCallback();
+    RemoveObjectEventByLocalIdAndMap(task->tLocalId, task->tMapNum, task->tMapGroup);
+    FieldEffectActiveListRemove(FLDEFF_DESTROY_DEOXYS_ROCK);
+    DestroyTask(taskId);
+}
+
+#undef tState
+#undef tObjectEventId
+#undef tTimer
+#undef tCameraTaskId
+#undef tLocalId
+#undef tMapNum
+#undef tMapGroup
+
 
 // Task data for Task_DeoxysRockCameraShake
 #define tShakeDelay data[0]
@@ -4397,34 +4468,37 @@ u32 FldEff_DestroyDeoxysRock(void)
 static void Task_DeoxysRockCameraShake(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    if (data[7] != 0)
+
+    if (tEnding)
     {
-        if (++data[6] > 20)
+        if (++tEndDelay > 20)
         {
-            data[6] = 0;
-            if (data[5] != 0)
-                data[5]--;
+            tEndDelay = 0;
+            if (tShake != 0)
+                tShake--;
         }
     }
     else
-        data[5] = 4;
-
-    if (++data[0] > 1)
     {
-        data[0] = 0;
-        if (++data[1] & 1)
-            SetCameraPanning(0, -data[5]);
+        tShake = 4;
+    }
+
+    if (++tShakeDelay > 1)
+    {
+        tShakeDelay = 0;
+        if (++tShakeUp & 1)
+            SetCameraPanning(0, -tShake);
         else
-            SetCameraPanning(0, data[5]);
+            SetCameraPanning(0, tShake);
     }
     UpdateCameraPanning();
-    if (data[5] == 0)
+    if (tShake == 0)
         DestroyTask(taskId);
 }
 
 static void StartEndingDeoxysRockCameraShake(u8 taskId)
 {
-    gTasks[taskId].data[7] = 1;
+    gTasks[taskId].tEnding = TRUE;
 }
 
 #undef tShakeDelay
@@ -4433,70 +4507,23 @@ static void StartEndingDeoxysRockCameraShake(u8 taskId)
 #undef tEndDelay
 #undef tEnding
 
-static void Task_DestroyDeoxysRock(u8 taskId)
-{
-    s16 *data = gTasks[taskId].data;
-    InstallCameraPanAheadCallback();
-    SetCameraPanningCallback(NULL);
-    sDestroyDeoxysRockEffectFuncs[tState](data, taskId);
-}
+#define NUM_ROCK_FRAGMENTS 4
 
-static void DestroyDeoxysRockEffect_CameraShake(s16 *data, u8 taskId)
-{
-    u8 newTaskId = CreateTask(Task_DeoxysRockCameraShake, 90);
-    PlaySE(SE_THUNDER2);
-    tCameraTaskId = newTaskId;
-    tState++;
-}
-
-static void DestroyDeoxysRockEffect_RockFragments(s16 *data, u8 taskId)
-{
-    if (++tTimer > 120)
-    {
-        struct Sprite *sprite = &gSprites[gObjectEvents[tObjectEventId].spriteId];
-        gObjectEvents[tObjectEventId].invisible = TRUE;
-        BlendPalettes(PALETTES_BG, 0x10, RGB_WHITE);
-        BeginNormalPaletteFade(PALETTES_BG, 0, 0x10, 0, RGB_WHITE);
-        CreateDeoxysRockFragments(sprite);
-        PlaySE(SE_THUNDER);
-        StartEndingDeoxysRockCameraShake(tCameraTaskId);
-        tTimer = 0;
-        tState++;
-    }
-}
-
-static void DestroyDeoxysRockEffect_WaitAndEnd(s16 *data, u8 taskId)
-{
-    if (!gPaletteFade.active && !FuncIsActiveTask(Task_DeoxysRockCameraShake))
-    {
-        InstallCameraPanAheadCallback();
-        RemoveObjectEventByLocalIdAndMap(tLocalId, tMapNum, tMapGroup);
-        FieldEffectActiveListRemove(FLDEFF_DESTROY_DEOXYS_ROCK);
-        DestroyTask(taskId);
-    }
-}
-
-#undef tState
-#undef tObjectEventId
-#undef tTimer
-#undef tCameraTaskId
-#undef tLocalId
-#undef tMapNum
-#undef tMapGroup
+#define sRockFragmentIndex data[0]
 
 static void CreateDeoxysRockFragments(struct Sprite *sprite)
 {
-    int i;
-    int xPos = (s16)gTotalCameraPixelOffsetX + sprite->x + sprite->x2;
-    int yPos = (s16)gTotalCameraPixelOffsetY + sprite->y + sprite->y2 - 4;
+    u32 i;
+    s32 xPos = (s16)gTotalCameraPixelOffsetX + sprite->x + sprite->x2;
+    s32 yPos = (s16)gTotalCameraPixelOffsetY + sprite->y + sprite->y2 - 4;
 
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < NUM_ROCK_FRAGMENTS; i++)
     {
         u8 spriteId = CreateSprite(&sSpriteTemplate_DeoxysRockFragment, xPos, yPos, 0);
         if (spriteId != MAX_SPRITES)
         {
             StartSpriteAnim(&gSprites[spriteId], i);
-            gSprites[spriteId].data[0] = i;
+            gSprites[spriteId].sRockFragmentIndex = i;
             gSprites[spriteId].oam.paletteNum = sprite->oam.paletteNum;
         }
     }
@@ -4504,7 +4531,7 @@ static void CreateDeoxysRockFragments(struct Sprite *sprite)
 
 static void SpriteCB_DeoxysRockFragment(struct Sprite *sprite)
 {
-    switch (sprite->data[0])
+    switch (sprite->sRockFragmentIndex)
     {
     case 0:
         sprite->x -= 16;
@@ -4523,9 +4550,12 @@ static void SpriteCB_DeoxysRockFragment(struct Sprite *sprite)
         sprite->y += 12;
         break;
     }
+
     if (sprite->x < -4 || sprite->x > DISPLAY_WIDTH + 4 || sprite->y < -4 || sprite->y > DISPLAY_HEIGHT + 4)
         DestroySprite(sprite);
 }
+
+#undef sRockFragmentIndex
 
 static void Task_PhotoFlash(u8 taskId)
 {
@@ -4538,8 +4568,8 @@ static void Task_PhotoFlash(u8 taskId)
 
 u32 FldEff_PhotoFlash(void)
 {
-    BlendPalettes(PALETTES_ALL, 0x10, RGB_WHITE);
-    BeginNormalPaletteFade(PALETTES_ALL, -1, 0x0F, 0x00, RGB_WHITE);
+    BlendPalettes(PALETTES_ALL, 16, RGB_WHITE);
+    BeginNormalPaletteFade(PALETTES_ALL, -1, 15, 0, RGB_WHITE);
     CreateTask(Task_PhotoFlash, 90);
 
     return 0;
