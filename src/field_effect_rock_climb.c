@@ -121,7 +121,7 @@ static bool8 RockClimb_ShowMon(struct Task *task, struct ObjectEvent *objectEven
 {
     if (ObjectEventCheckHeldMovementStatus(objectEvent))
     {
-        gFieldEffectArguments[0] = task->tMonId | 0x80000000;
+        gFieldEffectArguments[0] = task->tMonId | SHOW_MON_CRY_NO_DUCKING;
         FieldEffectStart(FLDEFF_FIELD_MOVE_SHOW_MON_INIT);
         task->tState++;
         return TRUE;

@@ -14,6 +14,9 @@ static bool32 FieldMove_IsUnlockedStrength(void);
 static bool32 FieldMove_IsUnlockedFlash(void);
 static bool32 FieldMove_IsUnlockedRockSmash(void);
 static bool32 FieldMove_IsUnlockedWaterfall(void);
+#if OW_ROCK_CLIMB_FIELD_MOVE == TRUE
+static bool32 FieldMove_IsUnlockedRockClimb(void);
+#endif
 
 static const u8 sText_ShareHp[] = _("Share HP.");
 
@@ -119,16 +122,18 @@ const struct FieldMoveInfo gFieldMovesInfo[FIELD_MOVE_COUNT] =
         .setUpFunc = NULL,
         .questLogText = COMPOUND_STRING("N/A"),
     },
+#if OW_ROCK_CLIMB_FIELD_MOVE == TRUE
     [FIELD_MOVE_ROCK_CLIMB] =
     {
         .defaultSpecies = SPECIES_SANDSHREW,
-        .isUnlockedFunc = NULL,
-        .moveId = MOVE_NONE,
+        .isUnlockedFunc = FieldMove_IsUnlockedRockClimb,
+        .moveId = MOVE_ROCK_CLIMB,
         .partyMessageId = PARTY_MSG_CANT_USE_HERE,
-        .description = COMPOUND_STRING("N/A"),
-        .setUpFunc = NULL,
-        .questLogText = COMPOUND_STRING("N/A"),
+        .description = COMPOUND_STRING("Climb a cliff."),
+        .setUpFunc = SetUpFieldMove_RockClimb,
+        .questLogText = COMPOUND_STRING("{STR_VAR_1} used the Hidden Move\nROCK CLIMB to climb a steep cliff."),
     },
+#endif
     [FIELD_MOVE_TELEPORT] =
     {
         .defaultSpecies = SPECIES_ABRA,
@@ -180,6 +185,7 @@ const struct FieldMoveInfo gFieldMovesInfo[FIELD_MOVE_COUNT] =
         .questLogText = COMPOUND_STRING("{STR_VAR_1} used SWEET SCENT to attract\nwild POKéMON."),
     },
 };
+
 
 u16 FieldMove_GetDefaultSpecies(enum FieldMove fieldMove)
 {
@@ -233,3 +239,10 @@ static bool32 FieldMove_IsUnlockedWaterfall(void)
 {
     return FlagGet(FLAG_BADGE07_GET);
 }
+
+#if OW_ROCK_CLIMB_FIELD_MOVE == TRUE
+static bool32 FieldMove_IsUnlockedRockClimb(void)
+{
+    return TRUE;
+}
+#endif

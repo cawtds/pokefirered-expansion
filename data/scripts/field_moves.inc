@@ -380,11 +380,10 @@ Text_LooksLikeNothingHere::
 	.string "Looks like there's nothing here…$"
 
 EventScript_UseRockClimb::
+	goto_if_questlog EventScript_ReleaseEnd
 	lockall
 	checkfieldmoveusable FIELD_MOVE_ROCK_CLIMB
 	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantRockClimb
-	bufferpartymonnick STR_VAR_1, VAR_RESULT
-	setfieldeffectargument 0, VAR_RESULT
 	msgbox Text_WantToRockClimb, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, EventScript_EndRockClimb
 	msgbox Text_MonUsedRockClimb, MSGBOX_DEFAULT
