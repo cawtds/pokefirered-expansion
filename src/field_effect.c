@@ -239,6 +239,17 @@ static void FlyOutFieldEffect_WaitFlyOff(struct Task *task);
 static void FlyOutFieldEffect_End(struct Task *task);
 static void SpriteCB_NPCFlyOut(struct Sprite *sprite);
 
+// Fly in
+static void Task_FlyIn(u8 taskId);
+static void FlyInFieldEffect_BirdSwoopDown(struct Task *task);
+static void FlyInFieldEffect_FlyInWithBird(struct Task *task);
+static void FlyInFieldEffect_JumpOffBird(struct Task *task);
+static void FlyInFieldEffect_FieldMovePose(struct Task *task);
+static void FlyInFieldEffect_BirdReturnToBall(struct Task *task);
+static void FlyInFieldEffect_WaitBirdReturn(struct Task *task);
+static void FlyInFieldEffect_End(struct Task *task);
+static void TryChangeBirdSprite(struct Sprite *sprite);
+
 // Fly
 static bool8 GetFlyBirdAnimCompleted(u8 flyBlobSpriteId);
 static u8 CreateFlyBirdSprite(void);
@@ -3620,7 +3631,7 @@ static void SpriteCB_NPCFlyOut(struct Sprite *sprite)
         FieldEffectStop(sprite, FLDEFF_NPCFLY_OUT);
 }
 
-enum FlyOutState
+enum FlyOutEffectState
 {
     FLY_OUT_FIELD_MOVE_POSE,
     FLY_OUT_SHOW_MON,
@@ -3646,7 +3657,7 @@ static void (*const sFlyOutFieldEffectFuncs[])(struct Task *) =
     [FLY_OUT_END]               = FlyOutFieldEffect_End,
 };
 
-// Task data for Task_FlyOut / Task_FlyIn
+// Task data for Task_FlyOut
 #define tState        data[0]
 #define tMonPartyId   data[1]
 #define tBirdSpriteId data[1] // re-used
@@ -3775,6 +3786,12 @@ static void FlyOutFieldEffect_End(struct Task *task)
         DestroyTask(FindTaskIdByFunc(Task_FlyOut));
     }
 }
+
+#undef tState
+#undef tMonPartyId
+#undef tBirdSpriteId
+#undef tTimer
+#undef tAvatarFlags
 
 static u8 CreateFlyBirdSprite(void)
 {
@@ -3926,30 +3943,40 @@ static void StartFlyBirdReturnToBall(u8 spriteId)
     gSprites[spriteId].callback = SpriteCB_FlyBirdReturnToBall;
 }
 
-static void Task_FlyIn(u8 taskId);
-static void FlyInFieldEffect_BirdSwoopDown(struct Task *task);
-static void FlyInFieldEffect_FlyInWithBird(struct Task *task);
-static void FlyInFieldEffect_JumpOffBird(struct Task *task);
-static void FlyInFieldEffect_FieldMovePose(struct Task *task);
-static void FlyInFieldEffect_BirdReturnToBall(struct Task *task);
-static void FlyInFieldEffect_WaitBirdReturn(struct Task *task);
-static void FlyInFieldEffect_End(struct Task *task);
-static void TryChangeBirdSprite(struct Sprite *sprite);
+enum FlyInEffectState
+{
+    FLY_IN_BIRD_SWOOP_DOWN,
+    FLY_IN_FLY_IN_WITH_BIRD,
+    FLY_IN_JUMP_OFF_BIRD,
+    FLY_IN_FIELD_MOVE_POSE,
+    FLY_IN_BIRD_RETURN_TO_BALL,
+    FLY_IN_WAIT_BIRD_RETURN,
+    FLY_IN_END,
+};
 
 static void (*const sFlyInFieldEffectFuncs[])(struct Task *task) =
 {
-    FlyInFieldEffect_BirdSwoopDown,
-    FlyInFieldEffect_FlyInWithBird,
-    FlyInFieldEffect_JumpOffBird,
-    FlyInFieldEffect_FieldMovePose,
-    FlyInFieldEffect_BirdReturnToBall,
-    FlyInFieldEffect_WaitBirdReturn,
-    FlyInFieldEffect_End
+    [FLY_IN_BIRD_SWOOP_DOWN]     = FlyInFieldEffect_BirdSwoopDown,
+    [FLY_IN_FLY_IN_WITH_BIRD]    = FlyInFieldEffect_FlyInWithBird,
+    [FLY_IN_JUMP_OFF_BIRD]       = FlyInFieldEffect_JumpOffBird,
+    [FLY_IN_FIELD_MOVE_POSE]     = FlyInFieldEffect_FieldMovePose,
+    [FLY_IN_BIRD_RETURN_TO_BALL] = FlyInFieldEffect_BirdReturnToBall,
+    [FLY_IN_WAIT_BIRD_RETURN]    = FlyInFieldEffect_WaitBirdReturn,
+    [FLY_IN_END]                 = FlyInFieldEffect_End,
 };
+
+// Task data for Task_FlyOut / Task_FlyIn
+#define tState        data[0]
+#define tMonPartyId   data[1]
+#define tBirdSpriteId data[1] // re-used
+#define tTimer1       data[1] // re-used
+#define tTimer2       data[2]
+#define tAvatarFlags  data[15]
 
 u32 FldEff_FlyIn(void)
 {
     CreateTask(Task_FlyIn, 0xFE);
+
     return 0;
 }
 
@@ -3965,7 +3992,7 @@ static void FlyInFieldEffect_BirdSwoopDown(struct Task *task)
     if (!ObjectEventIsMovementOverridden(playerObj) || ObjectEventClearHeldMovementIfFinished(playerObj))
     {
         task->tState++;
-        task->tTimer = 33;
+        task->tTimer2 = 33;
         task->tAvatarFlags = gPlayerAvatar.flags;
         gPlayerAvatar.preventStep = TRUE;
         SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_ON_FOOT);
@@ -3991,7 +4018,7 @@ static void FlyInFieldEffect_FlyInWithBird(struct Task *task)
     struct ObjectEvent *playerObj;
     struct Sprite *playerSprite;
     TryChangeBirdSprite(&gSprites[task->tBirdSpriteId]);
-    if (task->tTimer == 0 || (--task->tTimer) == 0)
+    if (task->tTimer2 == 0 || (--task->tTimer2) == 0)
     {
         playerObj= &gObjectEvents[gPlayerAvatar.objectEventId];
         playerSprite = &gSprites[playerObj->spriteId];
@@ -4001,7 +4028,7 @@ static void FlyInFieldEffect_FlyInWithBird(struct Task *task)
         playerSprite->x2 = 0;
         playerSprite->y2 = 0;
         task->tState++;
-        task->tTimer = 0;
+        task->tTimer2 = 0;
     }
 }
 
@@ -4009,8 +4036,8 @@ static void FlyInFieldEffect_JumpOffBird(struct Task *task)
 {
     s16 yOffsets[18] = {-2, -4, -5, -6, -7, -8, -8, -8, -7, -7, -6, -5, -3, -2, 0, 2, 4, 8};
     struct Sprite *sprite = &gSprites[gPlayerAvatar.spriteId];
-    sprite->y2 = yOffsets[task->tTimer];
-    if ((++task->tTimer) >= 18)
+    sprite->y2 = yOffsets[task->tTimer2];
+    if ((++task->tTimer2) >= 18)
         task->tState++;
 }
 
@@ -4048,18 +4075,17 @@ static void FlyInFieldEffect_WaitBirdReturn(struct Task *task)
     {
         DestroySprite(&gSprites[task->tBirdSpriteId]);
         task->tState++;
-        task->data[1] = 16;
+        task->tTimer1 = 16;
     }
 }
 
 static void FlyInFieldEffect_End(struct Task *task)
 {
-    struct ObjectEvent *playerObj;
-    u8 state;
-    if ((--task->data[1]) == 0)
+    if ((--task->tTimer1) == 0)
     {
-        playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
-        state = PLAYER_AVATAR_STATE_NORMAL;
+        struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+        u8 state = PLAYER_AVATAR_STATE_NORMAL;
+
         if (task->tAvatarFlags & PLAYER_AVATAR_FLAG_SURFING)
         {
             state = PLAYER_AVATAR_STATE_SURFING;
@@ -4077,7 +4103,8 @@ static void FlyInFieldEffect_End(struct Task *task)
 #undef tState
 #undef tMonPartyId
 #undef tBirdSpriteId
-#undef tTimer
+#undef tTimer1
+#undef tTimer2
 #undef tAvatarFlags
 
 static void DoBirdSpriteWithPlayerAffineAnim(struct Sprite *sprite, u8 affineAnimId)
