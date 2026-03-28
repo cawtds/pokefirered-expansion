@@ -226,6 +226,29 @@ static void UseVsSeeker_DoPlayerAnimation(struct Task *task);
 static void UseVsSeeker_ResetPlayerGraphics(struct Task *task);
 static void UseVsSeeker_End(struct Task *task);
 
+// Fly out
+static void Task_FlyOut(u8 taskId);
+static void FlyOutFieldEffect_FieldMovePose(struct Task *task);
+static void FlyOutFieldEffect_ShowMon(struct Task *task);
+static void FlyOutFieldEffect_BirdLeaveBall(struct Task *task);
+static void FlyOutFieldEffect_WaitBirdLeave(struct Task *task);
+static void FlyOutFieldEffect_BirdSwoopDown(struct Task *task);
+static void FlyOutFieldEffect_JumpOnBird(struct Task *task);
+static void FlyOutFieldEffect_FlyOffWithBird(struct Task *task);
+static void FlyOutFieldEffect_WaitFlyOff(struct Task *task);
+static void FlyOutFieldEffect_End(struct Task *task);
+static void SpriteCB_NPCFlyOut(struct Sprite *sprite);
+
+// Fly
+static bool8 GetFlyBirdAnimCompleted(u8 flyBlobSpriteId);
+static u8 CreateFlyBirdSprite(void);
+static void DoBirdSpriteWithPlayerAffineAnim(struct Sprite *sprite, u8 affineAnimId);
+static void SetFlyBirdPlayerSpriteId(u8 flyBlobSpriteId, u8 playerSpriteId);
+static void SpriteCB_FlyBirdLeaveBall(struct Sprite *sprite);
+static void SpriteCB_FlyBirdSwoopDown(struct Sprite *sprite);
+static void SpriteCB_FlyBirdWithPlayer(struct Sprite *sprite);
+static void StartFlyBirdSwoopDown(u8 flyBlobSpriteId);
+
 static const u16 sPokeballGlow_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.4bpp");
 static const u16 sPokeballGlow_Pal[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.gbapal");
 static const u16 sPokecenterMonitor_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokemoncenter_monitor.4bpp");
@@ -278,7 +301,7 @@ static const u32 (*const sFieldEffectFuncs[FLDEFF_COUNT]) (void) =
     [FLDEFF_USE_SECRET_POWER_SHRUB]       = FldEff_Nop,
     [FLDEFF_TREE_DISGUISE]                = FldEff_TreeDisguise,
     [FLDEFF_MOUNTAIN_DISGUISE]            = FldEff_MountainDisguise,
-    [FLDEFF_NPCFLY_OUT]                   = FldEff_NpcFlyOut,
+    [FLDEFF_NPCFLY_OUT]                   = FldEff_NPCFlyOut,
     [FLDEFF_USE_FLY]                      = FldEff_UseFly,
     [FLDEFF_FLY_IN]                       = FldEff_FlyIn,
     [FLDEFF_QUESTION_MARK_ICON_AND_EMOTE] = FldEff_QuestionMarkIcon,
@@ -484,6 +507,45 @@ static const struct SpriteTemplate sSpriteTemplate_HofMonitor =
     .images = sPicTable_HofMonitor,
     .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_HallOfFameMonitor
+};
+
+static const union AffineAnimCmd sAffineAnim_FlyBirdLeaveBall[] =
+{
+    AFFINEANIMCMD_FRAME( 8,  8, -30,  0),
+    AFFINEANIMCMD_FRAME(28, 28,   0, 30),
+    AFFINEANIMCMD_END
+};
+
+static const union AffineAnimCmd sAffineAnim_FlyBirdReturnToBall[] =
+{
+    AFFINEANIMCMD_FRAME(256, 256, 64,  0),
+    AFFINEANIMCMD_FRAME(-10, -10,  0, 22),
+    AFFINEANIMCMD_END
+};
+
+static const union AffineAnimCmd *const sAffineAnims_FlyBirdBall[] =
+{
+    sAffineAnim_FlyBirdLeaveBall,
+    sAffineAnim_FlyBirdReturnToBall
+};
+
+static const union AffineAnimCmd sAffineAnim_FlyBirdOutOfMap[] =
+{
+    AFFINEANIMCMD_FRAME(24, 24, 0, 1),
+    AFFINEANIMCMD_JUMP(0)
+};
+
+static const union AffineAnimCmd sAffineAnim_FlyBirdIntoMap[] =
+{
+    AFFINEANIMCMD_FRAME(512, 512, 0, 1),
+    AFFINEANIMCMD_FRAME(-16, -16, 0, 1),
+    AFFINEANIMCMD_JUMP(1)
+};
+
+static const union AffineAnimCmd *const sAffineAnims_FlyBirdWithPlayer[] =
+{
+    sAffineAnim_FlyBirdOutOfMap,
+    sAffineAnim_FlyBirdIntoMap
 };
 
 enum PokecenterHealEffectState
@@ -3521,17 +3583,18 @@ static void UseVsSeeker_End(struct Task *task)
 
 #undef tState
 
-static void SpriteCB_NPCFlyOut(struct Sprite *sprite);
+#define sNpcSpriteId data[1]
+#define sTime        data[2]
 
-u32 FldEff_NpcFlyOut(void)
+u32 FldEff_NPCFlyOut(void)
 {
-    u8 spriteId = CreateSprite(&gFieldEffectObjectTemplate_Bird, 0x78, 0, 1);
+    u8 spriteId = CreateSprite(&gFieldEffectObjectTemplate_Bird, 120, 0, 1);
     struct Sprite *sprite = &gSprites[spriteId];
 
     sprite->oam.paletteNum = LoadPlayerObjectEventPalette(gSaveBlock2Ptr->playerGender);
     sprite->oam.priority = 1;
     sprite->callback = SpriteCB_NPCFlyOut;
-    sprite->data[1] = gFieldEffectArguments[0];
+    sprite->sNpcSpriteId = gFieldEffectArguments[0];
     PlaySE(SE_M_FLY);
 
     return spriteId;
@@ -3539,25 +3602,49 @@ u32 FldEff_NpcFlyOut(void)
 
 static void SpriteCB_NPCFlyOut(struct Sprite *sprite)
 {
-    struct Sprite *npcSprite;
+    sprite->x2 = Cos(sprite->sTime, 140);
+    sprite->y2 = Sin(sprite->sTime, 72);
+    sprite->sTime = (sprite->sTime + 4) & 0xFF;
 
-    sprite->x2 = Cos(sprite->data[2], 0x8c);
-    sprite->y2 = Sin(sprite->data[2], 0x48);
-    sprite->data[2] = (sprite->data[2] + 4) & 0xff;
     if (sprite->data[0])
     {
-        npcSprite = &gSprites[sprite->data[1]];
+        struct Sprite *npcSprite = &gSprites[sprite->sNpcSpriteId];
         npcSprite->coordOffsetEnabled = FALSE;
         npcSprite->x = sprite->x + sprite->x2;
         npcSprite->y = sprite->y + sprite->y2 - 8;
         npcSprite->x2 = 0;
         npcSprite->y2 = 0;
     }
-    if (sprite->data[2] >= 0x80)
-    {
+
+    if (sprite->sTime >= 128)
         FieldEffectStop(sprite, FLDEFF_NPCFLY_OUT);
-    }
 }
+
+enum FlyOutState
+{
+    FLY_OUT_FIELD_MOVE_POSE,
+    FLY_OUT_SHOW_MON,
+    FLY_OUT_BIRD_LEAVE_BALL,
+    FLY_OUT_WAIT_BIRD_LEAVE,
+    FLY_OUT_BIRD_SWOOP_DOWN,
+    FLY_OUT_JUMP_ON_BIRD,
+    FLY_OUT_FLY_OFF_WITH_BIRD,
+    FLY_OUT_WAIT_FLY_OFF,
+    FLY_OUT_END,
+};
+
+static void (*const sFlyOutFieldEffectFuncs[])(struct Task *) =
+{
+    [FLY_OUT_FIELD_MOVE_POSE]   = FlyOutFieldEffect_FieldMovePose,
+    [FLY_OUT_SHOW_MON]          = FlyOutFieldEffect_ShowMon,
+    [FLY_OUT_BIRD_LEAVE_BALL]   = FlyOutFieldEffect_BirdLeaveBall,
+    [FLY_OUT_WAIT_BIRD_LEAVE]   = FlyOutFieldEffect_WaitBirdLeave,
+    [FLY_OUT_BIRD_SWOOP_DOWN]   = FlyOutFieldEffect_BirdSwoopDown,
+    [FLY_OUT_JUMP_ON_BIRD]      = FlyOutFieldEffect_JumpOnBird,
+    [FLY_OUT_FLY_OFF_WITH_BIRD] = FlyOutFieldEffect_FlyOffWithBird,
+    [FLY_OUT_WAIT_FLY_OFF]      = FlyOutFieldEffect_WaitFlyOff,
+    [FLY_OUT_END]               = FlyOutFieldEffect_End,
+};
 
 // Task data for Task_FlyOut / Task_FlyIn
 #define tState        data[0]
@@ -3565,38 +3652,6 @@ static void SpriteCB_NPCFlyOut(struct Sprite *sprite)
 #define tBirdSpriteId data[1] // re-used
 #define tTimer        data[2]
 #define tAvatarFlags  data[15]
-
-static void Task_FlyOut(u8 taskId);
-static void FlyOutFieldEffect_FieldMovePose(struct Task *task);
-static void FlyOutFieldEffect_ShowMon(struct Task *task);
-static void FlyOutFieldEffect_BirdLeaveBall(struct Task *task);
-static void FlyOutFieldEffect_WaitBirdLeave(struct Task *task);
-static void FlyOutFieldEffect_BirdSwoopDown(struct Task *task);
-static void FlyOutFieldEffect_JumpOnBird(struct Task *task);
-static void FlyOutFieldEffect_FlyOffWithBird(struct Task *task);
-static void FlyOutFieldEffect_WaitFlyOff(struct Task *task);
-static void FlyOutFieldEffect_End(struct Task *task);
-static u8 CreateFlyBirdSprite(void);
-static bool8 GetFlyBirdAnimCompleted(u8 flyBlobSpriteId);
-static void StartFlyBirdSwoopDown(u8 flyBlobSpriteId);
-static void SetFlyBirdPlayerSpriteId(u8 flyBlobSpriteId, u8 playerSpriteId);
-static void SpriteCB_FlyBirdLeaveBall(struct Sprite *sprite);
-static void SpriteCB_FlyBirdSwoopDown(struct Sprite *sprite);
-static void DoBirdSpriteWithPlayerAffineAnim(struct Sprite *sprite, u8 affineAnimId);
-static void SpriteCB_FlyBirdWithPlayer(struct Sprite *sprite);
-
-static void (*const sFlyOutFieldEffectFuncs[])(struct Task *) =
-{
-    FlyOutFieldEffect_FieldMovePose,
-    FlyOutFieldEffect_ShowMon,
-    FlyOutFieldEffect_BirdLeaveBall,
-    FlyOutFieldEffect_WaitBirdLeave,
-    FlyOutFieldEffect_BirdSwoopDown,
-    FlyOutFieldEffect_JumpOnBird,
-    FlyOutFieldEffect_FlyOffWithBird,
-    FlyOutFieldEffect_WaitFlyOff,
-    FlyOutFieldEffect_End
-};
 
 u32 FldEff_UseFly(void)
 {
@@ -3652,13 +3707,13 @@ static void FlyOutFieldEffect_BirdLeaveBall(struct Task *task)
 
 static void FlyOutFieldEffect_WaitBirdLeave(struct Task *task)
 {
-    if (GetFlyBirdAnimCompleted(task->tBirdSpriteId))
-    {
-        task->tState++;
-        task->tTimer = 16;
-        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
-        ObjectEventSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], MOVEMENT_ACTION_FACE_LEFT);
-    }
+    if (!GetFlyBirdAnimCompleted(task->tBirdSpriteId))
+        return;
+
+    task->tState++;
+    task->tTimer = 16;
+    SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+    ObjectEventSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], MOVEMENT_ACTION_FACE_LEFT);
 }
 
 static void FlyOutFieldEffect_BirdSwoopDown(struct Task *task)
@@ -3723,18 +3778,22 @@ static void FlyOutFieldEffect_End(struct Task *task)
 
 static u8 CreateFlyBirdSprite(void)
 {
-    u8 spriteId;
-    struct Sprite *sprite;
-    spriteId = CreateSprite(&gFieldEffectObjectTemplate_Bird, 255, 180, 1);
-    sprite = &gSprites[spriteId];
+    u8 spriteId = CreateSprite(&gFieldEffectObjectTemplate_Bird, 255, 180, 1);
+    struct Sprite *sprite = &gSprites[spriteId];
+
     sprite->oam.paletteNum = LoadPlayerObjectEventPalette(gSaveBlock2Ptr->playerGender);
     sprite->oam.priority = 1;
     sprite->callback = SpriteCB_FlyBirdLeaveBall;
+
     return spriteId;
 }
 
 // Sprite data for the bird sprite
 #define sInitData       data[0]
+#define sTimer1         data[1]
+#define sTimer2         data[2]
+#define sTimer3         data[3]
+#define sTimer4         data[4]
 #define sPlayerSpriteId data[6]
 #define sAnimCompleted  data[7]
 
@@ -3753,7 +3812,7 @@ static void StartFlyBirdSwoopDown(u8 spriteId)
     sprite->x2 = 0;
     sprite->y2 = 0;
     memset(&sprite->data[0], 0, 8 * sizeof(u16) /* zero all data cells */);
-    sprite->data[6] = MAX_SPRITES;
+    sprite->sPlayerSpriteId = MAX_SPRITES;
 }
 
 static void SetFlyBirdPlayerSpriteId(u8 flyBlobSpriteId, u8 playerSpriteId)
@@ -3761,31 +3820,11 @@ static void SetFlyBirdPlayerSpriteId(u8 flyBlobSpriteId, u8 playerSpriteId)
     gSprites[flyBlobSpriteId].sPlayerSpriteId = playerSpriteId;
 }
 
-static const union AffineAnimCmd sAffineAnim_FlyBirdLeaveBall[] =
-{
-    AFFINEANIMCMD_FRAME( 8,  8, -30,  0),
-    AFFINEANIMCMD_FRAME(28, 28,   0, 30),
-    AFFINEANIMCMD_END
-};
-
-static const union AffineAnimCmd sAffineAnim_FlyBirdReturnToBall[] =
-{
-    AFFINEANIMCMD_FRAME(256, 256, 64,  0),
-    AFFINEANIMCMD_FRAME(-10, -10,  0, 22),
-    AFFINEANIMCMD_END
-};
-
-static const union AffineAnimCmd *const sAffineAnims_FlyBirdBall[] =
-{
-    sAffineAnim_FlyBirdLeaveBall,
-    sAffineAnim_FlyBirdReturnToBall
-};
-
 static void SpriteCB_FlyBirdLeaveBall(struct Sprite *sprite)
 {
-    if (sprite->sAnimCompleted == FALSE)
+    if (!sprite->sAnimCompleted)
     {
-        if (sprite->sInitData == FALSE)
+        if (!sprite->sInitData)
         {
             sprite->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
             sprite->affineAnims = sAffineAnims_FlyBirdBall;
@@ -3797,17 +3836,20 @@ static void SpriteCB_FlyBirdLeaveBall(struct Sprite *sprite)
                 sprite->x = 118;
             sprite->y = -48;
             sprite->sInitData++;
-            sprite->data[1] = 64;
-            sprite->data[2] = 256;
+            sprite->sTimer1 = 64;
+            sprite->sTimer2 = 256;
         }
-        sprite->data[1] += (sprite->data[2] >> 8);
-        sprite->x2 = Cos(sprite->data[1], 120);
-        sprite->y2 = Sin(sprite->data[1], 120);
-        if (sprite->data[2] < 2048)
-            sprite->data[2] += 96;
-        if (sprite->data[1] > 129)
+
+        sprite->sTimer1 += (sprite->sTimer2 >> 8);
+        sprite->x2 = Cos(sprite->sTimer1, 120);
+        sprite->y2 = Sin(sprite->sTimer1, 120);
+
+        if (sprite->sTimer2 < 2048)
+            sprite->sTimer2 += 96;
+
+        if (sprite->sTimer1 > 129)
         {
-            sprite->sAnimCompleted++;
+            sprite->sAnimCompleted = TRUE;
             sprite->oam.affineMode = ST_OAM_AFFINE_OFF;
             FreeOamMatrix(sprite->oam.matrixNum);
             CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, ST_OAM_AFFINE_OFF);
@@ -3817,9 +3859,9 @@ static void SpriteCB_FlyBirdLeaveBall(struct Sprite *sprite)
 
 static void SpriteCB_FlyBirdSwoopDown(struct Sprite *sprite)
 {
-    sprite->x2 = Cos(sprite->data[2], 140);
-    sprite->y2 = Sin(sprite->data[2], 72);
-    sprite->data[2] = (sprite->data[2] + 4) & 0xFF;
+    sprite->x2 = Cos(sprite->sTimer2, 140);
+    sprite->y2 = Sin(sprite->sTimer2, 72);
+    sprite->sTimer2 = (sprite->sTimer2 + 4) & 0xFF;
     if (sprite->sPlayerSpriteId != MAX_SPRITES)
     {
         struct Sprite *playerSprite = &gSprites[sprite->sPlayerSpriteId];
@@ -3829,13 +3871,14 @@ static void SpriteCB_FlyBirdSwoopDown(struct Sprite *sprite)
         playerSprite->x2 = 0;
         playerSprite->y2 = 0;
     }
-    if (sprite->data[2] >= 128)
+
+    if (sprite->sTimer2 >= 128)
         sprite->sAnimCompleted = TRUE;
 }
 
 static void SpriteCB_FlyBirdReturnToBall(struct Sprite *sprite)
 {
-    if (sprite->sAnimCompleted == FALSE)
+    if (!sprite->sAnimCompleted)
     {
         if (sprite->sInitData == FALSE)
         {
@@ -3849,24 +3892,27 @@ static void SpriteCB_FlyBirdReturnToBall(struct Sprite *sprite)
                 sprite->x = 100;
             sprite->y = -32;
             sprite->sInitData++;
-            sprite->data[1] = 240;
-            sprite->data[2] = 2048;
-            sprite->data[4] = 128;
+            sprite->sTimer1 = 240;
+            sprite->sTimer2 = 2048;
+            sprite->sTimer4 = 128;
         }
-        sprite->data[1] += sprite->data[2] >> 8;
-        sprite->data[3] += sprite->data[2] >> 8;
-        sprite->data[1] &= 0xFF;
-        sprite->x2 = Cos(sprite->data[1], 32);
-        sprite->y2 = Sin(sprite->data[1], 120);
-        if (sprite->data[2] > 256)
-            sprite->data[2] -= sprite->data[4];
-        if (sprite->data[4] < 256)
-            sprite->data[4] += 24;
-        if (sprite->data[2] < 256)
-            sprite->data[2] = 256;
-        if (sprite->data[3] >= 60)
+        sprite->sTimer1 += sprite->sTimer2 >> 8;
+        sprite->sTimer3 += sprite->sTimer2 >> 8;
+        sprite->sTimer1 &= 0xFF;
+        sprite->x2 = Cos(sprite->sTimer1, 32);
+        sprite->y2 = Sin(sprite->sTimer1, 120);
+        if (sprite->sTimer2 > 256)
+            sprite->sTimer2 -= sprite->sTimer4;
+
+        if (sprite->sTimer4 < 256)
+            sprite->sTimer4 += 24;
+
+        if (sprite->sTimer2 < 256)
+            sprite->sTimer2 = 256;
+
+        if (sprite->sTimer3 >= 60)
         {
-            sprite->sAnimCompleted++;
+            sprite->sAnimCompleted = TRUE;
             sprite->oam.affineMode = ST_OAM_AFFINE_OFF;
             FreeOamMatrix(sprite->oam.matrixNum);
             sprite->invisible = TRUE;
@@ -4034,25 +4080,6 @@ static void FlyInFieldEffect_End(struct Task *task)
 #undef tTimer
 #undef tAvatarFlags
 
-static const union AffineAnimCmd sAffineAnim_FlyBirdOutOfMap[] =
-{
-    AFFINEANIMCMD_FRAME(24, 24, 0, 1),
-    AFFINEANIMCMD_JUMP(0)
-};
-
-static const union AffineAnimCmd sAffineAnim_FlyBirdIntoMap[] =
-{
-    AFFINEANIMCMD_FRAME(512, 512, 0, 1),
-    AFFINEANIMCMD_FRAME(-16, -16, 0, 1),
-    AFFINEANIMCMD_JUMP(1)
-};
-
-static const union AffineAnimCmd *const sAffineAnims_FlyBirdWithPlayer[] =
-{
-    sAffineAnim_FlyBirdOutOfMap,
-    sAffineAnim_FlyBirdIntoMap
-};
-
 static void DoBirdSpriteWithPlayerAffineAnim(struct Sprite *sprite, u8 affineAnimId)
 {
     sprite->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
@@ -4063,9 +4090,9 @@ static void DoBirdSpriteWithPlayerAffineAnim(struct Sprite *sprite, u8 affineAni
 
 static void SpriteCB_FlyBirdWithPlayer(struct Sprite *sprite)
 {
-    sprite->x2 = Cos(sprite->data[2], 180);
-    sprite->y2 = Sin(sprite->data[2], 72);
-    sprite->data[2] = (sprite->data[2] + 2) & 0xFF;
+    sprite->x2 = Cos(sprite->sTimer2, 180);
+    sprite->y2 = Sin(sprite->sTimer2, 72);
+    sprite->sTimer2 = (sprite->sTimer2 + 2) & 0xFF;
     if (sprite->sPlayerSpriteId != MAX_SPRITES)
     {
         struct Sprite *playerSprite;
@@ -4076,7 +4103,7 @@ static void SpriteCB_FlyBirdWithPlayer(struct Sprite *sprite)
         playerSprite->x2 = 0;
         playerSprite->y2 = 0;
     }
-    if (sprite->data[2] >= 128)
+    if (sprite->sTimer2 >= 128)
     {
         sprite->sAnimCompleted = TRUE;
         sprite->oam.affineMode = ST_OAM_AFFINE_OFF;
@@ -4086,6 +4113,10 @@ static void SpriteCB_FlyBirdWithPlayer(struct Sprite *sprite)
 }
 
 #undef sInitData
+#undef sTimer1
+#undef sTimer2
+#undef sTimer3
+#undef sTimer4
 #undef sPlayerSpriteId
 #undef sAnimCompleted
 

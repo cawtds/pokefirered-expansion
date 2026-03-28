@@ -121,7 +121,7 @@ u32 FldEff_DeepSandFootprints(void);
 u32 FldEff_PokecenterHeal(void);
 u32 FldEff_TreeDisguise(void);
 u32 FldEff_MountainDisguise(void);
-u32 FldEff_NpcFlyOut(void);
+u32 FldEff_NPCFlyOut(void);
 u32 FldEff_UseFly(void);
 u32 FldEff_FlyIn(void);
 u32 FldEff_QuestionMarkIcon(void);
