@@ -210,6 +210,14 @@ static void SpriteCB_FieldMoveMonSlideOnscreen(struct Sprite *sprite);
 static void SpriteCB_FieldMoveMonWaitAfterCry(struct Sprite *sprite);
 static void SpriteCB_FieldMoveMonSlideOffscreen(struct Sprite *sprite);
 
+// Surf
+static void Task_SurfFieldEffect(u8 taskId);
+static void SurfFieldEffect_Init(struct Task *task);
+static void SurfFieldEffect_FieldMovePose(struct Task *task);
+static void SurfFieldEffect_ShowMon(struct Task *task);
+static void SurfFieldEffect_JumpOnSurfBlob(struct Task *task);
+static void SurfFieldEffect_End(struct Task *task);
+
 static const u16 sPokeballGlow_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.4bpp");
 static const u16 sPokeballGlow_Pal[] = INCBIN_U16("graphics/field_effects/pics/pokeball_glow.gbapal");
 static const u16 sPokecenterMonitor_Gfx[] = INCBIN_U16("graphics/field_effects/pics/pokemoncenter_monitor.4bpp");
@@ -3298,37 +3306,45 @@ static void SpriteCB_FieldMoveMonSlideOffscreen(struct Sprite *sprite)
 #undef sNoDucking
 #undef sSlideDone
 
-static void Task_FldEffUseSurf(u8 taskId);
-static void UseSurfEffect_1(struct Task *task);
-static void UseSurfEffect_2(struct Task *task);
-static void UseSurfEffect_3(struct Task *task);
-static void UseSurfEffect_4(struct Task *task);
-static void UseSurfEffect_5(struct Task *task);
-
-static void (*const sUseSurfEffectFuncs[])(struct Task *) = {
-    UseSurfEffect_1,
-    UseSurfEffect_2,
-    UseSurfEffect_3,
-    UseSurfEffect_4,
-    UseSurfEffect_5,
+enum SurfState
+{
+    SURF_INIT,
+    SURF_FIELD_MOVE_POSE,
+    SURF_SHOW_MON,
+    SURF_JUMP_ON_SURF_BLOB,
+    SURF_END,
 };
+
+static void (*const sSurfFieldEffectFuncs[])(struct Task *) = {
+    [SURF_INIT]              = SurfFieldEffect_Init,
+    [SURF_FIELD_MOVE_POSE]   = SurfFieldEffect_FieldMovePose,
+    [SURF_SHOW_MON]          = SurfFieldEffect_ShowMon,
+    [SURF_JUMP_ON_SURF_BLOB] = SurfFieldEffect_JumpOnSurfBlob,
+    [SURF_END]               = SurfFieldEffect_End,
+};
+
+#define tState data[0]
+#define tDestX data[1]
+#define tDestY data[2]
+#define tMonId data[15]
 
 u32 FldEff_UseSurf(void)
 {
-    u8 taskId = CreateTask(Task_FldEffUseSurf, 0xff);
-    gTasks[taskId].data[15] = gFieldEffectArguments[0];
+    u8 taskId = CreateTask(Task_SurfFieldEffect, 0xFF);
+    gTasks[taskId].tMonId = gFieldEffectArguments[0];
     Overworld_ClearSavedMusic();
     if (Overworld_MusicCanOverrideMapMusic(MUS_SURF))
         Overworld_ChangeMusicTo(MUS_SURF);
+
     return FALSE;
 }
 
-static void Task_FldEffUseSurf(u8 taskId)
+static void Task_SurfFieldEffect(u8 taskId)
 {
-    sUseSurfEffectFuncs[gTasks[taskId].data[0]](&gTasks[taskId]);
+    sSurfFieldEffectFuncs[gTasks[taskId].tState](&gTasks[taskId]);
 }
 
-static void UseSurfEffect_1(struct Task *task)
+static void SurfFieldEffect_Init(struct Task *task)
 {
     LockPlayerFieldControls();
     FreezeObjectEvents();
@@ -3336,58 +3352,60 @@ static void UseSurfEffect_1(struct Task *task)
     HideFollowerForFieldEffect();
     gPlayerAvatar.preventStep = TRUE;
     SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_SURFING);
-    PlayerGetDestCoords(&task->data[1], &task->data[2]);
-    MoveCoords(gObjectEvents[gPlayerAvatar.objectEventId].movementDirection, &task->data[1], &task->data[2]);
-    task->data[0]++;
+    PlayerGetDestCoords(&task->tDestX, &task->tDestY);
+    MoveCoords(gObjectEvents[gPlayerAvatar.objectEventId].movementDirection, &task->tDestX, &task->tDestY);
+    task->tState = SURF_FIELD_MOVE_POSE;
 }
 
-static void UseSurfEffect_2(struct Task *task)
+static void SurfFieldEffect_FieldMovePose(struct Task *task)
 {
-    struct ObjectEvent * objectEvent;
-    objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+
     if (!ObjectEventIsMovementOverridden(objectEvent) || ObjectEventClearHeldMovementIfFinished(objectEvent))
     {
         StartPlayerAvatarSummonMonForFieldMoveAnim();
         ObjectEventSetHeldMovement(objectEvent, MOVEMENT_ACTION_START_ANIM_IN_DIRECTION);
-        task->data[0]++;
+        task->tState = SURF_SHOW_MON;
     }
 }
 
-static void UseSurfEffect_3(struct Task *task)
+static void SurfFieldEffect_ShowMon(struct Task *task)
 {
-    struct ObjectEvent * objectEvent;
-    objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+
     if (ObjectEventCheckHeldMovementStatus(objectEvent))
     {
-        gFieldEffectArguments[0] = task->data[15] | SHOW_MON_CRY_NO_DUCKING;
+        gFieldEffectArguments[0] = task->tMonId | SHOW_MON_CRY_NO_DUCKING;
         FieldEffectStart(FLDEFF_FIELD_MOVE_SHOW_MON_INIT);
-        task->data[0]++;
+        task->tState = SURF_JUMP_ON_SURF_BLOB;
     }
 }
 
-static void UseSurfEffect_4(struct Task *task)
+static void SurfFieldEffect_JumpOnSurfBlob(struct Task *task)
 {
-    struct ObjectEvent * objectEvent;
-    if (!FieldEffectActiveListContains(FLDEFF_FIELD_MOVE_SHOW_MON))
-    {
-        objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-        ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
-        ObjectEventClearHeldMovementIfFinished(objectEvent);
-        ObjectEventSetHeldMovement(objectEvent, GetJumpSpecialMovementAction(objectEvent->movementDirection));
-        FollowerNPC_FollowerToWater();
+    struct ObjectEvent *objectEvent;
 
-        gFieldEffectArguments[0] = task->data[1];
-        gFieldEffectArguments[1] = task->data[2];
-        gFieldEffectArguments[2] = gPlayerAvatar.objectEventId;
-        objectEvent->fieldEffectSpriteId = FieldEffectStart(FLDEFF_SURF_BLOB);
-        task->data[0]++;
-    }
+    if (FieldEffectActiveListContains(FLDEFF_FIELD_MOVE_SHOW_MON))
+        return;
+
+    objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+    ObjectEventClearHeldMovementIfFinished(objectEvent);
+    ObjectEventSetHeldMovement(objectEvent, GetJumpSpecialMovementAction(objectEvent->movementDirection));
+    FollowerNPC_FollowerToWater();
+
+    gFieldEffectArguments[0] = task->tDestX;
+    gFieldEffectArguments[1] = task->tDestY;
+    gFieldEffectArguments[2] = gPlayerAvatar.objectEventId;
+    objectEvent->fieldEffectSpriteId = FieldEffectStart(FLDEFF_SURF_BLOB);
+    task->tState = SURF_END;
 }
 
-static void UseSurfEffect_5(struct Task *task)
+static void SurfFieldEffect_End(struct Task *task)
 {
     struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
     struct ObjectEvent *followerObject = GetFollowerObject();
+
     if (ObjectEventClearHeldMovementIfFinished(objectEvent))
     {
         gPlayerAvatar.preventStep = FALSE;
@@ -3395,14 +3413,20 @@ static void UseSurfEffect_5(struct Task *task)
         ObjectEventSetHeldMovement(objectEvent, GetFaceDirectionMovementAction(objectEvent->movementDirection));
         if (followerObject)
             ObjectEventClearHeldMovementIfFinished(followerObject);
+
         SetSurfBlob_BobState(objectEvent->fieldEffectSpriteId, BOB_PLAYER_AND_MON);
         UnfreezeObjectEvents();
         UnlockPlayerFieldControls();
         FieldEffectActiveListRemove(FLDEFF_USE_SURF);
-        DestroyTask(FindTaskIdByFunc(Task_FldEffUseSurf));
+        DestroyTask(FindTaskIdByFunc(Task_SurfFieldEffect));
         SetHelpContext(HELPCONTEXT_SURFING);
     }
 }
+
+#undef tState
+#undef tDestX
+#undef tDestY
+#undef tMonId
 
 static void Task_FldEffUseVsSeeker(u8 taskId);
 static void UseVsSeekerEffect_1(struct Task *task);
