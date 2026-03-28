@@ -4339,22 +4339,6 @@ static void Task_MoveDeoxysRock(u8 taskId)
 #undef tMoveSteps
 #undef tObjEventId
 
-u32 FldEff_CaveDust(void)
-{
-    u8 spriteId;
-
-    FieldEffectScript_LoadFadedPal(&gSpritePalette_CaveDust);
-    SetSpritePosToOffsetMapCoords((s16 *)&gFieldEffectArguments[0], (s16 *)&gFieldEffectArguments[1], 8, 8);
-    spriteId = CreateSpriteAtEnd(&gFieldEffectObjectTemplate_CaveDust, gFieldEffectArguments[0], gFieldEffectArguments[1], 0xFF);
-    if (spriteId != MAX_SPRITES)
-    {
-        gSprites[spriteId].coordOffsetEnabled = TRUE;
-        gSprites[spriteId].data[0] = 22;
-    }
-
-    return spriteId;
-}
-
 enum DeoxysDestroyRockState
 {
     DEOXYS_DESTROY_ROCK_CAMERA_SHAKE,
@@ -4575,7 +4559,24 @@ u32 FldEff_PhotoFlash(void)
     return 0;
 }
 
+u32 FldEff_CaveDust(void)
+{
+    u8 spriteId;
+
+    FieldEffectScript_LoadFadedPal(&gSpritePalette_CaveDust);
+    SetSpritePosToOffsetMapCoords((s16 *)&gFieldEffectArguments[0], (s16 *)&gFieldEffectArguments[1], 8, 8);
+    spriteId = CreateSpriteAtEnd(&gFieldEffectObjectTemplate_CaveDust, gFieldEffectArguments[0], gFieldEffectArguments[1], 0xFF);
+    if (spriteId != MAX_SPRITES)
+    {
+        gSprites[spriteId].coordOffsetEnabled = TRUE;
+        gSprites[spriteId].data[0] = 22;
+    }
+
+    return spriteId;
+}
+
 static u32 FldEff_Nop()
 {
     return 0;
 }
+
