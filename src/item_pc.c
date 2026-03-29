@@ -74,7 +74,7 @@ static void ItemPc_PlaceTopMenuScrollIndicatorArrows(void);
 static void ItemPc_SetCursorPosition(void);
 static void ItemPc_FreeResources(void);
 static void Task_ItemPcTurnOff2(u8 taskId);
-static u16 ItemPc_GetItemIdBySlotId(u16 itemIndex);
+static enum Item ItemPc_GetItemIdBySlotId(u16 itemIndex);
 static u16 ItemPc_GetItemQuantityBySlotId(u16 itemIndex);
 static void ItemPc_CountPcItems(void);
 static void ItemPc_SetScrollPosition(void);
@@ -516,7 +516,7 @@ static void ItemPc_BuildListMenuTemplate(void)
     gMultiuseListMenuTemplate.cursorKind = 0;
 }
 
-static void AddPcItemIconSprite(u16 item, u8 iconSlot)
+static void AddPcItemIconSprite(enum Item item, u8 iconSlot)
 {
     u8 *spriteIdPtr = &sStateDataPtr->itemSpriteIds[iconSlot];
 
@@ -537,7 +537,7 @@ static void AddPcItemIconSprite(u16 item, u8 iconSlot)
     }
 }
 
-static void RemovePcItemIconSprite(u16 item, u8 iconSlot)
+static void RemovePcItemIconSprite(enum Item item, u8 iconSlot)
 {
     u8 *spriteIdPtr = &sStateDataPtr->itemSpriteIds[iconSlot];
     if (*spriteIdPtr == SPRITE_NONE)
@@ -549,9 +549,9 @@ static void RemovePcItemIconSprite(u16 item, u8 iconSlot)
     *spriteIdPtr = SPRITE_NONE;
 }
 
-static void ItemPc_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu * list)
+static void ItemPc_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list)
 {
-    u16 itemId;
+    enum Item itemId;
     const u8 * desc;
     if (onInit != TRUE)
         PlaySE(SE_SELECT);
@@ -705,7 +705,7 @@ static u8 ItemPc_GetCursorPosition(void)
     return sListMenuState.scroll + sListMenuState.row;
 }
 
-static u16 ItemPc_GetItemIdBySlotId(u16 idx)
+static enum Item ItemPc_GetItemIdBySlotId(u16 idx)
 {
     return gSaveBlock1Ptr->pcItems[idx].itemId;
 }

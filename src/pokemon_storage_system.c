@@ -498,7 +498,7 @@ struct PokemonStorageSystemData
     const u16 *displayMonPalette;
     u32 displayMonPersonality;
     u16 displayMonSpecies;
-    u16 displayMonItemId;
+    enum Item displayMonItemId;
     u16 displayUnusedVar;
     bool8 setMosaic;
     u8 displayMonMarkings;
@@ -544,7 +544,7 @@ struct PokemonStorageSystemData
     u8 inBoxMovingMode;
     u16 multiMoveWindowId;
     struct PokeStorageItemIcon itemIcons[MAX_ITEM_ICONS];
-    u16 movingItemId;
+    enum Item movingItemId;
     u16 itemInfoWindowOffset;
     struct QuestLogEvent_MovedBoxMon questLogData;
     u16 unusedField2;
@@ -776,7 +776,7 @@ static bool8 UpdateItemInfoWindowSlideIn(void);
 static bool8 UpdateItemInfoWindowSlideOut(void);
 static void InitItemInfoWindow(void);
 static void PrintItemDescription(void);
-static u16 GetMovingItem(void);
+static enum Item GetMovingItem(void);
 static bool8 IsActiveItemMoving(void);
 static bool8 IsItemIconAnimActive(void);
 static void MoveHeldItemWithPartyMenu(void);
@@ -785,7 +785,7 @@ static void MoveItemFromCursorToBag(void);
 static void Item_TakeMons(u8 cursorArea, u8 cursorPos);
 static void Item_GiveMovingToMon(u8 cursorArea, u8 cursorPos);
 static void Item_SwitchMonsWithMoving(u8 cursorArea, u8 cursorPos);
-static void InitItemIconInCursor(u16 item);
+static void InitItemIconInCursor(enum Item item);
 static void Item_FromMonToMoving(u8 cursorArea, u8 cursorPos);
 static void TryHideItemIconAtPos(u8 cursorArea, u8 cursorPos);
 static void TryLoadItemIconAtPos(u8 cursorArea, u8 cursorPos);
@@ -2382,7 +2382,7 @@ static void Task_OnSelectedMon(u8 taskId)
             PlaySE(SE_SELECT);
             if (gStorage->boxOption != OPTION_MOVE_ITEMS)
                 PrintStorageMessage(MSG_IS_SELECTED);
-            else if (IsActiveItemMoving() || gStorage->displayMonItemId != 0)
+            else if (IsActiveItemMoving() || gStorage->displayMonItemId != ITEM_NONE)
                 PrintStorageMessage(MSG_IS_SELECTED2);
             else
                 PrintStorageMessage(MSG_GIVE_TO_MON);
@@ -3571,7 +3571,7 @@ static void Task_ChangeScreen(u8 taskId)
 
 static void GiveChosenBagItem(void)
 {
-    u16 item = gSpecialVar_ItemId;
+    enum Item item = gSpecialVar_ItemId;
 
     if (item != ITEM_NONE)
     {
@@ -6245,7 +6245,7 @@ static bool8 TryHideReleaseMon(void)
 static void ReleaseMon(void)
 {
     u8 boxId;
-    u16 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
 
     DestroyReleaseMonIcon();
     if (sIsMonBeingMoved)
@@ -8450,7 +8450,7 @@ static void TryHideItemIconAtPos(u8 cursorArea, u8 cursorPos)
 static void Item_FromMonToMoving(u8 cursorArea, u8 cursorPos)
 {
     u8 id;
-    u16 item;
+    enum Item item;
 
     if (gStorage->boxOption != OPTION_MOVE_ITEMS)
         return;
@@ -8474,7 +8474,7 @@ static void Item_FromMonToMoving(u8 cursorArea, u8 cursorPos)
     gStorage->movingItemId = gStorage->displayMonItemId;
 }
 
-static void InitItemIconInCursor(u16 item)
+static void InitItemIconInCursor(enum Item item)
 {
     const u32 *tiles = GetItemIconPic(item);
     const u16 *pal = GetItemIconPalette(item);
@@ -8491,7 +8491,7 @@ static void InitItemIconInCursor(u16 item)
 static void Item_SwitchMonsWithMoving(u8 cursorArea, u8 cursorPos)
 {
     u8 id;
-    u16 item;
+    enum Item item;
 
     if (gStorage->boxOption != OPTION_MOVE_ITEMS)
         return;
@@ -8542,7 +8542,7 @@ static void Item_GiveMovingToMon(u8 cursorArea, u8 cursorPos)
 static void Item_TakeMons(u8 cursorArea, u8 cursorPos)
 {
     u8 id;
-    u16 item;
+    enum Item item;
 
     if (gStorage->boxOption != OPTION_MOVE_ITEMS)
         return;
@@ -8629,7 +8629,7 @@ static const u8 *GetMovingItemName(void)
     return GetItemName(gStorage->movingItemId);
 }
 
-static u16 GetMovingItem(void)
+static enum Item GetMovingItem(void)
 {
     return gStorage->movingItemId;
 }

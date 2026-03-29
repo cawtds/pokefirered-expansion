@@ -761,7 +761,7 @@ static void PokeMartWriteNameAndIdAt(struct ListMenuItem *list, u16 index, u8 *d
     list->id = index;
 }
 
-static void BuyMenuAddItemIcon(u16 item, u8 iconSlot)
+static void BuyMenuAddItemIcon(enum Item item, u8 iconSlot)
 {
     u8 *spriteIdPtr = &sShopData.itemSpriteIds[iconSlot];
 

@@ -46,9 +46,9 @@ void ItemUseInBattle_PartyMenu(u8 taskId);
 void ItemUseInBattle_PartyMenuChooseMove(u8 taskId);
 void Task_UseDigEscapeRopeOnField(u8 taskId);
 u8 CanUseEscapeRopeOnCurrMap(void);
-u8 CheckIfItemIsTMHMOrEvolutionStone(u16 itemId);
+u8 CheckIfItemIsTMHMOrEvolutionStone(enum Item itemId);
 void Task_ItemUse_CloseMessageBoxAndReturnToField_VsSeeker(u8);
-void ItemUse_SetQuestLogEvent(u8, struct Pokemon *, u16, u16);
+void ItemUse_SetQuestLogEvent(u8 eventId, struct Pokemon *pokemon, enum Item itemId, u16 param);
 void FieldCB_UseItemOnField(void);
 
 enum {
@@ -60,7 +60,7 @@ enum {
 };
 
 bool32 CanThrowBall(void);
-bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon);
+bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon);
 
 extern void (*sItemUseOnFieldCB)(u8 taskId);
 

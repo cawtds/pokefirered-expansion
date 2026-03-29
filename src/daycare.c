@@ -1210,9 +1210,9 @@ static void AlterEggSpeciesWithIncenseItem(enum Species *species, struct DayCare
 }
 
 static const struct {
-  u16 offspring;
-  u16 item;
-  u16 move;
+  enum Species offspring;
+  enum Item item;
+  enum Move move;
 } sBreedingSpecialMoveItemTable[] =
 {
     // Offspring,    Item,            Move
@@ -1221,11 +1221,11 @@ static const struct {
 
 static void GiveMoveIfItem(struct Pokemon *mon, struct DayCare *daycare)
 {
-    u16 i, species = GetMonData(mon, MON_DATA_SPECIES);
-    u32 motherItem = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM);
-    u32 fatherItem = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
+    enum Item motherItem = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM);
+    enum Item fatherItem = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM);
 
-    for (i = 0; i < ARRAY_COUNT(sBreedingSpecialMoveItemTable); i++)
+    for (u32 i = 0; i < ARRAY_COUNT(sBreedingSpecialMoveItemTable); i++)
     {
         if (sBreedingSpecialMoveItemTable[i].offspring == species
             && (motherItem == sBreedingSpecialMoveItemTable[i].item ||

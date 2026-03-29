@@ -336,7 +336,7 @@ static u16 GetPrizeData(void);
 static void UnpackPrizeData(u16, u16 *, u16 *);
 static u16 GetPrizeItemId(void);
 static u16 GetPrizeQuantity(void);
-static u16 GetQuantityLimitedByBag(u16 item, u16 quantity);
+static u16 GetQuantityLimitedByBag(enum Item item, u16 quantity);
 static void SetUpPokeJumpGfxFunc(void (*func)(void));
 static void Task_RunPokeJumpGfxFunc(u8 taskId);
 static void LoadPokeJumpGfx(void);
@@ -2479,7 +2479,7 @@ static u16 GetPrizeQuantity(void)
     return quantity;
 }
 
-static u16 GetQuantityLimitedByBag(u16 item, u16 quantity)
+static u16 GetQuantityLimitedByBag(enum Item item, u16 quantity)
 {
     while (quantity && !CheckBagHasSpace(item, quantity))
         quantity--;

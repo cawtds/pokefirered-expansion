@@ -42,7 +42,7 @@ void CopyItemIconPicTo4x4Buffer(const void *src, void *dest)
         CpuCopy16(src + i * 96, dest + i * 128, 0x60);
 }
 
-u8 AddItemIconSprite(u16 tilesTag, u16 paletteTag, u16 itemId)
+u8 AddItemIconSprite(u16 tilesTag, u16 paletteTag, enum Item itemId)
 {
     struct SpriteTemplate *spriteTemplate;
     struct SpriteSheet spriteSheet;
@@ -75,7 +75,7 @@ u8 AddItemIconSprite(u16 tilesTag, u16 paletteTag, u16 itemId)
     return spriteId;
 }
 
-u8 AddCustomItemIconSprite(const struct SpriteTemplate * origTemplate, u16 tilesTag, u16 paletteTag, u16 itemId)
+u8 AddCustomItemIconSprite(const struct SpriteTemplate * origTemplate, u16 tilesTag, u16 paletteTag, enum Item itemId)
 {
     struct SpriteTemplate template;
     struct SpriteSheet spriteSheet;
@@ -106,7 +106,7 @@ u8 AddCustomItemIconSprite(const struct SpriteTemplate * origTemplate, u16 tiles
     return spriteId;
 }
 
-const void *GetItemIconPic(u16 itemId)
+const void *GetItemIconPic(enum Item itemId)
 {
     if (itemId == ITEM_FIELD_ARROW)
         return gItemIcon_ReturnToFieldArrow; // Use last icon, the "return to field" arrow
@@ -122,7 +122,7 @@ const void *GetItemIconPic(u16 itemId)
     return gItemsInfo[itemId].iconPic;
 }
 
-const void *GetItemIconPalette(u16 itemId)
+const void *GetItemIconPalette(enum Item itemId)
 {
     if (itemId == ITEM_FIELD_ARROW)
         return gItemIconPalette_ReturnToFieldArrow;

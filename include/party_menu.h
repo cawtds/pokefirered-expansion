@@ -15,7 +15,7 @@ struct PartyMenu
     s8 slotId;
     s8 slotId2;
     u8 action;
-    u16 bagItem;
+    enum Item bagItem;
     s16 data[2];
 };
 
@@ -72,7 +72,7 @@ void ItemUseCB_RareCandy(u8 taskId, TaskFunc func);
 void ItemUseCB_DynamaxCandy(u8 taskId, TaskFunc task);
 void ItemUseCB_SacredAsh(u8 taskId, TaskFunc func);
 void ItemUseCB_EvolutionStone(u8 taskId, TaskFunc func);
-u8 GetItemEffectType(u16 item);
+u8 GetItemEffectType(enum Item item);
 void CB2_PartyMenuFromStartMenu(void);
 void CB2_ChooseMonToGiveItem(void);
 void ChooseMonToGiveMailFromMailbox(void);

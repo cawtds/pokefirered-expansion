@@ -724,7 +724,7 @@ static void CopySelectedListMenuItemName(s16 itemIdx, u8 * dest)
     StringCopy(dest, &sListMenuStrbuf[itemIdx * 27]);
 }
 
-static void CreateBerryPouchItemIcon(u16 item, u8 iconSlot)
+static void CreateBerryPouchItemIcon(enum Item item, u8 iconSlot)
 {
     u8 *spriteIdPtr = &sResources->itemSpriteIds[iconSlot];
 

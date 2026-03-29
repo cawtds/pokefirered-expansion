@@ -715,7 +715,7 @@ struct WarpData
 
 struct ItemSlot
 {
-    u16 itemId;
+    enum Item itemId;
     u16 quantity;
 };
 
