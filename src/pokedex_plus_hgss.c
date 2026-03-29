@@ -518,7 +518,7 @@ static void ResetOtherVideoRegisters(u16);
 static u8 PrintCryScreenSpeciesName(u8, u16, u8, u8);
 static void PrintDecimalNum(u8 windowId, u16 num, u8 left, u8 top);
 static u16 CreateMonSpriteFromNationalDexNumberHGSS(u16 nationalNum, s16 x, s16 y, u16 paletteSlot);
-static u16 CreateSizeScreenTrainerPic(u16, s16, s16, s8);
+static u16 CreateSizeScreenTrainerPic(enum TrainerPicID trainerPicId, s16, s16, s8);
 static u16 GetNextPosition(u8, u16, u16, u16);
 static u8 LoadSearchMenu(void);
 static void Task_LoadSearchMenu(u8);
@@ -4562,9 +4562,9 @@ static u16 GetTrainerOffsetFromNationalDexNumber(u16 nationalNum)
     return gSpeciesInfo[nationalNum].trainerOffset;
 }
 
-static u16 CreateSizeScreenTrainerPic(u16 species, s16 x, s16 y, s8 paletteSlot)
+static u16 CreateSizeScreenTrainerPic(enum TrainerPicID trainerPicId, s16 x, s16 y, s8 paletteSlot)
 {
-    return CreateTrainerFrontPicSprite(species, x, y, paletteSlot);
+    return CreateTrainerFrontPicSprite(trainerPicId, x, y, paletteSlot);
 }
 
 

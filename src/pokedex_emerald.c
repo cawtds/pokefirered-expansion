@@ -298,7 +298,7 @@ static u16 GetPokemonScaleFromNationalDexNumber(u16 nationalNum);
 static u16 GetPokemonOffsetFromNationalDexNumber(u16 nationalNum);
 static u16 GetTrainerScaleFromNationalDexNumber(u16 nationalNum);
 static u16 GetTrainerOffsetFromNationalDexNumber(u16 nationalNum);
-static u16 CreateSizeScreenTrainerPic(u16, s16, s16, s8);
+static u16 CreateSizeScreenTrainerPic(enum TrainerPicID trainerPicId, s16 x, s16 y, s8 paletteSlot);
 static u16 GetNextPosition(u8, u16, u16, u16);
 static u8 LoadSearchMenu(void);
 static void Task_LoadSearchMenu(u8);
@@ -4758,37 +4758,42 @@ static u32 GetPokedexMonPersonality(u16 species)
 
 u16 CreateMonSpriteFromNationalDexNumber(enum NationalDexOrder nationalNum, s16 x, s16 y, u16 paletteSlot)
 {
-    nationalNum = NationalPokedexNumToSpecies(nationalNum);
-    return CreateMonFrontPicSprite(nationalNum, FALSE, GetPokedexMonPersonality(nationalNum), x, y, paletteSlot, TAG_NONE);
+    enum Species species = NationalPokedexNumToSpecies(nationalNum);
+
+    return CreateMonFrontPicSprite(species, FALSE, GetPokedexMonPersonality(species), x, y, paletteSlot, TAG_NONE);
 }
 
 static u16 GetPokemonScaleFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpecies(nationalNum);
-    return gSpeciesInfo[nationalNum].pokemonScale;
+    enum Species species = NationalPokedexNumToSpecies(nationalNum);
+
+    return gSpeciesInfo[species].pokemonScale;
 }
 
 static u16 GetPokemonOffsetFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpecies(nationalNum);
-    return gSpeciesInfo[nationalNum].pokemonOffset;
+    enum Species species = NationalPokedexNumToSpecies(nationalNum);
+
+    return gSpeciesInfo[species].pokemonOffset;
 }
 
 static u16 GetTrainerScaleFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpecies(nationalNum);
-    return gSpeciesInfo[nationalNum].trainerScale;
+    enum Species species = NationalPokedexNumToSpecies(nationalNum);
+
+    return gSpeciesInfo[species].trainerScale;
 }
 
 static u16 GetTrainerOffsetFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpecies(nationalNum);
-    return gSpeciesInfo[nationalNum].trainerOffset;
+    enum Species species = NationalPokedexNumToSpecies(nationalNum);
+
+    return gSpeciesInfo[species].trainerOffset;
 }
 
-static u16 CreateSizeScreenTrainerPic(u16 species, s16 x, s16 y, s8 paletteSlot)
+static u16 CreateSizeScreenTrainerPic(enum TrainerPicID trainerPicId, s16 x, s16 y, s8 paletteSlot)
 {
-    return CreateTrainerFrontPicSprite(species, x, y, paletteSlot);
+    return CreateTrainerFrontPicSprite(trainerPicId, x, y, paletteSlot);
 }
 
 static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bodyColor, enum Type type1, enum Type type2)
