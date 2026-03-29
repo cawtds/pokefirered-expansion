@@ -68,7 +68,7 @@ static void Task_SmoothBlendLayers(u8 taskId)
     }
 }
 
-u8 Menu2_GetMonPosAttribute(u16 species, u32 personality, u8 attributeId)
+u8 Menu2_GetMonPosAttribute(enum Species species, u32 personality, u8 attributeId)
 {
     // if (species == SPECIES_UNOWN)
     // {
@@ -97,7 +97,7 @@ u8 Menu2_GetMonPosAttribute(u16 species, u32 personality, u8 attributeId)
     return 32;
 }
 
-s8 Menu2_GetStarSpritePosAttribute(u16 species, u32 personality, u8 attributeId)
+s8 Menu2_GetStarSpritePosAttribute(enum Species species, u32 personality, u8 attributeId)
 {
     return Menu2_GetMonPosAttribute(species, personality, attributeId) - 32;
 }

@@ -58,7 +58,7 @@ enum {
 
 struct InGameTrade {
     /*0x00*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
-    /*0x0C*/ u16 species;
+    /*0x0C*/ enum Species species;
     /*0x0E*/ u8 ivs[NUM_STATS];
     /*0x14*/ u8 abilityNum;
     /*0x18*/ u32 otId;
@@ -69,7 +69,7 @@ struct InGameTrade {
     /*0x2B*/ u8 otName[11];
     /*0x36*/ u8 otGender;
     /*0x37*/ u8 sheen;
-    /*0x38*/ u16 requestedSpecies;
+    /*0x38*/ enum Species requestedSpecies;
 };
 
 struct {
@@ -107,7 +107,7 @@ struct {
     /*0xEA*/ u16 bg2Zoom;
     /*0xEC*/ u16 bg2alpha;
     /*0xEE*/ bool8 isLinkTrade;
-    /*0xF0*/ u16 monSpecies[2];
+    /*0xF0*/ enum Species monSpecies[2];
     /*0xF4*/ u16 cachedMapMusic;
     /*0xF6*/ u8 unk_F6;
     /*0xF8*/ struct QuestLogEvent_Traded questLogData;
@@ -118,7 +118,7 @@ struct {
     /*0x10A*/ u8 win0top;
     /*0x10B*/ u8 win0right;
     /*0x10C*/ u8 win0bottom;
-} static EWRAM_DATA * sTradeAnim = NULL;
+} static EWRAM_DATA *sTradeAnim = NULL;
 
 static void SpriteCB_LinkMonGlow(struct Sprite *sprite);
 static void SpriteCB_LinkMonGlowWireless(struct Sprite *sprite);
@@ -735,7 +735,8 @@ static u32 TradeGetMultiplayerId(void)
 
 static void LoadTradeMonPic(struct Pokemon *mon, u8 state)
 {
-    u32 species, personality;
+    enum Species species;
+    u32 personality;
     u32 whichParty = state / 2;
     species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
 
@@ -1725,9 +1726,9 @@ static bool8 DoTradeAnim_Cable(void)
         if (gSprites[sTradeAnim->bouncingPokeballSpriteId].callback == SpriteCallbackDummy)
         {
             HandleLoadSpecialPokePic(TRUE,
-                                      gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_RIGHT],
-                                      sTradeAnim->monSpecies[TRADE_PARTNER],
-                                      sTradeAnim->monPersonalities[TRADE_PARTNER]);
+                                     gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_RIGHT],
+                                     sTradeAnim->monSpecies[TRADE_PARTNER],
+                                     sTradeAnim->monPersonalities[TRADE_PARTNER]);
             sTradeAnim->state++;
         }
         break;

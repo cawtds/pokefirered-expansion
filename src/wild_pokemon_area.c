@@ -12,16 +12,16 @@
 
 struct RoamerPair
 {
-    u16 roamer;
-    u16 starter;
+    enum Species roamer;
+    enum Species starter;
 };
 
-static u32 GetRoamerIndex(u32 species);
-static s32 GetRoamerPokedexAreaMarkers(u16 species, struct Subsprite * subsprites);
-static bool32 IsSpeciesOnMap(const struct WildPokemonHeader * data, u32 headerId, s32 species);
-static bool32 IsSpeciesInEncounterTable(const struct WildPokemonInfo * pokemon, s32 species, s32 count);
-static u16 GetMapSecIdFromWildMonHeader(const struct WildPokemonHeader * header);
-static bool32 FindDexAreaByMapSec(u16 mapSecId, const u16 (*lut)[2], s32 count, s32 * lutIdx_p, u16 * tableIdx_p);
+static u32 GetRoamerIndex(enum Species species);
+static s32 GetRoamerPokedexAreaMarkers(enum Species species, struct Subsprite * subsprites);
+static bool32 IsSpeciesOnMap(const struct WildPokemonHeader *data, u32 headerId, enum Species species);
+static bool32 IsSpeciesInEncounterTable(const struct WildPokemonInfo *pokemon, enum Species species, s32 count);
+static u16 GetMapSecIdFromWildMonHeader(const struct WildPokemonHeader *header);
+static bool32 FindDexAreaByMapSec(u16 mapSecId, const u16 (*lut)[2], s32 count, s32 *lutIdx_p, u16 *tableIdx_p);
 
 const u16 sDexAreas_Kanto[55][2] = {
     { MAPSEC_PALLET_TOWN,         DEX_AREA_PALLET_TOWN },
@@ -85,12 +85,12 @@ static const u16 sDexAreas_Sevii1[][2] = {
 	{ MAPSEC_KINDLE_ROAD,    DEX_AREA_KINDLE_ROAD },
 	{ MAPSEC_TREASURE_BEACH, DEX_AREA_TREASURE_BEACH },
 	{ MAPSEC_ONE_ISLAND,     DEX_AREA_ONE_ISLAND },
-	{ MAPSEC_MT_EMBER,       DEX_AREA_MT_EMBER }    
+	{ MAPSEC_MT_EMBER,       DEX_AREA_MT_EMBER }
 };
 
 static const u16 sDexAreas_Sevii2[][2] = {
 	{ MAPSEC_CAPE_BRINK, DEX_AREA_CAPE_BRINK },
-	{ MAPSEC_TWO_ISLAND, DEX_AREA_TWO_ISLAND }    
+	{ MAPSEC_TWO_ISLAND, DEX_AREA_TWO_ISLAND }
 };
 
 static const u16 sDexAreas_Sevii3[][2] = {
@@ -98,12 +98,12 @@ static const u16 sDexAreas_Sevii3[][2] = {
 	{ MAPSEC_THREE_ISLE_PORT, DEX_AREA_THREE_ISLE_PATH },
 	{ MAPSEC_THREE_ISLAND,    DEX_AREA_THREE_ISLAND },
 	{ MAPSEC_BERRY_FOREST,    DEX_AREA_BERRY_FOREST },
-	{ MAPSEC_THREE_ISLE_PATH, DEX_AREA_THREE_ISLE_PATH }    
+	{ MAPSEC_THREE_ISLE_PATH, DEX_AREA_THREE_ISLE_PATH }
 };
 
 static const u16 sDexAreas_Sevii4[][2] = {
 	{ MAPSEC_FOUR_ISLAND,  DEX_AREA_FOUR_ISLAND },
-	{ MAPSEC_ICEFALL_CAVE, DEX_AREA_ICEFALL_CAVE }    
+	{ MAPSEC_ICEFALL_CAVE, DEX_AREA_ICEFALL_CAVE }
 };
 
 static const u16 sDexAreas_Sevii5[][2] = {
@@ -113,7 +113,7 @@ static const u16 sDexAreas_Sevii5[][2] = {
 	{ MAPSEC_MEMORIAL_PILLAR,  DEX_AREA_MEMORIAL_PILLAR },
 	{ MAPSEC_FIVE_ISLAND,      DEX_AREA_FIVE_ISLAND },
 	{ MAPSEC_ROCKET_WAREHOUSE, DEX_AREA_FIVE_ISLE_MEADOW },
-	{ MAPSEC_LOST_CAVE,        DEX_AREA_LOST_CAVE }    
+	{ MAPSEC_LOST_CAVE,        DEX_AREA_LOST_CAVE }
 };
 
 static const u16 sDexAreas_Sevii6[][2] = {
@@ -123,7 +123,7 @@ static const u16 sDexAreas_Sevii6[][2] = {
 	{ MAPSEC_RUIN_VALLEY,    DEX_AREA_RUIN_VALLEY },
 	{ MAPSEC_DOTTED_HOLE,    DEX_AREA_DOTTED_HOLE },
 	{ MAPSEC_PATTERN_BUSH,   DEX_AREA_PATTERN_BUSH },
-	{ MAPSEC_ALTERING_CAVE_FRLG,  DEX_AREA_ALTERING_CAVE }    
+	{ MAPSEC_ALTERING_CAVE_FRLG,  DEX_AREA_ALTERING_CAVE }
 };
 
 static const u16 sDexAreas_Sevii7[][2] = {
@@ -137,7 +137,7 @@ static const u16 sDexAreas_Sevii7[][2] = {
 	{ MAPSEC_DILFORD_CHAMBER, DEX_AREA_TANOBY_CHAMBER },
 	{ MAPSEC_SCUFIB_CHAMBER,  DEX_AREA_TANOBY_CHAMBER },
 	{ MAPSEC_RIXY_CHAMBER,    DEX_AREA_TANOBY_CHAMBER },
-	{ MAPSEC_VIAPOIS_CHAMBER, DEX_AREA_TANOBY_CHAMBER }    
+	{ MAPSEC_VIAPOIS_CHAMBER, DEX_AREA_TANOBY_CHAMBER }
 };
 
 static const struct
@@ -162,7 +162,7 @@ static const struct RoamerPair sRoamerPairs[] = {
 
 // Scans for the given species and populates 'subsprites' with the area markers.
 // Returns the number of areas where the species was found.
-s32 GetSpeciesPokedexAreaMarkers(u16 species, struct Subsprite * subsprites)
+s32 GetSpeciesPokedexAreaMarkers(enum Species species, struct Subsprite *subsprites)
 {
     s32 areaCount;
     s32 j;
@@ -221,7 +221,7 @@ s32 GetSpeciesPokedexAreaMarkers(u16 species, struct Subsprite * subsprites)
     return areaCount;
 }
 
-static u32 GetRoamerIndex(u32 species)
+static u32 GetRoamerIndex(enum Species species)
 {
     u32 i;
     for (i = 0; i < ROAMER_COUNT; i++)
@@ -233,7 +233,7 @@ static u32 GetRoamerIndex(u32 species)
     return ROAMER_COUNT;
 }
 
-static s32 GetRoamerPokedexAreaMarkers(u16 species, struct Subsprite * subsprites)
+static s32 GetRoamerPokedexAreaMarkers(enum Species species, struct Subsprite *subsprites)
 {
     u32 roamerIndex;
     s32 tableIndex;
@@ -258,7 +258,7 @@ static s32 GetRoamerPokedexAreaMarkers(u16 species, struct Subsprite * subsprite
     return 0;
 }
 
-static bool32 IsSpeciesOnMap(const struct WildPokemonHeader * data, u32 headerId, s32 species)
+static bool32 IsSpeciesOnMap(const struct WildPokemonHeader *data, u32 headerId, enum Species species)
 {
     enum Season season;
     enum TimeOfDay timeOfDay;
@@ -281,7 +281,7 @@ static bool32 IsSpeciesOnMap(const struct WildPokemonHeader * data, u32 headerId
     return FALSE;
 }
 
-static bool32 IsSpeciesInEncounterTable(const struct WildPokemonInfo * info, s32 species, s32 count)
+static bool32 IsSpeciesInEncounterTable(const struct WildPokemonInfo *info, enum Species species, s32 count)
 {
     s32 i;
     if (info != NULL)
@@ -295,7 +295,7 @@ static bool32 IsSpeciesInEncounterTable(const struct WildPokemonInfo * info, s32
     return FALSE;
 }
 
-static u16 GetMapSecIdFromWildMonHeader(const struct WildPokemonHeader * header)
+static u16 GetMapSecIdFromWildMonHeader(const struct WildPokemonHeader *header)
 {
     return Overworld_GetMapHeaderByGroupAndId(header->mapGroup, header->mapNum)->regionMapSectionId;
 }

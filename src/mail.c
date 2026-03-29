@@ -440,7 +440,8 @@ static const struct MailAttrStruct sMessageLayouts_5x2[] = {
 void ReadMail(struct Mail * mail, void (*savedCallback)(void), bool8 messageExists)
 {
     u16 sp0;
-    u16 species;
+    enum Species species;
+
     sMailViewResources = AllocZeroed(sizeof(struct MailViewResources));
     sMailViewResources->unused = 2;
     sMailViewResources->mailArrangementType = 1;

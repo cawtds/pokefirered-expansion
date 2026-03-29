@@ -191,7 +191,7 @@ static void Task_ShowAreaMarkers(u8 taskId)
     gSprites[data->spriteId].invisible = FALSE;
 }
 
-u8 CreatePokedexAreaMarkers(u16 species, u16 tilesTag, u8 palIdx, u8 y)
+u8 CreatePokedexAreaMarkers(enum Species species, u16 tilesTag, u8 palIdx, u8 y)
 {
     struct SpriteTemplate spriteTemplate;
     struct CompressedSpriteSheet spriteSheet;
