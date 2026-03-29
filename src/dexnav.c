@@ -87,7 +87,7 @@ enum Statuses
 
 struct DexNavSearch
 {
-    u16 species;
+    enum Species species;
     u16 moves[MAX_MON_MOVES];
     u16 heldItem;
     u8 abilityNum;
@@ -144,13 +144,13 @@ static void Task_DexNavMain(u8 taskId);
 static void PrintCurrentSpeciesInfo(void);
 // SEARCH
 static bool8 TryStartHiddenMonFieldEffect(u8 environment, u8 xSize, u8 ySize, bool8 smallScan);
-static void DexNavGenerateMoveset(u16 species, u8 searchLevel, u8 encounterLevel, u16* moveDst);
-static u16 DexNavGenerateHeldItem(u16 species, u8 searchLevel);
-static u8 DexNavGetAbilityNum(u16 species, u8 searchLevel);
+static void DexNavGenerateMoveset(enum Species species, u8 searchLevel, u8 encounterLevel, u16* moveDst);
+static u16 DexNavGenerateHeldItem(enum Species species, u8 searchLevel);
+static u8 DexNavGetAbilityNum(enum Species species, u8 searchLevel);
 static u8 DexNavGeneratePotential(u8 searchLevel);
-static u8 DexNavTryGenerateMonLevel(u16 species, u8 environment);
-static u8 GetEncounterLevelFromMapData(u16 species, u8 environment);
-static void CreateDexNavWildMon(u16 species, u8 potential, u8 level, u8 abilityNum, u16 item, u16* moves);
+static u8 DexNavTryGenerateMonLevel(enum Species species, u8 environment);
+static u8 GetEncounterLevelFromMapData(enum Species species, u8 environment);
+static void CreateDexNavWildMon(enum Species species, u8 potential, u8 level, u8 abilityNum, enum Item item, enum Move* moves);
 static u8 GetPlayerDistance(s16 x, s16 y);
 static u8 DexNavPickTile(u8 environment, u8 xSize, u8 ySize, bool8 smallScan);
 static void DexNavProximityUpdate(void);
@@ -439,7 +439,7 @@ static s16 GetSearchWindowY(void)
 }
 
 #define SPECIES_ICON_X 28
-static void DrawDexNavSearchMonIcon(u16 species, u8 *dst, bool8 owned)
+static void DrawDexNavSearchMonIcon(enum Species species, u8 *dst, bool8 owned)
 {
     u8 spriteId;
 
@@ -1213,7 +1213,7 @@ static void DexNavUpdateSearchWindow(u8 proximity, u8 searchLevel)
 //////////////////////////////
 //// DEXNAV MON GENERATOR ////
 //////////////////////////////
-static void CreateDexNavWildMon(u16 species, u8 potential, u8 level, u8 abilityNum, u16 item, u16* moves)
+static void CreateDexNavWildMon(enum Species species, u8 potential, u8 level, u8 abilityNum, enum Item item, enum Move* moves)
 {
     struct Pokemon* mon = &gEnemyParty[0];
     u8 iv[3] = {NUM_STATS};
@@ -1253,7 +1253,7 @@ static void CreateDexNavWildMon(u16 species, u8 potential, u8 level, u8 abilityN
 
 // gets a random level of the species based on map data.
 //if it was a hidden encounter, updates the environment it is to be found from the wildheader encounterRate
-static u8 DexNavTryGenerateMonLevel(u16 species, u8 environment)
+static u8 DexNavTryGenerateMonLevel(enum Species species, u8 environment)
 {
     u8 levelBase = GetEncounterLevelFromMapData(species, environment);
     u8 levelBonus = gSaveBlock3Ptr->dexNavChain / 5;
@@ -1270,7 +1270,7 @@ static u8 DexNavTryGenerateMonLevel(u16 species, u8 environment)
         return levelBase + levelBonus;
 }
 
-static void DexNavGenerateMoveset(u16 species, u8 searchLevel, u8 encounterLevel, u16* moveDst)
+static void DexNavGenerateMoveset(enum Species species, u8 searchLevel, u8 encounterLevel, u16* moveDst)
 {
     bool8 genMove = FALSE;
     u16 randVal = Random() % 100;
@@ -1325,12 +1325,12 @@ static void DexNavGenerateMoveset(u16 species, u8 searchLevel, u8 encounterLevel
     }
 }
 
-static u16 DexNavGenerateHeldItem(u16 species, u8 searchLevel)
+static u16 DexNavGenerateHeldItem(enum Species species, u8 searchLevel)
 {
     u16 randVal = Random() % 100;
     u8 searchLevelInfluence = searchLevel >> 1;
-    u16 item1 = gSpeciesInfo[species].itemCommon;
-    u16 item2 = gSpeciesInfo[species].itemRare;
+    enum Item item1 = gSpeciesInfo[species].itemCommon;
+    enum Item item2 = gSpeciesInfo[species].itemRare;
 
     // if both are the same, 100% to hold
     if (item1 == item2)
@@ -1353,7 +1353,7 @@ static u16 DexNavGenerateHeldItem(u16 species, u8 searchLevel)
     return ITEM_NONE;
 }
 
-static u8 DexNavGetAbilityNum(u16 species, u8 searchLevel)
+static u8 DexNavGetAbilityNum(enum Species species, u8 searchLevel)
 {
     bool8 genAbility = FALSE;
     u16 randVal = Random() % 100;
@@ -1514,7 +1514,7 @@ static u8 DexNavGeneratePotential(u8 searchLevel)
     return 0;   // No potential
 }
 
-static u8 GetEncounterLevelFromMapData(u16 species, u8 environment)
+static u8 GetEncounterLevelFromMapData(enum Species species, u8 environment)
 {
     u16 headerId = GetCurrentMapWildMonHeaderId();
     enum Season season;

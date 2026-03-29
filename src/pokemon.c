@@ -2292,7 +2292,7 @@ bool32 IsPersonalityFemale(enum Species species, u32 personality)
     return GetGenderFromSpeciesAndPersonality(species, personality) == MON_FEMALE;
 }
 
-u32 GetUnownSpeciesId(u32 personality)
+enum Species GetUnownSpeciesId(u32 personality)
 {
     u16 unownLetter = GetUnownLetterByPersonality(personality);
 

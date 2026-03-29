@@ -2401,7 +2401,7 @@ static void DebugAction_FlagsVars_PokedexFlags_All(u8 taskId)
 static void DebugAction_FlagsVars_PokedexFlags_Reset(u8 taskId)
 {
     int boxId, boxPosition, partyId;
-    u16 species;
+    enum Species species;
 
     // Reset Pokedex to emtpy
     memset(&gSaveBlock1Ptr->dexCaught, 0, sizeof(gSaveBlock1Ptr->dexCaught));
@@ -3480,7 +3480,7 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
     u8 iv_val;
     u8 EVs[NUM_STATS];
     u8 ev_val;
-    u16 species     = sDebugMonData->species;
+    enum Species species = sDebugMonData->species;
     u8 level        = sDebugMonData->level;
     bool8 isShiny   = sDebugMonData->isShiny;
     u8 nature       = sDebugMonData->nature;
@@ -3723,7 +3723,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffini
 {
     int boxId, boxPosition;
     struct BoxPokemon boxMon;
-    u16 species = SPECIES_BULBASAUR;
+    enum Species species = SPECIES_BULBASAUR;
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
 
     CreateBoxMon(&boxMon, species, 100, Random32(), OTID_STRUCT_PLAYER_ID);

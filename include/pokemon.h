@@ -769,7 +769,7 @@ u8 GetMonGender(struct Pokemon *mon);
 u8 GetBoxMonGender(struct BoxPokemon *boxMon);
 u8 GetGenderFromSpeciesAndPersonality(enum Species species, u32 personality);
 bool32 IsPersonalityFemale(enum Species species, u32 personality);
-u32 GetUnownSpeciesId(u32 personality);
+enum Species GetUnownSpeciesId(u32 personality);
 void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, enum BattlerPosition battlerPosition);
 void SetMultiuseSpriteTemplateToTrainerBack(enum TrainerPicID trainerPicId, enum BattlerPosition battlerPosition);
 void SetMultiuseSpriteTemplateToTrainerFront(enum TrainerPicID trainerPicId, enum BattlerPosition battlerPosition);

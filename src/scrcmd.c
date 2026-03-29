@@ -2039,7 +2039,7 @@ bool8 ScrCmd_drawboxtext(struct ScriptContext * ctx)
 
 bool8 ScrCmd_showmonpic(struct ScriptContext * ctx)
 {
-    u16 species = VarGet(ScriptReadHalfword(ctx));
+    enum Species species = VarGet(ScriptReadHalfword(ctx));
     u8 x = ScriptReadByte(ctx);
     u8 y = ScriptReadByte(ctx);
 
@@ -2121,7 +2121,7 @@ u8 *const sScriptStringVars[] =
 bool8 ScrCmd_bufferspeciesname(struct ScriptContext * ctx)
 {
     u8 stringVarIndex = ScriptReadByte(ctx);
-    u16 species = VarGet(ScriptReadHalfword(ctx));
+    enum Species species = VarGet(ScriptReadHalfword(ctx));
 
     Script_RequestEffects(SCREFF_V1);
 
@@ -2294,7 +2294,7 @@ bool8 ScrCmd_bufferboxname(struct ScriptContext * ctx)
 
 bool8 ScrCmd_giveegg(struct ScriptContext * ctx)
 {
-    u16 species = VarGet(ScriptReadHalfword(ctx));
+    enum Species species = VarGet(ScriptReadHalfword(ctx));
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
 
@@ -2324,7 +2324,7 @@ bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
     gSpecialVar_Result = PARTY_SIZE;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL);
+        enum Species species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
         if (!species)
             break;
         if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], moveId) == TRUE)
@@ -2361,7 +2361,8 @@ bool8 ScrCmd_checkfieldmoveusable(struct ScriptContext* ctx)
     }
     else if (OW_FIELD_MOVES_WITHOUT_HMS)
     {
-        u16 species = FieldMove_GetDefaultSpecies(fieldMove);
+        enum Species species = FieldMove_GetDefaultSpecies(fieldMove);
+
         gFieldEffectArguments[0] = species | SHOW_MON_NOT_IN_PARTY;
         gSpecialVar_0x8004 = species;
         gSpecialVar_Result = TRUE;
@@ -2550,12 +2551,12 @@ bool8 ScrCmd_cleartrainerflag(struct ScriptContext * ctx)
 
 bool8 ScrCmd_setwildbattle(struct ScriptContext *ctx)
 {
-    u16 species = ScriptReadHalfword(ctx);
+    enum Species species = ScriptReadHalfword(ctx);
     u8 level = ScriptReadByte(ctx);
-    u16 item = ScriptReadHalfword(ctx);
-    u16 species2 = ScriptReadHalfword(ctx);
+    enum Item item = ScriptReadHalfword(ctx);
+    enum Species species2 = ScriptReadHalfword(ctx);
     u8 level2 = ScriptReadByte(ctx);
-    u16 item2 = ScriptReadHalfword(ctx);
+    enum Item item2 = ScriptReadHalfword(ctx);
 
     Script_RequestEffects(SCREFF_V1);
 
@@ -2757,7 +2758,7 @@ bool8 ScrCmd_checkplayergender(struct ScriptContext * ctx)
 
 bool8 ScrCmd_playmoncry(struct ScriptContext * ctx)
 {
-    u16 species = VarGet(ScriptReadHalfword(ctx));
+    enum Species species = VarGet(ScriptReadHalfword(ctx));
     u16 mode = VarGet(ScriptReadHalfword(ctx));
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);

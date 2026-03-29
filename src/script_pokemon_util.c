@@ -436,7 +436,7 @@ void HasEnoughMonsForDoubleBattle(void)
     }
 }
 
-static bool8 CheckPartyMonHasHeldItem(u16 item)
+static bool8 CheckPartyMonHasHeldItem(enum Item item)
 {
     int i;
 
@@ -458,7 +458,7 @@ bool8 DoesPartyHaveEnigmaBerry(void)
     return hasItem;
 }
 
-void CreateScriptedWildMon(enum Species species, u8 level, u16 item)
+void CreateScriptedWildMon(enum Species species, u8 level, enum Item item)
 {
     u8 heldItem[2];
 

@@ -187,7 +187,7 @@ const struct FieldMoveInfo gFieldMovesInfo[FIELD_MOVE_COUNT] =
 };
 
 
-u16 FieldMove_GetDefaultSpecies(enum FieldMove fieldMove)
+enum Species FieldMove_GetDefaultSpecies(enum FieldMove fieldMove)
 {
     if (fieldMove >= FIELD_MOVE_COUNT)
         return SPECIES_NONE;

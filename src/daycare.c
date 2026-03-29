@@ -58,16 +58,16 @@ struct EggHatchData
     u8 windowId;
     u8 unused_9;
     u8 unused_A;
-    u16 species;
+    enum Species species;
     u8 textColor[3];
 };
 
 // this file's functions
 static void ClearDaycareMonMail(struct DayCareMail *mail);
-static void SetInitialEggData(struct Pokemon *mon, u16 species, struct DayCare *daycare);
+static void SetInitialEggData(struct Pokemon *mon, enum Species species, struct DayCare *daycare);
 static void DaycarePrintMonInfo(u8 windowId, u32 daycareSlotId, u8 y);
 static u8 ModifyBreedingScoreForOvalCharm(u8 score);
-static u16 GetEggSpecies(u16 species);
+static enum Species GetEggSpecies(enum Species species);
 
 static void Task_EggHatch(u8 taskID);
 static void CB2_EggHatch_0(void);
@@ -134,9 +134,9 @@ static const struct ListMenuTemplate sDaycareListMenuLevelTemplate =
 };
 
 static const struct {
-  u16 currSpecies;
-  u16 item;
-  u16 babySpecies;
+  enum Species currSpecies;
+  enum Item item;
+  enum Species babySpecies;
 } sIncenseBabyTable[] =
 {
     // Regular offspring,   Item,              Incense Offspring
@@ -479,8 +479,8 @@ static void TransferEggMoves(void)
 
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
     {
-        u16 moveLearnerSpecies = GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[i].mon, MON_DATA_SPECIES);
-        u16 eggSpecies = GetEggSpecies(moveLearnerSpecies);
+        enum Species moveLearnerSpecies = GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[i].mon, MON_DATA_SPECIES);
+        enum Species eggSpecies = GetEggSpecies(moveLearnerSpecies);
 
         if (!GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[i].mon, MON_DATA_SANITY_HAS_SPECIES))
             continue;
@@ -614,9 +614,9 @@ static void ApplyDaycareExperience(struct Pokemon *mon)
     CalculateMonStats(mon);
 }
 
-static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
+static enum Species TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
 {
-    u16 species;
+    enum Species species;
     u32 experience;
     struct Pokemon pokemon;
 
@@ -645,14 +645,14 @@ static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
     return species;
 }
 
-static u16 TakeSelectedPokemonMonFromDaycareShiftSlots(struct DayCare *daycare, u8 slotId)
+static enum Species TakeSelectedPokemonMonFromDaycareShiftSlots(struct DayCare *daycare, u8 slotId)
 {
-    u16 species = TakeSelectedPokemonFromDaycare(&daycare->mons[slotId]);
+    enum Species species = TakeSelectedPokemonFromDaycare(&daycare->mons[slotId]);
     ShiftDaycareSlots(daycare);
     return species;
 }
 
-u16 TakePokemonFromDaycare(void)
+enum Species TakePokemonFromDaycare(void)
 {
     return TakeSelectedPokemonMonFromDaycareShiftSlots(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
 }
@@ -755,7 +755,7 @@ static void UNUSED ClearAllDaycareData(struct DayCare *daycare)
 // Determines what the species of an Egg would be based on the given species.
 // It determines this by working backwards through the evolution chain of the
 // given species.
-static u16 GetEggSpecies(u16 species)
+static enum Species GetEggSpecies(enum Species species)
 {
     int i, j, k;
     bool8 found;
@@ -1032,7 +1032,7 @@ static void InheritAbility(struct Pokemon *egg, struct BoxPokemon *father, struc
 u8 GetEggMoves(struct Pokemon *pokemon, u16 *eggMoves)
 {
     u16 numEggMoves;
-    u16 species;
+    enum Species species;
     u32 i;
     const u16 *eggMoveLearnset;
 
@@ -1049,7 +1049,7 @@ u8 GetEggMoves(struct Pokemon *pokemon, u16 *eggMoves)
     return numEggMoves;
 }
 
-u8 GetEggMovesBySpecies(u16 species, u16 *eggMoves)
+u8 GetEggMovesBySpecies(enum Species species, u16 *eggMoves)
 {
     u16 numEggMoves;
     const u16 *eggMoveLearnset;
@@ -1194,14 +1194,12 @@ void RejectEggFromDayCare(void)
     RemoveEggFromDayCare(&gSaveBlock1Ptr->daycare);
 }
 
-static void AlterEggSpeciesWithIncenseItem(u16 *species, struct DayCare *daycare)
+static void AlterEggSpeciesWithIncenseItem(enum Species *species, struct DayCare *daycare)
 {
-    u32 i;
-    u16 motherItem, fatherItem;
-    motherItem = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM);
-    fatherItem = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM);
+    enum Item motherItem = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM);
+    enum Item fatherItem = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM);
 
-    for (i = 0; i < ARRAY_COUNT(sIncenseBabyTable); i++)
+    for (u32 i = 0; i < ARRAY_COUNT(sIncenseBabyTable); i++)
     {
         if (sIncenseBabyTable[i].babySpecies == *species && motherItem != sIncenseBabyTable[i].item && fatherItem != sIncenseBabyTable[i].item)
         {
@@ -1241,13 +1239,13 @@ static void GiveMoveIfItem(struct Pokemon *mon, struct DayCare *daycare)
 
 STATIC_ASSERT(P_SCATTERBUG_LINE_FORM_BREED == SPECIES_SCATTERBUG_ICY_SNOW || (P_SCATTERBUG_LINE_FORM_BREED >= SPECIES_SCATTERBUG_POLAR && P_SCATTERBUG_LINE_FORM_BREED <= SPECIES_SCATTERBUG_POKEBALL), ScatterbugLineFormBreedMustBeAValidScatterbugForm);
 
-static u16 DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u8 *parentSlots)
+static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u8 *parentSlots)
 {
     u32 i;
-    u32 species[DAYCARE_MON_COUNT];
-    u32 eggSpecies, parentSpecies;
+    enum Species species[DAYCARE_MON_COUNT];
+    enum Species eggSpecies, parentSpecies;
+    enum Species motherEggSpecies, fatherEggSpecies;
     bool32 hasMotherEverstone, hasFatherEverstone, motherIsForeign, fatherIsForeign;
-    bool32 motherEggSpecies, fatherEggSpecies;
     u32 currentRegion = GetCurrentRegion();
 
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
@@ -1323,7 +1321,7 @@ static u16 DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u8 *parent
 static void _GiveEggFromDaycare(struct DayCare *daycare)
 {
     struct Pokemon egg;
-    u16 species;
+    enum Species species;
     u8 parentSlots[DAYCARE_MON_COUNT] = {0};
     bool8 isEgg;
 
@@ -1350,7 +1348,7 @@ static void _GiveEggFromDaycare(struct DayCare *daycare)
     RemoveEggFromDayCare(daycare);
 }
 
-void CreateEgg(struct Pokemon *mon, u16 species, bool8 setHotSpringsLocation)
+void CreateEgg(struct Pokemon *mon, enum Species species, bool8 setHotSpringsLocation)
 {
     u8 metLevel;
     enum PokeBall ball;
@@ -1377,7 +1375,7 @@ void CreateEgg(struct Pokemon *mon, u16 species, bool8 setHotSpringsLocation)
     SetMonData(mon, MON_DATA_IS_EGG, &isEgg);
 }
 
-static void SetInitialEggData(struct Pokemon *mon, u16 species, struct DayCare *daycare)
+static void SetInitialEggData(struct Pokemon *mon, enum Species species, struct DayCare *daycare)
 {
     u32 personality;
     u16 ball;
@@ -1543,7 +1541,7 @@ u8 GetDaycareCompatibilityScore(struct DayCare *daycare)
 {
     u32 i;
     u16 eggGroups[DAYCARE_MON_COUNT][EGG_GROUPS_PER_MON];
-    u16 species[DAYCARE_MON_COUNT];
+    enum Species species[DAYCARE_MON_COUNT];
     u32 trainerIds[DAYCARE_MON_COUNT];
     u32 genders[DAYCARE_MON_COUNT];
 
@@ -1860,7 +1858,7 @@ u16 TakePokemonFromRoute5Daycare(void)
 
 static void CreateHatchedMon(struct Pokemon *egg, struct Pokemon *temp)
 {
-    u16 species;
+    enum Species species;
     u32 personality, pokerus;
     u8 i, friendship, language, gameMet, markings, isModernFatefulEncounter, ball;
     u16 moves[MAX_MON_MOVES];
@@ -1906,8 +1904,9 @@ static void CreateHatchedMon(struct Pokemon *egg, struct Pokemon *temp)
 
 static void AddHatchedMonToParty(u8 id)
 {
-    u8 isEgg = 0x46; // ?
-    u16 species, natDexNum;
+    bool8 isEgg = 0x46; // ?
+    enum Species species;
+    enum NationalDexOrder natDexNum;
     u8 name[POKEMON_NAME_LENGTH + 1];
     u16 metLevel;
     u8 metLocation;
@@ -1965,46 +1964,47 @@ bool8 DaycareMonReceivedMail(void)
     return BufferDayCareMonReceivedMail(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
 }
 
-// extern const struct CompressedSpriteSheet gMonFrontPicTable[];
-
-static u8 EggHatchCreateMonSprite(u8 a0, u8 switchID, u8 pokeID, u16 *speciesLoc)
+static u8 EggHatchCreateMonSprite(bool32 useAlt, u8 state, u8 partyId, enum Species *speciesLoc)
 {
-    u8 r4 = 0;
-    u8 spriteID = 0; // r7
-    struct Pokemon* mon = NULL; // r5
+    enum BattlerPosition position = 0;
+    u8 spriteId = 0;
+    struct Pokemon *mon = NULL;
 
-    if (a0 == 0)
+    if (useAlt == FALSE)
     {
-        mon = &gPlayerParty[pokeID];
-        r4 = 1;
+        mon = &gPlayerParty[partyId];
+        position = B_POSITION_OPPONENT_LEFT;
     }
-    if (a0 == 1)
+    if (useAlt == TRUE)
     {
-        mon = &gPlayerParty[pokeID];
-        r4 = 3;
+        mon = &gPlayerParty[partyId];
+        position = B_POSITION_OPPONENT_RIGHT;
     }
-    switch (switchID)
+
+    switch (state)
     {
     case 0:
     {
-        u16 species = GetMonData(mon, MON_DATA_SPECIES);
+        enum Species species = GetMonData(mon, MON_DATA_SPECIES);
         u32 pid = GetMonData(mon, MON_DATA_PERSONALITY);
-        HandleLoadSpecialPokePic(TRUE, gMonSpritesGfxPtr->spritesGfx[(a0 * 2) + 1], species, pid);
+
+        HandleLoadSpecialPokePic(TRUE, gMonSpritesGfxPtr->spritesGfx[(useAlt * 2) + 1], species, pid);
         LoadSpritePaletteWithTag(GetMonFrontSpritePal(mon), species);
         *speciesLoc = species;
-    }
         break;
+    }
     case 1:
     {
-        u16 species = GetMonData(mon, MON_DATA_SPECIES);
-        SetMultiuseSpriteTemplateToPokemon(species, r4);
-        spriteID = CreateSprite(&gMultiuseSpriteTemplate, 120, 70, 6);
-        gSprites[spriteID].invisible = TRUE;
-        gSprites[spriteID].callback = SpriteCallbackDummy;
+        enum Species species = GetMonData(mon, MON_DATA_SPECIES);
+
+        SetMultiuseSpriteTemplateToPokemon(species, position);
+        spriteId = CreateSprite(&gMultiuseSpriteTemplate, 120, 70, 6);
+        gSprites[spriteId].invisible = TRUE;
+        gSprites[spriteId].callback = SpriteCallbackDummy;
         break;
     }
     }
-    return spriteID;
+    return spriteId;
 }
 
 static void VBlankCB_EggHatch(void)
@@ -2093,11 +2093,11 @@ static void CB2_EggHatch_0(void)
         gMain.state++;
         break;
     case 5:
-        EggHatchCreateMonSprite(0, 0, sEggHatchData->eggPartyID, &sEggHatchData->species);
+        EggHatchCreateMonSprite(FALSE, 0, sEggHatchData->eggPartyID, &sEggHatchData->species);
         gMain.state++;
         break;
     case 6:
-        sEggHatchData->pokeSpriteID = EggHatchCreateMonSprite(0, 1, sEggHatchData->eggPartyID, &sEggHatchData->species);
+        sEggHatchData->pokeSpriteID = EggHatchCreateMonSprite(FALSE, 1, sEggHatchData->eggPartyID, &sEggHatchData->species);
         gMain.state++;
         break;
     case 7:
@@ -2148,7 +2148,7 @@ static void Task_EggHatchPlayBGM(u8 taskID)
 
 static void CB2_EggHatch_1(void)
 {
-    u16 species;
+    enum Species species;
     u8 gender;
     u32 personality;
 
@@ -2309,7 +2309,7 @@ static void SpriteCB_Egg_2(struct Sprite* sprite)
     {
         if (++sprite->data[0] > 38)
         {
-            u16 species;
+            enum Species species;
 
             sprite->callback = SpriteCB_Egg_3;
             sprite->data[0] = 0;
