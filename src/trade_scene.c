@@ -1027,20 +1027,23 @@ static void CB2_InitInGameTrade(void)
 static void UpdatePokedexForReceivedMon(u8 partyIdx)
 {
     struct Pokemon *mon;
+    enum Species species;
+    enum NationalDexOrder natDex;
+    u32 personality;
 
     if (partyIdx == PC_MON_CHOSEN)
         mon = &gEnemyParty[TRADEMON_FROM_PC];
     else
         mon = &gPlayerParty[partyIdx];
 
-    if (!GetMonData(mon, MON_DATA_IS_EGG))
-    {
-        u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
-        u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
-        species = SpeciesToNationalPokedexNum(species);
-        GetSetPokedexFlag(species, FLAG_SET_SEEN);
-        HandleSetPokedexFlag(species, FLAG_SET_CAUGHT, personality);
-    }
+    if (GetMonData(mon, MON_DATA_IS_EGG))
+        return;
+
+    species = GetMonData(mon, MON_DATA_SPECIES, NULL);
+    personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
+    natDex = SpeciesToNationalPokedexNum(species);
+    GetSetPokedexFlag(natDex, FLAG_SET_SEEN);
+    HandleSetPokedexFlag(natDex, FLAG_SET_CAUGHT, personality);
 }
 
 static void TryEnableNationalDexFromLinkPartner(void)

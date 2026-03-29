@@ -54,7 +54,7 @@ static bool8 UnlockedTanobyOrAreNotInTanoby(void);
 static void UpdateChainFishingStreak();
 static bool8 IsWildLevelAllowedByRepel(u8 level);
 static void ApplyFluteEncounterRateMod(u32 *rate);
-static u8 GetMaxLevelOfSpeciesInWildTable(const struct WildPokemon *wildMon, u16 species, u8 area);
+static u8 GetMaxLevelOfSpeciesInWildTable(const struct WildPokemon *wildMon, enum Species species, u8 area);
 static u8 GetFluteEncounterRateModType(void);
 static void ApplyCleanseTagEncounterRateMod(u32 *rate);
 static bool8 IsLeadMonHoldingCleanseTag(void);
@@ -365,7 +365,7 @@ static u8 PickWildMonNature(u32 species)
     return GetSynchronizedNature(WILDMON_ORIGIN, species);
 }
 
-void CreateWildMon(u16 species, u8 level, u8 unownSlot)
+void CreateWildMon(enum Species species, u8 level, u8 unownSlot)
 {
     u8 unownLetter = RANDOM_UNOWN_LETTER;
 
@@ -975,7 +975,7 @@ static bool8 TryGetRandomWildMonIndexByType(const struct WildPokemon *wildMon, u
     return TRUE;
 }
 
-static u8 GetMaxLevelOfSpeciesInWildTable(const struct WildPokemon *wildMon, u16 species, u8 area)
+static u8 GetMaxLevelOfSpeciesInWildTable(const struct WildPokemon *wildMon, enum Species species, u8 area)
 {
     u8 i, maxLevel = 0, numMon = 0;
 

@@ -59,7 +59,7 @@ void ResetAllPicSprites(void)
         sSpritePics[i] = sDummyPicData;
 }
 
-static void LoadMonPicPaletteByTagOrSlot(u16 species, bool32 isShiny, u32 personality, u8 paletteSlot, u16 paletteTag)
+static void LoadMonPicPaletteByTagOrSlot(enum Species species, bool32 isShiny, u32 personality, u8 paletteSlot, u16 paletteTag)
 {
     if (paletteTag == TAG_NONE)
     {

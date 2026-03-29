@@ -2606,8 +2606,8 @@ static void BufferStat(u8 stat)
 static void BufferMonSkills(void)
 {
     u8 level;
-    u16 type;
-    u16 species;
+    enum Ability ability;
+    enum Species species;
     u32 exp;
     u32 expToNextLevel;
 
@@ -2633,9 +2633,9 @@ static void BufferMonSkills(void)
     ConvertIntToDecimalStringN(sMonSummaryScreen->summary.expToNextLevelStrBuf, expToNextLevel, STR_CONV_MODE_LEFT_ALIGN, 7);
     sMonSkillsPrinterXpos->toNextLevel = GetNumberRightAlign63(sMonSummaryScreen->summary.expToNextLevelStrBuf);
 
-    type = GetAbilityBySpecies(GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES), GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_ABILITY_NUM));
-    StringCopy(sMonSummaryScreen->summary.abilityNameStrBuf, gAbilitiesInfo[type].name);
-    StringCopy(sMonSummaryScreen->summary.abilityDescStrBuf, gAbilitiesInfo[type].description);
+    ability = GetAbilityBySpecies(GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES), GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_ABILITY_NUM));
+    StringCopy(sMonSummaryScreen->summary.abilityNameStrBuf, gAbilitiesInfo[ability].name);
+    StringCopy(sMonSummaryScreen->summary.abilityDescStrBuf, gAbilitiesInfo[ability].description);
 
     sMonSummaryScreen->curMonStatusAilment = StatusToAilment(GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_STATUS));
     if (sMonSummaryScreen->curMonStatusAilment == AILMENT_NONE)
@@ -4487,7 +4487,7 @@ static void SpriteCB_MonPicDummy(struct Sprite *sprite)
 static void PokeSum_CreateMonPicSprite(void)
 {
     u16 spriteId;
-    u16 species;
+    enum Species species;
     u32 personality;
     bool32 isShiny;
 
@@ -4595,7 +4595,7 @@ static void DestroyBallIconObj(void)
 
 static void PokeSum_CreateMonIconSprite(void)
 {
-    u16 species;
+    enum Species species;
     u32 personality;
 
     species = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES_OR_EGG);
@@ -4620,8 +4620,7 @@ static void PokeSum_ShowOrHideMonIconSprite(bool8 invisible)
 
 static void PokeSum_DestroyMonIconSprite(void)
 {
-    u16 species;
-    species = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES_OR_EGG);
     SafeFreeMonIconPalette(species);
     FreeAndDestroyMonIconSprite(&gSprites[sMonSummaryScreen->monIconSpriteId]);
 }
@@ -5050,7 +5049,7 @@ static void UpdateExpBarObjs(void)
     u32 exp;
     u32 totalExpToNextLevel;
     u32 curExpToNextLevel;
-    u16 species;
+    enum Species species;
     s64 pointsPerTile;
     s64 totalPoints;
     u8 animNum;

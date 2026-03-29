@@ -57,7 +57,7 @@ struct PokemonShadowSettings
 
 struct PokemonSpriteVisualizer
 {
-    u16 currentmonId;
+    enum Species currentmonId;
     u8 currentmonWindowId;
     u8 InstructionsWindowId;
     u8 frontspriteId;

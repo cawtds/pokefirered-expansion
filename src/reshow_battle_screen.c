@@ -55,7 +55,7 @@ void ReshowBattleScreenAfterMenu(void)
 static void CB2_ReshowBattleScreenAfterMenu(void)
 {
     u8 opponentBattler;
-    u16 species;
+    enum Species species;
 
     switch (gBattleScripting.reshowMainState)
     {

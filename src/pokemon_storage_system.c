@@ -636,7 +636,7 @@ static void StartDisplayMonMosaic(void);
 static void SpriteCB_DisplayMonMosaic(struct Sprite *sprite);
 static bool8 IsDisplayMonMosaicActive(void);
 static void CreateDisplayMonSprite(void);
-static void LoadDisplayMonGfx(u16 species, u32 personality);
+static void LoadDisplayMonGfx(enum Species species, u32 personality);
 static void PrintDisplayMonInfo(void);
 static void UpdateWaveformAnimation(void);
 static void InitSupplementalTilemaps(void);
@@ -703,7 +703,7 @@ static void DestroyAllPartyMonIcons(void);
 static void DoReleaseMonComeBackAnim(void);
 static bool8 ResetReleaseMonSpritePtr(void);
 static void SetMovingMonPriority(u8 priority);
-static struct Sprite *CreateMonIconSprite(u16 species, u32 personality, s16 x, s16 y, u8 oamPriority, u8 subpriority);
+static struct Sprite *CreateMonIconSprite(enum Species species, u32 personality, s16 x, s16 y, u8 oamPriority, u8 subpriority);
 
 // Pokémon data
 static bool8 TryStorePartyMonInBox(u8 boxId);
@@ -3751,7 +3751,7 @@ static void CreateDisplayMonSprite(void)
     }
 }
 
-static void LoadDisplayMonGfx(u16 species, u32 personality)
+static void LoadDisplayMonGfx(enum Species species, u32 personality)
 {
     if (gStorage->displayMonSprite == NULL)
         return;
@@ -4277,7 +4277,7 @@ static u8 GetMonIconPriorityByCursorArea(void)
 void CreateMovingMonIcon(void)
 {
     u32 personality = GetMonData(&gStorage->movingMon, MON_DATA_PERSONALITY);
-    u16 species = GetMonData(&gStorage->movingMon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetMonData(&gStorage->movingMon, MON_DATA_SPECIES_OR_EGG);
     u8 priority = GetMonIconPriorityByCursorArea();
 
     gStorage->movingMonSprite = CreateMonIconSprite(species, personality, 0, 0, priority, 7);
@@ -4299,7 +4299,7 @@ static void InitBoxMonSprites(u8 boxId)
 {
     u8 boxPosition;
     u16 i, j, count;
-    u16 species;
+    enum Species species;
     u32 personality;
 
     count = 0;
@@ -4337,7 +4337,7 @@ static void InitBoxMonSprites(u8 boxId)
 
 void CreateBoxMonIconAtPos(u8 boxPosition)
 {
-    u16 species = GetCurrentBoxMonData(boxPosition, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetCurrentBoxMonData(boxPosition, MON_DATA_SPECIES_OR_EGG);
 
     if (species != SPECIES_NONE)
     {
@@ -4590,7 +4590,7 @@ void SetBoxMonIconObjMode(u8 boxPosition, u8 objMode)
 static void CreatePartyMonsSprites(bool8 visible)
 {
     u16 i, count;
-    u16 species = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES_OR_EGG);
     u32 personality = GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY);
 
     gStorage->partySprites[0] = CreateMonIconSprite(species, personality, 104, 64, 1, 12);
@@ -4940,7 +4940,7 @@ static void SpriteCB_HeldMon(struct Sprite *sprite)
     sprite->y = gStorage->cursorSprite->y + gStorage->cursorSprite->y2 + 4;
 }
 
-static u16 TryLoadMonIconTiles(u16 species, u32 personality)
+static u16 TryLoadMonIconTiles(enum Species species, u32 personality)
 {
     u16 i, offset;
 
@@ -4978,7 +4978,7 @@ static u16 TryLoadMonIconTiles(u16 species, u32 personality)
     return offset;
 }
 
-static void RemoveSpeciesFromIconList(u16 species)
+static void RemoveSpeciesFromIconList(enum Species species)
 {
     u16 i;
     bool8 hasFemale = FALSE;
@@ -5003,7 +5003,7 @@ static void RemoveSpeciesFromIconList(u16 species)
     }
 }
 
-static struct Sprite *CreateMonIconSprite(u16 species, u32 personality, s16 x, s16 y, u8 oamPriority, u8 subpriority)
+static struct Sprite *CreateMonIconSprite(enum Species species, u32 personality, s16 x, s16 y, u8 oamPriority, u8 subpriority)
 {
     u16 tileNum;
     u8 spriteId;
@@ -5654,7 +5654,7 @@ static void GetCursorCoordsByPos(u8 cursorArea, u8 cursorPosition, u16 *x, u16 *
     }
 }
 
-static u16 GetSpeciesAtCursorPosition(void)
+static enum Species GetSpeciesAtCursorPosition(void)
 {
     switch (sCursorArea)
     {
@@ -6448,7 +6448,7 @@ s16 CompactPartySlots(void)
 
     for (i = 0, last = 0; i < PARTY_SIZE; i++)
     {
-        u16 species = GetMonData(gPlayerParty + i, MON_DATA_SPECIES);
+        enum Species species = GetMonData(gPlayerParty + i, MON_DATA_SPECIES);
         if (species != SPECIES_NONE)
         {
             if (i != last)
@@ -7301,7 +7301,7 @@ static bool8 SetSelectionMenuTexts(void)
 
 static bool8 SetMenuTextsForMon(void)
 {
-    u16 species = GetSpeciesAtCursorPosition();
+    enum Species species = GetSpeciesAtCursorPosition();
 
     switch (gStorage->boxOption)
     {
@@ -8105,7 +8105,7 @@ static void MultiMove_DeselectRow(u8 row, u8 minColumn, u8 maxColumn)
 static void MultiMove_SetIconToBg(u8 x, u8 y)
 {
     u8 position = x + (IN_BOX_COLUMNS * y);
-    u16 species = GetCurrentBoxMonData(position, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetCurrentBoxMonData(position, MON_DATA_SPECIES_OR_EGG);
     u32 personality = GetCurrentBoxMonData(position, MON_DATA_PERSONALITY);
 
     if (species != SPECIES_NONE)
@@ -8119,7 +8119,7 @@ static void MultiMove_SetIconToBg(u8 x, u8 y)
 static void MultiMove_ClearIconFromBg(u8 x, u8 y)
 {
     u8 position = x + (IN_BOX_COLUMNS * y);
-    u16 species = GetCurrentBoxMonData(position, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetCurrentBoxMonData(position, MON_DATA_SPECIES_OR_EGG);
 
     if (species != SPECIES_NONE)
         FillWindowPixelRect8Bit(gStorage->multiMoveWindowId, PIXEL_FILL(0), 24 * x, 24 * y, 32, 32);

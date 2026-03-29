@@ -783,7 +783,7 @@ static void UpdateBattlerValue(struct PokemonSpriteVisualizer *data)
     }
 }
 
-static void BattleLoadOpponentMonSpriteGfxCustom(u16 species, bool8 isFemale, bool8 isShiny, enum BattlerId battler)
+static void BattleLoadOpponentMonSpriteGfxCustom(enum Species species, bool8 isFemale, bool8 isShiny, enum BattlerId battler)
 {
     const u16 *palette = GetMonSpritePalFromSpecies(species, isShiny, isFemale);
     u16 paletteOffset = OBJ_PLTT_ID(battler);
@@ -794,7 +794,7 @@ static void BattleLoadOpponentMonSpriteGfxCustom(u16 species, bool8 isFemale, bo
 
 static void SetConstSpriteValues(struct PokemonSpriteVisualizer *data)
 {
-    u16 species = SanitizeSpeciesId(data->currentmonId);
+    enum Species species = SanitizeSpeciesId(data->currentmonId);
     data->constSpriteValues.frontPicCoords = gSpeciesInfo[species].frontPicYOffset;
     data->constSpriteValues.frontElevation = gSpeciesInfo[species].enemyMonElevation;
     data->constSpriteValues.backPicCoords = gSpeciesInfo[species].backPicYOffset;
@@ -811,7 +811,8 @@ static void ResetShadowSettings(struct PokemonSpriteVisualizer *data)
 {
     if (B_ENEMY_MON_SHADOW_STYLE <= GEN_3 || P_GBA_STYLE_SPECIES_GFX == TRUE)
         return;
-    u16 species = SanitizeSpeciesId(data->currentmonId);
+
+    enum Species species = SanitizeSpeciesId(data->currentmonId);
     data->shadowSettings.definedX = gSpeciesInfo[species].enemyShadowXOffset;
     data->shadowSettings.definedY = gSpeciesInfo[species].enemyShadowYOffset;
     data->shadowSettings.definedSize = gSpeciesInfo[species].enemyShadowSize;
@@ -821,7 +822,7 @@ static void ResetShadowSettings(struct PokemonSpriteVisualizer *data)
     data->shadowSettings.overrideSize = data->shadowSettings.definedSize;
 }
 
-static u8 GetBattlerSpriteFinal_YCustom(u16 species, s8 offset_picCoords, s8 offset_elevation)
+static u8 GetBattlerSpriteFinal_YCustom(enum Species species, s8 offset_picCoords, s8 offset_elevation)
 {
     u16 offset;
     u8 y;
@@ -911,7 +912,7 @@ static void SpriteCB_Follower(struct Sprite *sprite)
 static void LoadAndCreateEnemyShadowSpriteCustom(struct PokemonSpriteVisualizer *data)
 {
     bool8 invisible = FALSE;
-    u16 species = SanitizeSpeciesId(data->currentmonId);
+    enum Species species = SanitizeSpeciesId(data->currentmonId);
 
     if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
     {
@@ -1041,7 +1042,7 @@ static void DrawFollowerSprite(struct PokemonSpriteVisualizer *data)
     if (!OW_POKEMON_OBJECT_EVENTS)
         return;
 
-    u16 species = SanitizeSpeciesId(data->currentmonId);
+    enum Species species = SanitizeSpeciesId(data->currentmonId);
     u16 graphicsId = species + OBJ_EVENT_MON;
     if (data->isShiny)
         graphicsId += OBJ_EVENT_MON_SHINY;
@@ -1212,7 +1213,7 @@ void CB2_Pokemon_Sprite_Visualizer(void)
     u8 taskId;
     const u16 *palette;
     struct PokemonSpriteVisualizer *data;
-    u16 species;
+    enum Species species;
     s16 offset_y;
     u8 front_x = sBattlerCoords[0][1].x;
     u8 front_y;
@@ -1387,7 +1388,7 @@ static void ResetBGs_PokemonSpriteVisualizer(u16 a)
 
 static void ApplyOffsetSpriteValues(struct PokemonSpriteVisualizer *data)
 {
-    u16 species = SanitizeSpeciesId(data->currentmonId);
+    enum Species species = SanitizeSpeciesId(data->currentmonId);
     //Back
     gSprites[data->backspriteId].y = VISUALIZER_MON_BACK_Y + gSpeciesInfo[species].backPicYOffset + data->offsetsSpriteValues.offset_back_picCoords;
     //Front
@@ -1400,7 +1401,7 @@ static void ApplyOffsetSpriteValues(struct PokemonSpriteVisualizer *data)
 static void UpdateSubmenuOneOptionValue(u8 taskId, bool8 increment)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
-    u16 species = SanitizeSpeciesId(data->currentmonId);
+    enum Species species = SanitizeSpeciesId(data->currentmonId);
     u8 option = data->submenuYpos[1];
 
     switch (option)
@@ -1485,7 +1486,7 @@ static void UpdateSubmenuOneOptionValue(u8 taskId, bool8 increment)
 static void UpdateSubmenuTwoOptionValue(u8 taskId, bool8 increment)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
-    u16 species = SanitizeSpeciesId(data->currentmonId);
+    enum Species species = SanitizeSpeciesId(data->currentmonId);
     u8 option = data->submenuYpos[2];
     s8 offset;
     u8 y;
@@ -1705,7 +1706,7 @@ static void OpenSubmenu(u32 submenu, u8 taskId)
 static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
-    u16 species = SanitizeSpeciesId(data->currentmonId);
+    enum Species species = SanitizeSpeciesId(data->currentmonId);
     struct Sprite *Frontsprite = &gSprites[data->frontspriteId];
     struct Sprite *Backsprite = &gSprites[data->backspriteId];
 
@@ -1989,7 +1990,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
 static void ReloadPokemonSprites(struct PokemonSpriteVisualizer *data)
 {
     const u16 *palette;
-    u16 species = SanitizeSpeciesId(data->currentmonId);
+    enum Species species = SanitizeSpeciesId(data->currentmonId);
     s16 offset_y;
     u8 front_x = sBattlerCoords[0][1].x;
     u8 front_y;

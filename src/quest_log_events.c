@@ -128,7 +128,7 @@ static const u16 *LoadEvent_BoughtItem(const u16 *);
 static const u16 *LoadEvent_SoldItem(const u16 *);
 static const u16 *LoadEvent_ObtainedStoryItem(const u16 *);
 static const u16 *LoadEvent_ArrivedInLocation(const u16 *);
-static bool8 IsSpeciesFromSpecialEncounter(u16);
+static bool8 IsSpeciesFromSpecialEncounter(enum Species species);
 static bool8 ShouldRegisterEvent_HandleDeparted(u16, const u16 *);
 static bool8 ShouldRegisterEvent_DepartedGameCorner(u16, const u16 *);
 static void TranslateLinkPartnersName(u8 *);
@@ -998,7 +998,7 @@ static const u16 *LoadEvent(u16 eventId, const u16 *eventData)
     return eventData;
 }
 
-static void QuestLog_GetSpeciesName(u16 species, u8 *dest, u8 stringVarId)
+static void QuestLog_GetSpeciesName(enum Species species, u8 *dest, u8 stringVarId)
 {
     if (dest != NULL)
     {
@@ -1824,7 +1824,7 @@ static const u16 *LoadEvent_DefeatedWildMon(const u16 *a0)
     return (const u16 *)(data + 4);
 }
 
-static bool8 IsSpeciesFromSpecialEncounter(u16 species)
+static bool8 IsSpeciesFromSpecialEncounter(enum Species species)
 {
     switch (species)
     {
@@ -1837,8 +1837,9 @@ static bool8 IsSpeciesFromSpecialEncounter(u16 species)
     case SPECIES_HO_OH:
     case SPECIES_DEOXYS:
         return TRUE;
+    default:
+        return FALSE;
     }
-    return FALSE;
 }
 
 static u16 *RecordEvent_DefeatedEliteFourMember(u16 *dest, const struct QuestLogEvent_TrainerBattle * data)

@@ -1488,7 +1488,7 @@ static void Task_PokemonPicWindow(u8 taskId)
     }
 }
 
-bool8 ScriptMenu_ShowPokemonPic(u16 species, u8 x, u8 y)
+bool8 ScriptMenu_ShowPokemonPic(enum Species species, u8 x, u8 y)
 {
     u8 spriteId;
     u8 taskId;
