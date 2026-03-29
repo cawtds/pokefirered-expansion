@@ -263,7 +263,7 @@ u8 ObjectEventGetHeldMovementActionId(struct ObjectEvent *objectEvent);
 u8 GetMoveDirectionAnimNum(u8 direction);
 u8 CopySprite(struct Sprite *sprite, s16 x, s16 y, u8 subpriority);
 void FieldEffectFreeTilesIfUnused(u16 tileStart);
-u16 GetOverworldWeatherSpecies(u16 species);
+enum Species GetOverworldWeatherSpecies(enum Species species);
 const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 shiny, bool32 female);
 
 // Exported data declarations

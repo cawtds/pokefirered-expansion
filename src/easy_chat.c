@@ -34,7 +34,7 @@ static void PopulateAlphabeticalGroups(void);
 static u16 GetUnlockedWordsInECGroup(u16);
 static u16 GetUnlockedWordsInAlphabeticalGroup(u16);
 static bool8 UnlockedECMonOrMove(u16, u8);
-static bool32 EC_IsDeoxys(u16 species);
+static bool32 EC_IsDeoxys(enum Species species);
 static bool8 IsWordUnlocked(u16 word);
 
 #include "data/easy_chat/easy_chat_groups.h"
@@ -81,8 +81,11 @@ static const u16 sDefaultBattleStartWords[] = {
     EC_WORD_EXCL,
 };
 
-static const u16 sDeoxysValue[] = {
+static const enum Species sDeoxysValue[] = {
     SPECIES_DEOXYS,
+    SPECIES_DEOXYS_ATTACK,
+    SPECIES_DEOXYS_DEFENSE,
+    SPECIES_DEOXYS_SPEED,
 };
 
 static bool8 IsECGroupUnlocked(u8 groupId)
@@ -623,7 +626,7 @@ static bool8 UnlockedECMonOrMove(u16 wordIndex, u8 groupId)
     }
 }
 
-static bool32 EC_IsDeoxys(u16 species)
+static bool32 EC_IsDeoxys(enum Species species)
 {
     u32 i;
     for (i = 0; i < ARRAY_COUNT(sDeoxysValue); i++)

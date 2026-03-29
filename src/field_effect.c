@@ -819,9 +819,10 @@ bool8 FieldEffectActiveListContains(enum FieldEffect fldeff)
     return FALSE;
 }
 
-u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
+u8 CreateMonSprite_PicBox(enum Species species, s16 x, s16 y, u8 subpriority)
 {
     u16 spriteId = CreateMonFrontPicSprite(species, FALSE, 0x8000, x, y, 0, species);
+
     PreservePaletteInWeather(IndexOfSpritePaletteTag(species) + 0x10);
     if (spriteId == 0xFFFF)
         return MAX_SPRITES;
@@ -829,7 +830,7 @@ u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
         return spriteId;
 }
 
-static u8 CreateMonSprite_FieldMove(u16 species, bool32 isShiny, u32 personality, s16 x, s16 y, u8 subpriority)
+static u8 CreateMonSprite_FieldMove(enum Species species, bool32 isShiny, u32 personality, s16 x, s16 y, u8 subpriority)
 {
     u16 spriteId = CreateMonFrontPicSprite(species, isShiny, personality, x, y, 0, species);
     PreservePaletteInWeather(IndexOfSpritePaletteTag(species) + 0x10);
@@ -3030,7 +3031,7 @@ u32 FldEff_FieldMoveShowMonInit(void)
 
     if (gFieldEffectArguments[0] & SHOW_MON_NOT_IN_PARTY)
     {
-        u16 species = gFieldEffectArguments[0] & (~SHOW_MON_NOT_IN_PARTY);
+        u32 species = gFieldEffectArguments[0] & (~SHOW_MON_NOT_IN_PARTY);
 
         gFieldEffectArguments[0] = species;
         gFieldEffectArguments[1] = FALSE;

@@ -478,7 +478,7 @@ static void AddSearchWindow(u8 width)
 #define SEARCH_ARROW_X      (WINDOW_MOVE_NAME_X + 90)
 #define SEARCH_ARROW_Y      0
 
-static void AddSearchWindowText(u16 species, u8 proximity, u8 searchLevel, bool8 hidden)
+static void AddSearchWindowText(enum Species species, u8 proximity, u8 searchLevel, bool8 hidden)
 {
     u8 windowId = sDexNavSearchDataPtr->windowId;
 
@@ -540,7 +540,7 @@ static void AddSearchWindowText(u16 species, u8 proximity, u8 searchLevel, bool8
 
 #define SEARCH_WINDOW_WIDTH     28
 
-static void DrawSearchWindow(u16 species, u8 potential, bool8 hidden)
+static void DrawSearchWindow(enum Species species, u8 potential, bool8 hidden)
 {
     u8 searchLevel = sDexNavSearchDataPtr->searchLevel;
 
@@ -829,7 +829,7 @@ static void Task_SetUpDexNavSearch(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
-    u16 species = sDexNavSearchDataPtr->species;
+    enum Species species = sDexNavSearchDataPtr->species;
     u8 searchLevel = GetSearchLevel(species);
 
     // init sprites
@@ -879,7 +879,7 @@ static void DexNavSearchBail(u8 taskId, const u8 *script)
 static void Task_InitDexNavSearch(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
-    u16 species = task->tSpecies;
+    enum Species species = (enum Species)task->tSpecies;
     u8 environment = task->tEnvironment;
 
     sDexNavSearchDataPtr = AllocZeroed(sizeof(struct DexNavSearch));
@@ -966,7 +966,7 @@ static void DexNavUpdateDirectionArrow(void)
 
 static void DexNavDrawIcons(void)
 {
-    u16 species = sDexNavSearchDataPtr->species;
+    enum Species species = sDexNavSearchDataPtr->species;
 
     DrawSearchWindow(species, sDexNavSearchDataPtr->potential, FALSE);
     DrawDexNavSearchMonIcon(species, &sDexNavSearchDataPtr->iconSpriteId, GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT));
@@ -1024,7 +1024,7 @@ static u8 GetMovementProximityBySearchLevel(void)
 static void Task_RevealHiddenMon(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
-    u16 species = sDexNavSearchDataPtr->species;
+    enum Species species = sDexNavSearchDataPtr->species;
 
     // remove owned icon if it exists
     if (sDexNavSearchDataPtr->ownedIconSpriteId != MAX_SPRITES)
@@ -1770,7 +1770,7 @@ static bool8 CapturedAllLandMons(u16 headerId)
 static bool8 CapturedAllWaterMons(u16 headerId)
 {
     u32 i;
-    u16 species;
+    enum Species species;
     u8 count = 0;
     enum Season season;
     enum TimeOfDay timeOfDay;
@@ -1804,7 +1804,7 @@ static bool8 CapturedAllWaterMons(u16 headerId)
 static bool8 CapturedAllHiddenMons(u16 headerId)
 {
     u32 i;
-    u16 species;
+    enum Species species;
     u8 count = 0;
     enum Season season;
     enum TimeOfDay timeOfDay;
@@ -1910,29 +1910,28 @@ static void DexNavFadeAndExit(void)
     SetMainCallback2(DexNav_MainCB);
 }
 
-static bool8 SpeciesInArray(u16 species, u8 section)
+static bool8 SpeciesInArray(enum Species species, u8 section)
 {
-    u32 i;
     u16 dexNum = SpeciesToNationalPokedexNum(species);
 
     switch (section)
     {
     case 0: //land
-        for (i = 0; i < LAND_WILD_COUNT; i++)
+        for (u32 i = 0; i < LAND_WILD_COUNT; i++)
         {
             if (SpeciesToNationalPokedexNum(sDexNavUiDataPtr->landSpecies[i]) == dexNum)
                 return TRUE;
         }
         break;
     case 1: //water
-        for (i = 0; i < WATER_WILD_COUNT; i++)
+        for (u32 i = 0; i < WATER_WILD_COUNT; i++)
         {
             if (SpeciesToNationalPokedexNum(sDexNavUiDataPtr->waterSpecies[i]) == dexNum)
                 return TRUE;
         }
         break;
     case 2: //hidden
-        for (i = 0; i < HIDDEN_WILD_COUNT; i++)
+        for (u32 i = 0; i < HIDDEN_WILD_COUNT; i++)
         {
             if (SpeciesToNationalPokedexNum(sDexNavUiDataPtr->hiddenSpecies[i]) == dexNum)
                 return TRUE;
@@ -1951,7 +1950,7 @@ static void DexNavLoadEncounterData(void)
     u8 grassIndex = 0;
     u8 waterIndex = 0;
     u8 hiddenIndex = 0;
-    u16 species;
+    enum Species species;
     u32 i;
     u16 headerId = GetCurrentMapWildMonHeaderId();
     enum Season season;
@@ -2003,7 +2002,7 @@ static void DexNavLoadEncounterData(void)
     }
 }
 
-static void TryDrawIconInSlot(u16 species, s16 x, s16 y)
+static void TryDrawIconInSlot(enum Species species, s16 x, s16 y)
 {
     if (species == SPECIES_NONE || species > NUM_SPECIES)
         CreateNoDataIcon(x, y);   //'X' in slot
@@ -2016,11 +2015,10 @@ static void TryDrawIconInSlot(u16 species, s16 x, s16 y)
 static void DrawSpeciesIcons(void)
 {
     s16 x, y;
-    u32 i;
-    u16 species;
+    enum Species species;
 
     LoadCompressedSpriteSheetUsingHeap(&sNoDataIconSpriteSheet);
-    for (i = 0; i < LAND_WILD_COUNT; i++)
+    for (u32 i = 0; i < LAND_WILD_COUNT; i++)
     {
         species = sDexNavUiDataPtr->landSpecies[i];
         x = ROW_LAND_ICON_X + (24 * (i % COL_LAND_COUNT));
@@ -2028,7 +2026,7 @@ static void DrawSpeciesIcons(void)
         TryDrawIconInSlot(species, x, y);
     }
 
-    for (i = 0; i < WATER_WILD_COUNT; i++)
+    for (u32 i = 0; i < WATER_WILD_COUNT; i++)
     {
         species = sDexNavUiDataPtr->waterSpecies[i];
         x = ROW_WATER_ICON_X + 24 * i;
@@ -2036,7 +2034,7 @@ static void DrawSpeciesIcons(void)
         TryDrawIconInSlot(species, x, y);
     }
 
-    for (i = 0; i < HIDDEN_WILD_COUNT; i++)
+    for (u32 i = 0; i < HIDDEN_WILD_COUNT; i++)
     {
         species = sDexNavUiDataPtr->hiddenSpecies[i];
         x = ROW_HIDDEN_ICON_X + 24 * i;
@@ -2050,9 +2048,9 @@ static void DrawSpeciesIcons(void)
     }
 }
 
-static u16 DexNavGetSpecies(void)
+static enum Species DexNavGetSpecies(void)
 {
-    u16 species;
+    enum Species species;
 
     switch (sDexNavUiDataPtr->cursorRow)
     {
@@ -2126,7 +2124,7 @@ static void SetTypeIconPosAndPal(u8 typeId, u8 x, u8 y, u8 spriteArrayId)
 
 static void PrintCurrentSpeciesInfo(void)
 {
-    u16 species = DexNavGetSpecies();
+    enum Species species = DexNavGetSpecies();
     u16 dexNum = SpeciesToNationalPokedexNum(species);
     u8 type1, type2;
 
@@ -2205,7 +2203,7 @@ static void PrintMapName(void)
     CopyWindowToVram(WINDOW_REGISTERED, 3);
 }
 
-static void PrintSearchableSpecies(u16 species)
+static void PrintSearchableSpecies(enum Species species)
 {
     FillWindowPixelBuffer(WINDOW_REGISTERED, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
     PutWindowTilemap(WINDOW_REGISTERED);
@@ -2371,7 +2369,7 @@ static void Task_DexNavWaitFadeIn(u8 taskId)
 static void Task_DexNavMain(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
-    u16 species;
+    enum Species species;
 
     if (IsSEPlaying())
         return;
@@ -2536,7 +2534,7 @@ bool8 TryFindHiddenPokemon(void)
         // hidden pokemon
         u16 headerId = GetCurrentMapWildMonHeaderId();
         u8 index;
-        u16 species;
+        enum Species species;
         u8 environment;
         u8 taskId;
         enum Season season;
@@ -2669,7 +2667,7 @@ static void DrawHiddenSearchWindow(u8 width)
 
 static void DexNavDrawHiddenIcons(void)
 {
-    u16 species = sDexNavSearchDataPtr->species;
+    enum Species species = sDexNavSearchDataPtr->species;
 
     DrawHiddenSearchWindow(12);
     DrawSearchIcon();

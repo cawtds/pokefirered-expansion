@@ -115,7 +115,7 @@ static u8 MovementType_RaiseHandAndJump_Callback(struct ObjectEvent *, struct Sp
 static u8 MovementType_RaiseHandAndSwim_Callback(struct ObjectEvent *, struct Sprite *);
 static void QuestLogObjectEventExecHeldMovementAction(struct ObjectEvent *, struct Sprite *);
 static void VirtualObject_UpdateAnim(struct Sprite *sprite);
-static u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female);
+static u32 LoadDynamicFollowerPalette(enum Species species, bool32 shiny, bool32 female);
 static void CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(u16 graphicsId, u16 movementType, struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables);
 
 static u16 GetGraphicsIdForMon(u32 species, bool32 shiny, bool32 female);
@@ -1960,7 +1960,7 @@ static void CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(u16 graphics
 // also can write palette tag to the template
 static u32 LoadDynamicFollowerPaletteFromGraphicsId(u16 graphicsId, struct SpriteTemplate *template)
 {
-    u16 species = graphicsId & OBJ_EVENT_MON_SPECIES_MASK;
+    enum Species species = graphicsId & OBJ_EVENT_MON_SPECIES_MASK;
     bool32 shiny = graphicsId & OBJ_EVENT_MON_SHINY;
     bool32 female = graphicsId & OBJ_EVENT_MON_FEMALE;
     u8 paletteNum = LoadDynamicFollowerPalette(species, shiny, female);
@@ -2137,7 +2137,7 @@ const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 
 }
 
 // Find, or load, the palette for the specified pokemon info
-static u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female)
+static u32 LoadDynamicFollowerPalette(enum Species species, bool32 shiny, bool32 female)
 {
     u32 paletteNum;
     // Use standalone palette, unless entry is OOB or NULL (fallback to front-sprite-based)
@@ -2271,7 +2271,7 @@ static void RefreshFollowerGraphics(struct ObjectEvent *objEvent)
     }
 }
 
-u16 GetOverworldWeatherSpecies(u16 species)
+enum Species GetOverworldWeatherSpecies(enum Species species)
 {
     u32 i;
     u32 weather = GetCurrentWeather();
@@ -2400,7 +2400,7 @@ bool32 IsFollowerVisible(void)
             || MetatileBehavior_IsForcedMovementTile(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior));
 }
 
-static bool8 SpeciesHasType(u16 species, u8 type)
+static bool8 SpeciesHasType(enum Species species, enum Type type)
 {
     return gSpeciesInfo[species].types[0] == type || gSpeciesInfo[species].types[1] == type;
 }

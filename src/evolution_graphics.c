@@ -386,7 +386,7 @@ static void EvoTask_PostEvoSparklesSet1Teardown(u8 taskId)
     DestroyTask(taskId);
 }
 
-u8 EvolutionSparkles_SprayAndFlash(u16 species)
+u8 EvolutionSparkles_SprayAndFlash(enum Species species)
 {
     u8 taskId = CreateTask(EvoTask_PostEvoSparklesSet2Init, 0);
     gTasks[taskId].data[2] = species;
@@ -437,7 +437,7 @@ static void EvoTask_PostEvoSparklesSet2Teardown(u8 taskId)
         DestroyTask(taskId);
 }
 
-u8 EvolutionSparkles_SprayAndFlash_Trade(u16 species)
+u8 EvolutionSparkles_SprayAndFlash_Trade(enum Species species)
 {
     u8 taskId = CreateTask(EvoTask_PostEvoSparklesSet2TradeInit, 0);
     gTasks[taskId].data[2] = species;

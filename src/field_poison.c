@@ -18,10 +18,9 @@
 
 static bool32 IsMonValidSpecies(struct Pokemon *pokemon)
 {
-    u16 species = GetMonData(pokemon, MON_DATA_SPECIES_OR_EGG);
-    if (species == SPECIES_NONE || species == SPECIES_EGG)
-        return FALSE;
-    return TRUE;
+    enum Species species = GetMonData(pokemon, MON_DATA_SPECIES_OR_EGG);
+
+    return species != SPECIES_NONE && species != SPECIES_EGG;
 }
 
 static bool32 AllMonsFainted(void)

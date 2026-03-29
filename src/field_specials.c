@@ -88,7 +88,7 @@ static void Task_AnimatePcTurnOn(u8 taskId);
 static void PcTurnOnUpdateMetatileId(bool16 flag);
 static void Task_ShakeScreen(u8 taskId);
 static void Task_EndScreenShake(u8 taskId);
-static u16 SampleResortGorgeousMon(void);
+static enum Species SampleResortGorgeousMon(void);
 static u16 SampleResortGorgeousReward(void);
 static void Task_ElevatorShake(u8 taskId);
 static void AnimateElevatorWindowView(u16 nfloors, bool8 direction);
@@ -102,7 +102,7 @@ static void Task_SuspendListMenu(u8 taskId);
 static void Task_RedrawScrollArrowsAndWaitInput(u8 taskId);
 static void Task_CreateMenuRemoveScrollIndicatorArrowPair(u8 taskId);
 static void Task_ListMenuRemoveScrollIndicatorArrowPair(u8 taskId);
-static u16 GetStarterSpeciesById(u16 starterIdx);
+static enum Species GetStarterSpeciesById(u16 starterIdx);
 static void ChangeBoxPokemonNickname_CB(void);
 static void ChangePokemonNickname_CB(void);
 static void Task_RunPokemonLeagueLightingEffect(u8 taskId);
@@ -387,16 +387,13 @@ bool8 PlayerHasGrassPokemonInParty(void)
 {
     u8 i;
     struct Pokemon * pokemon;
-    u16 species;
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
         pokemon = &gPlayerParty[i];
-        if (GetMonData(pokemon, MON_DATA_SANITY_HAS_SPECIES)
-         && !GetMonData(pokemon, MON_DATA_IS_EGG)
-        )
+        if (GetMonData(pokemon, MON_DATA_SANITY_HAS_SPECIES) && !GetMonData(pokemon, MON_DATA_IS_EGG))
         {
-            species = GetMonData(pokemon, MON_DATA_SPECIES);
+            enum Species species = GetMonData(pokemon, MON_DATA_SPECIES);
             if (gSpeciesInfo[species].types[0] == TYPE_GRASS || gSpeciesInfo[species].types[1] == TYPE_GRASS)
                 return TRUE;
         }
@@ -646,7 +643,7 @@ bool8 AreLeadMonEVsMaxedOut(void)
 
 bool8 IsStarterFirstStageInParty(void)
 {
-    u16 species = GetStarterSpeciesById(VarGet(VAR_STARTER_MON));
+    enum Species species = GetStarterSpeciesById(VarGet(VAR_STARTER_MON));
     u8 partyCount = CalculatePlayerPartyCount();
     u8 i;
     for (i = 0; i < partyCount; i++)
@@ -907,11 +904,11 @@ void SampleResortGorgeousMonAndReward(void)
     StringCopy(gStringVar1, gSpeciesInfo[VarGet(VAR_RESORT_GORGEOUS_REQUESTED_MON)].speciesName);
 }
 
-static u16 SampleResortGorgeousMon(void)
+static enum Species SampleResortGorgeousMon(void)
 {
-    u16 i;
-    u16 species;
-    for (i = 0; i < 100; i++)
+    enum Species species;
+
+    for (u16 i = 0; i < 100; i++)
     {
         species = (Random() % (NUM_SPECIES - 1)) + 1;
         if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), 0) == TRUE)
@@ -1730,20 +1727,20 @@ void ForcePlayerToStartSurfing(void)
     SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_SURFING);
 }
 
-static const u16 sStarterSpecies[] = {
+static const enum Species sStarterSpecies[] = {
     SPECIES_BULBASAUR,
     SPECIES_SQUIRTLE,
     SPECIES_CHARMANDER
 };
 
-static u16 GetStarterSpeciesById(u16 idx)
+static enum Species GetStarterSpeciesById(u16 idx)
 {
     if (idx >= ARRAY_COUNT(sStarterSpecies))
         idx = 0;
     return sStarterSpecies[idx];
 }
 
-u16 GetStarterSpecies(void)
+enum Species GetStarterSpecies(void)
 {
     return GetStarterSpeciesById(VarGet(VAR_STARTER_MON));
 }
@@ -1866,16 +1863,15 @@ bool8 NameRaterWasNicknameChanged(void)
 void ChangeBoxPokemonNickname(void)
 {
     struct BoxPokemon * pokemon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
-    u16 species;
+    enum Species species;
     u8 gender;
     u32 personality;
 
-
     GetBoxMonData(pokemon, MON_DATA_NICKNAME, gStringVar3);
     GetBoxMonData(pokemon, MON_DATA_NICKNAME, gStringVar2);
-    species = GetBoxMonData(pokemon, MON_DATA_SPECIES, NULL);
+    species = GetBoxMonData(pokemon, MON_DATA_SPECIES);
     gender = GetBoxMonGender(pokemon);
-    personality = GetBoxMonData(pokemon, MON_DATA_PERSONALITY, NULL);
+    personality = GetBoxMonData(pokemon, MON_DATA_PERSONALITY);
     DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar2, species, gender, personality, ChangeBoxPokemonNickname_CB);
 }
 
@@ -1887,15 +1883,15 @@ static void ChangeBoxPokemonNickname_CB(void)
 
 void ChangePokemonNickname(void)
 {
-    u16 species;
+    enum Species species;
     u8 gender;
     u32 personality;
 
     GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar3);
     GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar2);
-    species = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES, NULL);
+    species = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES);
     gender = GetMonGender(&gPlayerParty[gSpecialVar_0x8004]);
-    personality = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_PERSONALITY, NULL);
+    personality = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_PERSONALITY);
     DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar2, species, gender, personality, ChangePokemonNickname_CB);
 }
 
@@ -1946,18 +1942,21 @@ u8 GetUnlockedSeviiAreas(void)
 
 void UpdateTrainerCardPhotoIcons(void)
 {
-    u16 species[PARTY_SIZE];
+    enum Species species[PARTY_SIZE];
     u32 personality[PARTY_SIZE];
     u8 i;
     u8 partyCount;
+
     for (i = 0; i < PARTY_SIZE; i++)
         species[i] = SPECIES_NONE;
+
     partyCount = CalculatePlayerPartyCount();
     for (i = 0; i < partyCount; i++)
     {
         species[i] = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL);
         personality[i] = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY, NULL);
     }
+
     VarSet(VAR_TRAINER_CARD_MON_ICON_1, SpeciesToMailSpecies(species[0], personality[0]));
     VarSet(VAR_TRAINER_CARD_MON_ICON_2, SpeciesToMailSpecies(species[1], personality[1]));
     VarSet(VAR_TRAINER_CARD_MON_ICON_3, SpeciesToMailSpecies(species[2], personality[2]));

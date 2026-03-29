@@ -73,7 +73,7 @@ static void LoadMonPicPaletteByTagOrSlot(u16 species, bool32 isShiny, u32 person
     }
 }
 
-void LoadMonFrontPicInWindow(u16 species, bool32 isShiny, u32 personality, u8 paletteSlot, u8 windowId)
+void LoadMonFrontPicInWindow(enum Species species, bool32 isShiny, u32 personality, u8 paletteSlot, u8 windowId)
 {
     u8 *framePics = Alloc(MON_PIC_SIZE * MAX_MON_PIC_FRAMES);
 
@@ -99,7 +99,7 @@ void LoadTrainerFrontPicInWindow(enum TrainerPicID trainerPicId, u16 destX, u16 
     Free(framePics);
 }
 
-u16 CreateMonFrontPicSprite(u16 species, bool32 isShiny, u32 personality, s16 x, s16 y, u8 paletteSlot, u16 paletteTag)
+u16 CreateMonFrontPicSprite(enum Species species, bool32 isShiny, u32 personality, s16 x, s16 y, u8 paletteSlot, u16 paletteTag)
 {
     u8 i;
     u8 *framePics;
@@ -153,7 +153,7 @@ u16 CreateMonFrontPicSprite(u16 species, bool32 isShiny, u32 personality, s16 x,
     return spriteId;
 }
 
-u16 CreateMonPicSprite_Affine(u16 species, bool8 isShiny, u32 personality, u8 flags, s16 x, s16 y, u8 paletteSlot, u16 paletteTag)
+u16 CreateMonPicSprite_Affine(enum Species species, bool8 isShiny, u32 personality, u8 flags, s16 x, s16 y, u8 paletteSlot, u16 paletteTag)
 {
     u8 *framePics;
     struct SpriteFrameImage *images;
@@ -228,6 +228,7 @@ u16 CreateMonPicSprite_Affine(u16 species, bool8 isShiny, u32 personality, u8 fl
     sSpritePics[i].paletteTag = paletteTag;
     sSpritePics[i].spriteId = spriteId;
     sSpritePics[i].active = TRUE;
+
     return spriteId;
 }
 

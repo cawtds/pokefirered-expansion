@@ -622,7 +622,7 @@ struct LevelUpMove
 struct FormChange
 {
     u16 method;
-    u16 targetSpecies;
+    enum Species targetSpecies;
     u16 param1;
     u16 param2;
     u16 param3;
@@ -632,7 +632,7 @@ struct FormChange
 struct FormChangeContext
 {
     enum FormChanges method:16;
-    u16 currentSpecies;
+    enum Species currentSpecies;
     u16 partyItemUsed;
     u16 multichoiceSelection;
     u16 heldItem;
