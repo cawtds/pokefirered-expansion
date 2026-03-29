@@ -87,11 +87,11 @@ static void CreateEggShardSprite(u8 x, u8 y, s16 data1, s16 data2, s16 data3, u8
 static struct EggHatchData *sEggHatchData;
 
 // RAM buffers used to assist with BuildEggMoveset()
-EWRAM_DATA static u16 sHatchedEggLevelUpMoves[EGG_LVL_UP_MOVES_ARRAY_COUNT] = {0};
-EWRAM_DATA static u16 sHatchedEggFatherMoves[MAX_MON_MOVES] = {0};
-EWRAM_DATA static u16 sHatchedEggFinalMoves[MAX_MON_MOVES] = {0};
-EWRAM_DATA static u16 sHatchedEggEggMoves[EGG_MOVES_ARRAY_COUNT] = {0};
-EWRAM_DATA static u16 sHatchedEggMotherMoves[MAX_MON_MOVES] = {0};
+EWRAM_DATA static enum Move sHatchedEggLevelUpMoves[EGG_LVL_UP_MOVES_ARRAY_COUNT] = {0};
+EWRAM_DATA static enum Move sHatchedEggFatherMoves[MAX_MON_MOVES] = {0};
+EWRAM_DATA static enum Move sHatchedEggFinalMoves[MAX_MON_MOVES] = {0};
+EWRAM_DATA static enum Move sHatchedEggEggMoves[EGG_MOVES_ARRAY_COUNT] = {0};
+EWRAM_DATA static enum Move sHatchedEggMotherMoves[MAX_MON_MOVES] = {0};
 
 static const struct WindowTemplate sDaycareLevelMenuWindowTemplate =
 {
@@ -1145,7 +1145,7 @@ static void BuildEggMoveset(struct Pokemon *egg, struct BoxPokemon *father, stru
             {
                 for (j = 0; j < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; j++)
                 {
-                    u16 moveId = ItemIdToBattleMoveId(ITEM_TM01 + j);
+                    enum Move moveId = ItemIdToBattleMoveId(ITEM_TM01 + j);
                     if (sHatchedEggFatherMoves[i] == moveId && CanLearnTeachableMove(GetMonData(egg, MON_DATA_SPECIES_OR_EGG), moveId))
                     {
                         if (GiveMoveToMon(egg, sHatchedEggFatherMoves[i]) == MON_HAS_MAX_MOVES)

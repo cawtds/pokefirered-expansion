@@ -227,7 +227,7 @@ static inline enum Item GetTMHMItemId(enum TMHMIndex index)
     return gTMHMItemMoveIds[index].itemId;
 }
 
-static inline u16 GetTMHMMoveId(enum TMHMIndex index)
+static inline enum Move GetTMHMMoveId(enum TMHMIndex index)
 {
     return gTMHMItemMoveIds[index].moveId;
 }

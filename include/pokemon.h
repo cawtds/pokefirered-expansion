@@ -945,8 +945,8 @@ u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot);
 void ChangePokemonNicknameWithCallback(void (*callback)(void));
 
 // pokefirered
-u16 GetFirstPartnerMove(enum Species species);
+enum Move GetFirstPartnerMove(enum Species species);
 u8 GetPlayerPartyHighestLevel(void);
-bool8 CheckBattleTypeGhost(struct Pokemon *mon, enum BattlerId battler);
+bool32 CheckBattleTypeGhost(struct Pokemon *mon, enum BattlerId battler);
 
 #endif // GUARD_POKEMON_H

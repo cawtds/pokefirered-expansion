@@ -1553,21 +1553,19 @@ static void DrawMoveInfoLabels(void)
 
 static void PrintMoveInfo(enum Item itemId)
 {
-    u8 i;
-    u16 move;
-    const u8 * str;
 
     FillWindowPixelRect(WIN_MOVE_INFO, 0, 0, 0, 40, 48);
     if (itemId == ITEM_NONE)
     {
-        for (i = 0; i < 4; i++)
+        for (u32 i = 0; i < 4; i++)
             TMCase_Print(WIN_MOVE_INFO, FONT_NORMAL_COPY_2, gText_ThreeHyphens, 7, 12 * i, 0, 0, TEXT_SKIP_DRAW, COLOR_MOVE_INFO);
         CopyWindowToVram(WIN_MOVE_INFO, COPYWIN_GFX);
     }
     else
     {
+        const u8 *str;
+        enum Move move = ItemIdToBattleMoveId(itemId);
         // Draw type icon
-        move = ItemIdToBattleMoveId(itemId);
         BlitMenuInfoIcon(WIN_MOVE_INFO, gMovesInfo[move].type + 1, 0, 0);
 
         // Print power

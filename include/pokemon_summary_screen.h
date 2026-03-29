@@ -12,7 +12,7 @@ extern const struct SpritePalette gSpritePal_CategoryIcons;
 extern const struct SpriteTemplate gSpriteTemplate_CategoryIcons;
 extern MainCallback gInitialSummaryScreenCallback;
 
-void ShowSelectMovePokemonSummaryScreen(struct Pokemon *mons, u8 monIndex, void (*callback)(void), u16 newMove);
+void ShowSelectMovePokemonSummaryScreen(struct Pokemon *mons, u8 monIndex, void (*callback)(void), enum Move newMove);
 u8 GetMoveSlotToReplace(void);
 void SummaryScreen_SetUnknownTaskId(u8 a0);
 void SummaryScreen_DestroyUnknownTask(void);

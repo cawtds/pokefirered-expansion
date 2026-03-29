@@ -851,7 +851,7 @@ const u8 *GetBufferedString(u8 *buffer, u16 value)
     return buffer;
 }
 
-static void PrintMoveInfo(u16 move)
+static void PrintMoveInfo(enum Move move)
 {
     const u8 *colors = sTextColors[GENERAL_TEXT_COLOR];
     u8 buffer[50];

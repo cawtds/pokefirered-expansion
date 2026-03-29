@@ -2466,7 +2466,8 @@ bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
     //   8007 = Index of lead mon
     //   to specialvar = whether a move can be taught in the first place
     u8 i, leadMonSlot, moveCount = 0;
-    u16 moveId, tutorFlag;
+    enum Move moveId;
+    u16 tutorFlag;
     struct Pokemon *leadMon;
 
     leadMonSlot = GetLeadMonIndex();

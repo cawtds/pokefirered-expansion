@@ -7426,7 +7426,7 @@ u8 GetPlayerPartyHighestLevel(void)
     return level;
 }
 
-bool8 CheckBattleTypeGhost(struct Pokemon *mon, enum BattlerId battler)
+bool32 CheckBattleTypeGhost(struct Pokemon *mon, enum BattlerId battler)
 {
     u8 nickname[POKEMON_NAME_LENGTH + 1];
 
@@ -7440,7 +7440,7 @@ bool8 CheckBattleTypeGhost(struct Pokemon *mon, enum BattlerId battler)
     return FALSE;
 }
 
-u16 GetFirstPartnerMove(enum Species species)
+enum Move GetFirstPartnerMove(enum Species species)
 {
     switch(species)
     {

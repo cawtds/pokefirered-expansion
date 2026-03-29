@@ -103,8 +103,8 @@ static void BufferMonSkills(void);
 static void BufferMonMoves(void);
 static u8 StatusToAilment(u32 status);
 static void BufferMonMoveI(u8);
-static u16 GetMonMoveBySlotId(struct Pokemon * mon, u8 moveSlot);
-static u16 GetMonPpByMoveSlot(struct Pokemon * mon, u8 moveSlot);
+static enum Move GetMonMoveBySlotId(struct Pokemon *mon, u8 moveSlot);
+static u16 GetMonPpByMoveSlot(struct Pokemon *mon, u8 moveSlot);
 static void CreateShinyStarObj(u16, u16);
 static void CreatePokerusIconObj(u16, u16);
 static void PokeSum_CreateMonMarkingsSprite(void);
@@ -223,8 +223,8 @@ struct PokemonSummaryScreenData
     u8 ALIGNED(4) unk3248; /* 0x3248 */
     s16 ALIGNED(4) flipPagesBgHofs; /* 0x324C */
 
-    u16 moveTypes[MAX_MON_MOVES + 1]; /* 0x3250 */
-    u16 moveIds[MAX_MON_MOVES + 1]; /* 0x325A */
+    enum Type moveTypes[MAX_MON_MOVES + 1]; /* 0x3250 */
+    enum Move moveIds[MAX_MON_MOVES + 1]; /* 0x325A */
     u8 ALIGNED(4) numMoves; /* 0x3264 */
     u8 ALIGNED(4) isSwappingMoves; /* 0x3268 */
 
@@ -1301,10 +1301,10 @@ void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallbac
     SetMainCallback2(CB2_SetUpPSS);
 }
 
-void ShowSelectMovePokemonSummaryScreen(struct Pokemon *party, u8 cursorPos, MainCallback savedCallback, u16 move)
+void ShowSelectMovePokemonSummaryScreen(struct Pokemon *party, u8 cursorPos, MainCallback savedCallback, enum Move move)
 {
     ShowPokemonSummaryScreen(party, cursorPos, gPlayerPartyCount - 1, savedCallback, PSS_MODE_SELECT_MOVE);
-    sMonSummaryScreen->moveIds[4] = move;
+    sMonSummaryScreen->moveIds[MAX_MON_MOVES] = move;
 }
 
 static u8 PageFlipInputIsDisabled(u8 direction)
@@ -2661,7 +2661,7 @@ static void BufferMonMoveI(u8 i)
     if (i < MAX_MON_MOVES)
         sMonSummaryScreen->moveIds[i] = GetMonMoveBySlotId(&sMonSummaryScreen->currentMon, i);
 
-    if (sMonSummaryScreen->moveIds[i] == 0)
+    if (sMonSummaryScreen->moveIds[i] == MOVE_NONE)
     {
         StringCopy(sMonSummaryScreen->summary.moveNameStrBufs[i], gText_PokeSum_OneHyphen);
         StringCopy(sMonSummaryScreen->summary.moveCurPpStrBufs[i], gText_PokeSum_TwoHyphens);
@@ -2676,7 +2676,7 @@ static void BufferMonMoveI(u8 i)
     sMonSummaryScreen->moveTypes[i] = gMovesInfo[sMonSummaryScreen->moveIds[i]].type;
     StringCopy(sMonSummaryScreen->summary.moveNameStrBufs[i], gMovesInfo[sMonSummaryScreen->moveIds[i]].name);
 
-    if (i >= 4 && sMonSummaryScreen->mode == PSS_MODE_SELECT_MOVE)
+    if (i >= MAX_MON_MOVES && sMonSummaryScreen->mode == PSS_MODE_SELECT_MOVE)
     {
         ConvertIntToDecimalStringN(sMonSummaryScreen->summary.moveCurPpStrBufs[i],
                                    gMovesInfo[sMonSummaryScreen->moveIds[i]].pp, STR_CONV_MODE_LEFT_ALIGN, 3);
@@ -2981,7 +2981,7 @@ static void PokeSum_PrintMoveName(u8 i)
 {
     u8 colorIdx = 0;
     u8 curPP = GetMonPpByMoveSlot(&sMonSummaryScreen->currentMon, i);
-    u16 move = sMonSummaryScreen->moveIds[i];
+    enum Move move = sMonSummaryScreen->moveIds[i];
     u8 ppBonuses = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_PP_BONUSES);
     u8 maxPP = CalculatePPWithBonus(move, ppBonuses, i);
 
@@ -3899,9 +3899,9 @@ static void BufferSelectedMonData(struct Pokemon * mon)
     }
 }
 
-static u16 GetMonMoveBySlotId(struct Pokemon * mon, u8 moveSlot)
+static enum Move GetMonMoveBySlotId(struct Pokemon * mon, u8 moveSlot)
 {
-    u16 move;
+    enum Move move;
 
     switch (moveSlot)
     {
@@ -4244,9 +4244,7 @@ static void UpdateCurrentMonBufferFromPartyOrBox(struct Pokemon * mon)
 
 static u8 PokeSum_CanForgetSelectedMove(void)
 {
-    u16 move;
-
-    move = GetMonMoveBySlotId(&sMonSummaryScreen->currentMon, sMoveSelectionCursorPos);
+    enum Move move = GetMonMoveBySlotId(&sMonSummaryScreen->currentMon, sMoveSelectionCursorPos);
 
     if (CannotForgetMove(move) == TRUE && sMonSummaryScreen->mode != PSS_MODE_FORGET_MOVE)
         return FALSE;

@@ -293,8 +293,8 @@ static EWRAM_DATA u8 sPokeBallRotation = 0;
 static EWRAM_DATA struct PokedexListItem *sPokedexListItem = NULL;
 //Pokedex Plus HGSS_Ui
 #define MOVES_COUNT_TOTAL (EGG_MOVES_ARRAY_COUNT + MAX_LEVEL_UP_MOVES + NUM_ALL_MACHINES)
-EWRAM_DATA static u16 sStatsMoves[MOVES_COUNT_TOTAL] = {0};
-EWRAM_DATA static u16 sStatsMovesTMHM_ID[NUM_ALL_MACHINES] = {0};
+EWRAM_DATA static enum Move sStatsMoves[MOVES_COUNT_TOTAL] = {0};
+EWRAM_DATA static enum Item sStatsMovesTMHM_ID[NUM_ALL_MACHINES] = {0};
 
 
 struct SearchOptionText
@@ -5056,14 +5056,14 @@ static void PrintStatsScreen_DestroyMoveItemIcon(u8 taskId)
 
 static u16 AddTMTutorMoves(enum Species species, u16 movesTotal, u8 *numTMHMMoves, u8 *numTutorMoves)
 {
-    u16 i, move;
+    enum Move move;
     bool8 isTMMove[MOVES_COUNT] = {0};
     const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
 
     // TM Moves
     if (HGSS_SORT_TMS_BY_NUM)
     {
-        for (i = 0; i < NUM_ALL_MACHINES; i++)
+        for (u32 i = 0; i < NUM_ALL_MACHINES; i++)
         {
             move = GetTMHMMoveId(i + 1);
             if (move != MOVE_NONE && CanLearnTeachableMove(species, move))
@@ -5078,7 +5078,7 @@ static u16 AddTMTutorMoves(enum Species species, u16 movesTotal, u8 *numTMHMMove
     }
     else
     {
-        for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
+        for (u32 i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
         {
             move = teachableLearnset[i];
             for (u16 j = 0; j < NUM_ALL_MACHINES; j++)
@@ -5098,7 +5098,7 @@ static u16 AddTMTutorMoves(enum Species species, u16 movesTotal, u8 *numTMHMMove
 
     // Tutor Moves
 #if P_TUTOR_MOVES_ARRAY
-    for (i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
+    for (u32 i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
     {
         move = gTutorMoves[i];
         if (!isTMMove[move] && CanLearnTeachableMove(species, move))
@@ -5109,7 +5109,7 @@ static u16 AddTMTutorMoves(enum Species species, u16 movesTotal, u8 *numTMHMMove
         }
     }
 #else
-    for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
+    for (u32 i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
     {
         move = teachableLearnset[i];
         if (!isTMMove[move] && CanLearnTeachableMove(species, move))
@@ -5193,9 +5193,8 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
     u8 level;
     u8 moves_x = 5;
     u8 moves_y = 3;
-    u16 move;
+    enum Move move;
     enum Item item;
-
     enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
 
     //Move
@@ -5266,7 +5265,7 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
 static void PrintStatsScreen_Moves_Description(u8 taskId)
 {
     u16 selected = sPokedexView->moveSelected;
-    u16 move;
+    enum Move move;
     u8 moves_x = 5;
     u8 moves_y = 5;
 
@@ -5308,7 +5307,7 @@ static void PrintStatsScreen_Moves_Bottom(u8 taskId)
     u8 moves_x = 8;
     u8 moves_y = 3;
     u8 selected = sPokedexView->moveSelected;
-    u16 move;
+    enum Move move;
     //Contest
     u8 contest_effectValue;
     u8 contest_appeal = 0;

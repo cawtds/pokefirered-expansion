@@ -6,11 +6,11 @@
 struct FieldMoveInfo {
     enum Species defaultSpecies;
     bool32 (*isUnlockedFunc)(void);
-    u16 moveId;
+    enum Move moveId;
     u8 partyMessageId;
-    const u8* description;
+    const u8 *description;
     bool32 (*setUpFunc)(void);
-    const u8* questLogText;
+    const u8 *questLogText;
 };
 
 extern const struct FieldMoveInfo gFieldMovesInfo[];

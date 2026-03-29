@@ -2216,7 +2216,7 @@ bool8 ScrCmd_bufferdecorationname(struct ScriptContext * ctx)
 bool8 ScrCmd_buffermovename(struct ScriptContext * ctx)
 {
     u8 stringVarIndex = ScriptReadByte(ctx);
-    u16 moveId = VarGet(ScriptReadHalfword(ctx));
+    enum Move moveId = VarGet(ScriptReadHalfword(ctx));
 
     Script_RequestEffects(SCREFF_V1);
 
@@ -2306,7 +2306,7 @@ bool8 ScrCmd_setmonmove(struct ScriptContext * ctx)
 {
     u8 partyIndex = ScriptReadByte(ctx);
     u8 slot = ScriptReadByte(ctx);
-    u16 move = ScriptReadHalfword(ctx);
+    enum Move move = ScriptReadHalfword(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
 
@@ -2316,18 +2316,17 @@ bool8 ScrCmd_setmonmove(struct ScriptContext * ctx)
 
 bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
 {
-    u8 i;
-    u16 moveId = ScriptReadHalfword(ctx);
+    enum Move moveId = ScriptReadHalfword(ctx);
 
     Script_RequestEffects(SCREFF_V1);
 
     gSpecialVar_Result = PARTY_SIZE;
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (u32 i = 0; i < PARTY_SIZE; i++)
     {
         enum Species species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
         if (!species)
             break;
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], moveId) == TRUE)
+        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], moveId))
         {
             gSpecialVar_Result = i;
             gSpecialVar_0x8004 = species;
@@ -2341,7 +2340,7 @@ bool8 ScrCmd_checkfieldmoveusable(struct ScriptContext* ctx)
 {
     u32 partyIndex;
     enum FieldMove fieldMove = ScriptReadHalfword(ctx);
-    u16 moveId = gFieldMovesInfo[fieldMove].moveId;
+    enum Move moveId = gFieldMovesInfo[fieldMove].moveId;
     gSpecialVar_Result = FALSE;
 
     Script_RequestEffects(SCREFF_V1);

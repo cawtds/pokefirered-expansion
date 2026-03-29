@@ -69,7 +69,6 @@ static struct PokemonSpecialAnim *AllocPSA(u8 slotId, enum Item itemId, MainCall
 {
     struct PokemonSpecialAnim *ptr;
     struct Pokemon *pokemon;
-    u16 moveId;
 
     if (!gMain.inBattle)
         ResetTasks();
@@ -96,7 +95,7 @@ static struct PokemonSpecialAnim *AllocPSA(u8 slotId, enum Item itemId, MainCall
     GetMonData(pokemon, MON_DATA_NICKNAME, ptr->nickname);
     if (ptr->animType == PSA_ITEM_ANIM_TYPE_TMHM)
     {
-        moveId = ItemIdToBattleMoveId(itemId);
+        enum Move moveId = ItemIdToBattleMoveId(itemId);
         StringCopy(ptr->nameOfMoveToTeach, GetMoveName(moveId));
     }
     return ptr;

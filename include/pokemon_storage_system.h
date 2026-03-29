@@ -28,44 +28,41 @@ struct PokemonStorage
 
 extern struct PokemonStorage *gPokemonStoragePtr;
 
-void DrawTextWindowAndBufferTiles(const u8 *string, void *dst, u8 zero1, u8 zero2, s32 bytesToBuffer);
-u8 CountMonsInBox(u8 boxId);
-s16 GetFirstFreeBoxSpot(u8 boxId);
-u8 CountPartyAliveNonEggMonsExcept(u8 slotToIgnore);
-u16 CountPartyAliveNonEggMons_IgnoreVar0x8004Slot(void);
-u8 CountPartyMons(void);
-u8 *StringCopyAndFillWithSpaces(u8 *dst, const u8 *src, u16 n);
-void ShowPokemonStorageSystemPC(void);
-void ResetPokemonStorageSystem(void);
+bool32 CheckBoxMonSanityAt(u32 boxId, u32 boxPosition);
+bool8 CheckFreePokemonStorageSpace(void);
+s16 AdvanceStorageMonIndex(struct BoxPokemon *boxMons, u8 currIndex, u8 maxIndex, u8 mode);
 s16 CompactPartySlots(void);
-u8 StorageGetCurrentBox(void);
-u32 GetBoxMonDataAt(u8 boxId, u8 boxPosition, s32 request);
-void SetBoxMonDataAt(u8 boxId, u8 boxPosition, s32 request, const void *value);
-u32 GetCurrentBoxMonData(u8 boxPosition, s32 request);
-void SetCurrentBoxMonData(u8 boxPosition, s32 request, const void *value);
-void GetBoxMonNickAt(u8 boxId, u8 boxPosition, u8 *dst);
-u32 GetBoxMonLevelAt(u8 boxId, u8 boxPosition);
-void SetBoxMonNickAt(u8 boxId, u8 boxPosition, const u8 *nick);
+s16 GetFirstFreeBoxSpot(u8 boxId);
+struct BoxPokemon *GetBoxedMonPtr(u8 boxId, u8 boxPosition);
+u16 CountPartyAliveNonEggMons_IgnoreVar0x8004Slot(void);
+u32 CountAllStorageMons(void);
+u32 CountPartyNonEggMons(void);
+u32 CountStorageNonEggMons(void);
 u32 GetAndCopyBoxMonDataAt(u8 boxId, u8 boxPosition, s32 request, void *dst);
-void SetBoxMonAt(u8 boxId, u8 boxPosition, struct BoxPokemon *src);
+u32 GetBoxMonDataAt(u8 boxId, u8 boxPosition, s32 request);
+u32 GetBoxMonLevelAt(u8 boxId, u8 boxPosition);
+u32 GetCurrentBoxMonData(u8 boxPosition, s32 request);
+u8 *GetBoxNamePtr(u8 boxId);
+u8 *StringCopyAndFillWithSpaces(u8 *dst, const u8 *src, u16 n);
+u8 CountMonsInBox(u8 boxId);
+u8 CountPartyAliveNonEggMonsExcept(u8 slotToIgnore);
+u8 CountPartyMons(void);
+u8 StorageGetCurrentBox(void);
+void BoxMonAtToMon(u8 boxId, u8 boxPosition, struct Pokemon *dst);
+void CB2_ReturnToPokeStorage(void);
+void ChooseMonFromStorage();
 void CopyBoxMonAt(u8 boxId, u8 boxPosition, struct BoxPokemon *dst);
 void CreateBoxMonAt(u8 boxId, u8 boxPosition, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 personality, u8 otIDType, u32 otID);
-void ZeroBoxMonAt(u8 boxId, u8 boxPosition);
-void BoxMonAtToMon(u8 boxId, u8 boxPosition, struct Pokemon *dst);
-struct BoxPokemon *GetBoxedMonPtr(u8 boxId, u8 boxPosition);
-u8 *GetBoxNamePtr(u8 boxId);
-s16 AdvanceStorageMonIndex(struct BoxPokemon *boxMons, u8 currIndex, u8 maxIndex, u8 mode);
-bool8 CheckFreePokemonStorageSpace(void);
-bool32 CheckBoxMonSanityAt(u32 boxId, u32 boxPosition);
-u32 CountStorageNonEggMons(void);
-u32 CountAllStorageMons(void);
-bool32 AnyStorageMonWithMove(u16 moveId);
-
-void CB2_ReturnToPokeStorage(void);
-
+void DrawTextWindowAndBufferTiles(const u8 *string, void *dst, u8 zero1, u8 zero2, s32 bytesToBuffer);
 void EnterPokeStorage(u8 boxOption);
-u32 CountPartyNonEggMons(void);
-void ChooseMonFromStorage();
+void GetBoxMonNickAt(u8 boxId, u8 boxPosition, u8 *dst);
 void RemoveSelectedPcMon(struct Pokemon *mon);
+void ResetPokemonStorageSystem(void);
+void SetBoxMonAt(u8 boxId, u8 boxPosition, struct BoxPokemon *src);
+void SetBoxMonDataAt(u8 boxId, u8 boxPosition, s32 request, const void *value);
+void SetBoxMonNickAt(u8 boxId, u8 boxPosition, const u8 *nick);
+void SetCurrentBoxMonData(u8 boxPosition, s32 request, const void *value);
+void ShowPokemonStorageSystemPC(void);
+void ZeroBoxMonAt(u8 boxId, u8 boxPosition);
 
 #endif // GUARD_POKEMON_STORAGE_SYSTEM_H

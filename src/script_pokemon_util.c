@@ -510,7 +510,7 @@ void CreateScriptedDoubleWildMon(enum Species species1, u8 level1, enum Item ite
     }
 }
 
-void ScriptSetMonMoveSlot(u8 monIndex, u16 move, u8 slot)
+void ScriptSetMonMoveSlot(u8 monIndex, enum Move move, u8 slot)
 {
     if (monIndex > PARTY_SIZE)
         monIndex = gPlayerPartyCount - 1;

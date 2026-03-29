@@ -3,7 +3,7 @@
 
 u32 ScriptGiveMon(enum Species species, u8 level, enum Item item);
 bool8 ScriptGiveEgg(enum Species species);
-void ScriptSetMonMoveSlot(u8 partyIdx, u16 move, u8 slot);
+void ScriptSetMonMoveSlot(u8 partyIdx, enum Move move, u8 slot);
 void HealPlayerParty(void);
 void ReducePlayerPartyToSelectedMons(void);
 void CreateScriptedWildMon(enum Species species, u8 level, enum Item item);
