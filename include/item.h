@@ -235,12 +235,12 @@ static inline u16 GetTMHMMoveId(enum TMHMIndex index)
 void BagPocket_SetSlotData(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot);
 struct ItemSlot BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos);
 
-static inline void BagPocket_SetSlotItemIdAndCount(struct BagPocket *pocket, u32 pocketPos, u16 itemId, u16 quantity)
+static inline void BagPocket_SetSlotItemIdAndCount(struct BagPocket *pocket, u32 pocketPos, enum Item itemId, u16 quantity)
 {
     BagPocket_SetSlotData(pocket, pocketPos, (struct ItemSlot) {itemId, quantity});
 }
 
-static inline u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos)
+static inline enum Item GetBagItemId(enum Pocket pocketId, u32 pocketPos)
 {
     return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos).itemId;
 }

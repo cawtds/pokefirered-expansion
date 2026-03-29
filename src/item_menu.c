@@ -193,7 +193,7 @@ static void ConfirmSell(u8 taskId);
 static void CancelSell(u8 taskId);
 
 // pokefirered functions
-static void BagListMenuGetItemNameColored(u8 *dest, u16 itemId);
+static void BagListMenuGetItemNameColored(u8 *dest, enum Item itemId);
 static void PrintPocketName(void);
 static void GoToTMCase_Give(void);
 static void GoToBerryPouch_Give(void);
@@ -1018,7 +1018,7 @@ static void LoadBagItemListBuffers(u8 pocketId)
     gMultiuseListMenuTemplate.maxShowed = gBagMenu->numShownItems[pocketId];
 }
 
-static void BagListMenuGetItemNameColored(u8 *dest, u16 itemId)
+static void BagListMenuGetItemNameColored(u8 *dest, enum Item itemId)
 {
     u8* end;
     if (itemId == ITEM_TM_CASE || itemId == ITEM_BERRY_POUCH)
@@ -1052,9 +1052,8 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
 
 static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
 {
-    u16 itemId;
+    enum Item itemId;
     u16 itemQuantity;
-
 
     if (itemIndex == LIST_CANCEL)
         return;

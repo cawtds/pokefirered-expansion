@@ -8,7 +8,7 @@ extern const struct SpritePalette gSpritePalette_Bag;
 void AddBagVisualSprite(u8 bagPocketId);
 void SetBagVisualPocketId(u8 bagPocketId);
 void ShakeBagSprite(void);
-void AddBagItemIconSprite(u16 itemId, u8 id);
+void AddBagItemIconSprite(enum Item itemId, u8 id);
 void RemoveBagItemIconSprite(u8 id);
 void CreateItemMenuSwapLine(void);
 void SetItemMenuSwapLineInvisibility(bool8 invisible);

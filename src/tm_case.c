@@ -126,11 +126,11 @@ static void LoadBGTemplates(void);
 static bool8 HandleLoadTMCaseGraphicsAndPalettes(void);
 static void CreateTMCaseListMenuBuffers(void);
 static void InitTMCaseListMenuItems(void);
-static void GetTMNumberAndMoveString(u8 * dest, u16 itemId);
+static void GetTMNumberAndMoveString(u8 *dest, enum Item itemId);
 static void List_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list);
 static void List_ItemPrintFunc(u8 windowId, u32 itemId, u8 y);
 static void PrintDescription(s32 itemIndex);
-static void PrintMoveInfo(u16 itemId);
+static void PrintMoveInfo(enum Item itemId);
 static void PrintListCursorAtRow(u8 y, u8 colorIdx);
 static void CreateListScrollArrows(void);
 static void TMCaseSetup_GetTMCount(void);
@@ -173,11 +173,11 @@ static void PrintPlayersMoney(void);
 static void HandleCreateYesNoMenu(u8 taskId, const struct YesNoFuncTable * ptrs);
 static u8 AddContextMenu(u8 * windowId, u8 windowIndex);
 static void RemoveContextMenu(u8 * windowId);
-static u8 CreateDiscSprite(u16 itemId);
+static u8 CreateDiscSprite(enum Item itemId);
 static void SetDiscSpriteAnim(struct Sprite *sprite, u8 tmIdx);
 static void TintDiscpriteByType(u8 type);
 static void SetDiscSpritePosition(struct Sprite *sprite, u8 tmIdx);
-static void SwapDisc(u8 spriteId, u16 itemId);
+static void SwapDisc(u8 spriteId, enum Item itemId);
 static void SpriteCB_SwapDisc(struct Sprite *sprite);
 
 static const struct BgTemplate sBGTemplates[] = {
@@ -675,7 +675,7 @@ static void InitTMCaseListMenuItems(void)
     gMultiuseListMenuTemplate.scrollMultiple = 0;
 }
 
-static void GetTMNumberAndMoveString(u8 *dest, u16 itemId)
+static void GetTMNumberAndMoveString(u8 *dest, enum Item itemId)
 {
     StringCopy(gStringVar4, gText_FontSmall);
     if (IsItemHM(itemId))
@@ -699,7 +699,7 @@ static void GetTMNumberAndMoveString(u8 *dest, u16 itemId)
 
 static void List_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list)
 {
-    u16 itemId;
+    enum Item itemId;
 
     if (itemIndex == LIST_CANCEL)
         itemId = ITEM_NONE;
@@ -719,7 +719,7 @@ static void List_ItemPrintFunc(u8 windowId, u32 itemIndex, u8 y)
 {
     if (itemIndex != LIST_CANCEL)
     {
-        u16 itemId = GetBagItemId(POCKET_TM_HM, itemIndex);
+        enum Item itemId = GetBagItemId(POCKET_TM_HM, itemIndex);
         if (!IsItemHM(itemId))
         {
             if (!GetItemImportance(itemId))
@@ -743,10 +743,12 @@ static void List_ItemPrintFunc(u8 windowId, u32 itemIndex, u8 y)
 static void PrintDescription(s32 itemIndex)
 {
     const u8 * str;
+
     if (itemIndex != LIST_CANCEL)
         str = GetItemDescription(GetBagItemId(POCKET_TM_HM, itemIndex));
     else
         str = gText_TMCaseWillBePutAway;
+
     FillWindowPixelBuffer(WIN_DESCRIPTION, 0);
     TMCase_Print(WIN_DESCRIPTION, FONT_NORMAL, str, 2, 3, 1, 0, 0, COLOR_LIGHT);
 }
@@ -1045,8 +1047,9 @@ static void Action_Use(u8 taskId)
 
 static void Action_Give(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
-    u16 itemId = GetBagItemId(POCKET_TM_HM, tListPos);
+    s16 *data = gTasks[taskId].data;
+    enum Item itemId = GetBagItemId(POCKET_TM_HM, tListPos);
+
     RemoveContextMenu(&sTMCaseDynamicResources->contextMenuWindowId);
     ClearStdWindowAndFrameToTransparent(WIN_SELECTED_MSG, FALSE);
     ClearWindowTilemap(WIN_SELECTED_MSG);
@@ -1548,7 +1551,7 @@ static void DrawMoveInfoLabels(void)
     CopyWindowToVram(WIN_MOVE_INFO_LABELS, COPYWIN_GFX);
 }
 
-static void PrintMoveInfo(u16 itemId)
+static void PrintMoveInfo(enum Item itemId)
 {
     u8 i;
     u16 move;
@@ -1630,7 +1633,7 @@ static void RemoveContextMenu(u8 * windowId)
     *windowId = WINDOW_NONE;
 }
 
-static u8 CreateDiscSprite(u16 itemId)
+static u8 CreateDiscSprite(enum Item itemId)
 {
     u8 spriteId = CreateSprite(&sSpriteTemplate_Disc, DISC_BASE_X, DISC_BASE_Y, 0);
     u8 tmIdx;
@@ -1696,7 +1699,7 @@ static void SetDiscSpritePosition(struct Sprite *sprite, u8 tmIdx)
 #define sItemId  data[0]
 #define sState   data[1]
 
-static void SwapDisc(u8 spriteId, u16 itemId)
+static void SwapDisc(u8 spriteId, enum Item itemId)
 {
     gSprites[spriteId].sItemId = itemId;
     gSprites[spriteId].sState = 0;

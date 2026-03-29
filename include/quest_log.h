@@ -63,7 +63,7 @@ struct QuestLogEvent_SwitchedPartyOrder
 // QL_EVENT_WITHDREW_ITEM_PC
 struct QuestLogEvent_Item
 {
-    u16 itemId;
+    enum Item itemId;
     u16 unused;
     u16 species;
     u16 itemParam;
@@ -154,7 +154,7 @@ struct QuestLogEvent_FieldMove
 struct QuestLogEvent_Shop
 {
     u32 totalMoney; // Total amount of money spent buying or earned selling
-    u16 lastItemId;
+    enum Item lastItemId;
     u16 itemQuantity; // Total number of items bought or sold
     u8 mapSec;
     bool8 hasMultipleTransactions;
@@ -164,7 +164,7 @@ struct QuestLogEvent_Shop
 // QL_EVENT_OBTAINED_STORY_ITEM
 struct QuestLogEvent_StoryItem
 {
-    u16 itemId;
+    enum Item itemId;
     u8 mapSec;
 };
 

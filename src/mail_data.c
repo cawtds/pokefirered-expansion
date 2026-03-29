@@ -99,7 +99,7 @@ enum Species MailSpeciesToSpecies(u16 mailSpecies, u16 *buffer)
 u8 GiveMailToMon2(struct Pokemon *mon, struct Mail *mail)
 {
     u8 heldItem[2];
-    u16 itemId = mail->itemId;
+    enum Item itemId = mail->itemId;
     u8 mailId = GiveMailToMon(mon, itemId);
 
     if (mailId == 0xFF)
@@ -168,7 +168,7 @@ u8 TakeMailFromMonAndSave(struct Pokemon *mon)
     return newMailId;
 }
 
-bool8 ItemIsMail(u16 itemId)
+bool8 ItemIsMail(enum Item itemId)
 {
     switch (itemId)
     {

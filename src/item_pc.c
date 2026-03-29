@@ -937,7 +937,7 @@ static void Task_ItemPcWithdraw(u8 taskId)
 static void ItemPc_DoWithdraw(u8 taskId)
 {
     s16 * data = gTasks[taskId].data;
-    u16 itemId = ItemPc_GetItemIdBySlotId(data[1]);
+    enum Item itemId = ItemPc_GetItemIdBySlotId(data[1]);
     u8 windowId;
 
     if (AddBagItem(itemId, tItemCount) == TRUE)
@@ -997,7 +997,7 @@ static void Task_ItemPcCleanUpWithdraw(u8 taskId)
 
 static void ItemPc_WithdrawMultipleInitWindow(u16 slotId)
 {
-    u16 itemId = ItemPc_GetItemIdBySlotId(slotId);
+    enum Item itemId = ItemPc_GetItemIdBySlotId(slotId);
 
     CopyItemName(itemId, gStringVar1);
     StringExpandPlaceholders(gStringVar4, gText_WithdrawHowMany);

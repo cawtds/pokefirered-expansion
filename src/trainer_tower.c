@@ -366,7 +366,7 @@ static const u16 sFloorLayouts[MAX_TRAINER_TOWER_FLOORS][NUM_TOWER_CHALLENGE_TYP
     {LAYOUT_TRAINER_TOWER_8F, LAYOUT_TRAINER_TOWER_8F_DOUBLES, LAYOUT_TRAINER_TOWER_8F_KNOCKOUT}
 };
 
-static const u16 sPrizeList[] = {
+static const enum Item sPrizeList[] = {
     ITEM_HP_UP,
     ITEM_PROTEIN,
     ITEM_IRON,
@@ -822,7 +822,7 @@ static void GetOwnerState(void)
 static void GiveChallengePrize(void)
 {
 #if FREE_TRAINER_HILL == FALSE
-    u16 itemId = sPrizeList[sTrainerTowerState->data.floors->prize];
+    enum Item itemId = sPrizeList[sTrainerTowerState->data.floors->prize];
 
     if (TRAINER_TOWER.receivedPrize)
     {

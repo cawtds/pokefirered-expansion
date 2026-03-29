@@ -160,7 +160,7 @@ static void SpriteCB_ShakeBagSprite(struct Sprite *sprite)
     }
 }
 
-void AddBagItemIconSprite(u16 itemId, u8 id)
+void AddBagItemIconSprite(enum Item itemId, u8 id)
 {
     u8 *spriteIds = &gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM];
 

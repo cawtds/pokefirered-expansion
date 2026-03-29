@@ -142,7 +142,7 @@ static inline u16 GetBagItemQuantityPocket(struct BagPocket *pocket, u32 pocketP
     return pocket->itemSlots[pocketPos].quantity;
 }
 
-static inline void SetBagItemIdPocket(struct BagPocket *pocket, u32 pocketPos, u16 itemId)
+static inline void SetBagItemIdPocket(struct BagPocket *pocket, u32 pocketPos, enum Item itemId)
 {
     pocket->itemSlots[pocketPos].itemId = itemId;
 }
@@ -152,7 +152,7 @@ static inline void SetBagItemQuantityPocket(struct BagPocket *pocket, u32 pocket
     pocket->itemSlots[pocketPos].quantity = newValue;
 }
 
-// static void SetBagItemId(enum Pocket pocketId, u32 pocketPos, u16 itemId)
+// static void SetBagItemId(enum Pocket pocketId, u32 pocketPos, enum Item itemId)
 // {
 //     SetBagItemIdPocket(&gBagPockets[pocketId], pocketPos, itemId);
 // }
@@ -322,7 +322,7 @@ bool32 CheckBagHasSpace(enum Item itemId, u16 count)
     return GetFreeSpaceForItemInBag(itemId) >= count;
 }
 
-static u32 NONNULL BagPocket_GetFreeSpaceForItem(struct BagPocket *pocket, u16 itemId)
+static u32 NONNULL BagPocket_GetFreeSpaceForItem(struct BagPocket *pocket, enum Item itemId)
 {
     u32 spaceForItem = 0;
     struct ItemSlot tempItem;
@@ -348,7 +348,7 @@ u32 GetFreeSpaceForItemInBag(enum Item itemId)
     return BagPocket_GetFreeSpaceForItem(&gBagPockets[GetItemPocket(itemId)], itemId);
 }
 
-static inline bool32 NONNULL CheckSlotAndUpdateCount(struct BagPocket *pocket, u16 itemId, u32 pocketPos, u32 *nextPocketPos, u16 *count, u16 *tempPocketSlotQuantities)
+static inline bool32 NONNULL CheckSlotAndUpdateCount(struct BagPocket *pocket, enum Item itemId, u32 pocketPos, u32 *nextPocketPos, u16 *count, u16 *tempPocketSlotQuantities)
 {
     struct ItemSlot tempItem = BagPocket_GetSlotData(pocket, pocketPos);
     if (tempItem.itemId == ITEM_NONE || tempItem.itemId == itemId)
@@ -453,7 +453,7 @@ bool32 AddBagItem(enum Item itemId, u16 count)
     return BagPocket_AddItem(&gBagPockets[GetItemPocket(itemId)], itemId, count);
 }
 
-static bool32 NONNULL BagPocket_RemoveItem(struct BagPocket *pocket, u16 itemId, u16 count)
+static bool32 NONNULL BagPocket_RemoveItem(struct BagPocket *pocket, enum Item itemId, u16 count)
 {
     u32 itemLookupIndex, itemRemoveIndex = 0, totalQuantity = 0;
     struct ItemSlot tempItem;

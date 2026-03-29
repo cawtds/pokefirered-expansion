@@ -37,8 +37,8 @@ void DisplayMessageAndContinueTask(u8 taskId, u8 windowId, u16 tileNum, u8 palet
 void CreateYesNoMenuWithCallbacks(u8 taskId, const struct WindowTemplate *template, u8 fontId, u8 left, u8 top, u16 tileStart, u8 palette, const struct YesNoFuncTable *yesNo);
 u8 GetLRKeysPressed(void);
 u8 GetLRKeysPressedAndHeld(void);
-bool8 IsHoldingItemAllowed(u16 itemId);
-bool8 IsWritingMailAllowed(u16 itemId);
+bool8 IsHoldingItemAllowed(enum Item itemId);
+bool8 IsWritingMailAllowed(enum Item itemId);
 void ResetVramOamAndBgCntRegs(void);
 void LoadListMenuSwapLineGfx(void);
 void CreateSwapLineSprites(u8 *spriteIds, u8 count);

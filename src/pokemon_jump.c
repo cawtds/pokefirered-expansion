@@ -334,7 +334,7 @@ static void TryUpdateExcellentsRecord(u16);
 static bool32 HasEnoughScoreForPrize(void);
 static u16 GetPrizeData(void);
 static void UnpackPrizeData(u16, u16 *, u16 *);
-static u16 GetPrizeItemId(void);
+static enum Item GetPrizeItemId(void);
 static u16 GetPrizeQuantity(void);
 static u16 GetQuantityLimitedByBag(enum Item item, u16 quantity);
 static void SetUpPokeJumpGfxFunc(void (*func)(void));
@@ -376,9 +376,9 @@ static void SetUpPokeJumpGfxFuncById(int);
 static bool32 IsPokeJumpGfxFuncFinished(void);
 static void SetUpResetVineGfx(void);
 static bool32 ResetVineGfx(void);
-static void PrintPrizeMessage(u16, u16);
-static void PrintPrizeFilledBagMessage(u16);
-static void PrintNoRoomForPrizeMessage(u16);
+static void PrintPrizeMessage(enum Item itemId, u16 quantity);
+static void PrintPrizeFilledBagMessage(enum Item itemId);
+static void PrintNoRoomForPrizeMessage(enum Item itemId);
 static bool32 DoPrizeMessageAndFanfare(void);
 static void ClearMessageWindow(void);
 static void SetMonSpriteY(u32 , s16);
@@ -2413,7 +2413,7 @@ static void TryUpdateExcellentsRecord(u16 excellentsInRow)
         sPokemonJump->excellentsInRowRecord = excellentsInRow;
 }
 
-static const u16 sPrizeItems[] = {
+static const enum Item sPrizeItems[] = {
     ITEM_LEPPA_BERRY,
     ITEM_LUM_BERRY,
     ITEM_SITRUS_BERRY,
@@ -2446,7 +2446,7 @@ static bool32 HasEnoughScoreForPrize(void)
 
 static u16 GetPrizeData(void)
 {
-    u16 itemId = GetPrizeItemId();
+    enum Item itemId = GetPrizeItemId();
     u16 quantity = GetPrizeQuantity();
     return (quantity << 12) | (itemId & 0xFFF);
 }
@@ -2457,7 +2457,7 @@ static void UnpackPrizeData(u16 data, u16 *itemId, u16 *quantity)
     *itemId = data & 0xFFF;
 }
 
-static u16 GetPrizeItemId(void)
+static enum Item GetPrizeItemId(void)
 {
     u16 index = Random() % ARRAY_COUNT(sPrizeItems);
     return sPrizeItems[index];
@@ -2465,10 +2465,9 @@ static u16 GetPrizeItemId(void)
 
 static u16 GetPrizeQuantity(void)
 {
-    u32 quantity, i;
+    u32 quantity = 0;
 
-    quantity = 0;
-    for (i = 0; i < ARRAY_COUNT(sPrizeQuantityData); i++)
+    for (u32 i = 0; i < ARRAY_COUNT(sPrizeQuantityData); i++)
     {
         if (sPokemonJump->comm.jumpScore >= sPrizeQuantityData[i].score)
             quantity = sPrizeQuantityData[i].quantity;
@@ -3150,7 +3149,7 @@ static bool32 ResetVineGfx(void)
 
 static const u8 sPluralTxt[] = _("IES");
 
-static void PrintPrizeMessage(u16 itemId, u16 quantity)
+static void PrintPrizeMessage(enum Item itemId, u16 quantity)
 {
     CopyItemName(itemId, sPokemonJumpGfx->itemName);
     ConvertIntToDecimalStringN(sPokemonJumpGfx->itemQuantityStr, quantity, STR_CONV_MODE_LEFT_ALIGN, 1);
@@ -3178,7 +3177,7 @@ static void PrintPrizeMessage(u16 itemId, u16 quantity)
     sPokemonJumpGfx->msgWindowState = 0;
 }
 
-static void PrintPrizeFilledBagMessage(u16 itemId)
+static void PrintPrizeFilledBagMessage(enum Item itemId)
 {
     CopyItemName(itemId, sPokemonJumpGfx->itemName);
     DynamicPlaceholderTextUtil_Reset();
@@ -3191,7 +3190,7 @@ static void PrintPrizeFilledBagMessage(u16 itemId)
     sPokemonJumpGfx->msgWindowState = 0;
 }
 
-static void PrintNoRoomForPrizeMessage(u16 itemId)
+static void PrintNoRoomForPrizeMessage(enum Item itemId)
 {
     CopyItemName(itemId, sPokemonJumpGfx->itemName);
     DynamicPlaceholderTextUtil_Reset();

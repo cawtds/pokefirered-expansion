@@ -37,6 +37,6 @@ void TakeMailFromMon(struct Pokemon *mon);
 void ClearMailItemId(u8 mailId);
 u8 SaveMailToPC(struct Mail *mail);
 u8 TakeMailFromMonAndSave(struct Pokemon *mon);
-bool8 ItemIsMail(u16 itemId);
+bool8 ItemIsMail(enum Item itemId);
 
 #endif // GUARD_MAIL_H

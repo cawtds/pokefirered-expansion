@@ -73,8 +73,8 @@ bool8 PSA_LevelUpVerticalSpritesTaskIsRunning(void);
 void PSA_CreateMonSpriteAtCloseness(u8 closeness);
 void PSA_SetUpZoomAnim(u8 closeness);
 bool8 PSA_IsZoomTaskActive(void);
-void PSA_SetUpItemUseOnMonAnim(u16 itemId, u8 closeness, bool32 a2);
-void CreateItemIconSpriteAtMaxCloseness(u16 itemId);
+void PSA_SetUpItemUseOnMonAnim(enum Item itemId, u8 closeness, bool32 a2);
+void CreateItemIconSpriteAtMaxCloseness(enum Item itemId);
 bool8 PSA_IsItemUseOnMonAnimActive(void);
 void PSA_UseItem_CleanUpForCancel(void);
 

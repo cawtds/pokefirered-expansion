@@ -1914,7 +1914,7 @@ static u8 TryTakeMonItem(struct Pokemon *mon)
     return 2;
 }
 
-static void BufferBagFullCantTakeItemMessage(u16 itemId)
+static void BufferBagFullCantTakeItemMessage(enum Item itemId)
 {
     const u8 *string;
 

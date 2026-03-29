@@ -83,7 +83,7 @@ static void BerryPouchInitBgs(void);
 static bool8 BerryPouchLoadGfx(void);
 static bool8 AllocateListMenuBuffers(void);
 static void SetUpListMenuTemplate(void);
-static void GetBerryNameAndIndexForMenu(u8 * dest, u16 itemId);
+static void GetBerryNameAndIndexForMenu(u8 * dest, enum Item itemId);
 static void BerryPouchMoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list);
 static void BerryPouchItemPrintFunc(u8 windowId, u32 itemId, u8 y);
 static void BerryPouchSetArrowCursorAt(u8 y, u8 colorIdx);
@@ -706,7 +706,7 @@ static void SetUpListMenuTemplate(void)
     gMultiuseListMenuTemplate.scrollMultiple = 0;
 }
 
-static void GetBerryNameAndIndexForMenu(u8 * dest, u16 itemId)
+static void GetBerryNameAndIndexForMenu(u8 * dest, enum Item itemId)
 {
     StringCopy(gStringVar4, gText_FontSmall);
     StringAppend(gStringVar4, gText_NumberClear01);

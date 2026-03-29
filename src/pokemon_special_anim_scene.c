@@ -31,8 +31,7 @@ static void StartMonWiggleAnim(struct PokemonSpecialAnimScene * scene, u8 frameL
 static void StopMonWiggleAnim(struct PokemonSpecialAnimScene * scene);
 static void SpriteCallback_MonSpriteWiggle(struct Sprite *sprite);
 static void LoadMonSpriteGraphics(u16 *tilees, const u16 *palette);
-static struct Sprite *PSA_CreateItemIconObject(u16 itemId);
-static u16 GetBlendColorByItemId(u16 itemId);
+static struct Sprite *PSA_CreateItemIconObject(enum Item itemId);
 static void Task_ItemUseOnMonAnim(u8 taskId);
 static void CreateSprites_UseItem_OutwardSpiralDots(u8 taskId, s16 *data, struct Sprite *sprite);
 static void SpriteCB_OutwardSpiralDots(struct Sprite *sprite);
@@ -872,7 +871,7 @@ static void LoadMonSpriteGraphics(u16 *tiles, const u16 *palette)
 #define tTimerReset      data[10]
 #define tSuppressDots    data[11]
 
-void PSA_SetUpItemUseOnMonAnim(u16 itemId, u8 closeness, bool32 a2)
+void PSA_SetUpItemUseOnMonAnim(enum Item itemId, u8 closeness, bool32 a2)
 {
     struct PokemonSpecialAnimScene * scene = PSA_GetSceneWork();
     u8 taskId;
@@ -887,18 +886,13 @@ void PSA_SetUpItemUseOnMonAnim(u16 itemId, u8 closeness, bool32 a2)
         gTasks[taskId].tCloseness = closeness;
         gTasks[taskId].tYpos = GetYPosByScale(sAffineScales[closeness]);
         gTasks[taskId].tData6 = a2;
-        gTasks[taskId].tBlendColor = GetBlendColorByItemId(itemId);
+        gTasks[taskId].tBlendColor = RGB_WHITE;
     }
 }
 
-static u16 GetBlendColorByItemId(u16 itemId)
+void CreateItemIconSpriteAtMaxCloseness(enum Item itemId)
 {
-    return RGB_WHITE;
-}
-
-void CreateItemIconSpriteAtMaxCloseness(u16 itemId)
-{
-    struct PokemonSpecialAnimScene * scene = PSA_GetSceneWork();
+    struct PokemonSpecialAnimScene *scene = PSA_GetSceneWork();
     scene->itemIconSprite = PSA_CreateItemIconObject(itemId);
     if (scene->itemIconSprite != NULL)
     {
@@ -907,7 +901,7 @@ void CreateItemIconSpriteAtMaxCloseness(u16 itemId)
     }
 }
 
-static struct Sprite *PSA_CreateItemIconObject(u16 itemId)
+static struct Sprite *PSA_CreateItemIconObject(enum Item itemId)
 {
     u8 spriteId;
     spriteId = AddItemIconSprite(1, 1, itemId);
