@@ -44,12 +44,12 @@ struct PokedexCryScreen
     u8 waveformPreviousY;
     u16 unk; // Never read
     u8 playStartPos;
-    u16 species;
+    enum Species species;
     u8 cryOverrideCountdown;
     u8 cryRepeatDelay;
 };
 
-static void PlayCryScreenCry(u16);
+static void PlayCryScreenCry(enum Species species);
 static void BufferCryWaveformSegment(void);
 static void DrawWaveformFlatline(void);
 static void AdvancePlayhead(u8);
@@ -324,7 +324,7 @@ void UpdateCryWaveformWindow(u8 windowId)
     sDexCryScreen->cryState++;
 }
 
-void CryScreenPlayButton(u16 species)
+void CryScreenPlayButton(enum Species species)
 {
     if (gMPlayInfo_BGM.status & MUSICPLAYER_STATUS_PAUSE && !sDexCryScreen->cryOverrideCountdown)
     {
@@ -345,7 +345,7 @@ void CryScreenPlayButton(u16 species)
     }
 }
 
-static void PlayCryScreenCry(u16 species)
+static void PlayCryScreenCry(enum Species species)
 {
     PlayCry_NormalNoDucking(species, 0, CRY_VOLUME_RS, CRY_PRIORITY_NORMAL);
     sDexCryScreen->cryState = 1;

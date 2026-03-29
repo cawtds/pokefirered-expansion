@@ -520,7 +520,7 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
 {
     u8 fontId = FONT_SMALL;
     u8 x = 2;
-    u16 species = data->modifyArrows.currValue;
+    enum Species species = data->modifyArrows.currValue;
 
     u8 textBottom[] = _("BACK:\nFRONT:\nBG:$");
     u8 textBottomForms[] = _("BACK:\nFRONT:\nBG:\nFORMS:$");
@@ -576,7 +576,7 @@ static void SetStructPtr(u8 taskId, void *ptr)
 static void PrintDigitChars(struct PokemonSpriteVisualizer *data)
 {
     s32 i;
-    u16 species = data->modifyArrows.currValue;
+    enum Species species = data->modifyArrows.currValue;
     u8 text[MODIFY_DIGITS_MAX + POKEMON_NAME_LENGTH + 8];
 
     for (i = 0; i < data->modifyArrows.maxDigits; i++)

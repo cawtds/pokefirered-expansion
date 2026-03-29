@@ -74,7 +74,7 @@ struct PokedexScreenData
     u16 orderedDexCount;
     u8 windowIds[0x10];
     u16 dexSpecies;
-    u16 * bgBufsMem;
+    u16 *bgBufsMem;
     u8 scrollArrowsTaskId;
     u8 categoryPageCursorTaskId;
     u16 modeSelectCursorPosBak;
@@ -87,13 +87,13 @@ struct PokedexScreenData
 
 struct PokedexScreenWindowGfx
 {
-    const u32 * tiles;
-    const u16 * pal;
+    const u32 *tiles;
+    const u16 *pal;
 };
 
 struct PokedexCategoryPage
 {
-    const u16 * species;
+    const enum Species *species;
     u8 count;
 };
 
@@ -118,7 +118,7 @@ static void DexScreen_RemoveWindow(u8 *windowId_p);
 static void DexScreen_AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 colorIdx);
 static void DexScreen_PrintNum3RightAlign(u8 windowId, u8 fontId, u16 num, u8 x, u8 y, u8 colorIdx);
 static void DexScreen_PrintNum4RightAlign(u8 windowId, u8 fontId, u16 num, u8 x, u8 y, u8 colorIdx);
-static void DexScreen_PrintMonDexNo(u8 windowId, u8 fontId, u16 species, u8 x, u8 y, bool32 allowNationalDex);
+static void DexScreen_PrintMonDexNo(u8 windowId, u8 fontId, enum Species species, u8 x, u8 y, bool32 allowNationalDex);
 static u16 DexScreen_GetDexCount(u8 caseId, bool8 whichDex);
 static void DexScreen_PrintControlInfo(const u8 *src);
 static void DexScreen_DestroyCategoryPageMonIconAndInfoWindows(void);
@@ -133,7 +133,7 @@ u8 DexScreen_DrawMonAreaPage(void);
 static bool8 DexScreen_IsPageUnlocked(u8 category, u8 pageNum);
 static bool8 DexScreen_IsCategoryUnlocked(u8 category);
 static u8 DexScreen_GetPageLimitsForCategory(u8 category);
-static bool8 DexScreen_LookUpCategoryBySpecies(u16 species);
+static bool8 DexScreen_LookUpCategoryBySpecies(enum Species species);
 u8 DexScreen_DestroyAreaScreenResources(void);
 void DexScreen_CreateCategoryPageSpeciesList(u8 category, u8 pageNum);
 static u8 DexScreen_PageNumberToRenderablePages(u16 page);
@@ -1598,16 +1598,9 @@ static u8 DexScreen_CreateDexOrderScrollArrows(void)
     return AddScrollIndicatorArrowPair(&template, &sPokedexScreenData->modeSelectCursorPosBak);
 }
 
-struct PokedexListItem
-{
-    u16 species;
-    bool8 seen:1;
-    bool8 caught:1;
-};
-
 static void ItemPrintFunc_OrderedListMenu(u8 windowId, u32 itemId, u8 y)
 {
-    u16 species = itemId;
+    enum Species species = itemId;
     bool8 caught = (itemId >> 17) & 1;
     u8 type1;
     DexScreen_PrintMonDexNo(sPokedexScreenData->numericalOrderWindowId, FONT_SMALL, species, 12, y, sPokedexScreenData->dexOrderId != DEX_ORDER_NUMERICAL_KANTO);
@@ -2294,12 +2287,12 @@ static u32 DexScreen_GetDefaultPersonality(int species)
     }
 }
 
-static void DexScreen_LoadMonPicInWindow(u8 windowId, u16 species, u16 paletteOffset)
+static void DexScreen_LoadMonPicInWindow(u8 windowId, enum Species species, u16 paletteOffset)
 {
     LoadMonFrontPicInWindow(species, FALSE, DexScreen_GetDefaultPersonality(species), paletteOffset >> 4, windowId);
 }
 
-static void DexScreen_PrintMonDexNo(u8 windowId, u8 fontId, u16 species, u8 x, u8 y, bool32 allowNationalDex)
+static void DexScreen_PrintMonDexNo(u8 windowId, u8 fontId, enum Species species, u8 x, u8 y, bool32 allowNationalDex)
 {
     u16 dexNum;
     u8 xNum;
@@ -2383,7 +2376,7 @@ static void DexScreen_PrintControlInfo(const u8 *src)
     DexScreen_AddTextPrinterParameterized(1, FONT_SMALL, src, 236 - GetStringWidth(FONT_SMALL, src, 0), 2, 4);
 }
 
-bool8 DexScreen_DrawMonPicInCategoryPage(u16 species, u8 slot, u8 numSlots)
+bool8 DexScreen_DrawMonPicInCategoryPage(enum Species species, u8 slot, u8 numSlots)
 {
     struct WindowTemplate template;
     numSlots--;
@@ -2750,7 +2743,7 @@ void DexScreen_DexPageZoomEffectFrame(u8 bg, u8 scale)
     FillBgTilemapBufferRect_Palette0(bg, 2, left + 1, divY + 1, width, top + height - divY);
 }
 
-void DexScreen_PrintMonCategory(u8 windowId, u16 species, u8 x, u8 y)
+void DexScreen_PrintMonCategory(u8 windowId, enum Species species, u8 x, u8 y)
 {
     u8 *categoryName;
     u8 index, categoryStr[12];
@@ -2782,7 +2775,7 @@ void DexScreen_PrintMonCategory(u8 windowId, u16 species, u8 x, u8 y)
     DexScreen_AddTextPrinterParameterized(windowId, FONT_SMALL, gText_PokedexPokemon, x, y, 0);
 }
 
-void DexScreen_PrintMonHeight(u8 windowId, u16 species, u8 x, u8 y)
+void DexScreen_PrintMonHeight(u8 windowId, enum Species species, u8 x, u8 y)
 {
     u8* heightString;
 
@@ -2887,7 +2880,7 @@ static u8* ConvertMeasurementToMetricString(u32 num, u32* index)
     return string;
 }
 
-void DexScreen_PrintMonWeight(u8 windowId, u16 species, u8 x, u8 y)
+void DexScreen_PrintMonWeight(u8 windowId, enum Species species, u8 x, u8 y)
 {
     u8* weightString;
 
@@ -3015,7 +3008,7 @@ static u8* ReplaceDecimalSeparator(const u8* originalString)
     return modifiedString;
 }
 
-void DexScreen_PrintMonFlavorText(u8 windowId, u16 species, u8 x, u8 y)
+void DexScreen_PrintMonFlavorText(u8 windowId, enum Species species, u8 x, u8 y)
 {
     struct TextPrinterTemplate printerTemplate;
     u16 length;
@@ -3054,7 +3047,7 @@ void DexScreen_PrintMonFlavorText(u8 windowId, u16 species, u8 x, u8 y)
 
 #define NUM_FOOTPRINT_TILES  4
 
-void DexScreen_DrawMonFootprint(u8 windowId, u16 species, u8 x, u8 y)
+void DexScreen_DrawMonFootprint(u8 windowId, enum Species species, u8 x, u8 y)
 {
     u16 i, j, tileIdx;
     u8 footprintPixel, footprintTile;
@@ -3338,10 +3331,10 @@ u8 DexScreen_DestroyAreaScreenResources(void)
     return 0;
 }
 
-static bool32 DexScreen_MonHasCategoryEntry(u16 species)
+static bool32 DexScreen_MonHasCategoryEntry(enum Species species)
 {
     u16 i, j, k;
-    u16 natDexNum = SpeciesToNationalPokedexNum(species);
+    enum NationalDexOrder natDexNum = SpeciesToNationalPokedexNum(species);
 
     for (i = 0; i < ARRAY_COUNT(gDexCategories); i++)
     {
@@ -3358,7 +3351,7 @@ static bool32 DexScreen_MonHasCategoryEntry(u16 species)
     return FALSE;
 }
 
-static bool32 DexScreen_CanShowMonInDex(u16 species)
+static bool32 DexScreen_CanShowMonInDex(enum Species species)
 {
     return (IsNationalPokedexEnabled() || IsSpeciesInKantoDex(species)) && DexScreen_MonHasCategoryEntry(species);
 }
@@ -3366,7 +3359,7 @@ static bool32 DexScreen_CanShowMonInDex(u16 species)
 static u8 DexScreen_IsPageUnlocked(u8 categoryNum, u8 pageNum)
 {
     int i, count;
-    u16 species;
+    enum Species species;
 
     count = gDexCategories[categoryNum].page[pageNum].count;
 
@@ -3399,7 +3392,7 @@ static bool8 DexScreen_IsCategoryUnlocked(u8 categoryNum)
 void DexScreen_CreateCategoryPageSpeciesList(u8 categoryNum, u8 pageNum)
 {
     int i, count;
-    u16 species;
+    enum Species species;
 
     count = gDexCategories[categoryNum].page[pageNum].count;
     sPokedexScreenData->numMonsOnPage = 0;
@@ -3447,10 +3440,10 @@ static u8 DexScreen_GetPageLimitsForCategory(u8 category)
     }
 }
 
-static u8 DexScreen_LookUpCategoryBySpecies(u16 species)
+static u8 DexScreen_LookUpCategoryBySpecies(enum Species species)
 {
     int i, j, k, categoryCount, categoryPageCount, posInPage;
-    u16 dexSpecies;
+    enum Species dexSpecies;
 
     for (i = 0; i < ARRAY_COUNT(gDexCategories); i++)
     {
@@ -3501,7 +3494,7 @@ void DexScreen_InputHandler_StartToCry(void)
 #define tPersonalityLo 14
 #define tPersonalityHi 15
 
-u8 DexScreen_RegisterMonToPokedex(u16 species)
+u8 DexScreen_RegisterMonToPokedex(enum Species species)
 {
     DexScreen_GetSetPokedexFlag(species, FLAG_SET_SEEN, TRUE);
     DexScreen_GetSetPokedexFlag(species, FLAG_SET_CAUGHT, TRUE);
@@ -3516,7 +3509,7 @@ u8 DexScreen_RegisterMonToPokedex(u16 species)
     return sPokedexScreenData->taskId;
 }
 
-u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality)
+u8 DisplayCaughtMonDexPage(enum Species species, bool32 isShiny, u32 personality)
 {
     u8 taskId = 0;
     if (POKEDEX_PLUS_HGSS)

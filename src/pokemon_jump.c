@@ -269,7 +269,7 @@ static void InitGame(struct PokemonJump *);
 static void ResetForNewGame(struct PokemonJump *);
 static void InitPlayerAndJumpTypes(void);
 static void ResetPlayersForNewGame(void);
-static s16 GetSpeciesPokemonJumpType(u16 species);
+static s16 GetSpeciesPokemonJumpType(enum Species species);
 static void InitJumpMonInfo(struct PokemonJump_MonInfo *monInfo, struct Pokemon *mon);
 static void CB2_PokemonJump(void);
 static void Task_StartPokemonJump(u8 taskId);
@@ -814,7 +814,7 @@ static void ResetPlayersForNewGame(void)
     }
 }
 
-static s16 GetSpeciesPokemonJumpType(u16 species)
+static s16 GetSpeciesPokemonJumpType(enum Species species)
 {
     return gSpeciesInfo[SanitizeSpeciesId(species)].pokemonJumpType;
 }
@@ -2507,7 +2507,7 @@ static u8 *GetPokeJumpPlayerName(u8 multiplayerId)
     return sPokemonJump->players[multiplayerId].name;
 }
 
-bool32 IsSpeciesAllowedInPokemonJump(u16 species)
+bool32 IsSpeciesAllowedInPokemonJump(enum Species species)
 {
     return GetSpeciesPokemonJumpType(species) != PKMN_JUMP_TYPE_NONE;
 }
@@ -2520,7 +2520,7 @@ void IsPokemonJumpSpeciesInParty(void)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SANITY_HAS_SPECIES))
         {
-            u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+            enum Species species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
             if (IsSpeciesAllowedInPokemonJump(species))
             {
                 gSpecialVar_Result = TRUE;

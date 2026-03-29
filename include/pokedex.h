@@ -108,7 +108,7 @@ bool16 HasAllKantoMons(void);
 bool16 HasAllMons(void);
 u8* ConvertMonHeightToString(u32 height);
 u8* ConvertMonWeightToString(u32 weight);
-u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality);
-u8 DexScreen_RegisterMonToPokedex(u16 species);
+u8 DisplayCaughtMonDexPage(enum Species species, bool32 isShiny, u32 personality);
+u8 DexScreen_RegisterMonToPokedex(enum Species species);
 
 #endif // GUARD_POKEDEX_H

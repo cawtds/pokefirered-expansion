@@ -240,7 +240,7 @@ static u16 TryDoPokedexScroll(u16, u16);
 static void UpdateSelectedMonSpriteId(void);
 static bool8 TryDoInfoScreenScroll(void);
 static u8 ClearMonSprites(void);
-static u16 GetPokemonSpriteToDisplay(u16);
+static u16 GetPokemonSpriteToDisplay(enum NationalDexOrder natDexNum);
 static u32 CreatePokedexMonSprite(u16, s16, s16);
 static void CreateInterfaceSprites(u8);
 static void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite);
@@ -283,9 +283,9 @@ static void PrintUnknownMonMeasurements(void);
 static u8* GetUnknownMonHeightString(void);
 static u8* GetUnknownMonWeightString(void);
 static u8* ReplaceDecimalSeparator(const u8* originalString);
-static void PrintOwnedMonMeasurements(u16 species);
-static void PrintOwnedMonHeight(u16 species);
-static void PrintOwnedMonWeight(u16 species);
+static void PrintOwnedMonMeasurements(enum Species species);
+static void PrintOwnedMonHeight(enum Species species);
+static void PrintOwnedMonWeight(enum Species species);
 // static u8* ConvertMonHeightToImperialString(u32 height);
 // static u8* ConvertMonHeightToMetricString(u32 height);
 // static u8* ConvertMonWeightToImperialString(u32 weight);
@@ -2772,12 +2772,12 @@ static u8 ClearMonSprites(void)
     return FALSE;
 }
 
-static u16 GetPokemonSpriteToDisplay(u16 species)
+static u16 GetPokemonSpriteToDisplay(enum NationalDexOrder natDexNum)
 {
-    if (species >= NATIONAL_DEX_COUNT || sPokedexView->pokedexList[species].dexNum == 0xFFFF)
+    if (natDexNum >= NATIONAL_DEX_COUNT || sPokedexView->pokedexList[natDexNum].dexNum == 0xFFFF)
         return 0xFFFF;
-    else if (sPokedexView->pokedexList[species].seen)
-        return sPokedexView->pokedexList[species].dexNum;
+    else if (sPokedexView->pokedexList[natDexNum].seen)
+        return sPokedexView->pokedexList[natDexNum].dexNum;
     else
         return 0;
 }
@@ -4048,7 +4048,7 @@ u32 Pokedex_CreateCaughtMonSprite(u32 species, s32 x, s32 y)
 void Task_DisplayCaughtMonDexPage(u8 taskId)
 {
     u8 spriteId;
-    u16 species = gTasks[taskId].tSpecies;
+    enum Species species = gTasks[taskId].tSpecies;
     enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(species);
 
     switch (gTasks[taskId].tState)
@@ -4189,7 +4189,7 @@ static void PrintMonInfo(u32 num, u32 value, u32 owned, u32 newEntry)
 {
     u8 str[0x10];
     u8 str2[0x30];
-    u16 species;
+    enum Species species;
     const u8 *name;
     const u8 *category;
     const u8 *description;
@@ -4229,7 +4229,7 @@ static void PrintMonInfo(u32 num, u32 value, u32 owned, u32 newEntry)
     PrintInfoScreenText(description, GetStringCenterAlignXOffset(FONT_NORMAL, description, DISPLAY_WIDTH), 95);
 }
 
-void PrintMonMeasurements(u16 species, u32 owned)
+void PrintMonMeasurements(enum Species species, u32 owned)
 {
     u32 x = GetMeasurementTextPositions(DEX_HEADER_X);
     u32 yTop = GetMeasurementTextPositions(DEX_Y_TOP);
@@ -4316,13 +4316,13 @@ static u8* ReplaceDecimalSeparator(const u8* originalString)
     return modifiedString;
 }
 
-static void PrintOwnedMonMeasurements(u16 species)
+static void PrintOwnedMonMeasurements(enum Species species)
 {
     PrintOwnedMonHeight(species);
     PrintOwnedMonWeight(species);
 }
 
-static void PrintOwnedMonHeight(u16 species)
+static void PrintOwnedMonHeight(enum Species species)
 {
     u32 height = GetSpeciesHeight(species);
     u8* heightString;
@@ -4344,7 +4344,7 @@ static void PrintOwnedMonHeight(u16 species)
 //         return ConvertMonHeightToMetricString(height);
 // }
 
-static void PrintOwnedMonWeight(u16 species)
+static void PrintOwnedMonWeight(enum Species species)
 {
     u32 weight = GetSpeciesWeight(species);
     u8* weightString;
@@ -4662,7 +4662,7 @@ static void UNUSED PrintDecimalNum(u8 windowId, u16 num, u8 left, u8 top)
 
 #define NUM_FOOTPRINT_TILES  4
 
-void DrawFootprint(u8 windowId, u16 species)
+void DrawFootprint(u8 windowId, enum Species species)
 {
     u8 ALIGNED(4) footprint4bpp[TILE_SIZE_4BPP * NUM_FOOTPRINT_TILES];
     const u8 *footprintGfx = NULL;
@@ -4741,7 +4741,7 @@ static u16 GetNextPosition(u8 direction, u16 position, u16 min, u16 max)
 
 // Unown and Spinda use the personality of the first seen individual of that species
 // All others use personality 0
-static u32 GetPokedexMonPersonality(u16 species)
+static u32 GetPokedexMonPersonality(enum Species species)
 {
     if (species == SPECIES_UNOWN || species == SPECIES_SPINDA)
     {
@@ -4798,7 +4798,7 @@ static u16 CreateSizeScreenTrainerPic(enum TrainerPicID trainerPicId, s16 x, s16
 
 static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bodyColor, enum Type type1, enum Type type2)
 {
-    u16 species;
+    enum Species species;
     u16 i;
     u16 resultsCount;
     enum Type types[2];

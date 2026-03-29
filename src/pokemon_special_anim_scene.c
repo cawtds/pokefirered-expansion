@@ -391,7 +391,7 @@ void PSA_HideMessageWindow(void)
 void PSA_PrintMessage(u8 messageId)
 {
     struct PokemonSpecialAnimScene * scene = PSA_GetSceneWork();
-    u16 itemId = PSA_GetItemId();
+    enum Item itemId = PSA_GetItemId();
     u16 strWidth = 0;
     u8 textSpeed = GetPlayerTextSpeedDelay();
     struct Pokemon * pokemon = PSA_GetPokemon();
@@ -652,7 +652,7 @@ void PSA_CreateMonSpriteAtCloseness(u8 closeness)
 {
     struct PokemonSpecialAnimScene * scene = PSA_GetSceneWork();
     struct Pokemon * pokemon = PSA_GetPokemon();
-    u16 species = GetMonData(pokemon, MON_DATA_SPECIES);
+    enum Species species = GetMonData(pokemon, MON_DATA_SPECIES);
     u32 personality = GetMonData(pokemon, MON_DATA_PERSONALITY);
     u8 yOffset = Menu2_GetMonPosAttribute(species, personality, PSA_MON_ATTR_Y_OFFSET);
     void *monPicBuffer;
@@ -1043,8 +1043,10 @@ void PSA_UseItem_CleanUpForCancel(void)
 
 static void InitItemIconSpriteState(struct PokemonSpecialAnimScene * scene, struct Sprite *sprite, u8 closeness)
 {
-    u16 species, x, y;
+    enum Species species;
+    u16 x, y;
     u32 personality;
+
     if (closeness == 3)
     {
         sprite->x = 120;
@@ -1185,8 +1187,9 @@ static void CreateStarSprites(struct PokemonSpecialAnimScene * scene)
 {
     int i;
     u8 spriteId;
-    u16 species;
+    enum Species species;
     u32 personality;
+
     LoadCompressedSpriteSheet(&sSpriteSheet_Star);
     LoadSpritePalette(&sSpritePalette_Star);
     scene->field_0002 = 0;

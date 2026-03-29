@@ -659,7 +659,7 @@ struct PokemonSpecialAnimScene * PSA_GetSceneWork(void)
     return &GetPSAStruct()->sceneResources;
 }
 
-u16 PSA_GetItemId(void)
+enum Item PSA_GetItemId(void)
 {
     return GetPSAStruct()->itemId;
 }
@@ -689,7 +689,7 @@ u8 PSA_GetAnimType(void)
     return GetPSAStruct()->animType;
 }
 
-u16 PSA_GetMonSpecies(void)
+enum Species PSA_GetMonSpecies(void)
 {
     return GetPSAStruct()->species;
 }

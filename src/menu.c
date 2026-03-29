@@ -1558,12 +1558,12 @@ void PrintPlayerNameOnWindow(u8 windowId, const u8 * src, u16 x, u16 y)
     }
 }
 
-void LoadMonIconPalAtOffset(u8 palOffset, u16 speciesId)
+void LoadMonIconPalAtOffset(u8 palOffset, enum Species speciesId)
 {
     LoadPalette(GetValidMonIconPalettePtr(speciesId), palOffset, PLTT_SIZE_4BPP);
 }
 
-void DrawMonIconAtPos(u8 windowId, u16 speciesId, u32 personality, u16 x, u16 y)
+void DrawMonIconAtPos(u8 windowId, enum Species speciesId, u32 personality, u16 x, u16 y)
 {
     BlitBitmapToWindow(windowId, GetMonIconPtr(speciesId, personality), x, y, 32, 32);
 }
