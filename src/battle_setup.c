@@ -1069,17 +1069,17 @@ void SetBattledTrainerFlag(void)
     FlagSet(GetTrainerAFlag());
 }
 
-bool8 HasTrainerBeenFought(u16 trainerId)
+bool8 HasTrainerBeenFought(enum TrainerID trainerId)
 {
     return FlagGet(TRAINER_FLAGS_START + trainerId);
 }
 
-void SetTrainerFlag(u16 trainerId)
+void SetTrainerFlag(enum TrainerID trainerId)
 {
     FlagSet(TRAINER_FLAGS_START + trainerId);
 }
 
-void ClearTrainerFlag(u16 trainerId)
+void ClearTrainerFlag(enum TrainerID trainerId)
 {
     FlagClear(TRAINER_FLAGS_START + trainerId);
 }

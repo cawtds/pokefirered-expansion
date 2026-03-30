@@ -10,7 +10,7 @@
 
 struct RematchData
 {
-    u16 trainerIDs[MAX_REMATCH_PARTIES];
+    enum TrainerID trainerIDs[MAX_REMATCH_PARTIES];
     u16 mapGroup; // unused
     u16 mapNum; // unused
 };
@@ -18,7 +18,7 @@ struct RematchData
 void Task_VsSeeker_0(u8 taskId);
 void ClearRematchStateByTrainerId(void);
 void ClearRematchStateOfLastTalked(void);
-int GetRematchTrainerId(u16 trainerId);
+enum TrainerID GetRematchTrainerId(enum TrainerID trainerId);
 bool8 UpdateVsSeekerStepCounter(void);
 void MapResetTrainerRematches(u16 mapGroup, u16 mapNum);
 void NativeVsSeekerRematchId(struct ScriptContext *ctx);
