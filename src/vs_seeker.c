@@ -110,7 +110,7 @@ static bool8 IsTrainerVisibleOnScreen(struct VsSeekerTrainerInfo *trainerInfo);
 static u8 GetCurVsSeekerResponse(s32 vsSeekerIdx, enum TrainerID trainerId);
 static u8 GetNextAvailableRematchTrainer(const struct RematchData *vsSeekerData, enum TrainerID trainerId, u8 *idxPtr);
 static u8 GetRematchableTrainerLocalId(void);
-static u8 GetRematchTrainerIdGivenGameState(const enum TrainerID *trainerIdxs, u8 rematchIdx);
+static u8 BackwardsSearchRematchTrainerIndex(const enum TrainerID *trainerIds, u8 rematchIndex);
 static u8 GetRunningBehaviorFromGraphicsId(u16 graphicsId);
 static void StartTrainerObjectMovementScript(struct VsSeekerTrainerInfo *trainerInfo, const u8 *script);
 #endif //FREE_MATCH_CALL
@@ -526,43 +526,43 @@ void ClearRematchStateByTrainerId(void)
 }
 
 #if FREE_MATCH_CALL == FALSE
-static void TryGetRematchTrainerIdGivenGameState(const enum TrainerID *trainerIdxs, u8 *rematchIdx_p)
+static u8 TryGetRematchTrainerIdGivenGameState(const enum TrainerID *trainerIds, u8 rematchIndex)
 {
-    switch (*rematchIdx_p)
+    bool32 isFlagSet = TRUE;
+
+    switch (rematchIndex)
     {
-     case 0:
-         break;
      case 1:
-         if (!FlagGet(FLAG_GOT_VS_SEEKER))
-             *rematchIdx_p = GetRematchTrainerIdGivenGameState(trainerIdxs, *rematchIdx_p);
+        isFlagSet = FlagGet(FLAG_GOT_VS_SEEKER);
          break;
      case 2:
-         if (!FlagGet(FLAG_WORLD_MAP_CELADON_CITY))
-             *rematchIdx_p = GetRematchTrainerIdGivenGameState(trainerIdxs, *rematchIdx_p);
+        isFlagSet = FlagGet(FLAG_WORLD_MAP_CELADON_CITY);
          break;
      case 3:
-         if (!FlagGet(FLAG_WORLD_MAP_FUCHSIA_CITY))
-             *rematchIdx_p = GetRematchTrainerIdGivenGameState(trainerIdxs, *rematchIdx_p);
+        isFlagSet = FlagGet(FLAG_WORLD_MAP_FUCHSIA_CITY);
          break;
      case 4:
-         if (!FlagGet(FLAG_SYS_GAME_CLEAR))
-             *rematchIdx_p = GetRematchTrainerIdGivenGameState(trainerIdxs, *rematchIdx_p);
+        isFlagSet = FlagGet(FLAG_SYS_GAME_CLEAR);
          break;
      case 5:
-         if (!FlagGet(FLAG_SYS_CAN_LINK_WITH_RS))
-             *rematchIdx_p = GetRematchTrainerIdGivenGameState(trainerIdxs, *rematchIdx_p);
+        isFlagSet = FlagGet(FLAG_SYS_CAN_LINK_WITH_RS);
          break;
     }
+
+    if (isFlagSet)
+        return rematchIndex;
+
+    return BackwardsSearchRematchTrainerIndex(trainerIds, rematchIndex);
 }
 
-static u8 GetRematchTrainerIdGivenGameState(const enum TrainerID *trainerIdxs, u8 rematchIdx)
+static u8 BackwardsSearchRematchTrainerIndex(const enum TrainerID *trainerIds, u8 rematchIndex)
 {
-    while (--rematchIdx != 0)
+    while (--rematchIndex != 0)
     {
-        const enum TrainerID rematch_p = trainerIdxs[rematchIdx];
-        if (rematch_p != SKIP)
-            return rematchIdx;
+        if (trainerIds[rematchIndex] != SKIP)
+            return rematchIndex;
     }
+
     return 0;
 }
 #endif //FREE_MATCH_CALL
@@ -644,7 +644,8 @@ enum TrainerID GetRematchTrainerId(enum TrainerID trainerId)
     j = GetNextAvailableRematchTrainer(sRematches, trainerId, &i);
     if (!j)
         return TRAINER_NONE;
-    TryGetRematchTrainerIdGivenGameState(sRematches[i].trainerIDs, &j);
+
+    j = TryGetRematchTrainerIdGivenGameState(sRematches[i].trainerIDs, j);
     return sRematches[i].trainerIDs[j];
 }
 #endif //FREE_MATCH_CALL
