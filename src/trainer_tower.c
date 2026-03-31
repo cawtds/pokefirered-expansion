@@ -461,28 +461,28 @@ u8 GetTrainerTowerTrainerFrontSpriteId(void)
 
 void InitTrainerTowerBattleStruct(void)
 {
-    u16 trainerId;
+    u16 trainerIndex;
 
     SetUpTrainerTowerDataStruct();
     sTrainerTowerOpponent = AllocZeroed(sizeof(*sTrainerTowerOpponent));
-    trainerId = VarGet(VAR_TEMP_1);
-    StringCopyN(sTrainerTowerOpponent->name, CURR_FLOOR.trainers[trainerId].name, TRAINER_NAME_LENGTH + 1);
+    trainerIndex = VarGet(VAR_TEMP_1);
+    StringCopyN(sTrainerTowerOpponent->name, CURR_FLOOR.trainers[trainerIndex].name, TRAINER_NAME_LENGTH + 1);
 
     for (u32 i = 0; i < EASY_CHAT_BATTLE_WORDS_COUNT; i++)
     {
-        sTrainerTowerOpponent->speechWin[i] = CURR_FLOOR.trainers[trainerId].speechWin[i];
-        sTrainerTowerOpponent->speechLose[i] = CURR_FLOOR.trainers[trainerId].speechLose[i];
+        sTrainerTowerOpponent->speechWin[i] = CURR_FLOOR.trainers[trainerIndex].speechWin[i];
+        sTrainerTowerOpponent->speechLose[i] = CURR_FLOOR.trainers[trainerIndex].speechLose[i];
 
         if (CURR_FLOOR.challengeType == CHALLENGE_TYPE_DOUBLE)
         {
-            sTrainerTowerOpponent->speechWin2[i] = CURR_FLOOR.trainers[trainerId + 1].speechWin[i];
-            sTrainerTowerOpponent->speechLose2[i] = CURR_FLOOR.trainers[trainerId + 1].speechLose[i];
+            sTrainerTowerOpponent->speechWin2[i] = CURR_FLOOR.trainers[trainerIndex + 1].speechWin[i];
+            sTrainerTowerOpponent->speechLose2[i] = CURR_FLOOR.trainers[trainerIndex + 1].speechLose[i];
         }
     }
 
     sTrainerTowerOpponent->battleType = CURR_FLOOR.challengeType;
-    sTrainerTowerOpponent->facilityClass = CURR_FLOOR.trainers[trainerId].facilityClass;
-    sTrainerTowerOpponent->textColor = CURR_FLOOR.trainers[trainerId].textColor;
+    sTrainerTowerOpponent->facilityClass = CURR_FLOOR.trainers[trainerIndex].facilityClass;
+    sTrainerTowerOpponent->textColor = CURR_FLOOR.trainers[trainerIndex].textColor;
 #if FREE_TRAINER_HILL == FALSE
     SetTrainerTowerVBlankCounter(&TRAINER_TOWER.timer);
 #endif //FREE_TRAINER_HILL
@@ -659,12 +659,12 @@ static void TT_ConvertEasyChatMessageToString(u16 *ecWords, u8 *dest)
 
 static void BufferTowerOpponentSpeech(void)
 {
-    u16 trainerId = gSpecialVar_0x8006;
+    u16 trainerIndex = gSpecialVar_0x8006;
     u8 facilityClass;
     u8 challengeType = CURR_FLOOR.challengeType;
 
     if (challengeType != CHALLENGE_TYPE_DOUBLE)
-        facilityClass = CURR_FLOOR.trainers[trainerId].facilityClass;
+        facilityClass = CURR_FLOOR.trainers[trainerIndex].facilityClass;
     else
         facilityClass = CURR_FLOOR.trainers[0].facilityClass;
 
@@ -672,18 +672,18 @@ static void BufferTowerOpponentSpeech(void)
     {
     case TRAINER_TOWER_TEXT_INTRO:
         TrainerTowerGetOpponentTextColor(challengeType, facilityClass);
-        TT_ConvertEasyChatMessageToString(CURR_FLOOR.trainers[trainerId].speechBefore, gStringVar4);
+        TT_ConvertEasyChatMessageToString(CURR_FLOOR.trainers[trainerIndex].speechBefore, gStringVar4);
         break;
     case TRAINER_TOWER_TEXT_PLAYER_LOST:
         TrainerTowerGetOpponentTextColor(challengeType, facilityClass);
-        TT_ConvertEasyChatMessageToString(CURR_FLOOR.trainers[trainerId].speechWin, gStringVar4);
+        TT_ConvertEasyChatMessageToString(CURR_FLOOR.trainers[trainerIndex].speechWin, gStringVar4);
         break;
     case TRAINER_TOWER_TEXT_PLAYER_WON:
         TrainerTowerGetOpponentTextColor(challengeType, facilityClass);
-        TT_ConvertEasyChatMessageToString(CURR_FLOOR.trainers[trainerId].speechLose, gStringVar4);
+        TT_ConvertEasyChatMessageToString(CURR_FLOOR.trainers[trainerIndex].speechLose, gStringVar4);
         break;
     case TRAINER_TOWER_TEXT_AFTER:
-        TT_ConvertEasyChatMessageToString(CURR_FLOOR.trainers[trainerId].speechAfter, gStringVar4);
+        TT_ConvertEasyChatMessageToString(CURR_FLOOR.trainers[trainerIndex].speechAfter, gStringVar4);
         break;
     }
 }
@@ -1006,8 +1006,8 @@ static void ShouldWarpToCounter(void)
 
 static void PlayTrainerTowerEncounterMusic(void)
 {
-    u16 trainerIdx = VarGet(VAR_TEMP_1);
-    enum FacilityClass facilityClass = CURR_FLOOR.trainers[trainerIdx].facilityClass;
+    u16 trainerIndex = VarGet(VAR_TEMP_1);
+    enum FacilityClass facilityClass = CURR_FLOOR.trainers[trainerIndex].facilityClass;
     enum TrainerEncounterMusic musicId = sFacilityClassToEncounterMusic[facilityClass];
 
     PlayNewMapMusic(sTrainerTowerEncounterMusic[musicId]);
@@ -1022,7 +1022,7 @@ static void HasSpokenToOwner(void)
 
 static void BuildEnemyParty(void)
 {
-    u16 trainerIdx = VarGet(VAR_TEMP_1);
+    u16 trainerIndex = VarGet(VAR_TEMP_1);
     s32 level = GetPartyMaxLevel();
 #if FREE_TRAINER_HILL == FALSE
     u8 floorIdx = TRAINER_TOWER.floorsCleared;
@@ -1041,8 +1041,8 @@ static void BuildEnemyParty(void)
         for (i = 0; i < 2; i++)
         {
             monIdx = sSingleBattleChallengeMonIdxs[floorIdx][i];
-            CURR_FLOOR.trainers[trainerIdx].mons[monIdx].level = level;
-            CreateBattleTowerMon(&gEnemyParty[i], &CURR_FLOOR.trainers[trainerIdx].mons[monIdx]);
+            CURR_FLOOR.trainers[trainerIndex].mons[monIdx].level = level;
+            CreateBattleTowerMon(&gEnemyParty[i], &CURR_FLOOR.trainers[trainerIndex].mons[monIdx]);
         }
         break;
     case CHALLENGE_TYPE_DOUBLE:
@@ -1055,9 +1055,9 @@ static void BuildEnemyParty(void)
         CreateBattleTowerMon(&gEnemyParty[1], &CURR_FLOOR.trainers[1].mons[monIdx]);
         break;
     case CHALLENGE_TYPE_KNOCKOUT:
-        monIdx = sKnockoutChallengeMonIdxs[floorIdx][trainerIdx];
-        CURR_FLOOR.trainers[trainerIdx].mons[monIdx].level = level;
-        CreateBattleTowerMon(&gEnemyParty[0], &CURR_FLOOR.trainers[trainerIdx].mons[monIdx]);
+        monIdx = sKnockoutChallengeMonIdxs[floorIdx][trainerIndex];
+        CURR_FLOOR.trainers[trainerIndex].mons[monIdx].level = level;
+        CreateBattleTowerMon(&gEnemyParty[0], &CURR_FLOOR.trainers[trainerIndex].mons[monIdx]);
         break;
     }
 }

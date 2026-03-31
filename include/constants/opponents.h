@@ -2,6 +2,7 @@
 #define GUARD_CONSTANTS_OPPONENTS_H
 
 #include "constants/battle_partner.h"
+#include "constants/battle_frontier_trainers.h"
 
 enum TrainerID
 {
@@ -758,6 +759,16 @@ enum TrainerID
     TRAINER_LUCY,
     TRAINER_BRANDON,
     TRAINERS_COUNT,
+
+    // Special Trainer Ids.
+    TRAINER_RECORD_MIXING_FRIEND     = FRONTIER_TRAINERS_COUNT,
+    TRAINER_RECORD_MIXING_APPRENTICE = 1020,
+    TRAINER_EREADER                  = 1021,
+    TRAINER_FRONTIER_BRAIN           = 1022,
+    TRAINER_PLAYER                   = 1023,
+    TRAINER_UNION_ROOM               = 0xC00,
+    TRAINER_LINK_OPPONENT            = 0x800,
+    TRAINER_SECRET_BASE              = 0x400,
 };
 
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is

@@ -8,7 +8,7 @@ enum DifficultyLevel GetCurrentDifficultyLevel(void);
 void SetCurrentDifficultyLevel(enum DifficultyLevel);
 
 enum DifficultyLevel GetBattlePartnerDifficultyLevel(u16);
-enum DifficultyLevel GetTrainerDifficultyLevel(u16);
+enum DifficultyLevel GetTrainerDifficultyLevel(enum TrainerID trainerId);
 void Script_IncreaseDifficulty(void);
 void Script_DecreaseDifficulty(void);
 void Script_GetDifficulty(void);

@@ -39,7 +39,7 @@ enum DifficultyLevel GetBattlePartnerDifficultyLevel(u16 partnerId)
     return difficulty;
 }
 
-enum DifficultyLevel GetTrainerDifficultyLevel(u16 trainerId)
+enum DifficultyLevel GetTrainerDifficultyLevel(enum TrainerID trainerId)
 {
     enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
 

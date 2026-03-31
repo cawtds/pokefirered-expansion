@@ -221,14 +221,14 @@ extern const struct FollowerMsgInfo gFollowerCuriousMessages[];
 extern const struct FollowerMsgInfo gFollowerMusicMessages[];
 extern const struct FollowerMsgInfo gFollowerPoisonedMessages[];
 
-static inline bool8 IsPartnerTrainerId(u16 trainerId)
+static inline bool32 IsPartnerTrainerId(enum TrainerID trainerId)
 {
     if (trainerId >= TRAINER_PARTNER(PARTNER_NONE) && trainerId < TRAINER_PARTNER(PARTNER_COUNT))
         return TRUE;
     return FALSE;
 }
 
-static inline u16 SanitizeTrainerId(u16 trainerId)
+static inline enum TrainerID SanitizeTrainerId(enum TrainerID trainerId)
 {
     switch (trainerId)
     {
@@ -241,6 +241,8 @@ static inline u16 SanitizeTrainerId(u16 trainerId)
     case TRAINER_LINK_OPPONENT:
     case TRAINER_UNION_ROOM:
         return TRAINER_NONE;
+    default:
+        break;
     }
 
     assertf(trainerId < TRAINERS_COUNT || IsPartnerTrainerId(trainerId), "invalid trainer: %d", trainerId)
@@ -251,7 +253,7 @@ static inline u16 SanitizeTrainerId(u16 trainerId)
     return trainerId;
 }
 
-static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
+static inline const struct Trainer *GetTrainerStructFromId(enum TrainerID trainerId)
 {
     u32 sanitizedTrainerId = 0;
     if (gIsDebugBattle) return GetDebugAiTrainer();
@@ -264,14 +266,14 @@ static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
         return &gTrainers[difficulty][sanitizedTrainerId];
 }
 
-static inline const enum TrainerClassID GetTrainerClassFromId(u16 trainerId)
+static inline const enum TrainerClassID GetTrainerClassFromId(enum TrainerID trainerId)
 {
     const struct Trainer *trainer = GetTrainerStructFromId(trainerId);
 
     return trainer->trainerClass;
 }
 
-static inline const u8 *GetTrainerClassNameFromId(u16 trainerId)
+static inline const u8 *GetTrainerClassNameFromId(enum TrainerID trainerId)
 {
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
 
@@ -280,7 +282,7 @@ static inline const u8 *GetTrainerClassNameFromId(u16 trainerId)
     return gTrainerClasses[GetTrainerClassFromId(trainerId)].name;
 }
 
-static inline const u8 *GetTrainerNameFromId(u16 trainerId)
+static inline const u8 *GetTrainerNameFromId(enum TrainerID trainerId)
 {
     if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
     {
@@ -290,7 +292,7 @@ static inline const u8 *GetTrainerNameFromId(u16 trainerId)
     return GetTrainerStructFromId(trainerId)->trainerName;
 }
 
-static inline const enum TrainerPicID GetTrainerPicFromId(u16 trainerId)
+static inline const enum TrainerPicID GetTrainerPicFromId(enum TrainerID trainerId)
 {
     enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
 
@@ -300,42 +302,42 @@ static inline const enum TrainerPicID GetTrainerPicFromId(u16 trainerId)
     return GetTrainerStructFromId(trainerId)->trainerPic;
 }
 
-static inline const struct StartingStatuses GetTrainerStartingStatusFromId(u16 trainerId)
+static inline const struct StartingStatuses GetTrainerStartingStatusFromId(enum TrainerID trainerId)
 {
     return GetTrainerStructFromId(trainerId)->startingStatus;
 }
 
-static inline const enum TrainerBattleType GetTrainerBattleType(u16 trainerId)
+static inline const enum TrainerBattleType GetTrainerBattleType(enum TrainerID trainerId)
 {
     return GetTrainerStructFromId(trainerId)->battleType;
 }
 
-static inline const u8 GetTrainerPartySizeFromId(u16 trainerId)
+static inline const u8 GetTrainerPartySizeFromId(enum TrainerID trainerId)
 {
     return GetTrainerStructFromId(trainerId)->partySize;
 }
 
-static inline const bool32 DoesTrainerHaveMugshot(u16 trainerId)
+static inline const bool32 DoesTrainerHaveMugshot(enum TrainerID trainerId)
 {
     return GetTrainerStructFromId(trainerId)->mugshotColor;
 }
 
-static inline const u8 GetTrainerMugshotColorFromId(u16 trainerId)
+static inline const u8 GetTrainerMugshotColorFromId(enum TrainerID trainerId)
 {
     return GetTrainerStructFromId(trainerId)->mugshotColor;
 }
 
-static inline const u16 *GetTrainerItemsFromId(u16 trainerId)
+static inline const enum Item *GetTrainerItemsFromId(enum TrainerID trainerId)
 {
     return GetTrainerStructFromId(trainerId)->items;
 }
 
-static inline const struct TrainerMon *GetTrainerPartyFromId(u16 trainerId)
+static inline const struct TrainerMon *GetTrainerPartyFromId(enum TrainerID trainerId)
 {
     return GetTrainerStructFromId(trainerId)->party;
 }
 
-static inline const u64 GetTrainerAIFlagsFromId(u16 trainerId)
+static inline const u64 GetTrainerAIFlagsFromId(enum TrainerID trainerId)
 {
     return GetTrainerStructFromId(trainerId)->aiFlags;
 }

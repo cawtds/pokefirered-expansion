@@ -185,15 +185,6 @@ enum __attribute__((packed)) TrainerPicID
     TRAINER_PIC_COUNT,
 };
 
-// Special Trainer Ids.
-#define TRAINER_RECORD_MIXING_FRIEND        FRONTIER_TRAINERS_COUNT
-#define TRAINER_RECORD_MIXING_APPRENTICE    1020
-#define TRAINER_EREADER                     1021
-#define TRAINER_FRONTIER_BRAIN              1022
-#define TRAINER_PLAYER                      1023
-#define TRAINER_UNION_ROOM                  0xC00
-#define TRAINER_LINK_OPPONENT               0x800
-#define TRAINER_SECRET_BASE                 0x400
 
 enum TrainerClassID
 {
