@@ -121,9 +121,9 @@ struct Trainer
     const struct TrainerMon *party;
     enum Item items[MAX_TRAINER_ITEMS];
     struct StartingStatuses startingStatus; // this trainer starts a battle with a given status. see include/constants/battle.h for values
-    u8 trainerClass;
-    u8 encounterMusic:7;
-    u8 gender:1;
+    enum TrainerClassID trainerClass:8;
+    enum TrainerEncounterMusic encounterMusic:7;
+    enum TrainerGender gender:1;
     enum TrainerPicID trainerPic;
     u8 trainerName[TRAINER_NAME_LENGTH + 1];
     u8 battleType:2;

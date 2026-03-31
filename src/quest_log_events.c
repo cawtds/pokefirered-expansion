@@ -620,18 +620,23 @@ static bool8 ShouldRegisterEvent_HandlePartyActions(u16 eventId, const u16 * dat
 
 static bool8 ShouldRegisterEvent_HandleBeatStoryTrainer(u16 eventId, const u16 * genericData)
 {
-    if (eventId == QL_EVENT_DEFEATED_TRAINER)
+    const struct QuestLogEvent_TrainerBattle *data;
+
+    if (eventId != QL_EVENT_DEFEATED_TRAINER)
+        return FALSE;
+
+    data = (struct QuestLogEvent_TrainerBattle *)genericData;
+
+    switch (GetTrainerClassFromId(data->trainerId))
     {
-        const struct QuestLogEvent_TrainerBattle * data = (struct QuestLogEvent_TrainerBattle *)genericData;
-        u32 trainerClass =  GetTrainerClassFromId(data->trainerId);
-        if (trainerClass == TRAINER_CLASS_RIVAL_EARLY
-         || trainerClass == TRAINER_CLASS_RIVAL_LATE
-         || trainerClass == TRAINER_CLASS_CHAMPION
-         || trainerClass == TRAINER_CLASS_BOSS)
-            return FALSE;
+    case TRAINER_CLASS_RIVAL_EARLY:
+    case TRAINER_CLASS_RIVAL_LATE:
+    case TRAINER_CLASS_CHAMPION:
+    case TRAINER_CLASS_BOSS:
+        return FALSE;
+    default:
         return TRUE;
     }
-    return FALSE;
 }
 
 void QL_EnableRecordingSteps(void)
@@ -1916,17 +1921,23 @@ static const u16 *LoadEvent_DefeatedTrainer(const u16 *eventData)
 {
     const u16 *r5 = LoadEvent(QL_EVENT_DEFEATED_TRAINER, eventData);
     const u8 *r6 = (const u8 *)r5 + 6;
-    u32 trainerClass = GetTrainerClassFromId(r5[2]);
+    enum TrainerClassID trainerClass = GetTrainerClassFromId(r5[2]);
+
     DynamicPlaceholderTextUtil_Reset();
     GetMapNameGeneric(gStringVar1, r6[0]);
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, gStringVar1);
 
-    if (trainerClass == TRAINER_CLASS_RIVAL_EARLY
-     || trainerClass == TRAINER_CLASS_RIVAL_LATE
-     || trainerClass == TRAINER_CLASS_CHAMPION)
+    switch (trainerClass)
+    {
+    case TRAINER_CLASS_RIVAL_EARLY:
+    case TRAINER_CLASS_RIVAL_LATE:
+    case TRAINER_CLASS_CHAMPION:
         DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, GetExpandedPlaceholder(PLACEHOLDER_ID_RIVAL));
-    else
+        break;
+    default:
         DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, GetTrainerNameFromId(r5[2]));
+        break;
+    }
 
     QuestLog_GetSpeciesName(r5[0], NULL, 2);
     QuestLog_GetSpeciesName(r5[1], NULL, 3);
