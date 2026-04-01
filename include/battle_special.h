@@ -3,7 +3,7 @@
 
 void ClearEReaderTrainer(struct BattleTowerEReaderTrainer *);
 void ValidateEReaderTrainer(void);
-u8 GetEreaderTrainerFrontSpriteId(void);
+enum TrainerPicID GetEreaderTrainerFrontSpriteId(void);
 void GetEreaderTrainerName(u8 *dest);
 enum TrainerClassID GetEreaderTrainerClassId(void);
 

@@ -2581,7 +2581,7 @@ void ClearEnemyPartyAfterChallenge()
 bool8 IsFrontierTrainerFemale(u16 trainerId)
 {
     u32 i;
-    u8 facilityClass;
+    enum FacilityClass facilityClass;
 
     SetFacilityPtrsGetLevel();
     if (trainerId == TRAINER_EREADER)
@@ -2708,7 +2708,7 @@ static void UNUSED GetRandomScaledFrontierTrainerIdRange(u8 challengeNum, u8 bat
 void SetBattleFacilityTrainerGfxId(u16 trainerId, u8 tempVarId)
 {
     u32 i;
-    u8 facilityClass;
+    enum FacilityClass facilityClass;
     u8 trainerObjectGfxId;
 
     SetFacilityPtrsGetLevel();
@@ -2804,7 +2804,7 @@ void SetBattleFacilityTrainerGfxId(u16 trainerId, u8 tempVarId)
 u16 GetBattleFacilityTrainerGfxId(u16 trainerId)
 {
     u32 i;
-    u8 facilityClass;
+    enum FacilityClass facilityClass;
     u16 trainerObjectGfxId;
 
     SetFacilityPtrsGetLevel();
@@ -2896,89 +2896,65 @@ u8 GetFrontierTrainerFrontSpriteId(u16 trainerId)
 
 enum TrainerClassID GetFrontierOpponentClass(u16 trainerId)
 {
-    u8 trainerClass = 0;
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
     SetFacilityPtrsGetLevel();
 
 #if FREE_BATTLE_TOWER_E_READER == FALSE
     if (trainerId == TRAINER_EREADER)
-    {
-        trainerClass = gFacilityClassToTrainerClass[gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass];
-    }
-    else if (trainerId == TRAINER_FRONTIER_BRAIN)
-#else
-    if (trainerId == TRAINER_FRONTIER_BRAIN)
+        return gFacilityClassToTrainerClass[gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass];
 #endif //FREE_BATTLE_TOWER_E_READER
-    {
+
+    if (trainerId == TRAINER_FRONTIER_BRAIN)
         return GetFrontierBrainTrainerClass();
-    }
-    else if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
-    {
-        trainerClass = gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerClass;
-    }
-    else if (trainerId < FRONTIER_TRAINERS_COUNT)
-    {
-        trainerClass = gFacilityClassToTrainerClass[gFacilityTrainers[trainerId].facilityClass];
-    }
-    else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
+
+    if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
+        return gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerClass;
+
+    if (trainerId < FRONTIER_TRAINERS_COUNT)
+        return gFacilityClassToTrainerClass[gFacilityTrainers[trainerId].facilityClass];
+
+    if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
     {
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
-        {
-            trainerClass = gFacilityClassToTrainerClass[GetRecordedBattleRecordMixFriendClass()];
-        }
+            return gFacilityClassToTrainerClass[GetRecordedBattleRecordMixFriendClass()];
         else
-        {
-            trainerClass = gFacilityClassToTrainerClass[gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].facilityClass];
-        }
-    }
-    else
-    {
-        if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
-        {
-            trainerClass = gFacilityClassToTrainerClass[gApprentices[GetRecordedBattleApprenticeId()].facilityClass];
-        }
-        else
-        {
-            trainerClass = gFacilityClassToTrainerClass[gApprentices[gSaveBlock1Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE].id].facilityClass];
-        }
+            return gFacilityClassToTrainerClass[gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].facilityClass];
     }
 
-    return trainerClass;
+    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+        return gFacilityClassToTrainerClass[gApprentices[GetRecordedBattleApprenticeId()].facilityClass];
+
+    return gFacilityClassToTrainerClass[gApprentices[gSaveBlock1Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE].id].facilityClass];
 }
 
-u8 GetFrontierTrainerFacilityClass(u16 trainerId)
+enum FacilityClass GetFrontierTrainerFacilityClass(u16 trainerId)
 {
-    u8 facilityClass;
     SetFacilityPtrsGetLevel();
 
     if (trainerId == TRAINER_EREADER)
     {
     #if FREE_BATTLE_TOWER_E_READER == FALSE
-        facilityClass = gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass;
+        return gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass;
     #else
-        facilityClass = 0;
+        return FACILITY_CLASS_RED;
     #endif //FREE_BATTLE_TOWER_E_READER
     }
-    else if (trainerId < FRONTIER_TRAINERS_COUNT)
-    {
-        facilityClass = gFacilityTrainers[trainerId].facilityClass;
-    }
-    else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
-    {
-        if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
-            facilityClass = GetRecordedBattleRecordMixFriendClass();
-        else
-            facilityClass = gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].facilityClass;
-    }
-    else
+
+    if (trainerId < FRONTIER_TRAINERS_COUNT)
+        return gFacilityTrainers[trainerId].facilityClass;
+
+    if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
     {
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
-            facilityClass = gApprentices[GetRecordedBattleApprenticeId()].facilityClass;
+            return GetRecordedBattleRecordMixFriendClass();
         else
-            facilityClass = gApprentices[gSaveBlock1Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE].id].facilityClass;
+            return gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].facilityClass;
     }
 
-    return facilityClass;
+    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+        return gApprentices[GetRecordedBattleApprenticeId()].facilityClass;
+
+    return gApprentices[gSaveBlock1Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE].id].facilityClass;
 }
 
 void GetFrontierTrainerName(u8 *dst, u16 trainerId)
@@ -3140,7 +3116,7 @@ s32 GetHighestLevelInPlayerParty(void)
     return highestLevel;
 }
 
-u16 FacilityClassToGraphicsId(u8 facilityClass)
+u16 FacilityClassToGraphicsId(enum FacilityClass facilityClass)
 {
     u16 trainerObjectGfxId;
     u8 i;

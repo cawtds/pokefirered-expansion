@@ -67,7 +67,7 @@ static void ClearBattleTowerRecord(struct EmeraldBattleTowerRecord *record);
 #include "data/battle_frontier/battle_frontier_trainers.h"
 #include "data/battle_frontier/battle_frontier_mons.h"
 
-const u8 gTowerMaleFacilityClasses[30] =
+const enum FacilityClass gTowerMaleFacilityClasses[30] =
 {
     FACILITY_CLASS_RUIN_MANIAC,
     FACILITY_CLASS_TUBER_M,
@@ -101,7 +101,7 @@ const u8 gTowerMaleFacilityClasses[30] =
     FACILITY_CLASS_HIKER
 };
 
-const u8 gTowerFemaleFacilityClasses[20] =
+const enum FacilityClass gTowerFemaleFacilityClasses[20] =
 {
     FACILITY_CLASS_AROMA_LADY,
     FACILITY_CLASS_TUBER_F,
@@ -1001,7 +1001,8 @@ static void SaveBattleTowerRecord(void)
 {
     s32 i;
     enum FrontierLevelMode lvlMode;
-    u8 battleMode, class;
+    u8 battleMode;
+    enum FacilityClass class;
     struct EmeraldBattleTowerRecord *playerRecord = &gSaveBlock2Ptr->frontier.towerPlayer;
 
     ClearBattleTowerRecord(playerRecord);

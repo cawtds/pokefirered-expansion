@@ -1,4 +1,4 @@
-const u16 gFacilityClassToPicIndex[] =
+const enum TrainerPicID gFacilityClassToPicIndex[] =
 {
     [FACILITY_CLASS_AQUA_LEADER_ARCHIE]     = TRAINER_PIC_AQUA_LEADER_ARCHIE,
     [FACILITY_CLASS_AQUA_GRUNT_M]           = TRAINER_PIC_AQUA_GRUNT_M,

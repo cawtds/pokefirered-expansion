@@ -1181,7 +1181,7 @@ static void SetSavedApprenticeTrainerGfxId(void)
 {
     u8 i;
     u8 objectEventGfxId;
-    u8 class = gApprentices[gSaveBlock1Ptr->apprentices[0].id].facilityClass;
+    enum FacilityClass class = gApprentices[gSaveBlock1Ptr->apprentices[0].id].facilityClass;
 
     for (i = 0; i < ARRAY_COUNT(gTowerMaleFacilityClasses) && gTowerMaleFacilityClasses[i] != class; i++)
         ;
@@ -1205,7 +1205,7 @@ static void SetPlayerApprenticeTrainerGfxId(void)
 {
     u8 i;
     u8 objectEventGfxId;
-    u8 class = gApprentices[PLAYER_APPRENTICE.id].facilityClass;
+    enum FacilityClass class = gApprentices[PLAYER_APPRENTICE.id].facilityClass;
 
     for (i = 0; i < ARRAY_COUNT(gTowerMaleFacilityClasses) && gTowerMaleFacilityClasses[i] != class; i++)
         ;

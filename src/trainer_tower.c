@@ -37,7 +37,7 @@ struct TrainerTowerOpponent
     /* 0x24 */ u16 speechWin2[EASY_CHAT_BATTLE_WORDS_COUNT];
     /* 0x30 */ u16 speechLose2[EASY_CHAT_BATTLE_WORDS_COUNT];
     /* 0x3C */ u8 battleType;
-    /* 0x3D */ u8 facilityClass;
+    /* 0x3D */ enum FacilityClass facilityClass;
     /* 0x3E */ u8 textColor;
 };
 
@@ -67,7 +67,7 @@ static void InitTrainerTowerFloor(void);
 static void SetTrainerTowerNPCGraphics(void);
 static void TT_ConvertEasyChatMessageToString(u16 *ecWords, u8 *dest);
 static void BufferTowerOpponentSpeech(void);
-static void TrainerTowerGetOpponentTextColor(u8 battleType, u8 facilityClass);
+static void TrainerTowerGetOpponentTextColor(u8 battleType, enum FacilityClass facilityClass);
 static void DoTrainerTowerBattle(void);
 static void TrainerTowerGetChallengeType(void);
 static void TrainerTowerAddFloorCleared(void);
@@ -444,7 +444,7 @@ void CallTrainerTowerFunc(void)
     FreeTrainerTowerDataStruct();
 }
 
-u8 GetTrainerTowerOpponentClass(void)
+enum TrainerClassID GetTrainerTowerOpponentClass(void)
 {
     return gFacilityClassToTrainerClass[sTrainerTowerOpponent->facilityClass];
 }
@@ -660,7 +660,7 @@ static void TT_ConvertEasyChatMessageToString(u16 *ecWords, u8 *dest)
 static void BufferTowerOpponentSpeech(void)
 {
     u16 trainerIndex = gSpecialVar_0x8006;
-    u8 facilityClass;
+    enum FacilityClass facilityClass;
     u8 challengeType = CURR_FLOOR.challengeType;
 
     if (challengeType != CHALLENGE_TYPE_DOUBLE)
@@ -688,7 +688,7 @@ static void BufferTowerOpponentSpeech(void)
     }
 }
 
-static void TrainerTowerGetOpponentTextColor(u8 challengeType, u8 facilityClass)
+static void TrainerTowerGetOpponentTextColor(u8 challengeType, enum FacilityClass facilityClass)
 {
     u16 gender = MALE;
     int i;

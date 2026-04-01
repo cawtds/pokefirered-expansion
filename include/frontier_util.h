@@ -32,14 +32,14 @@ void SetBattleFacilityTrainerGfxId(u16 trainerId, u8 tempVarId);
 u16 GetBattleFacilityTrainerGfxId(u16 trainerId);
 u8 GetFrontierTrainerFrontSpriteId(u16 trainerId);
 enum TrainerClassID GetFrontierOpponentClass(u16 trainerId);
-u8 GetFrontierTrainerFacilityClass(u16 trainerId);
+enum FacilityClass GetFrontierTrainerFacilityClass(u16 trainerId);
 void GetFrontierTrainerName(u8 *dst, u16 trainerId);
 u16 GetRandomFrontierMonFromSet(u16 trainerId);
 void FrontierSpeechToString(const u16 *words);
 u8 SetFacilityPtrsGetLevel(void);
 u8 GetFrontierEnemyMonLevel(enum FrontierLevelMode lvlMode);
 s32 GetHighestLevelInPlayerParty(void);
-u16 FacilityClassToGraphicsId(u8 facilityClass);
+u16 FacilityClassToGraphicsId(enum FacilityClass facilityClass);
 void ShowBattleFrontierCaughtBannedSpecies(void);
 
 #endif // GUARD_FRONTIER_UTIL_H

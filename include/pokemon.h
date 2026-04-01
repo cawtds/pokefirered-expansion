@@ -711,7 +711,7 @@ extern bool32 consumeItem;
 extern u32 removeBagItem;
 extern u32 removeBagItemCount;
 
-extern const u16 gFacilityClassToPicIndex[];
+extern const enum TrainerPicID gFacilityClassToPicIndex[];
 extern const enum TrainerClassID gFacilityClassToTrainerClass[];
 extern const struct SpeciesInfo gSpeciesInfo[];
 extern const u32 gExperienceTables[][MAX_LEVEL + 1];
@@ -719,7 +719,7 @@ extern const u8 gPPUpGetMask[];
 extern const u8 gPPUpClearMask[];
 extern const u8 gPPUpAddValues[];
 extern const u8 gStatStageRatios[MAX_STAT_STAGE + 1][2];
-extern const u16 gUnionRoomFacilityClasses[];
+extern const enum FacilityClass gUnionRoomFacilityClasses[];
 extern const struct SpriteTemplate gBattlerSpriteTemplates[];
 extern const u32 sExpCandyExperienceTable[];
 extern const struct AbilityInfo gAbilitiesInfo[];
@@ -899,7 +899,7 @@ void PokemonSummaryDoMonAnimation(struct Sprite *sprite, enum Species species, b
 void StopPokemonAnimationDelayTask(void);
 void BattleAnimateBackSprite(struct Sprite *sprite, enum Species species);
 u8 GetOpposingLinkMultiBattlerId(bool8 rightSide, u8 multiplayerId);
-enum TrainerPicID FacilityClassToPicIndex(u16 facilityClass);
+enum TrainerPicID FacilityClassToPicIndex(enum FacilityClass facilityClass);
 enum TrainerPicID PlayerGenderToFrontTrainerPicId(enum Gender playerGender);
 void HandleSetPokedexFlag(enum NationalDexOrder nationalNum, u8 caseId, u32 personality);
 void HandleSetPokedexFlagFromMon(struct Pokemon *mon, u32 caseId);

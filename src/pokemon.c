@@ -1018,7 +1018,7 @@ const u8 gStatStageRatios[MAX_STAT_STAGE + 1][2] =
 
 // The classes used by other players in the Union Room.
 // These should correspond with the overworld graphics in sUnionRoomObjGfxIds
-const u16 gUnionRoomFacilityClasses[NUM_UNION_ROOM_CLASSES * GENDER_COUNT] =
+const enum FacilityClass gUnionRoomFacilityClasses[NUM_UNION_ROOM_CLASSES * GENDER_COUNT] =
 {
     // Male classes
     FACILITY_CLASS_COOLTRAINER_M,
@@ -1091,7 +1091,7 @@ static const struct SpriteTemplate sTrainerBackSpriteTemplate =
 };
 
 #define NUM_SECRET_BASE_CLASSES 5
-static const u8 sSecretBaseFacilityClasses[GENDER_COUNT][NUM_SECRET_BASE_CLASSES] =
+static const enum FacilityClass sSecretBaseFacilityClasses[GENDER_COUNT][NUM_SECRET_BASE_CLASSES] =
 {
     [MALE] = {
         FACILITY_CLASS_YOUNGSTER,
@@ -1710,7 +1710,7 @@ static void CreateEventMon(struct Pokemon *mon, enum Species species, u8 level, 
     SetMonData(mon, MON_DATA_MODERN_FATEFUL_ENCOUNTER, &isModernFatefulEncounter);
 }
 
-enum TrainerPicID GetUnionRoomTrainerPic(void)
+static enum FacilityClass GetUnionRoomTrainerFacilityClass(void)
 {
     u8 linkId;
     u32 arrId;
@@ -1722,22 +1722,22 @@ enum TrainerPicID GetUnionRoomTrainerPic(void)
 
     arrId = gLinkPlayers[linkId].trainerId % NUM_UNION_ROOM_CLASSES;
     arrId |= gLinkPlayers[linkId].gender * NUM_UNION_ROOM_CLASSES;
-    return FacilityClassToPicIndex(gUnionRoomFacilityClasses[arrId]);
+
+    return gUnionRoomFacilityClasses[arrId];
+}
+
+enum TrainerPicID GetUnionRoomTrainerPic(void)
+{
+    enum FacilityClass facilityClass = GetUnionRoomTrainerFacilityClass();
+
+    return FacilityClassToPicIndex(facilityClass);
 }
 
 enum TrainerClassID GetUnionRoomTrainerClass(void)
 {
-    u8 linkId;
-    u32 arrId;
+    enum FacilityClass facilityClass = GetUnionRoomTrainerFacilityClass();
 
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
-        linkId = gRecordedBattleMultiplayerId ^ 1;
-    else
-        linkId = GetMultiplayerId() ^ 1;
-
-    arrId = gLinkPlayers[linkId].trainerId % NUM_UNION_ROOM_CLASSES;
-    arrId |= gLinkPlayers[linkId].gender * NUM_UNION_ROOM_CLASSES;
-    return gFacilityClassToTrainerClass[gUnionRoomFacilityClasses[arrId]];
+    return gFacilityClassToTrainerClass[facilityClass];
 }
 
 void CreateEnemyEventMon(void)
@@ -3620,21 +3620,19 @@ void CreateSecretBaseEnemyParty(struct SecretBase *secretBaseRecord)
 
 enum TrainerPicID GetSecretBaseTrainerPicIndex(void)
 {
-    u8 facilityClass = sSecretBaseFacilityClasses[gBattleResources->secretBase->gender][gBattleResources->secretBase->trainerId[0] % NUM_SECRET_BASE_CLASSES];
+    enum FacilityClass facilityClass = sSecretBaseFacilityClasses[gBattleResources->secretBase->gender][gBattleResources->secretBase->trainerId[0] % NUM_SECRET_BASE_CLASSES];
     return gFacilityClassToPicIndex[facilityClass];
 }
 
 enum TrainerClassID GetSecretBaseTrainerClass(void)
 {
-    u8 facilityClass = sSecretBaseFacilityClasses[gBattleResources->secretBase->gender][gBattleResources->secretBase->trainerId[0] % NUM_SECRET_BASE_CLASSES];
+    enum FacilityClass facilityClass = sSecretBaseFacilityClasses[gBattleResources->secretBase->gender][gBattleResources->secretBase->trainerId[0] % NUM_SECRET_BASE_CLASSES];
     return gFacilityClassToTrainerClass[facilityClass];
 }
 
 bool8 IsPlayerPartyAndPokemonStorageFull(void)
 {
-    s32 i;
-
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (u32 i = 0; i < PARTY_SIZE; i++)
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
             return FALSE;
 
@@ -6297,7 +6295,7 @@ u8 GetOpposingLinkMultiBattlerId(bool8 rightSide, u8 multiplayerId)
     return i;
 }
 
-enum TrainerPicID FacilityClassToPicIndex(u16 facilityClass)
+enum TrainerPicID FacilityClassToPicIndex(enum FacilityClass facilityClass)
 {
     return gFacilityClassToPicIndex[facilityClass];
 }

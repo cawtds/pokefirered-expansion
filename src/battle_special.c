@@ -169,12 +169,12 @@ static void UNUSED FillEReaderTrainerWithPlayerData(void)
 #endif //FREE_BATTLE_TOWER_E_READER
 }
 
-u8 GetEreaderTrainerFrontSpriteId(void)
+enum TrainerPicID GetEreaderTrainerFrontSpriteId(void)
 {
 #if FREE_BATTLE_TOWER_E_READER == FALSE
     return gFacilityClassToPicIndex[gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass];
 #else
-    return 0;
+    return TRAINER_PIC_NONE;
 #endif //FREE_BATTLE_TOWER_E_READER
 }
 
@@ -183,7 +183,7 @@ enum TrainerClassID GetEreaderTrainerClassId(void)
 #if FREE_BATTLE_TOWER_E_READER == FALSE
     return gFacilityClassToTrainerClass[gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass];
 #else
-    return 0;
+    return TRAINER_CLASS_PKMN_TRAINER_1;
 #endif //FREE_BATTLE_TOWER_E_READER
 }
 
