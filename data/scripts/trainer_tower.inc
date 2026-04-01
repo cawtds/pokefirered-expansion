@@ -300,9 +300,9 @@ TrainerTower_Roof_EventScript_NoRoomForPrize::
 TrainerTower_Roof_EventScript_CheckFinalTime::
 	ttower_checkfinaltime
 	switch VAR_RESULT
-	case 0, TrainerTower_Roof_EventScript_NewRecord
-	case 1, TrainerTower_Roof_EventScript_NoNewRecord
-	case 2, TrainerTower_Roof_EventScript_OwnerEnd
+	case TT_RESULT_NEW_RECORD, TrainerTower_Roof_EventScript_NewRecord
+	case TT_RESULT_NO_RECORD, TrainerTower_Roof_EventScript_NoNewRecord
+	case TT_RESULT_ALREADY_CHECKED, TrainerTower_Roof_EventScript_OwnerEnd
 
 TrainerTower_Roof_EventScript_NewRecord:
 	msgbox TrainerTower_Roof_Text_DoneItInRecordTime

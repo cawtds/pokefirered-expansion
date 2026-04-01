@@ -43,15 +43,15 @@ struct TrainerTowerOpponent
 
 struct SinglesTrainerInfo
 {
-    u8 objGfx;
+    enum ObjectEventGfx objGfx;
     enum FacilityClass facilityClass;
     enum Gender gender;
 };
 
 struct DoublesTrainerInfo
 {
-    u8 objGfx1;
-    u8 objGfx2;
+    enum ObjectEventGfx objGfx1;
+    enum ObjectEventGfx objGfx2;
     enum FacilityClass facilityClass;
     enum Gender gender1;
     enum Gender gender2;
@@ -321,8 +321,6 @@ static const struct WindowTemplate sTimeBoardWindowTemplate[] =
     }, DUMMY_WIN_TEMPLATE
 };
 
-static const u32 sUnusedValue = 112;
-
 static const u8 sTextColors[3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
 
 static void (*const sTrainerTowerFunctions[])(void) = {
@@ -567,8 +565,10 @@ static void InitTrainerTowerFloor(void)
 
 static void SetTrainerTowerNPCGraphics(void)
 {
-    s32 i, j;
-    u8 trainerGfx1, trainerGfx2, facilityClass;
+    u32 i;
+    enum ObjectEventGfx trainerGfx1, trainerGfx2;
+    enum FacilityClass facilityClass;
+
     switch (CURR_FLOOR.challengeType)
     {
     case CHALLENGE_TYPE_SINGLE:
@@ -607,7 +607,7 @@ static void SetTrainerTowerNPCGraphics(void)
         VarSet(VAR_OBJ_GFX_ID_3, trainerGfx2);
         break;
     case CHALLENGE_TYPE_KNOCKOUT:
-        for (j = 0; j < MAX_TRAINERS_PER_FLOOR; j++)
+        for (u32 j = 0; j < MAX_TRAINERS_PER_FLOOR; j++)
         {
             facilityClass = CURR_FLOOR.trainers[j].facilityClass;
             for (i = 0; i < ARRAY_COUNT(sSingleBattleTrainerInfo); i++)
@@ -641,7 +641,7 @@ static void TT_ConvertEasyChatMessageToString(u16 *ecWords, u8 *dest)
 {
     s32 i;
     ConvertEasyChatWordsToString(dest, ecWords, 3, 2);
-    if ((unsigned)GetStringWidth(FONT_NORMAL, dest, -1) > 196)
+    if (GetStringWidth(FONT_NORMAL, dest, -1) > 196)
     {
         // Has to be printed 2x3
         ConvertEasyChatWordsToString(dest, ecWords, 2, 3);
@@ -730,13 +730,13 @@ static void CB2_EndTrainerTowerBattle(void)
 
 static void Task_DoTrainerTowerBattle(u8 taskId)
 {
-    if (IsBattleTransitionDone() == TRUE)
-    {
-        gMain.savedCallback = CB2_EndTrainerTowerBattle;
-        CleanupOverworldWindowsAndTilemaps();
-        SetMainCallback2(CB2_InitBattle);
-        DestroyTask(taskId);
-    }
+    if (!IsBattleTransitionDone())
+        return;
+
+    gMain.savedCallback = CB2_EndTrainerTowerBattle;
+    CleanupOverworldWindowsAndTilemaps();
+    SetMainCallback2(CB2_InitBattle);
+    DestroyTask(taskId);
 }
 
 static void DoTrainerTowerBattle(void)
@@ -846,34 +846,35 @@ static void CheckFinalTime(void)
 #if FREE_TRAINER_HILL == FALSE
     if (TRAINER_TOWER.checkedFinalTime)
     {
-        gSpecialVar_Result = 2;
+        gSpecialVar_Result = TT_RESULT_ALREADY_CHECKED;
     }
     else if (GetTrainerTowerRecordTime(&TRAINER_TOWER.bestTime) > TRAINER_TOWER.timer)
     {
         SetTrainerTowerRecordTime(&TRAINER_TOWER.bestTime, TRAINER_TOWER.timer);
-        gSpecialVar_Result = 0;
+        gSpecialVar_Result = TT_RESULT_NEW_RECORD;
     }
     else
     {
-        gSpecialVar_Result = 1;
+        gSpecialVar_Result = TT_RESULT_NO_RECORD;
     }
 
     TRAINER_TOWER.checkedFinalTime = TRUE;
 #else
-    gSpecialVar_Result = 0;
+    gSpecialVar_Result = TT_RESULT_ALREADY_CHECKED;
 #endif //FREE_TRAINER_HILL
 }
 
 static void TrainerTowerResumeTimer(void)
 {
 #if FREE_TRAINER_HILL == FALSE
-    if (!TRAINER_TOWER.spokeToOwner)
-    {
-        if (TRAINER_TOWER.timer >= TRAINER_TOWER_MAX_TIME)
-            TRAINER_TOWER.timer = TRAINER_TOWER_MAX_TIME;
-        else
-            SetTrainerTowerVBlankCounter(&TRAINER_TOWER.timer);
-    }
+    if (TRAINER_TOWER.spokeToOwner)
+        return;
+
+    if (TRAINER_TOWER.timer >= TRAINER_TOWER_MAX_TIME)
+        TRAINER_TOWER.timer = TRAINER_TOWER_MAX_TIME;
+    else
+        SetTrainerTowerVBlankCounter(&TRAINER_TOWER.timer);
+
 #endif //FREE_TRAINER_HILL
 }
 
@@ -1029,7 +1030,6 @@ static void BuildEnemyParty(void)
 #else
     u8 floorIdx = gMapHeader.mapLayoutId - LAYOUT_TRAINER_TOWER_1F;
 #endif //FREE_TRAINER_HILL
-    s32 i;
     u8 monIdx;
 
     ZeroEnemyPartyMons();
@@ -1038,7 +1038,7 @@ static void BuildEnemyParty(void)
     {
     case CHALLENGE_TYPE_SINGLE:
     default:
-        for (i = 0; i < 2; i++)
+        for (u32 i = 0; i < 2; i++)
         {
             monIdx = sSingleBattleChallengeMonIdxs[floorIdx][i];
             CURR_FLOOR.trainers[trainerIndex].mons[monIdx].level = level;
@@ -1065,9 +1065,8 @@ static void BuildEnemyParty(void)
 static s32 GetPartyMaxLevel(void)
 {
     s32 topLevel = 0;
-    s32 i;
 
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (u32 i = 0; i < PARTY_SIZE; i++)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) != 0 && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) != SPECIES_EGG)
         {
@@ -1101,14 +1100,14 @@ void PrintTrainerTowerRecords(void)
     SetUpTrainerTowerDataStruct();
     FillWindowPixelRect(0, PIXEL_FILL(0), 0, 0, 216, 144);
     ValidateOrResetCurTrainerTowerRecord();
-    AddTextPrinterParameterized3(0, FONT_NORMAL, 0x4a, 0, sTextColors, 0, gText_TimeBoard);
+    AddTextPrinterParameterized3(0, FONT_NORMAL, 74, 0, sTextColors, 0, gText_TimeBoard);
 
     for (i = 0; i < NUM_TOWER_CHALLENGE_TYPES; i++)
     {
         PRINT_TOWER_TIME(GetTrainerTowerRecordTime(&gSaveBlock1Ptr->trainerTower[i].bestTime));
         StringExpandPlaceholders(gStringVar4, gText_XMinYZSec);
-        AddTextPrinterParameterized3(windowId, FONT_NORMAL, 0x18, 0x24 + 0x14 * i, sTextColors, 0, gTrainerTowerChallengeTypeTexts[i]);
-        AddTextPrinterParameterized3(windowId, FONT_NORMAL, 0x60, 0x24 + 0x14 * i, sTextColors, 0, gStringVar4);
+        AddTextPrinterParameterized3(windowId, FONT_NORMAL, 24, 36 + 20 * i, sTextColors, 0, gTrainerTowerChallengeTypeTexts[i]);
+        AddTextPrinterParameterized3(windowId, FONT_NORMAL, 96, 36 + 20 * i, sTextColors, 0, gStringVar4);
     }
 
     PutWindowTilemap(windowId);
@@ -1132,11 +1131,9 @@ static void SetTrainerTowerRecordTime(u32 *counter, u32 value)
 void ResetTrainerTowerResults(void)
 {
 #if FREE_TRAINER_HILL == FALSE
-    s32 i;
 
-    for (i = 0; i < NUM_TOWER_CHALLENGE_TYPES; i++)
-    {
+    for (u32 i = 0; i < NUM_TOWER_CHALLENGE_TYPES; i++)
         SetTrainerTowerRecordTime(&gSaveBlock1Ptr->trainerTower[i].bestTime, TRAINER_TOWER_MAX_TIME);
-    }
+
 #endif //FREE_TRAINER_HILL
 }
