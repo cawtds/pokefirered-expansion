@@ -5431,13 +5431,13 @@ s32 GetBattlerMultiplayerId(u16 id)
     return multiplayerId;
 }
 
-u8 GetTrainerEncounterMusicId(u16 trainerOpponentId)
+enum TrainerEncounterMusic GetTrainerEncounterMusicId(enum TrainerID trainerId)
 {
-    u32 sanitizedTrainerId = SanitizeTrainerId(trainerOpponentId);
+    enum TrainerID sanitizedTrainerId = SanitizeTrainerId(trainerId);
     enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
 
     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
-        return GetTrainerEncounterMusicIdInBattlePyramid(trainerOpponentId);
+        return GetTrainerEncounterMusicIdInBattlePyramid(trainerId);
     else
         return gTrainers[difficulty][sanitizedTrainerId].encounterMusic;
 }

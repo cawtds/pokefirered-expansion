@@ -522,7 +522,7 @@ static const u8 *const sPartnerTextsSwimmerM[] =
 
 struct
 {
-    u32 facilityClass;
+    enum FacilityClass facilityClass;
     const u8 *const *strings;
 } static const sPartnerTrainerTextTables[] =
 {

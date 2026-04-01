@@ -64,8 +64,8 @@ struct PyramidFloorTemplate
 
 struct PyramidTrainerEncounterMusic
 {
-    u8 trainerClass;
-    u8 trainerEncounterMusic;
+    enum TrainerClassID trainerClass;
+    enum TrainerEncounterMusic trainerEncounterMusic;
 };
 
 // This file's functions.
@@ -1691,7 +1691,7 @@ void CopyPyramidTrainerLoseSpeech(u16 trainerId)
     FrontierSpeechToString(gFacilityTrainers[trainerId].speechLose);
 }
 
-u8 GetTrainerEncounterMusicIdInBattlePyramid(u16 trainerId)
+enum TrainerEncounterMusic GetTrainerEncounterMusicIdInBattlePyramid(u16 trainerId)
 {
     int i;
 

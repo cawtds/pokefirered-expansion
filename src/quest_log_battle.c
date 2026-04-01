@@ -23,8 +23,7 @@ void TrySetQuestLogBattleEvent(void)
 
         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
         {
-            u32 trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
-            switch (trainerClass)
+            switch (GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA))
             {
             case TRAINER_CLASS_LEADER:
                 eventId = QL_EVENT_DEFEATED_GYM_LEADER;

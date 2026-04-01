@@ -46,19 +46,19 @@
 
 struct FrontierBrainMon
 {
-    u16 species;
-    u16 heldItem;
+    enum Species species;
+    enum Item heldItem;
     u8 fixedIV;
-    u8 nature;
+    enum Nature nature;
     u8 evs[NUM_STATS];
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
 };
 
 struct FrontierBrain
 {
-    u16 trainerId;
-    u8 objEventGfx;
-    u8 isFemale;
+    enum TrainerID trainerId;
+    enum ObjectEventGfx objEventGfx;
+    bool8 isFemale:1;
     const u8 *lostTexts[2];
     const u8 *wonTexts[2];
     u16 battledBit[2];
