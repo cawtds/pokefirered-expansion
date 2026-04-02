@@ -6,6 +6,7 @@ enum PartnerId
 {
     PARTNER_NONE,
     PARTNER_STEVEN,
+    PARTNER_DUMMY,
     PARTNER_COUNT,
 };
 
