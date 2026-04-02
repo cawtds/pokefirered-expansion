@@ -141,6 +141,24 @@ static s32 (*const sBattleAiFuncTable[])(enum BattlerId, enum BattlerId, enum Mo
 };
 
 // Functions
+void AIDebugTimerStart()
+{
+    // Set delay timer to count how long it takes for AI to choose action/move
+    if ((TESTING && gBattleTurnCounter == 0) || DEBUG_AI_DELAY_TIMER)
+        gBattleStruct->aiDelayTimer = gMain.vblankCounter1;
+    if (!TESTING && DEBUG_AI_DELAY_TIMER)
+        CycleCountStart();
+}
+
+void AIDebugTimerEnd()
+{
+    // We add to existing to compound multiple calls
+    if ((TESTING && gBattleTurnCounter == 0) || DEBUG_AI_DELAY_TIMER)
+        gBattleStruct->aiDelayFrames += gMain.vblankCounter1 - gBattleStruct->aiDelayTimer;
+    if (!TESTING && DEBUG_AI_DELAY_TIMER)
+        gBattleStruct->aiDelayCycles += CycleCountEnd();
+}
+
 void BattleAI_SetupItems(void)
 {
     u8 *data = (u8 *)gBattleHistory;
@@ -370,6 +388,8 @@ void ComputeBattlerDecisions(enum BattlerId battler)
 
         gAiLogicData->aiCalcInProgress = TRUE;
 
+        AIDebugTimerStart();
+
         // Setup battler and prediction data
         BattleAI_SetupAIData(0xF, battler);
         SetupAIPredictionData(battler, SWITCH_MID_BATTLE_OPTIONAL);
@@ -388,6 +408,8 @@ void ComputeBattlerDecisions(enum BattlerId battler)
         if (isAiBattler)
             BattlerChooseNonMoveAction();
         ModifySwitchAfterMoveScoring(battler);
+
+        AIDebugTimerEnd();
 
         gAiLogicData->aiCalcInProgress = FALSE;
     }
@@ -707,8 +729,9 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     if (!(gBattleTypeFlags & BATTLE_TYPE_HAS_AI) && !IsWildMonSmart())
         return;
 
-    // Set delay timer to count how long it takes for AI to choose action/move
-    gBattleStruct->aiDelayTimer = gMain.vblankCounter1;
+       gAiLogicData->aiCalcInProgress = TRUE;
+
+    AIDebugTimerStart();
 
     aiData->weatherHasEffect = HasWeatherEffect();
     weather = AI_GetWeather();
@@ -716,9 +739,6 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     // get/assume all battler data and simulate AI damage
     battlersCount = gBattlersCount;
 
-    gAiLogicData->aiCalcInProgress = TRUE;
-    if (DEBUG_AI_DELAY_TIMER)
-        CycleCountStart();
     for (enum BattlerId battlerAtk = 0; battlerAtk < battlersCount; battlerAtk++)
     {
         if (!IsBattlerAlive(battlerAtk))
@@ -748,9 +768,8 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
         aiData->predictingMove = RandomPercentage(RNG_AI_PREDICT_MOVE, PREDICT_MOVE_CHANCE);
     }
 
-    if (DEBUG_AI_DELAY_TIMER)
-        // We add to existing to compound multiple calls
-        gBattleStruct->aiDelayCycles += CycleCountEnd();
+    AIDebugTimerEnd();
+
     gAiLogicData->aiCalcInProgress = FALSE;
 }
 
@@ -877,7 +896,7 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
 
     for (enum BattlerId battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
     {
-        if (battlerIndex == battler || gBattleMons[battlerIndex].hp == 0)
+        if (gBattleMons[battlerIndex].hp == 0)
         {
             actionOrMoveIndex[battlerIndex] = 0xFF;
             bestMovePointsForTarget[battlerIndex] = -1;
@@ -987,12 +1006,14 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
 
 static inline bool32 ShouldConsiderMoveForBattler(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move move)
 {
+    enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAi, move);
     if (battlerAi == BATTLE_PARTNER(battlerDef))
     {
-        enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAi, move);
         if (target == TARGET_BOTH || target == TARGET_OPPONENTS_FIELD)
             return FALSE;
     }
+    if (!IsBattlerAlly(battlerAi, battlerDef) && target == TARGET_USER_OR_ALLY)
+        return FALSE;
     return TRUE;
 }
 
@@ -2319,7 +2340,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         //TODO
         break;
     case EFFECT_LOCK_ON:
-        if (gBattleMons[battlerDef].volatiles.lockOn
+        if (gBattleMons[battlerAtk].volatiles.battlerWithSureHit == battlerDef + 1
           || aiData->abilities[battlerAtk] == ABILITY_NO_GUARD
           || aiData->abilities[battlerDef] == ABILITY_NO_GUARD
           || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
@@ -2567,6 +2588,9 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_YAWN:
         if (gBattleMons[battlerDef].volatiles.yawn)
+            ADJUST_SCORE(-10);
+        else if ((aiData->holdEffects[battlerDef] == HOLD_EFFECT_FLAME_ORB && CanBeBurned(battlerDef, battlerDef, abilityDef))
+              || (aiData->holdEffects[battlerDef] == HOLD_EFFECT_TOXIC_ORB && CanBePoisoned(battlerDef, battlerDef, abilityDef, abilityDef)))
             ADJUST_SCORE(-10);
         else if (!AI_CanPutToSleep(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
             ADJUST_SCORE(-10);
@@ -3893,6 +3917,12 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 ADJUST_SCORE(WORST_EFFECT);
                 break;
             }
+            case EFFECT_ACUPRESSURE:
+            {
+                ADJUST_SCORE(IncreaseStatUpScore(battlerAtkPartner, BATTLE_OPPOSITE(battlerAtkPartner), STAT_CHANGE_ATK_2));
+                ADJUST_SCORE(IncreaseStatUpScore(battlerAtkPartner, BATTLE_OPPOSITE(battlerAtkPartner), STAT_CHANGE_SPATK_2));
+                break;
+            }
             default:
                 break;
             } // attacker move effects
@@ -4504,6 +4534,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     case EFFECT_BIDE:
         if (aiData->hpPercents[battlerAtk] < 90)
             ADJUST_SCORE(-2); // Should be either removed or turned into increasing score
+        break;
     // treat as offense booster
     case EFFECT_ACUPRESSURE:
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK_2));
@@ -4687,7 +4718,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     case EFFECT_OHKO:
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
-        else if (gBattleMons[battlerAtk].volatiles.lockOn)
+        else if (gBattleMons[battlerAtk].volatiles.battlerWithSureHit == battlerDef + 1)
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_MEAN_LOOK:

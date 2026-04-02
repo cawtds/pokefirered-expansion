@@ -53,6 +53,15 @@ BattleScript_BattleTowerEtcTrainerBattleWonSkipText::
 	end2
 
 @ pokeemerald
+BattleScript_TryRevertWeatherform:
+    setbyte gEffectBattler, 0
+    sortbattlers
+BattleScript_TryRevertWeatherformLoop:
+    tryrevertweatherform
+    addbyte gEffectBattler, 1
+    jumpifbytenotequal gEffectBattler, gBattlersCount, BattleScript_TryRevertWeatherformLoop
+    return
+
 BattleScript_FickleBeamMessage::
 	pause B_WAIT_TIME_SHORTEST
 	printstring STRINGID_FICKLEBEAMDOUBLED
@@ -937,7 +946,7 @@ BattleScript_MoveEffectCoreEnforcer::
 	printstring STRINGID_PKMNSABILITYSUPPRESSED
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 BattleScript_CoreEnforcerRet:
 	return
@@ -1843,7 +1852,7 @@ BattleScript_EffectEntrainment::
 	printstring STRINGID_PKMNACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
 	goto BattleScript_MoveEnd
@@ -1878,7 +1887,7 @@ BattleScript_EffectHealingWishGen4:
 	switchindataupdate BS_ATTACKER
 	hpthresholds BS_ATTACKER
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
 	flushtextbox
@@ -1922,7 +1931,7 @@ BattleScript_EffectOverwriteAbility::
 	printstring STRINGID_PKMNACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
 	goto BattleScript_MoveEnd
@@ -2028,7 +2037,7 @@ BattleScript_EffectGastroAcid::
 	printstring STRINGID_PKMNSABILITYSUPPRESSED
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
 	goto BattleScript_MoveEnd
@@ -2756,7 +2765,7 @@ BattleScript_EffectEvasionUp2::
 BattleScript_EffectTransform::
 	attackcanceler
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
 	flushtextbox
@@ -4033,7 +4042,7 @@ BattleScript_FaintBattler::
 	printstring STRINGID_BATTLERFAINTED
 	cleareffectsonfaint BS_FAINTED
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	waitanimation
 	tryactivatereceiver BS_FAINTED
@@ -4587,7 +4596,7 @@ BattleScript_SafeguardProtected::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNUSEDSAFEGUARD
 	waitmessage B_WAIT_TIME_LONG
-	end2
+	goto BattleScript_MoveEnd
 
 BattleScript_SafeguardEnds::
 	pause B_WAIT_TIME_SHORT
@@ -5459,7 +5468,7 @@ BattleScript_BattlerFormChangeNoPopup::
 BattleScript_BattlerFormChangeFromAfterAnimation::
 	handleformchange BS_SCRIPTING, 1
 	switchinabilities BS_SCRIPTING
-	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
+	jumpifability BS_SCRIPTING, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
 	return
 
 BattleScript_ZenMode::
@@ -5481,7 +5490,8 @@ BattleScript_BattlerFormChangeDisguise::
 	waitanimation
 	printstring STRINGID_PKMNDISGUISEWASBUSTED
 	waitmessage B_WAIT_TIME_SHORT
-	goto BattleScript_BattlerFormChangeFromAfterAnimation
+	call BattleScript_BattlerFormChangeFromAfterAnimation
+    return
 
 BattleScript_BattlerFormChangeEnd3NoPopup::
 	call BattleScript_BattlerFormChangeNoPopup
@@ -5539,9 +5549,10 @@ BattleScript_ApplyDisguiseFormChangeHPLossReturn:
 BattleScript_TargetFormChangeNoPopup:
 	flushtextbox
 	handleformchange BS_SCRIPTING, 0
-	playanimation BS_TARGET, B_ANIM_FORM_CHANGE
+	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
 	waitanimation
-	goto BattleScript_BattlerFormChangeFromAfterAnimation
+	call BattleScript_BattlerFormChangeFromAfterAnimation
+    return
 
 BattleScript_TargetFormChange::
 	pause 5
@@ -6693,7 +6704,7 @@ BattleScript_MummyActivates::
 	printstring STRINGID_ATTACKERACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
 	return
@@ -7740,6 +7751,8 @@ BattleScript_DoesntAffectTargetAtkString::
 	setmoveresultflags MOVE_RESULT_NO_EFFECT
 	goto BattleScript_MoveEnd
 
+BattleScript_NoEffectivenessAbility::
+	call BattleScript_AbilityPopUp
 BattleScript_DoesntAffectScripting::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_SCR_ITDOESNTAFFECT

@@ -1,7 +1,6 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
-// #include "contest.h"
 #include "m4a.h"
 #include "sound.h"
 #include "task.h"
@@ -139,7 +138,7 @@ void SoundTask_PlayCryHighPitch(u8 taskId)
     if (IsContest())
     {
         if (animBattler == ANIM_ATTACKER)
-            species = SPECIES_NONE; // species = gContestResources->moveAnim->species;
+            species = SPECIES_NONE;
     // Destroying the task twice (here and at end of function)
     // results in an incorrect value for gAnimVisualTaskCount
     #ifndef BUGFIX
@@ -192,7 +191,7 @@ void SoundTask_PlayDoubleCry(u8 taskId)
     if (IsContest())
     {
         if (animBattler == ANIM_ATTACKER)
-            species = SPECIES_NONE; // species = gContestResources->moveAnim->species;
+            species = SPECIES_NONE;
     // Destroying the task twice (here and at end of function)
     // results in an incorrect value for gAnimVisualTaskCount
     #ifndef BUGFIX
@@ -314,7 +313,7 @@ void SoundTask_PlayCryWithEcho(u8 taskId)
     pan = BattleAnimAdjustPanning(SOUND_PAN_ATTACKER);
 
     if (IsContest())
-        species = SPECIES_NONE; // species = gContestResources->moveAnim->species;
+        species = SPECIES_NONE;
     else
         species = (GetIllusionMonSpecies(gBattleAnimAttacker) != SPECIES_NONE) ? GetIllusionMonSpecies(gBattleAnimAttacker) : gAnimBattlerSpecies[gBattleAnimAttacker];
 

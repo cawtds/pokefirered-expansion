@@ -1353,13 +1353,9 @@ void DrawBattleEntryBackground(void)
         }
 
         if (GetCurrentMapBattleScene() == MAP_BATTLE_SCENE_NORMAL)
-        {
             LoadBattleEnvironmentEntryGfx(gBattleEnvironment);
-        }
         else
-        {
             LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_BUILDING);
-        }
     }
 }
 

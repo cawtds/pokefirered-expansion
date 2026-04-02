@@ -283,10 +283,7 @@ void AnimTask_DrawFallingWhiteLinesOnAttacker(u8 taskId)
         }
     }
 
-    if (IsContest())
-        species = 0; //gContestResources->moveAnim->species;
-    else
-        species = GetMonData(GetBattlerMon(gBattleAnimAttacker), MON_DATA_SPECIES);
+    species = GetMonData(GetBattlerMon(gBattleAnimAttacker), MON_DATA_SPECIES);
 
     spriteId = GetAnimBattlerSpriteId(ANIM_ATTACKER);
     newSpriteId = CreateInvisibleSpriteCopy(gBattleAnimAttacker, spriteId, species);
