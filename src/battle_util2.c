@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
+#include "bg.h"
 #include "malloc.h"
 #include "pokemon.h"
 #include "trainer_tower.h"

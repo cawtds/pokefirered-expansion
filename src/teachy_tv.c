@@ -3,6 +3,7 @@
 #include "battle_main.h"
 #include "battle_transition.h"
 #include "battle.h"
+#include "bg.h"
 #include "decompress.h"
 #include "event_data.h"
 #include "event_object_movement.h"

@@ -3,6 +3,7 @@
 #include "battle_controllers.h"
 #include "battle_interface.h"
 #include "battle.h"
+#include "bg.h"
 #include "data.h"
 #include "gpu_regs.h"
 #include "help_system.h"

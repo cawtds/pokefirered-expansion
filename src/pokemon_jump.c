@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle_anim.h"
+#include "bg.h"
 #include "decompress.h"
 #include "digit_obj_util.h"
 #include "dynamic_placeholder_text_util.h"

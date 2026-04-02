@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle_setup.h"
 #include "battle.h"
+#include "bg.h"
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"

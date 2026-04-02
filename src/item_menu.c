@@ -7,6 +7,7 @@
 #include "battle_pyramid.h"
 #include "battle.h"
 #include "berry_pouch.h"
+#include "bg.h"
 #include "decompress.h"
 #include "event_data.h"
 #include "event_object_movement.h"

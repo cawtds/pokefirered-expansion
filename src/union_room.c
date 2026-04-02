@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "berry_crush.h"
+#include "bg.h"
 #include "cable_club.h"
 #include "data.h"
 #include "decompress.h"

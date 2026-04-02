@@ -1,8 +1,8 @@
 #ifndef GUARD_BATTLE_ENVIRONMENT_H
 #define GUARD_BATTLE_ENVIRONMENT_H
 
-#include "battle_bg.h"
 #include "constants/battle.h"
+#include "battle_bg.h"
 #include "task.h"
 
 struct BattleEnvironment

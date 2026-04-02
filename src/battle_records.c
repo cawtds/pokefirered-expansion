@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle.h"
+#include "bg.h"
 #include "event_data.h"
 #include "gpu_regs.h"
 #include "link.h"

@@ -53,8 +53,6 @@ enum BattleEnvironments BattleSetup_GetEnvironmentId(void);
 enum BattleTransition GetWildBattleTransition(void);
 enum BattleTransition GetTrainerBattleTransition(void);
 enum BattleTransition GetSpecialBattleTransition(enum BattleTransitionGroup id);
-void ChooseStarter(void);
-void ChooseStarter(void);
 void ResetTrainerOpponentIds(void);
 void SetMapVarsToTrainerA(void);
 void SetMapVarsToTrainerB(void);

@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle_setup.h"
 #include "battle.h"
+#include "bg.h"
 #include "gpu_regs.h"
 #include "link.h"
 #include "malloc.h"

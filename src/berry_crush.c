@@ -4,6 +4,7 @@
 #include "berry_pouch.h"
 #include "berry_powder.h"
 #include "berry.h"
+#include "bg.h"
 #include "decompress.h"
 #include "digit_obj_util.h"
 #include "dynamic_placeholder_text_util.h"

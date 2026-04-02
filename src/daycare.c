@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle.h"
+#include "bg.h"
 #include "caps.h"
 #include "data.h"
 #include "daycare.h"

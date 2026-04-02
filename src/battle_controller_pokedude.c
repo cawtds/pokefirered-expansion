@@ -4,6 +4,7 @@
 #include "battle_interface.h"
 #include "battle_message.h"
 #include "battle.h"
+#include "bg.h"
 #include "data.h"
 #include "event_data.h"
 #include "palette.h"
