@@ -1,7 +1,7 @@
 static bool8 MovementType_WanderAround_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderAround_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderAround_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite);
-static bool8 MovementType_WanderAround_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+static bool8 MovementType_Wander_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderAround_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderAround_Step5(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderAround_Step5Slower(struct ObjectEvent *objectEvent, struct Sprite *sprite);
@@ -14,14 +14,12 @@ static bool8 MovementType_LookAround_Step4(struct ObjectEvent *objectEvent, stru
 static bool8 MovementType_WanderUpAndDown_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderUpAndDown_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderUpAndDown_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite);
-static bool8 MovementType_WanderUpAndDown_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderUpAndDown_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderUpAndDown_Step5(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderUpAndDown_Step6(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderLeftAndRight_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderLeftAndRight_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderLeftAndRight_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite);
-static bool8 MovementType_WanderLeftAndRight_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderLeftAndRight_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderLeftAndRight_Step5(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_WanderLeftAndRight_Step6(struct ObjectEvent *objectEvent, struct Sprite *sprite);
@@ -169,7 +167,7 @@ u8 (*const gMovementTypeFuncs_WanderAround[])(struct ObjectEvent *, struct Sprit
     MovementType_WanderAround_Step0,
     MovementType_WanderAround_Step1,
     MovementType_WanderAround_Step2,
-    MovementType_WanderAround_Step3,
+    MovementType_Wander_Step3,
     MovementType_WanderAround_Step4,
     MovementType_WanderAround_Step5,
     MovementType_WanderAround_Step6,
@@ -179,7 +177,7 @@ u8 (*const gMovementTypeFuncs_WanderAroundSlower[])(struct ObjectEvent *, struct
     MovementType_WanderAround_Step0,
     MovementType_WanderAround_Step1,
     MovementType_WanderAround_Step2,
-    MovementType_WanderAround_Step3,
+    MovementType_Wander_Step3,
     MovementType_WanderAround_Step4,
     MovementType_WanderAround_Step5Slower,
     MovementType_WanderAround_Step6,
@@ -213,7 +211,7 @@ u8 (*const gMovementTypeFuncs_WanderUpAndDown[])(struct ObjectEvent *, struct Sp
     MovementType_WanderUpAndDown_Step0,
     MovementType_WanderUpAndDown_Step1,
     MovementType_WanderUpAndDown_Step2,
-    MovementType_WanderUpAndDown_Step3,
+    MovementType_Wander_Step3,
     MovementType_WanderUpAndDown_Step4,
     MovementType_WanderUpAndDown_Step5,
     MovementType_WanderUpAndDown_Step6,
@@ -225,7 +223,7 @@ u8 (*const gMovementTypeFuncs_WanderLeftAndRight[])(struct ObjectEvent *, struct
     MovementType_WanderLeftAndRight_Step0,
     MovementType_WanderLeftAndRight_Step1,
     MovementType_WanderLeftAndRight_Step2,
-    MovementType_WanderLeftAndRight_Step3,
+    MovementType_Wander_Step3,
     MovementType_WanderLeftAndRight_Step4,
     MovementType_WanderLeftAndRight_Step5,
     MovementType_WanderLeftAndRight_Step6,
