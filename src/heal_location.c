@@ -60,12 +60,12 @@ void SetWhiteoutRespawnWarpAndHealerNpc(struct WarpData * warp)
         if (!gSaveBlock1Ptr->trainerTower[gSaveBlock1Ptr->towerChallengeId].spokeToOwner)
 #endif //FREE_TRAINER_HILL
             VarSet(VAR_MAP_SCENE_TRAINER_TOWER, 0);
-        gSpecialVar_LastTalked = 1;
+        gSpecialVar_LastTalked = LOCALID_TOWER_NURSE;
         warp->x = 4;
         warp->y = 11;
         warp->mapGroup = MAP_GROUP(MAP_TRAINER_TOWER_LOBBY);
         warp->mapNum = MAP_NUM(MAP_TRAINER_TOWER_LOBBY);
-        warp->warpId = 0xFF;
+        warp->warpId = WARP_ID_NONE;
     }
     else
     {

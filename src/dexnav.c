@@ -920,8 +920,6 @@ static void DexNavUpdateDirectionArrow(void)
             str = sText_ArrowDown;  //player above
     }
 
-    DebugPrintfLevel(MGBA_LOG_ERROR, "Arrow x: %u", arrowX);
-    DebugPrintfLevel(MGBA_LOG_ERROR, "Arrow y: %u", arrowY);
     AddTextPrinterParameterized3(windowId, FONT_NORMAL, arrowX, arrowY, sSearchFontColor, TEXT_SKIP_DRAW, str);
     CopyWindowToVram(windowId, 2);
 }
@@ -1099,7 +1097,6 @@ bool32 OnStep_DexNavSearch(void)
         return FALSE;
     }
 
-    DebugPrintfLevel(MGBA_LOG_ERROR, "prox: %d", sDexNavSearchDataPtr->proximity);
     if (sDexNavSearchDataPtr->proximity < 1)
     {
         gDexNavSpecies = sDexNavSearchDataPtr->species;
@@ -1191,7 +1188,6 @@ static void CreateDexNavWildMon(enum Species species, u8 potential, u8 level, u8
     u8 i;
     u8 perfectIv = 31;
 
-    DebugPrintfLevel(MGBA_LOG_ERROR, "create");
     CreateWildMon(species, level, 0);  // shiny rate bonus handled in CreateBoxMon
 
     // Pick random, unique IVs to set to 31. The number of perfect IVs that are assigned is equal to the potential

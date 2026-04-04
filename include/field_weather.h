@@ -144,6 +144,7 @@ struct FieldWeather
     u8 loadDroughtPalsOffset;
 };
 
+extern struct FieldWeather gWeather;
 extern struct FieldWeather *const gWeatherPtr;
 
 bool32 IsWeatherAlphaBlend(void);

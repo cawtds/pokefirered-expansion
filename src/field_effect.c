@@ -377,6 +377,7 @@ static const u32 (*const sFieldEffectFuncs[FLDEFF_COUNT]) (void) =
     [FLDEFF_CAVE_DUST]                    = FldEff_CaveDust,
     [FLDEFF_USE_ROCK_CLIMB]               = FldEff_UseRockClimb,
     [FLDEFF_ROCK_CLIMB_DUST]              = FldEff_RockClimbDust,
+    [FLDEFF_DEFOG]                        = FldEff_Defog,
     [FLDEFF_ORAS_DOWSE]                   = FldEff_ORASDowsing,
 };
 

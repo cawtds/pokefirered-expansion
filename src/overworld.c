@@ -115,7 +115,7 @@ EWRAM_DATA struct WarpData gLastUsedWarp = {};
 static EWRAM_DATA struct WarpData sWarpDestination = {};
 static EWRAM_DATA struct WarpData sFixedDiveWarp = {};
 static EWRAM_DATA struct WarpData sFixedHoleWarp = {};
-
+EWRAM_DATA static mapsec_u16_t sLastMapSectionId = 0;
 static EWRAM_DATA struct InitialPlayerAvatarState sInitialPlayerAvatarState = {};
 
 EWRAM_DATA bool8 gDisableMapMusicChangeOnMapLoad = MUSIC_DISABLE_OFF;
@@ -595,6 +595,7 @@ struct MapHeader const *const GetDestinationWarpMapHeader(void)
 
 static void LoadCurrentMapData(void)
 {
+    sLastMapSectionId = gMapHeader.regionMapSectionId;
     gMapHeader = *Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum);
     gSaveBlock1Ptr->mapLayoutId = gMapHeader.mapLayoutId;
     gMapHeader.mapLayout = GetMapLayout();
@@ -665,7 +666,7 @@ void SetWarpDestinationToHealLocation(u8 healLocationId)
 {
     const struct HealLocation *warp = GetHealLocation(healLocationId);
     if (warp)
-        SetWarpDestination(warp->mapGroup, warp->mapNum, -1, warp->x, warp->y);
+        SetWarpDestination(warp->mapGroup, warp->mapNum, WARP_ID_NONE, warp->x, warp->y);
 }
 
 void SetWarpDestinationToLastHealLocation(void)
@@ -824,8 +825,18 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     DoCurrentWeather();
     ResetFieldTasksArgs();
     RunOnResumeMapScript();
-    if (GetLastUsedWarpMapSectionId() != gMapHeader.regionMapSectionId)
-        ShowMapNamePopup(TRUE);
+
+    if (OW_HIDE_REPEAT_MAP_POPUP)
+    {
+        if (gMapHeader.regionMapSectionId != sLastMapSectionId)
+            ShowMapNamePopup(TRUE);
+    }
+    else
+    {
+        if (gMapHeader.regionMapSectionId != MAPSEC_BATTLE_FRONTIER
+         || gMapHeader.regionMapSectionId != sLastMapSectionId)
+            ShowMapNamePopup(TRUE);
+    }
 }
 
 static void LoadMapFromWarp(bool32 unused)
