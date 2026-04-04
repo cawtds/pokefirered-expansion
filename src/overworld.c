@@ -3798,8 +3798,6 @@ bool8 GetSetItemObtained(enum Item item, enum ItemObtainFlags caseId)
     return FALSE;
 }
 
-#if OW_SHOW_ITEM_DESCRIPTIONS != OW_ITEM_DESCRIPTIONS_OFF
-
 EWRAM_DATA static u8 sHeaderBoxWindowId = 0;
 EWRAM_DATA u8 sItemIconSpriteId = 0;
 EWRAM_DATA u8 sItemIconSpriteId2 = 0;
@@ -3812,7 +3810,7 @@ static u8 ReformatItemDescription(enum Item item, u8 *dest)
     u8 count = 0;
     u8 numLines = 1;
     u8 maxChars = 32;
-    u8 *desc = (u8 *)gItemsInfo[item].description;
+    u8 *desc = (u8 *)GetItemDescription(item);
 
     while (*desc != EOS)
     {
@@ -3851,14 +3849,23 @@ static u8 ReformatItemDescription(enum Item item, u8 *dest)
 
 void ScriptShowItemDescription(struct ScriptContext *ctx)
 {
+    if (OW_SHOW_ITEM_DESCRIPTIONS == OW_ITEM_DESCRIPTIONS_OFF)
+    {
+        (void) ScriptReadByte(ctx);
+        return;
+    }
+
     u8 headerType = ScriptReadByte(ctx);
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+
     struct WindowTemplate template;
     enum Item item = gSpecialVar_0x8006;
     u8 textY;
     u8 *dst;
     bool8 handleFlash = FALSE;
 
-    if (GetFlashLevel() > 0)
+    if (GetFlashLevel() > 0 || InBattlePyramid_())
         handleFlash = TRUE;
 
     if (headerType == 1) // berry
@@ -3891,6 +3898,11 @@ void ScriptShowItemDescription(struct ScriptContext *ctx)
 
 void ScriptHideItemDescription(struct ScriptContext *ctx)
 {
+    if (OW_SHOW_ITEM_DESCRIPTIONS == OW_ITEM_DESCRIPTIONS_OFF)
+        return;
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE | SCREFF_HARDWARE);
+
     DestroyItemIconSprite();
 
     if (!GetSetItemObtained(gSpecialVar_0x8006, FLAG_GET_ITEM_OBTAINED))
@@ -3957,19 +3969,9 @@ static void DestroyItemIconSprite(void)
     FreeSpriteOamMatrix(&gSprites[sItemIconSpriteId]);
     DestroySprite(&gSprites[sItemIconSpriteId]);
 
-    if ((GetFlashLevel() > 0) && sItemIconSpriteId2 != MAX_SPRITES)
+    if ((GetFlashLevel() > 0 || InBattlePyramid_()) && sItemIconSpriteId2 != MAX_SPRITES)
     {
         FreeSpriteOamMatrix(&gSprites[sItemIconSpriteId2]);
         DestroySprite(&gSprites[sItemIconSpriteId2]);
     }
 }
-
-#else
-void ScriptShowItemDescription(struct ScriptContext *ctx)
-{
-    (void) ScriptReadByte(ctx);
-}
-void ScriptHideItemDescription(struct ScriptContext *ctx)
-{
-}
-#endif // OW_SHOW_ITEM_DESCRIPTIONS
