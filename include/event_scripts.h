@@ -908,7 +908,7 @@ extern const u8 EventScript_CancelMessageBox[];
 extern const u8 PalletTown_PlayersHouse_2F_EventScript_PC[];
 extern const u8 EventScript_HiddenItemScript[];
 extern const u8 EventScript_PC[];
-extern const u8 EventScript_WallTownMap[];
+extern const u8 EventScript_RegionMap[];
 extern const u8 EventScript_Bookshelf[];
 extern const u8 EventScript_PokeMartShelf[];
 extern const u8 EventScript_Food[];

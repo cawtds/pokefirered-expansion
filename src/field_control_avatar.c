@@ -590,7 +590,7 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
     if (MetatileBehavior_IsPC(metatileBehavior) == TRUE)
         return EventScript_PC;
     if (MetatileBehavior_IsRegionMap(metatileBehavior) == TRUE)
-        return EventScript_WallTownMap;
+        return EventScript_RegionMap;
     if (MetatileBehavior_IsBookshelf(metatileBehavior) == TRUE)
         return EventScript_Bookshelf;
     if (MetatileBehavior_IsPokeMartShelf(metatileBehavior) == TRUE)

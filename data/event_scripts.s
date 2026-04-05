@@ -1172,12 +1172,12 @@ EventScript_OutOfCenterPartyHeal::
 	fadescreenswapbuffers FADE_FROM_BLACK
 	return
 
-EventScript_WallTownMap::
+EventScript_RegionMap::
 	lockall
 	msgbox Text_ATownMap
 	goto_if_questlog EventScript_ReleaseEnd
 	fadescreen FADE_TO_BLACK
-	special ShowTownMap
+	special FieldShowRegionMap
 	waitstate
 	releaseall
 	end

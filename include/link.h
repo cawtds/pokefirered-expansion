@@ -313,5 +313,6 @@ void CheckLinkPlayersMatchSaved(void);
 void SetLocalLinkPlayerId(u8 playerId);
 bool32 IsSendingKeysToLink(void);
 u32 GetLinkRecvQueueLength(void);
+bool32 ShouldCheckForUnionRoom(void);
 
 #endif // GUARD_LINK_H

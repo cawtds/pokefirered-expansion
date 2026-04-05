@@ -377,7 +377,7 @@ u8 GetLeadMonFriendship(void)
         return 0;
 }
 
-void ShowTownMap(void)
+void FieldShowRegionMap(void)
 {
     QuestLog_CutRecording();
     InitRegionMapWithExitCB(REGIONMAP_TYPE_WALL, CB2_ReturnToFieldContinueScriptPlayMapMusic);
