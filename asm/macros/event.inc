@@ -2445,9 +2445,10 @@
 	.byte \facility
 	.endm
 
-	.macro ingame_trade tradeId:req wantTradeMsg:req, declineTradeJump:req, wrongMonJump:req, tradeCompleteMsg:req
+	.macro ingame_trade tradeId:req wantTradeMsg:req, declineTradeJump:req, wrongMonJump:req, tradeCompleteMsg:req, flagId:req, flagSetJump:req
 	setvar VAR_0x8005, \tradeId
 	specialvar VAR_0x8009, GetInGameTradeSpeciesInfo
+	goto_if_set \flagId, \flagSetJump
 	msgbox \wantTradeMsg, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, \declineTradeJump
 	chooseboxmon SELECT_PC_MON_TRADE
@@ -2459,6 +2460,7 @@
 	special DoInGameTradeScene
 	waitstate
 	msgbox \tradeCompleteMsg, MSGBOX_DEFAULT
+	setflag \flagId
 	.endm
 
 	.macro move_tutor moveId:req, wantTeachingMsg:req, monSelectMsg:req, declinedJmp:req, taughtJmp:req, flagId=0

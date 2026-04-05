@@ -8,9 +8,7 @@ Route2_House_EventScript_Scientist::
 Route2_House_EventScript_Reyley::
 	lock
 	faceplayer
-	goto_if_set FLAG_DID_MIMIEN_TRADE, Route2_House_EventScript_AlreadyTraded
-	ingame_trade INGAME_TRADE_MR_MIME, Trade_Text_LookingForMonWannaTradeForMon, Route2_House_EventScript_DeclineTrade, Route2_House_EventScript_NotRequestedMon, Trade_Text_HeyThanks
-	setflag FLAG_DID_MIMIEN_TRADE
+	ingame_trade INGAME_TRADE_MR_MIME, Trade_Text_LookingForMonWannaTradeForMon, Route2_House_EventScript_DeclineTrade, Route2_House_EventScript_NotRequestedMon, Trade_Text_HeyThanks, FLAG_DID_MIMIEN_TRADE, Route2_House_EventScript_AlreadyTraded
 	release
 	end
 
