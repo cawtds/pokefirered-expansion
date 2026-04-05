@@ -4,6 +4,7 @@
 #include "battle.h"
 #include "battle_partner.h"
 #include "battle_setup.h"
+#include "battle_tower.h"
 #include "bike.h"
 #include "event_data.h"
 #include "event_object_movement.h"
@@ -16,8 +17,7 @@
 #include "field_screen_effect.h"
 #include "field_weather.h"
 #include "fieldmap.h"
-// #include "fldeff_misc.h"
-// #include "frontier_util.h"
+#include "frontier_util.h"
 #include "item.h"
 #include "load_save.h"
 #include "metatile_behavior.h"
@@ -32,7 +32,7 @@
 #include "trig.h"
 #include "constants/event_object_movement.h"
 #include "constants/field_effects.h"
-// #include "constants/frontier_util.h"
+#include "constants/frontier_util.h"
 #include "constants/map_types.h"
 #include "constants/metatile_behaviors.h"
 #include "constants/songs.h"
@@ -145,6 +145,7 @@ u32 GetFollowerNPCData(enum FollowerNPCDataTypes type)
 {
     if (QL_IS_PLAYBACK_STATE)
         return 0;
+
 #if FNPC_ENABLE_NPC_FOLLOWERS
     switch (type)
     {
@@ -1699,9 +1700,9 @@ void PrepareForFollowerNPCBattle(void)
         SavePlayerParty();
         ChooseFirstThreeEligibleMons();
         ReducePlayerPartyToSelectedMons();
-        // VarSet(VAR_0x8004, FRONTIER_UTIL_FUNC_SET_DATA);
-        // VarSet(VAR_0x8005, FRONTIER_DATA_SELECTED_MON_ORDER);
-        // CallFrontierUtilFunc();
+        VarSet(VAR_0x8004, FRONTIER_UTIL_FUNC_SET_DATA);
+        VarSet(VAR_0x8005, FRONTIER_DATA_SELECTED_MON_ORDER);
+        CallFrontierUtilFunc();
         gPartnerTrainerId = TRAINER_PARTNER(GetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER));
         FillPartnerParty(gPartnerTrainerId);
     }
@@ -1709,8 +1710,8 @@ void PrepareForFollowerNPCBattle(void)
 
 void RestorePartyAfterFollowerNPCBattle(void)
 {
-    // VarSet(VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY);
-    // CallFrontierUtilFunc();
+    VarSet(VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY);
+    CallFrontierUtilFunc();
     LoadPlayerParty();
 }
 
