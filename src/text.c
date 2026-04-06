@@ -1276,7 +1276,7 @@ void TextPrinterClearDownArrow(struct TextPrinter *textPrinter)
 
 bool32 TextPrinterWaitAutoMode(struct TextPrinter *textPrinter)
 {
-    u8 delay = (gQuestLogState == QL_STATE_PLAYBACK) ? 50 : 120;
+    u8 delay = (gQuestLogState == QL_STATE_PLAYBACK) ? 50 : NUM_FRAMES_AUTO_SCROLL_DELAY;
     if (textPrinter->autoScrollDelay == delay)
     {
         textPrinter->autoScrollDelay = 0;

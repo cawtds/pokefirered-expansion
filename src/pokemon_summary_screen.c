@@ -2496,7 +2496,7 @@ static void SetStatXPos(u8 stat, u16 xpos)
     }
 }
 
-static void ApplyNatureColor(u8 *str, u8 stat)
+static void ApplyNatureColor(u8 *str, enum Stat stat)
 {
     const u8 blue[] = _("{COLOR 7}");
     const u8 red[] = _("{COLOR 1}");
@@ -2506,7 +2506,7 @@ static void ApplyNatureColor(u8 *str, u8 stat)
 
     StringCopy(tmp, str);
 
-    if (gNaturesInfo[nature].statUp == gNaturesInfo[nature].statDown)
+    if (!P_SUMMARY_SCREEN_NATURE_COLORS || gNaturesInfo[nature].statUp == gNaturesInfo[nature].statDown)
         StringCopy(str, none);
     else if (gNaturesInfo[nature].statUp == stat)
         StringCopy(str, red);
@@ -2517,7 +2517,7 @@ static void ApplyNatureColor(u8 *str, u8 stat)
     StringAppend(str, tmp);
 }
 
-static void BufferStatString(u8 stat)
+static void BufferStatString(enum Stat stat)
 {
     u8 *dst = sMonSummaryScreen->summary.statValueStrBufs[sStatData[stat].pssStat];
     u16 statValue = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataStat);
@@ -2587,7 +2587,7 @@ static void BufferIVString(u8 stat)
         ApplyNatureColor(dst, stat);
 }
 
-static void BufferStat(u8 stat)
+static void BufferStat(enum Stat stat)
 {
     switch (sMonSummaryScreen->skillsPageMode)
     {
