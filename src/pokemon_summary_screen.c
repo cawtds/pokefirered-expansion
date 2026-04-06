@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle_anim.h"
+#include "battle_factory.h"
 #include "battle_interface.h"
 #include "battle_main.h"
 #include "data.h"
@@ -1307,6 +1308,18 @@ void ShowSelectMovePokemonSummaryScreen(struct Pokemon *party, u8 cursorPos, Mai
     sMonSummaryScreen->moveIds[MAX_MON_MOVES] = move;
 }
 
+static void CB2_ReturnToSummaryScreenFromNamingScreen(void)
+{
+    SetBoxMonData(GetSelectedBoxMonFromPcOrParty(), MON_DATA_NICKNAME, gStringVar2);
+    ShowPokemonSummaryScreen(gPlayerParty, gSpecialVar_0x8004, gPlayerPartyCount - 1, gInitialSummaryScreenCallback, PSS_MODE_NORMAL);
+}
+
+static void CB2_PssChangePokemonNickname(void)
+{
+    ChangePokemonNicknameWithCallback(CB2_ReturnToSummaryScreenFromNamingScreen);
+}
+
+
 static u8 PageFlipInputIsDisabled(u8 direction)
 {
     if (sMonSummaryScreen->inhibitPageFlipInput == TRUE && sMonSummaryScreen->pageFlipDirection != direction)
@@ -1364,7 +1377,27 @@ static const u8 *GetStatControlString(void)
     if (!P_SUMMARY_SCREEN_IV_EV_INFO)
         return gText_PokeSum_Controls_Page;
 
-    return sStatControlStrings[sMonSummaryScreen->skillsPageMode];
+    if (!P_SUMMARY_SCREEN_IV_EV_BOX_ONLY)
+        return sStatControlStrings[sMonSummaryScreen->skillsPageMode];
+
+    if (sMonSummaryScreen->mode == PSS_MODE_BOX)
+        return sStatControlStrings[sMonSummaryScreen->skillsPageMode];
+
+    return gText_PokeSum_Controls_Page;
+}
+
+static bool32 CanRename(void)
+{
+    if (P_SUMMARY_SCREEN_RENAME == FALSE)
+        return FALSE;
+    if (InBattleFactory())
+        return FALSE;
+    if (sMonSummaryScreen->isEgg)
+        return FALSE;
+    if (GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_OT_ID) != GetPlayerTrainerId())
+        return FALSE;
+
+    return TRUE;
 }
 
 static void Task_InputHandler_Info(u8 taskId)
@@ -1448,12 +1481,18 @@ static void Task_InputHandler_Info(u8 taskId)
             {
                 if (sMonSummaryScreen->curPageIndex == PSS_PAGE_INFO)
                 {
+                    if (CanRename())
+                        sMonSummaryScreen->savedCallback = CB2_PssChangePokemonNickname;
+
                     PlaySE(SE_SELECT);
                     sMonSummaryScreen->state3270 = PSS_STATE3270_ATEXIT_FADEOUT;
                 }
                 else if (sMonSummaryScreen->curPageIndex == PSS_PAGE_SKILLS)
                 {
                     if (!P_SUMMARY_SCREEN_IV_EV_INFO)
+                        return;
+
+                    if (P_SUMMARY_SCREEN_IV_EV_BOX_ONLY && sMonSummaryScreen->mode != PSS_MODE_BOX)
                         return;
 
                     sMonSummaryScreen->skillsPageMode = (sMonSummaryScreen->skillsPageMode + 1) % PSS_SKILL_PAGE_MODE_COUNT;
@@ -3463,6 +3502,8 @@ static void PokeSum_DrawMoveTypeIcons(void)
         BlitMenuInfoIcon(sMonSummaryScreen->windowIds[5], sMonSummaryScreen->moveTypes[MAX_MON_MOVES] + 1, 3, GetMoveNamePrinterYpos(MAX_MON_MOVES));
 }
 
+static const u8 *sText_PageRename = COMPOUND_STRING("{DPAD_RIGHT}PAGE {A_BUTTON}RENAME");
+
 static void PokeSum_PrintPageHeaderText(u8 curPageIndex)
 {
     switch (curPageIndex)
@@ -3470,9 +3511,16 @@ static void PokeSum_PrintPageHeaderText(u8 curPageIndex)
     case PSS_PAGE_INFO:
         PokeSum_PrintPageName(gText_PokeSum_PageName_PokemonInfo);
         if (!sMonSummaryScreen->isEgg)
-            PokeSum_PrintControlsString(gText_PokeSum_Controls_PageCancel);
+        {
+            if (CanRename())
+                PokeSum_PrintControlsString(sText_PageRename);
+            else
+                PokeSum_PrintControlsString(gText_PokeSum_Controls_PageCancel);
+        }
         else
+        {
             PokeSum_PrintControlsString(gText_PokeSum_Controls_Cancel);
+        }
 
         PrintMonLevelNickOnWindow2(gText_PokeSum_NoData);
         break;
@@ -3950,16 +3998,16 @@ static bool32 IsMultiBattlePartner(void)
     return FALSE;
 }
 
-static void BufferSelectedMonData(struct Pokemon * mon)
+static void BufferSelectedMonData(struct Pokemon *mon)
 {
     if (!sMonSummaryScreen->isBoxMon)
     {
-        struct Pokemon * partyMons = sMonSummaryScreen->monList.mons;
+        struct Pokemon *partyMons = sMonSummaryScreen->monList.mons;
         *mon = partyMons[GetLastViewedMonIndex()];
     }
     else
     {
-        struct BoxPokemon * boxMons = sMonSummaryScreen->monList.boxMons;
+        struct BoxPokemon *boxMons = sMonSummaryScreen->monList.boxMons;
         BoxMonToMon(&boxMons[GetLastViewedMonIndex()], mon);
     }
 }
