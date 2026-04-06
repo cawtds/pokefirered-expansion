@@ -1359,6 +1359,14 @@ static const u8 *sStatControlStrings[] =
     [PSS_SKILL_PAGE_IVS] = gText_PokeSum_Controls_PageIVs,
 };
 
+static const u8 *GetStatControlString(void)
+{
+    if (!P_SUMMARY_SCREEN_IV_EV_INFO)
+        return gText_PokeSum_Controls_Page;
+
+    return sStatControlStrings[sMonSummaryScreen->skillsPageMode];
+}
+
 static void Task_InputHandler_Info(u8 taskId)
 {
     switch (sMonSummaryScreen->state3270) {
@@ -1445,12 +1453,15 @@ static void Task_InputHandler_Info(u8 taskId)
                 }
                 else if (sMonSummaryScreen->curPageIndex == PSS_PAGE_SKILLS)
                 {
+                    if (!P_SUMMARY_SCREEN_IV_EV_INFO)
+                        return;
+
                     sMonSummaryScreen->skillsPageMode = (sMonSummaryScreen->skillsPageMode + 1) % PSS_SKILL_PAGE_MODE_COUNT;
                     BufferMonSkills();
                     RemoveWindow(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE]);
                     AddWindow(&sWindowTemplates_Skills[0]);
                     PokeSum_PrintRightPaneText();
-                    PokeSum_PrintControlsString(sStatControlStrings[sMonSummaryScreen->skillsPageMode]);
+                    PokeSum_PrintControlsString(GetStatControlString());
                     CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2);
                 }
                 else if (sMonSummaryScreen->curPageIndex == PSS_PAGE_MOVES)
@@ -3467,7 +3478,7 @@ static void PokeSum_PrintPageHeaderText(u8 curPageIndex)
         break;
     case PSS_PAGE_SKILLS:
         PokeSum_PrintPageName(gText_PokeSum_PageName_PokemonSkills);
-        PokeSum_PrintControlsString(sStatControlStrings[sMonSummaryScreen->skillsPageMode]);
+        PokeSum_PrintControlsString(GetStatControlString());
         PrintMonLevelNickOnWindow2(gText_PokeSum_NoData);
         break;
     case PSS_PAGE_MOVES:
