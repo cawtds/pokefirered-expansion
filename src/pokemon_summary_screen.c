@@ -2712,23 +2712,25 @@ static void BufferIVString(enum Stat stat)
     bool8 isHyperTrained = P_SUMMARY_SCREEN_IV_HYPERTRAIN ? GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataHyperTrained) : FALSE;
     u16 statValue = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataIv);
     u8 *dst = sMonSummaryScreen->summary.statValueStrBufs[sStatData[stat].pssStat];
+    u16 xPos;
 
     switch (P_SUMMARY_SCREEN_IV_DISPLAY)
     {
         case P_SUMMARY_SCREEN_IV_NUMBER:
             ConvertIntToDecimalStringN(dst, statValue, STR_CONV_MODE_LEFT_ALIGN, 3);
-            SetStatXPos(stat, GetNumberRightAlign63(dst));
+            xPos = GetNumberRightAlign63(dst);
             break;
         case P_SUMMARY_SCREEN_IV_GRADE:
             BufferIVGradeString(dst, statValue, isHyperTrained);
-            SetStatXPos(stat, GetNumberRightAlign63(dst));
+            xPos = GetNumberRightAlign63(dst);
             break;
         case P_SUMMARY_SCREEN_IV_TEXT:
             BufferIVTextString(dst, statValue, isHyperTrained);
-            SetStatXPos(stat, 0);
+            xPos = 0;
             break;
     }
 
+    SetStatXPos(stat, xPos);
     if (stat != STAT_HP)
         ApplyNatureColor(dst, stat);
 }
