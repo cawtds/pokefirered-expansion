@@ -15,7 +15,6 @@ static const u8 sEasyChatWord_Version[] = _("VERSION");
 static const u8 sEasyChatWord_Pokenav[] = _("POKéNAV");
 static const u8 sEasyChatWord_Pokemon[] = _("POKéMON");
 static const u8 sEasyChatWord_Get[] = _("GET");
-static const u8 sEasyChatWord_Pokedex[] = _("POKéDEX");
 static const u8 sEasyChatWord_Ruby[] = _("RUBY");
 static const u8 sEasyChatWord_Level[] = _("LEVEL");
 static const u8 sEasyChatWord_Red[] = _("RED");
@@ -108,7 +107,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Trainer[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_Pokedex,
+        .text = gText_Pokedex,
         .alphabeticalOrder = 14,
         .enabled = TRUE
     },

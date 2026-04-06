@@ -18,7 +18,6 @@ static const u8 sEasyChatWord_Monday[] = _("MONDAY");
 static const u8 sEasyChatWord_Later[] = _("LATER");
 static const u8 sEasyChatWord_Earlier[] = _("EARLIER");
 static const u8 sEasyChatWord_Another[] = _("ANOTHER");
-static const u8 sEasyChatWord_Time[] = _("TIME");
 static const u8 sEasyChatWord_Finish[] = _("FINISH");
 static const u8 sEasyChatWord_Wednesday[] = _("WEDNESDAY");
 static const u8 sEasyChatWord_Soon[] = _("SOON");
@@ -142,7 +141,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Time[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_Time,
+        .text = gText_Time,
         .alphabeticalOrder = 15,
         .enabled = TRUE
     },

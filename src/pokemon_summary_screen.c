@@ -647,10 +647,10 @@ enum EggHatchTime
 
 static const u8 *const sEggHatchTimeTexts[] =
 {
-    [EGG_HATCH_TIME_LONG]         = gText_PokeSum_EggHatch_LongTime,
-    [EGG_HATCH_TIME_SOME]         = gText_PokeSum_EggHatch_SomeTime,
-    [EGG_HATCH_TIME_SOON]         = gText_PokeSum_EggHatch_Soon,
-    [EGG_HATCH_TIME_ALMOST_READY] = gText_PokeSum_EggHatch_AlmostReady
+    [EGG_HATCH_TIME_LONG]         = COMPOUND_STRING("It looks like this\nEGG will take a\nlong time to hatch."),
+    [EGG_HATCH_TIME_SOME]         = COMPOUND_STRING("What will hatch\nfrom this? It will\ntake some time."),
+    [EGG_HATCH_TIME_SOON]         = COMPOUND_STRING("It occasionally\nmoves. It should\nhatch soon."),
+    [EGG_HATCH_TIME_ALMOST_READY] = COMPOUND_STRING("It's making sounds.\nIt's almost ready\nto hatch!"),
 };
 
 enum EggOrigin

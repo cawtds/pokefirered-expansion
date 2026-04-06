@@ -145,6 +145,16 @@ static const struct BgTemplate sBgTemplate[] = {
 
 static const u8 sMenuCursorYMax[] = { 0, 1, 2 };
 
+static const u8 sText_NewGame[] = _("NEW GAME");
+static const u8 sText_Continue[] = _("CONTINUE");
+static const u8 sText_MysteryGift[] = _("MYSTERY GIFT");
+static const u8 sText_WirelessNotConnected[] = _("The Wireless Adapter is not\nconnected.");
+static const u8 sText_MysteryGiftCantUse[] = _("MYSTERY GIFT can't be used while\nthe Wireless Adapter is attached.");
+static const u8 sText_SaveFileCorrupted[] = _("The save file is corrupted.\pThe previous save file will be\nloaded.");
+static const u8 sText_SaveFileHasBeenDeleted[] = _("The save file has been\ndeleted...");
+static const u8 sText_1MSubCircuitBoardNotInstalled[] = _("The 1M sub-circuit board is\nnot installed.");
+static const u8 sText_BatteryRunDry[] = _("The internal battery has run dry.\nThe game can be played.\pHowever, clock-based events will\nno longer occur.");
+
 static void CB2_MainMenu(void)
 {
     RunTasks();
@@ -249,12 +259,12 @@ static void Task_SetWin0BldRegsAndCheckSaveFile(u8 taskId)
         case SAVE_STATUS_INVALID:
             SetStdFrame0OnBg(0);
             gTasks[taskId].tMenuType = MAIN_MENU_NEWGAME;
-            PrintSaveErrorStatus(taskId, gText_SaveFileHasBeenDeleted);
+            PrintSaveErrorStatus(taskId, sText_SaveFileHasBeenDeleted);
             break;
         case SAVE_STATUS_ERROR:
             SetStdFrame0OnBg(0);
             gTasks[taskId].tMenuType = MAIN_MENU_CONTINUE;
-            PrintSaveErrorStatus(taskId, gText_SaveFileCorrupted);
+            PrintSaveErrorStatus(taskId, sText_SaveFileCorrupted);
             if (IsMysteryGiftEnabled() == TRUE)
             {
                 gTasks[taskId].tMenuType = MAIN_MENU_MYSTERYGIFT;
@@ -273,7 +283,7 @@ static void Task_SetWin0BldRegsAndCheckSaveFile(u8 taskId)
         case SAVE_STATUS_NO_FLASH:
             SetStdFrame0OnBg(0);
             gTasks[taskId].tMenuType = MAIN_MENU_NEWGAME;
-            PrintSaveErrorStatus(taskId, gText_1MSubCircuitBoardNotInstalled);
+            PrintSaveErrorStatus(taskId, sText_1MSubCircuitBoardNotInstalled);
             break;
         }
     }
@@ -305,7 +315,7 @@ static void Task_MainMenuCheckBattery(u8 taskId)
         else
         {
             SetStdFrame0OnBg(0);
-            PrintSaveErrorStatus(taskId, gText_BatteryRunDry);
+            PrintSaveErrorStatus(taskId, sText_BatteryRunDry);
             gTasks[taskId].func = Task_WaitForBatteryDryErrorWindow;
         }
     }
@@ -413,7 +423,7 @@ static void Task_PrintMainMenuText(u8 taskId)
     case MAIN_MENU_NEWGAME:
     default:
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_NEWGAME_ONLY, PIXEL_FILL(10));
-        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_NEWGAME_ONLY, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_NewGame);
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_NEWGAME_ONLY, FONT_NORMAL, 2, 2, sTextColor1, -1, sText_NewGame);
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_NEWGAME_ONLY]);
         PutWindowTilemap(MAIN_MENU_WINDOW_NEWGAME_ONLY);
         CopyWindowToVram(MAIN_MENU_WINDOW_NEWGAME_ONLY, COPYWIN_FULL);
@@ -421,8 +431,8 @@ static void Task_PrintMainMenuText(u8 taskId)
     case MAIN_MENU_CONTINUE:
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_CONTINUE, PIXEL_FILL(10));
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_NEWGAME, PIXEL_FILL(10));
-        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_Continue);
-        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_NEWGAME, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_NewGame);
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 2, 2, sTextColor1, -1, sText_Continue);
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_NEWGAME, FONT_NORMAL, 2, 2, sTextColor1, -1, sText_NewGame);
         PrintContinueStats();
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_CONTINUE]);
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_NEWGAME]);
@@ -435,10 +445,10 @@ static void Task_PrintMainMenuText(u8 taskId)
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_CONTINUE, PIXEL_FILL(10));
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_NEWGAME, PIXEL_FILL(10));
         FillWindowPixelBuffer(MAIN_MENU_WINDOW_MYSTERYGIFT, PIXEL_FILL(10));
-        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_Continue);
-        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_NEWGAME, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_NewGame);
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 2, 2, sTextColor1, -1, sText_Continue);
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_NEWGAME, FONT_NORMAL, 2, 2, sTextColor1, -1, sText_NewGame);
         gTasks[taskId].tMGErrorType = 1;
-        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_MYSTERYGIFT, FONT_NORMAL, 2, 2, sTextColor1, -1, gText_MysteryGift);
+        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_MYSTERYGIFT, FONT_NORMAL, 2, 2, sTextColor1, -1, sText_MysteryGift);
         PrintContinueStats();
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_CONTINUE]);
         MainMenu_DrawWindow(&sWindowTemplate[MAIN_MENU_WINDOW_NEWGAME]);
@@ -561,9 +571,9 @@ static void Task_MysteryGiftError(u8 taskId)
     case 0:
         FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 30, 20);
         if (gTasks[taskId].tMGErrorType == 1)
-            PrintMessageOnWindow4(gText_WirelessNotConnected);
+            PrintMessageOnWindow4(sText_WirelessNotConnected);
         else
-            PrintMessageOnWindow4(gText_MysteryGiftCantUse);
+            PrintMessageOnWindow4(sText_MysteryGiftCantUse);
         gTasks[taskId].tMGErrorMsgState++;
         break;
     case 1:
@@ -707,35 +717,34 @@ static void PrintPlayTime(void)
 static void PrintDexCount(void)
 {
     u8 strbuf[30];
-    u8 *ptr;
     u16 dexcount;
-    if (FlagGet(FLAG_SYS_POKEDEX_GET) == TRUE)
-    {
-        if (IsNationalPokedexEnabled())
-            dexcount = GetNationalPokedexCount(FLAG_GET_CAUGHT);
-        else
-            dexcount = GetKantoPokedexCount(FLAG_GET_CAUGHT);
-        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 2, 50, sTextColor2, -1, gText_Pokedex);
-        ptr = ConvertIntToDecimalStringN(strbuf, dexcount, STR_CONV_MODE_LEFT_ALIGN, 4);
-        StringAppend(ptr, gTextJPDummy_Hiki);
-        AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 62, 50, sTextColor2, -1, strbuf);
-    }
+
+    if (!FlagGet(FLAG_SYS_POKEDEX_GET))
+        return;
+
+    if (IsNationalPokedexEnabled())
+        dexcount = GetNationalPokedexCount(FLAG_GET_CAUGHT);
+    else
+        dexcount = GetKantoPokedexCount(FLAG_GET_CAUGHT);
+
+    AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 2, 50, sTextColor2, -1, gText_Pokedex);
+    ConvertIntToDecimalStringN(strbuf, dexcount, STR_CONV_MODE_LEFT_ALIGN, 4);
+    AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 62, 50, sTextColor2, -1, strbuf);
 }
 
 static void PrintBadgeCount(void)
 {
     u8 strbuf[30];
-    u8 *ptr;
     u32 flagId;
     u8 nbadges = 0;
+
     for (flagId = FLAG_BADGE01_GET; flagId < FLAG_BADGE01_GET + 8; flagId++)
     {
         if (FlagGet(flagId))
             nbadges++;
     }
     AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 2, 66, sTextColor2, -1, gText_Badges);
-    ptr = ConvertIntToDecimalStringN(strbuf, nbadges, STR_CONV_MODE_LEADING_ZEROS, 1);
-    StringAppend(ptr, gTextJPDummy_Ko);
+    ConvertIntToDecimalStringN(strbuf, nbadges, STR_CONV_MODE_LEADING_ZEROS, 1);
     AddTextPrinterParameterized3(MAIN_MENU_WINDOW_CONTINUE, FONT_NORMAL, 62, 66, sTextColor2, -1, strbuf);
 }
 

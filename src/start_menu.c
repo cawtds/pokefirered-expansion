@@ -150,7 +150,7 @@ static u8 BattlePyramidRetireInputCallback(void);
 static const u8 sText_MenuDebug[] = _("DEBUG");
 
 static const struct MenuAction sStartMenuActionTable[] = {
-    [MENU_ACTION_POKEDEX]           = {gText_MenuPokedex, {.u8_void = StartMenuPokedexCallback}},
+    [MENU_ACTION_POKEDEX]           = {gText_Pokedex,     {.u8_void = StartMenuPokedexCallback}},
     [MENU_ACTION_POKEMON]           = {gText_MenuPokemon, {.u8_void = StartMenuPokemonCallback}},
     [MENU_ACTION_BAG]               = {gText_MenuBag,     {.u8_void = StartMenuBagCallback}},
     [MENU_ACTION_PLAYER]            = {gText_MenuPlayer,  {.u8_void = StartMenuPlayerNameCallback}},
@@ -1347,12 +1347,12 @@ static void ShowSaveInfoWindow(void)
 
     // Print player name
     x = (u32)(112 - GetStringWidth(FONT_NORMAL, gStringVar4, -1)) / 2;
-    AddTextPrinterParameterized3(sSaveStatsWindowId, FONT_SMALL, 2, 14, sTextColor_StatName, TEXT_SKIP_DRAW, gSaveStatName_Player);
+    AddTextPrinterParameterized3(sSaveStatsWindowId, FONT_SMALL, 2, 14, sTextColor_StatName, TEXT_SKIP_DRAW, gText_Player);
     BufferSaveMenuText(SAVE_MENU_NAME, gStringVar4, TEXT_COLOR_DARK_GRAY);
 
     // Print badge count
     PrintPlayerNameOnWindow(sSaveStatsWindowId, gStringVar4, 60, 14);
-    AddTextPrinterParameterized3(sSaveStatsWindowId, FONT_SMALL, 2, 28, sTextColor_StatName, TEXT_SKIP_DRAW, gSaveStatName_Badges);
+    AddTextPrinterParameterized3(sSaveStatsWindowId, FONT_SMALL, 2, 28, sTextColor_StatName, TEXT_SKIP_DRAW, gText_Badges);
     BufferSaveMenuText(SAVE_MENU_BADGES, gStringVar4, TEXT_COLOR_DARK_GRAY);
     AddTextPrinterParameterized3(sSaveStatsWindowId, FONT_SMALL, 60, 28, sTextColor_StatValue, TEXT_SKIP_DRAW, gStringVar4);
 
@@ -1360,14 +1360,14 @@ static void ShowSaveInfoWindow(void)
     if (FlagGet(FLAG_SYS_POKEDEX_GET) == TRUE)
     {
         // Print Pokédex count
-        AddTextPrinterParameterized3(sSaveStatsWindowId, FONT_SMALL, 2, 42, sTextColor_StatName, TEXT_SKIP_DRAW, gSaveStatName_Pokedex);
+        AddTextPrinterParameterized3(sSaveStatsWindowId, FONT_SMALL, 2, 42, sTextColor_StatName, TEXT_SKIP_DRAW, gText_Pokedex);
         BufferSaveMenuText(SAVE_MENU_POKEDEX, gStringVar4, TEXT_COLOR_DARK_GRAY);
         AddTextPrinterParameterized3(sSaveStatsWindowId, FONT_SMALL, 60, 42, sTextColor_StatValue, TEXT_SKIP_DRAW, gStringVar4);
         y = 56;
     }
 
     // Print play time
-    AddTextPrinterParameterized3(sSaveStatsWindowId, FONT_SMALL, 2, y, sTextColor_StatName, TEXT_SKIP_DRAW, gSaveStatName_Time);
+    AddTextPrinterParameterized3(sSaveStatsWindowId, FONT_SMALL, 2, y, sTextColor_StatName, TEXT_SKIP_DRAW, gText_Time);
     BufferSaveMenuText(SAVE_MENU_TIME, gStringVar4, TEXT_COLOR_DARK_GRAY);
     AddTextPrinterParameterized3(sSaveStatsWindowId, FONT_SMALL, 60, y, sTextColor_StatValue, TEXT_SKIP_DRAW, gStringVar4);
 

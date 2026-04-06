@@ -26,16 +26,16 @@ static const s32 sPowersOfTen[] =
     1000000000,
 };
 
-extern u8 gExpandedPlaceholder_Sapphire[];
-extern u8 gExpandedPlaceholder_Ruby[];
-extern u8 gExpandedPlaceholder_Aqua[];
-extern u8 gExpandedPlaceholder_Magma[];
-extern u8 gExpandedPlaceholder_Archie[];
-extern u8 gExpandedPlaceholder_Maxie[];
-extern u8 gExpandedPlaceholder_Kyogre[];
-extern u8 gExpandedPlaceholder_Groudon[];
-extern u8 gExpandedPlaceholder_Red[];
-extern u8 gExpandedPlaceholder_Green[];
+static const u8 sExpandedPlaceholder_Sapphire[] = _("SAPPHIRE");
+static const u8 sExpandedPlaceholder_Ruby[] = _("RUBY");
+static const u8 sExpandedPlaceholder_Aqua[] = _("AQUA");
+static const u8 sExpandedPlaceholder_Magma[] = _("MAGMA");
+static const u8 sExpandedPlaceholder_Archie[] = _("ARCHIE");
+static const u8 sExpandedPlaceholder_Maxie[] = _("MAXIE");
+static const u8 sExpandedPlaceholder_Kyogre[] = _("KYOGRE");
+static const u8 sExpandedPlaceholder_Groudon[] = _("GROUDON");
+static const u8 sExpandedPlaceholder_Red[] = _("RED");
+static const u8 sExpandedPlaceholder_Green[] = _("GREEN");
 
 u8 *StringCopy_Nickname(u8 *dest, const u8 *src)
 {
@@ -412,9 +412,9 @@ static const u8 *ExpandPlaceholder_RivalName(void)
     if (gSaveBlock1Ptr->rivalName[0] == EOS)
     {
         if (gSaveBlock2Ptr->playerGender == MALE)
-            return gExpandedPlaceholder_Green;
+            return sExpandedPlaceholder_Green;
         else
-            return gExpandedPlaceholder_Red;
+            return sExpandedPlaceholder_Red;
     }
     else
     {
@@ -425,63 +425,63 @@ static const u8 *ExpandPlaceholder_RivalName(void)
 static const u8 *ExpandPlaceholder_Version(void)
 {
 #if defined(FIRERED)
-    return gExpandedPlaceholder_Ruby;
+    return sExpandedPlaceholder_Ruby;
 #elif defined(LEAFGREEN)
-    return gExpandedPlaceholder_Sapphire;
+    return sExpandedPlaceholder_Sapphire;
 #endif
 }
 
 static const u8 *ExpandPlaceholder_Magma(void)
 {
 #if defined(FIRERED)
-    return gExpandedPlaceholder_Magma;
+    return sExpandedPlaceholder_Magma;
 #elif defined(LEAFGREEN)
-    return gExpandedPlaceholder_Aqua;
+    return sExpandedPlaceholder_Aqua;
 #endif
 }
 
 static const u8 *ExpandPlaceholder_Aqua(void)
 {
 #if defined(FIRERED)
-    return gExpandedPlaceholder_Aqua;
+    return sExpandedPlaceholder_Aqua;
 #elif defined(LEAFGREEN)
-    return gExpandedPlaceholder_Magma;
+    return sExpandedPlaceholder_Magma;
 #endif
 }
 
 static const u8 *ExpandPlaceholder_Maxie(void)
 {
 #if defined(FIRERED)
-    return gExpandedPlaceholder_Maxie;
+    return sExpandedPlaceholder_Maxie;
 #elif defined(LEAFGREEN)
-    return gExpandedPlaceholder_Archie;
+    return sExpandedPlaceholder_Archie;
 #endif
 }
 
 static const u8 *ExpandPlaceholder_Archie(void)
 {
 #if defined(FIRERED)
-    return gExpandedPlaceholder_Archie;
+    return sExpandedPlaceholder_Archie;
 #elif defined(LEAFGREEN)
-    return gExpandedPlaceholder_Maxie;
+    return sExpandedPlaceholder_Maxie;
 #endif
 }
 
 static const u8 *ExpandPlaceholder_Groudon(void)
 {
 #if defined(FIRERED)
-    return gExpandedPlaceholder_Groudon;
+    return sExpandedPlaceholder_Groudon;
 #elif defined(LEAFGREEN)
-    return gExpandedPlaceholder_Kyogre;
+    return sExpandedPlaceholder_Kyogre;
 #endif
 }
 
 static const u8 *ExpandPlaceholder_Kyogre(void)
 {
 #if defined(FIRERED)
-    return gExpandedPlaceholder_Kyogre;
+    return sExpandedPlaceholder_Kyogre;
 #elif defined(LEAFGREEN)
-    return gExpandedPlaceholder_Groudon;
+    return sExpandedPlaceholder_Groudon;
 #endif
 }
 
