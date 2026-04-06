@@ -75,8 +75,8 @@ static void PokeSum_PrintBottomPaneText(void);
 static void PokeSum_PrintAbilityDataOrMoveTypes(void);
 static void PokeSum_PrintMonTypeIcons(void);
 static void PokeSum_PrintPageName(const u8 * str);
-static void PokeSum_PrintControlsString(const u8 * str);
-static void PrintMonLevelNickOnWindow2(const u8 * str);
+static void PokeSum_PrintControlsString(const u8 *str);
+static void PrintMonLevelNickOnWindow2(const u8 *str);
 static void PokeSum_UpdateBgPriorityForPageFlip(u8 setBg0Priority, u8 keepBg1Bg2PriorityOrder);
 static void ShowOrHideHpBarObjs(u8 invisible);
 static void ShowOrHideExpBarObjs(u8 invisible);
@@ -252,7 +252,7 @@ struct PokemonSummaryScreenData
 
     u8 ALIGNED(4) lastPageFlipDirection; /* 0x3300 */
     u8 ALIGNED(4) unk3304; /* 0x3304 */
-    u8 ALIGNED(4) skillsPageMode;
+    enum PokemonSummaryScreenSkillPageMode skillsPageMode:2;
     u8 categoryIconSpriteId;
 };
 
@@ -1285,7 +1285,7 @@ void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallbac
     sMonSummaryScreen->infoAndMovesPageBgNum = 1;
     sMonSummaryScreen->flippingPages = FALSE;
     sMonSummaryScreen->categoryIconSpriteId = 0xFF;
-    sMonSummaryScreen->skillsPageMode = 0;
+    sMonSummaryScreen->skillsPageMode = PSS_SKILL_PAGE_STATS;
 
     sMonSummaryScreen->unk3228 = 0;
     sMonSummaryScreen->unk322C = 1;
@@ -1351,6 +1351,13 @@ bool32 IsPageFlipInput(u8 direction)
 
     return FALSE;
 }
+
+static const u8 *sStatControlStrings[] =
+{
+    [PSS_SKILL_PAGE_STATS] = gText_PokeSum_Controls_PageStats,
+    [PSS_SKILL_PAGE_EVS] = gText_PokeSum_Controls_PageEVs,
+    [PSS_SKILL_PAGE_IVS] = gText_PokeSum_Controls_PageIVs,
+};
 
 static void Task_InputHandler_Info(u8 taskId)
 {
@@ -1443,6 +1450,7 @@ static void Task_InputHandler_Info(u8 taskId)
                     RemoveWindow(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE]);
                     AddWindow(&sWindowTemplates_Skills[0]);
                     PokeSum_PrintRightPaneText();
+                    PokeSum_PrintControlsString(sStatControlStrings[sMonSummaryScreen->skillsPageMode]);
                     CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2);
                 }
                 else if (sMonSummaryScreen->curPageIndex == PSS_PAGE_MOVES)
@@ -2560,13 +2568,15 @@ static const u8 sText_JudgeVeryGood[] = _("Very good");
 static const u8 sText_JudgeFantastic[] = _("Fantastic");
 static const u8 sText_JudgeBest[] = _("Best");
 static const u8 sText_JudgeHyperTrained[] = _("Hyper trained!");
+static const u8 sText_GradeS[] = _("S");
+static const u8 sText_GradeA[] = _("A");
+static const u8 sText_GradeB[] = _("B");
+static const u8 sText_GradeC[] = _("C");
+static const u8 sText_GradeD[] = _("D");
+static const u8 sText_GradeF[] = _("F");
 
-static void BufferIVString(u8 stat)
+static void BufferIVTextString(u8 *dst, u8 statValue, bool32 isHyperTrained)
 {
-    bool8 isHyperTrained = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataHyperTrained);
-    u16 statValue = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataIv);
-    u8 *dst = sMonSummaryScreen->summary.statValueStrBufs[sStatData[stat].pssStat];
-
     if (isHyperTrained)
         StringCopy(dst, sText_JudgeHyperTrained);
     else if (statValue == 31)
@@ -2581,8 +2591,48 @@ static void BufferIVString(u8 stat)
         StringCopy(dst, sText_JudgeDecent);
     else
         StringCopy(dst, sText_JudgeNoGood);
+}
 
-    SetStatXPos(stat, 0);
+static void BufferIVGradeString(u8 *dst, u8 statValue, bool32 isHyperTrained)
+{
+    if (isHyperTrained)
+        StringCopy(dst, sText_GradeS);
+    else if (statValue == 31)
+        StringCopy(dst, sText_GradeS);
+    else if (statValue == 30)
+        StringCopy(dst, sText_GradeA);
+    else if (statValue > 25)
+        StringCopy(dst, sText_GradeB);
+    else if (statValue > 15)
+        StringCopy(dst, sText_GradeC);
+    else if (statValue > 0)
+        StringCopy(dst, sText_GradeD);
+    else
+        StringCopy(dst, sText_GradeF);
+}
+
+static void BufferIVString(enum Stat stat)
+{
+    bool8 isHyperTrained = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataHyperTrained);
+    u16 statValue = GetMonData(&sMonSummaryScreen->currentMon, sStatData[stat].monDataIv);
+    u8 *dst = sMonSummaryScreen->summary.statValueStrBufs[sStatData[stat].pssStat];
+
+    switch (P_SUMMARY_SCREEN_IV_DISPLAY)
+    {
+        case P_SUMMARY_SCREEN_IV_NUMBER:
+            ConvertIntToDecimalStringN(dst, statValue, STR_CONV_MODE_LEFT_ALIGN, 3);
+            SetStatXPos(stat, GetNumberRightAlign63(dst));
+            break;
+        case P_SUMMARY_SCREEN_IV_GRADE:
+            BufferIVGradeString(dst, statValue, isHyperTrained);
+            SetStatXPos(stat, GetNumberRightAlign63(dst));
+            break;
+        case P_SUMMARY_SCREEN_IV_TEXT:
+            BufferIVTextString(dst, statValue, isHyperTrained);
+            SetStatXPos(stat, 0);
+            break;
+    }
+
     if (stat != STAT_HP)
         ApplyNatureColor(dst, stat);
 }
@@ -2600,6 +2650,8 @@ static void BufferStat(enum Stat stat)
         case PSS_SKILL_PAGE_EVS:
             BufferEVString(stat);
             break;
+        default:
+            return;
     }
 }
 
@@ -2935,11 +2987,13 @@ static void PrintSkillsPage(void)
     u8 statFontId, x, yDiff;
     switch (sMonSummaryScreen->skillsPageMode)
     {
+#if P_SUMMARY_SCRREN_IV_DISPLAY == P_SUMMARY_SCREEN_IV_TEXT
         case PSS_SKILL_PAGE_IVS:
             x = 10;
             yDiff = 1;
             statFontId = FONT_SMALL;
             break;
+#endif
         default:
             x = 13;
             yDiff = 0;
@@ -3413,7 +3467,7 @@ static void PokeSum_PrintPageHeaderText(u8 curPageIndex)
         break;
     case PSS_PAGE_SKILLS:
         PokeSum_PrintPageName(gText_PokeSum_PageName_PokemonSkills);
-        PokeSum_PrintControlsString(gText_PokeSum_Controls_PageJudge);
+        PokeSum_PrintControlsString(sStatControlStrings[sMonSummaryScreen->skillsPageMode]);
         PrintMonLevelNickOnWindow2(gText_PokeSum_NoData);
         break;
     case PSS_PAGE_MOVES:
