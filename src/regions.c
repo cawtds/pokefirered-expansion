@@ -3,7 +3,7 @@
 
 
 static const u16 sKantoSubregionMapsecs[KANTO_SUBREGION_SEVII67 + 1][30] = {
-    [KANTO_SUBREGION_KANTO] = 
+    [KANTO_SUBREGION_KANTO] =
     {
         MAPSEC_NONE
     },
@@ -49,9 +49,6 @@ static const u16 sKantoSubregionMapsecs[KANTO_SUBREGION_SEVII67 + 1][30] = {
         MAPSEC_CANYON_ENTRANCE,
         MAPSEC_SEVAULT_CANYON,
         MAPSEC_TANOBY_RUINS,
-        MAPSEC_SEVII_ISLE_22,
-        MAPSEC_SEVII_ISLE_23,
-        MAPSEC_SEVII_ISLE_24,
         MAPSEC_TRAINER_TOWER_2,
         MAPSEC_DOTTED_HOLE,
         MAPSEC_PATTERN_BUSH,

@@ -2318,54 +2318,6 @@
       "blockdata_filepath": "data/layouts/ThreeIsland_Port/map.bin"
     },
     {
-      "id": "LAYOUT_PROTOTYPE_SEVII_ISLE_6",
-      "name": "Prototype_SeviiIsle_6_Layout",
-      "width": 1,
-      "height": 1,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_CeladonCity",
-      "border_filepath": "data/layouts/Prototype_SeviiIsle_6/border.bin",
-      "blockdata_filepath": "data/layouts/Prototype_SeviiIsle_6/map.bin"
-    },
-    {
-      "id": "LAYOUT_PROTOTYPE_SEVII_ISLE_7",
-      "name": "Prototype_SeviiIsle_7_Layout",
-      "width": 1,
-      "height": 1,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_CeladonCity",
-      "border_filepath": "data/layouts/Prototype_SeviiIsle_7/border.bin",
-      "blockdata_filepath": "data/layouts/Prototype_SeviiIsle_7/map.bin"
-    },
-    {
-      "id": "LAYOUT_PROTOTYPE_SEVII_ISLE_8",
-      "name": "Prototype_SeviiIsle_8_Layout",
-      "width": 84,
-      "height": 20,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_CeladonCity",
-      "border_filepath": "data/layouts/Prototype_SeviiIsle_8/border.bin",
-      "blockdata_filepath": "data/layouts/Prototype_SeviiIsle_8/map.bin"
-    },
-    {
-      "id": "LAYOUT_PROTOTYPE_SEVII_ISLE_9",
-      "name": "Prototype_SeviiIsle_9_Layout",
-      "width": 24,
-      "height": 60,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_CeladonCity",
-      "border_filepath": "data/layouts/Prototype_SeviiIsle_9/border.bin",
-      "blockdata_filepath": "data/layouts/Prototype_SeviiIsle_9/map.bin"
-    },
-    {
       "id": "LAYOUT_FIVE_ISLAND_RESORT_GORGEOUS",
       "name": "FiveIsland_ResortGorgeous_Layout",
       "width": 72,
@@ -2508,54 +2460,6 @@
       "secondary_tileset": "gTileset_SeviiIslands67",
       "border_filepath": "data/layouts/SevenIsland_TanobyRuins/border.bin",
       "blockdata_filepath": "data/layouts/SevenIsland_TanobyRuins/map.bin"
-    },
-    {
-      "id": "LAYOUT_PROTOTYPE_SEVII_ISLE_22",
-      "name": "Prototype_SeviiIsle_22_Layout",
-      "width": 24,
-      "height": 60,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_PalletTown",
-      "border_filepath": "data/layouts/Prototype_SeviiIsle_22/border.bin",
-      "blockdata_filepath": "data/layouts/Prototype_SeviiIsle_22/map.bin"
-    },
-    {
-      "id": "LAYOUT_PROTOTYPE_SEVII_ISLE_23_EAST",
-      "name": "Prototype_SeviiIsle_23_East_Layout",
-      "width": 144,
-      "height": 20,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_PalletTown",
-      "border_filepath": "data/layouts/Prototype_SeviiIsle_23_East/border.bin",
-      "blockdata_filepath": "data/layouts/Prototype_SeviiIsle_23_East/map.bin"
-    },
-    {
-      "id": "LAYOUT_PROTOTYPE_SEVII_ISLE_23_WEST",
-      "name": "Prototype_SeviiIsle_23_West_Layout",
-      "width": 24,
-      "height": 60,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_PalletTown",
-      "border_filepath": "data/layouts/Prototype_SeviiIsle_23_West/border.bin",
-      "blockdata_filepath": "data/layouts/Prototype_SeviiIsle_23_West/map.bin"
-    },
-    {
-      "id": "LAYOUT_PROTOTYPE_SEVII_ISLE_24",
-      "name": "Prototype_SeviiIsle_24_Layout",
-      "width": 24,
-      "height": 20,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_PalletTown",
-      "border_filepath": "data/layouts/Prototype_SeviiIsle_24/border.bin",
-      "blockdata_filepath": "data/layouts/Prototype_SeviiIsle_24/map.bin"
     },
     {
       "id": "LAYOUT_UNION_ROOM",
