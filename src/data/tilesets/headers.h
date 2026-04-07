@@ -251,17 +251,6 @@ const struct Tileset gTileset_ViridianGym =
     .callback = NULL,
 };
 
-const struct Tileset gTileset_HoennBuilding =
-{
-    .isCompressed = TRUE,
-    .isSecondary = TRUE,
-    .tiles = gTilesetTiles_HoennBuilding,
-    .palettes = gTilesetPalettes_HoennBuilding,
-    .metatiles = gMetatiles_HoennBuilding,
-    .metatileAttributes = gMetatileAttributes_HoennBuilding,
-    .callback = NULL,
-};
-
 const struct Tileset gTileset_GameCorner =
 {
     .isCompressed = TRUE,

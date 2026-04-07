@@ -194,30 +194,6 @@
       "blockdata_filepath": "data/layouts/FiveIsland_ResortGorgeous_House/map.bin"
     },
     {
-      "id": "LAYOUT_PACIFIDLOG_TOWN_HOUSE1",
-      "name": "PacifidlogTown_House1_Layout",
-      "width": 10,
-      "height": 9,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/PacifidlogTown_House1/border.bin",
-      "blockdata_filepath": "data/layouts/PacifidlogTown_House1/map.bin"
-    },
-    {
-      "id": "LAYOUT_PACIFIDLOG_TOWN_HOUSE2",
-      "name": "PacifidlogTown_House2_Layout",
-      "width": 10,
-      "height": 9,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/PacifidlogTown_House2/border.bin",
-      "blockdata_filepath": "data/layouts/PacifidlogTown_House2/map.bin"
-    },
-    {
       "id": "LAYOUT_FUCHSIA_CITY_GYM",
       "name": "FuchsiaCity_Gym_Layout",
       "width": 15,
@@ -314,18 +290,6 @@
       "blockdata_filepath": "data/layouts/ThreeIsland_House1/map.bin"
     },
     {
-      "id": "LAYOUT_FORTREE_CITY_HOUSE1",
-      "name": "FortreeCity_House1_Layout",
-      "width": 8,
-      "height": 6,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/FortreeCity_House1/border.bin",
-      "blockdata_filepath": "data/layouts/FortreeCity_House1/map.bin"
-    },
-    {
       "id": "LAYOUT_SAFFRON_CITY_GYM",
       "name": "SaffronCity_Gym_Layout",
       "width": 29,
@@ -336,18 +300,6 @@
       "secondary_tileset": "gTileset_SaffronGym",
       "border_filepath": "data/layouts/SaffronCity_Gym/border.bin",
       "blockdata_filepath": "data/layouts/SaffronCity_Gym/map.bin"
-    },
-    {
-      "id": "LAYOUT_FORTREE_CITY_HOUSE2",
-      "name": "FortreeCity_House2_Layout",
-      "width": 8,
-      "height": 6,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/FortreeCity_House2/border.bin",
-      "blockdata_filepath": "data/layouts/FortreeCity_House2/map.bin"
     },
     {
       "id": "LAYOUT_CINNABAR_ISLAND_GYM",
@@ -432,90 +384,6 @@
       "secondary_tileset": "gTileset_SafariZoneBuilding",
       "border_filepath": "data/layouts/FuchsiaCity_SafariZone_Entrance/border.bin",
       "blockdata_filepath": "data/layouts/FuchsiaCity_SafariZone_Entrance/map.bin"
-    },
-    {
-      "id": "LAYOUT_FORTREE_CITY_DECORATION_SHOP",
-      "name": "FortreeCity_DecorationShop_Layout",
-      "width": 8,
-      "height": 6,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/FortreeCity_DecorationShop/border.bin",
-      "blockdata_filepath": "data/layouts/FortreeCity_DecorationShop/map.bin"
-    },
-    {
-      "id": "LAYOUT_EVER_GRANDE_CITY_HALL_OF_FAME",
-      "name": "EverGrandeCity_HallOfFame_Layout",
-      "width": 15,
-      "height": 17,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_CableClub",
-      "border_filepath": "data/layouts/EverGrandeCity_HallOfFame/border.bin",
-      "blockdata_filepath": "data/layouts/EverGrandeCity_HallOfFame/map.bin"
-    },
-    {
-      "id": "LAYOUT_MOSSDEEP_CITY_EREADER_TRAINER_HOUSE_1F",
-      "name": "MossdeepCity_EReaderTrainerHouse_1F_Layout",
-      "width": 11,
-      "height": 8,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/MossdeepCity_EReaderTrainerHouse_1F/border.bin",
-      "blockdata_filepath": "data/layouts/MossdeepCity_EReaderTrainerHouse_1F/map.bin"
-    },
-    {
-      "id": "LAYOUT_MOSSDEEP_CITY_EREADER_TRAINER_HOUSE_2F",
-      "name": "MossdeepCity_EReaderTrainerHouse_2F_Layout",
-      "width": 12,
-      "height": 9,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/MossdeepCity_EReaderTrainerHouse_2F/border.bin",
-      "blockdata_filepath": "data/layouts/MossdeepCity_EReaderTrainerHouse_2F/map.bin"
-    },
-    {
-      "id": "LAYOUT_SOOTOPOLIS_CITY_HOUSE1",
-      "name": "SootopolisCity_House1_Layout",
-      "width": 8,
-      "height": 7,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/SootopolisCity_House1/border.bin",
-      "blockdata_filepath": "data/layouts/SootopolisCity_House1/map.bin"
-    },
-    {
-      "id": "LAYOUT_SOOTOPOLIS_CITY_HOUSE2",
-      "name": "SootopolisCity_House2_Layout",
-      "width": 8,
-      "height": 7,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/SootopolisCity_House2/border.bin",
-      "blockdata_filepath": "data/layouts/SootopolisCity_House2/map.bin"
-    },
-    {
-      "id": "LAYOUT_SOOTOPOLIS_CITY_HOUSE3",
-      "name": "SootopolisCity_House3_Layout",
-      "width": 8,
-      "height": 7,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/SootopolisCity_House3/border.bin",
-      "blockdata_filepath": "data/layouts/SootopolisCity_House3/map.bin"
     },
     {
       "id": "LAYOUT_PALLET_TOWN",
