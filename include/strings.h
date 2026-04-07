@@ -69,7 +69,6 @@ extern const u8 gText_Hoenn[];
 extern const u8 gText_Ferry[];
 extern const u8 gText_SecretBase[];
 extern const u8 gText_Hideout[];
-extern const u8 gText_FlyToWhere[];
 extern const u8 gText_ApostropheSBase[];
 extern const u8 gText_NoRegistry[];
 extern const u8 gText_OkayToDeleteFromRegistry[];
@@ -498,8 +497,6 @@ extern const u8 gText_IsThisTheCorrectTime[];
 extern const u8 gText_PickOKExit[];
 extern const u8 gText_PickOKCancel[];
 extern const u8 gText_MysteryGift2[];
-extern const u8 gJPText_MysteryGift[];
-extern const u8 gJPText_DecideStop[];
 extern const u8 gText_WhatToDoWithCards[];
 extern const u8 gText_WhatToDoWithNews[];
 extern const u8 gText_OkayToDiscardNews[];
@@ -632,16 +629,6 @@ extern const u8 gText_Peak[];
 extern const u8 gText_SafariBallStock[];
 extern const u8 gText_BattlePyramidFloor[];
 
-extern const u8 gStartMenuDesc_Pokedex[];
-extern const u8 gStartMenuDesc_Pokemon[];
-extern const u8 gStartMenuDesc_Bag[];
-extern const u8 gStartMenuDesc_Save[];
-extern const u8 gStartMenuDesc_Option[];
-extern const u8 gStartMenuDesc_Exit[];
-extern const u8 gStartMenuDesc_Retire[];
-extern const u8 gStartMenuDesc_Player[];
-extern const u8 gStartMenuDesc_Debug[];
-extern const u8 gText_SaveError_PleaseExchangeBackupMemory[];
 extern const u8 gText_SavingDontTurnOffThePower2[];
 extern const u8 gText_MenuTime[];
 extern const u8 gText_MenuDay[];
@@ -776,20 +763,6 @@ extern const u8 gEasyChatGroupName_Move2[];
 extern const u8 gEasyChatGroupName_TrendySaying[];
 extern const u8 gEasyChatGroupName_Pokemon2[];
 extern const u8 gText_ThreeQuestionMarks[];
-
-// hall_of_fame
-extern const u8 gText_LeagueChamp[];
-extern const u8 gText_HOFNumber[];
-extern const u8 gText_UPDOWNPick_ABUTTONBBUTTONCancel[];
-extern const u8 gText_UPDOWNPick_ABUTTONNext_BBUTTONBack[];
-extern const u8 gText_ABUTTONExit[];
-extern const u8 gText_HOFCorrupted[];
-extern const u8 gText_WelcomeToHOF[];
-extern const u8 gText_Number[];
-extern const u8 gText_Level[];
-extern const u8 gText_IDNumber[];
-extern const u8 gText_Name[];
-extern const u8 gText_MainMenuTime[];
 
 // learn_move
 extern const u8 gText_TeachWhichMoveToMon[];
@@ -979,21 +952,6 @@ extern const u8 gText_PeopleTrading[];
 extern const u8 gText_PeopleBattling[];
 extern const u8 gText_PeopleInUnionRoom[];
 extern const u8 gText_PeopleCommunicating[];
-
-// mystery_gift
-extern const u8 gJPText_ReceiveMysteryGiftWithEReader[];
-extern const u8 gJPText_SelectConnectFromEReaderMenu[];
-extern const u8 gJPText_SelectConnectWithGBA[];
-extern const u8 gJPText_LinkIsIncorrect[];
-extern const u8 gJPText_CardReadingHasBeenHalted[];
-extern const u8 gJPText_Connecting[];
-extern const u8 gJPText_ConnectionErrorCheckLink[];
-extern const u8 gJPText_ConnectionErrorTryAgain[];
-extern const u8 gJPText_AllowEReaderToLoadCard[];
-extern const u8 gJPText_ConnectionComplete[];
-extern const u8 gJPText_NewTrainerHasComeToSevii[];
-extern const u8 gJPText_PleaseWaitAMoment[];
-extern const u8 gJPText_WriteErrorUnableToSaveData[];
 
 // pokemon_jump
 extern const u8 gText_WantToPlayAgain2[];

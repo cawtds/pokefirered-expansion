@@ -37,6 +37,9 @@ extern void CreateEReaderTask(void);
 static const u16 sTextboxBorder_Pal[] = INCBIN_U16("graphics/interface/mystery_gift_textbox_border.gbapal");
 static const u32 sTextboxBorder_Gfx[] = INCBIN_U32("graphics/interface/mystery_gift_textbox_border.4bpp.smol");
 
+static const u8 sJPText_MysteryGift[] = _("");
+static const u8 sJPText_DecideStop[] = _("");
+
 struct MysteryGiftTaskData
 {
     u16 var; // Multipurpose
@@ -350,9 +353,6 @@ ALIGNED(4) static const u8 sTextColors_TopMenu[3]      = { 0, 1, 2 };
 ALIGNED(4) static const u8 sTextColors_TopMenu_Copy[3] = { 0, 1, 2 };
 ALIGNED(4) static const u8 sMG_Ereader_TextColor_2[3]  = { 1, 2, 3 };
 
-static const u8 sText_Test[] = _("テスト");
-static const u8 sText_EonTicket[] = _("むげんのチケット");
-
 static void VBlankCB_MysteryGiftEReader(void)
 {
     ProcessSpriteCopyRequests();
@@ -481,8 +481,8 @@ void PrintMysteryGiftOrEReaderTopMenu(bool8 isEReader, bool32 useCancel)
     }
     else
     {
-        AddTextPrinterParameterized4(0, FONT_NORMAL, 2, 2, 0, 0, sTextColors_TopMenu, 0, gJPText_MysteryGift);
-        AddTextPrinterParameterized4(0, FONT_SMALL, 120, 2, 0, 0, sTextColors_TopMenu, 0, gJPText_DecideStop);
+        AddTextPrinterParameterized4(0, FONT_NORMAL, 2, 2, 0, 0, sTextColors_TopMenu, 0, sJPText_MysteryGift);
+        AddTextPrinterParameterized4(0, FONT_SMALL, 120, 2, 0, 0, sTextColors_TopMenu, 0, sJPText_DecideStop);
     }
     CopyWindowToVram(0, COPYWIN_GFX);
     PutWindowTilemap(0);

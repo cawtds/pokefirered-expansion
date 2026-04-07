@@ -147,7 +147,18 @@ static u8 BattlePyramidConfirmRetireCallback(void);
 static u8 BattlePyramidRetireYesNoCallback(void);
 static u8 BattlePyramidRetireInputCallback(void);
 
+// Start menu option descriptions
+static const u8 sStartMenuDesc_Pokedex[] = _("A device that records POKéMON secrets\nupon meeting or catching them.");
+static const u8 sStartMenuDesc_Pokemon[] = _("Check and organize POKéMON that are\ntraveling with you in your party.");
+static const u8 sStartMenuDesc_Bag[] = _("Equipped with pockets for storing items\nyou bought, received, or found.");
+static const u8 sStartMenuDesc_Player[] = _("Check your money and other game data.");
+static const u8 sStartMenuDesc_Save[] = _("Save your game with a complete record\nof your progress to take a break.");
+static const u8 sStartMenuDesc_Option[] = _("Adjust various game settings such as text\nspeed, game rules, etc.");
+static const u8 sStartMenuDesc_Exit[] = _("Close this MENU window.");
+static const u8 sStartMenuDesc_Retire[] = _("Retire from the SAFARI GAME and return to\nthe registration counter.");
+static const u8 sStartMenuDesc_Debug[] = _("Debug Menu.");
 static const u8 sText_MenuDebug[] = _("DEBUG");
+static const u8 sText_SaveError_PleaseExchangeBackupMemory[] = _("Save error.\pPlease exchange the\nbackup memory.");
 
 static const struct MenuAction sStartMenuActionTable[] = {
     [MENU_ACTION_POKEDEX]           = {gText_Pokedex,     {.u8_void = StartMenuPokedexCallback}},
@@ -219,16 +230,16 @@ static const struct WindowTemplate sWindowTemplate_PyramidPeak = {
 };
 
 static const u8 *const sStartMenuDescPointers[] = {
-    gStartMenuDesc_Pokedex,
-    gStartMenuDesc_Pokemon,
-    gStartMenuDesc_Bag,
-    gStartMenuDesc_Player,
-    gStartMenuDesc_Save,
-    gStartMenuDesc_Option,
-    gStartMenuDesc_Exit,
-    gStartMenuDesc_Retire,
-    gStartMenuDesc_Player,
-    gStartMenuDesc_Debug,
+    sStartMenuDesc_Pokedex,
+    sStartMenuDesc_Pokemon,
+    sStartMenuDesc_Bag,
+    sStartMenuDesc_Player,
+    sStartMenuDesc_Save,
+    sStartMenuDesc_Option,
+    sStartMenuDesc_Exit,
+    sStartMenuDesc_Retire,
+    sStartMenuDesc_Player,
+    sStartMenuDesc_Debug,
 };
 
 static const struct BgTemplate sBGTemplates_AfterLinkSaveMessage[] = {
@@ -1139,7 +1150,7 @@ static u8 SaveDoSaveCallback(void)
     if (saveStatus == SAVE_STATUS_OK)
         ShowSaveMessage(gText_PlayerSavedTheGame, SaveSuccessCallback);
     else
-        ShowSaveMessage(gText_SaveError_PleaseExchangeBackupMemory, SaveErrorCallback);
+        ShowSaveMessage(sText_SaveError_PleaseExchangeBackupMemory, SaveErrorCallback);
 
     SaveStartTimer();
     return SAVE_IN_PROGRESS;

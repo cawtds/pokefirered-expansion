@@ -110,11 +110,12 @@ static void CreateFadeOutTask(u8, u8);
 static void PrintNameChoiceOptions(u8, u8);
 static void GetDefaultName(u8, u8);
 
-extern const u8 gText_Controls[];
-extern const u8 gText_ABUTTONNext[];
-extern const u8 gText_ABUTTONNext_BBUTTONBack[];
-extern const u8 gText_Boy[];
-extern const u8 gText_Girl[];
+static const u8 sText_Controls[] = _("CONTROLS");
+static const u8 sText_ABUTTONNext[] = _("{A_BUTTON}NEXT");
+static const u8 sText_ABUTTONNext_BBUTTONBack[] = _("{A_BUTTON}NEXT {B_BUTTON}BACK");
+static const u8 sText_Boy[] = _("BOY");
+static const u8 sText_Girl[] = _("GIRL");
+
 extern const struct OamData gOamData_AffineOff_ObjBlend_32x32;
 extern const struct OamData gOamData_AffineOff_ObjNormal_32x32;
 extern const struct OamData gOamData_AffineOff_ObjNormal_32x16;
@@ -800,7 +801,7 @@ static void Task_NewGameScene(u8 taskId)
 
 static void ControlsGuide_LoadPage1(void)
 {
-    HofPCTopBar_PrintPair(gText_Controls, gText_ABUTTONNext, FALSE, 0, TRUE);
+    HofPCTopBar_PrintPair(sText_Controls, sText_ABUTTONNext, FALSE, 0, TRUE);
     sOakSpeechResources->windowIds[0] = AddWindow(sControlsGuide_WindowTemplates[sOakSpeechResources->currentPage]);
     PutWindowTilemap(sOakSpeechResources->windowIds[0]);
     FillWindowPixelBuffer(sOakSpeechResources->windowIds[0], PIXEL_FILL(0));
@@ -820,7 +821,7 @@ static void Task_ControlsGuide_LoadPage(u8 taskId)
     }
     else
     {
-        HofPCTopBar_Print(gText_ABUTTONNext_BBUTTONBack, 0, TRUE);
+        HofPCTopBar_Print(sText_ABUTTONNext_BBUTTONBack, 0, TRUE);
         for (currWindow = CONTROLS_GUIDE_PAGES_2_3_WINDOW_TOP; currWindow < NUM_CONTROLS_GUIDE_PAGES_2_3_WINDOWS; currWindow++)
         {
             sOakSpeechResources->windowIds[currWindow] = AddWindow(&sControlsGuide_WindowTemplates[sOakSpeechResources->currentPage][currWindow]);
@@ -955,7 +956,7 @@ static void Task_PikachuIntro_LoadPage1(u8 taskId)
     {
         PlayBGM(MUS_NEW_GAME_INTRO);
         HofPCTopBar_Clear();
-        HofPCTopBar_Print(gText_ABUTTONNext, 0, 1);
+        HofPCTopBar_Print(sText_ABUTTONNext, 0, 1);
         sOakSpeechResources->pikachuIntroTilemap = malloc_and_decompress(sPikachuIntro_Background_Tilemap, &size);
         CopyToBgTilemapBufferRect(1, sOakSpeechResources->pikachuIntroTilemap, 0, 2, 30, 19);
         CopyBgTilemapBufferToVram(1);
@@ -1031,12 +1032,12 @@ static void Task_PikachuIntro_HandleInput(u8 taskId)
             if (sOakSpeechResources->currentPage == PIKACHU_INTRO_PAGE_1)
             {
                 HofPCTopBar_Clear();
-                HofPCTopBar_Print(gText_ABUTTONNext, 0, 1);
+                HofPCTopBar_Print(sText_ABUTTONNext, 0, 1);
             }
             else
             {
                 HofPCTopBar_Clear();
-                HofPCTopBar_Print(gText_ABUTTONNext_BBUTTONBack, 0, 1);
+                HofPCTopBar_Print(sText_ABUTTONNext_BBUTTONBack, 0, 1);
             }
             gMain.state++;
         }
@@ -1314,11 +1315,11 @@ static void Task_OakSpeech_ShowGenderOptions(u8 taskId)
         sOakSpeechResources->textColor[0] = 1;
         sOakSpeechResources->textColor[1] = 2;
         sOakSpeechResources->textColor[2] = 3;
-        AddTextPrinterParameterized3(gTasks[taskId].tMenuWindowId, FONT_NORMAL, 8, 1, sOakSpeechResources->textColor, 0, gText_Boy);
+        AddTextPrinterParameterized3(gTasks[taskId].tMenuWindowId, FONT_NORMAL, 8, 1, sOakSpeechResources->textColor, 0, sText_Boy);
         sOakSpeechResources->textColor[0] = 1;
         sOakSpeechResources->textColor[1] = 2;
         sOakSpeechResources->textColor[2] = 3;
-        AddTextPrinterParameterized3(gTasks[taskId].tMenuWindowId, FONT_NORMAL, 8, 17, sOakSpeechResources->textColor, 0, gText_Girl);
+        AddTextPrinterParameterized3(gTasks[taskId].tMenuWindowId, FONT_NORMAL, 8, 17, sOakSpeechResources->textColor, 0, sText_Girl);
         InitMenuNormal(gTasks[taskId].tMenuWindowId, FONT_NORMAL, 0, 1, GetFontAttribute(FONT_NORMAL, FONTATTR_MAX_LETTER_HEIGHT) + 2, 2, 0);
         CopyWindowToVram(gTasks[taskId].tMenuWindowId, COPYWIN_FULL);
         gTasks[taskId].func = Task_OakSpeech_HandleGenderInput;

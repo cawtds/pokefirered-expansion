@@ -133,6 +133,8 @@ extern const u32 gPlayerIcon_Leaf[];
 extern const u16 gPlayerIcon_RedPal[];
 extern const u16 gPlayerIcon_LeafPal[];
 
+const u8 sText_FlyToWhere[] = _("FLY to where?");
+
 #include "data/region_map/region_map_layout.h"
 // #include "data/region_map/region_map_entries.h"
 extern const struct RegionMapLocation gRegionMapEntries[];
@@ -2000,7 +2002,7 @@ void CB2_OpenFlyMapEmerald(void)
         LoadPalette(sRegionMapFramePal, BG_PLTT_ID(1), sizeof(sRegionMapFramePal));
         PutWindowTilemap(WIN_FLY_TO_WHERE);
         FillWindowPixelBuffer(WIN_FLY_TO_WHERE, PIXEL_FILL(0));
-        AddTextPrinterParameterized(WIN_FLY_TO_WHERE, FONT_NORMAL, gText_FlyToWhere, 0, 1, 0, NULL);
+        AddTextPrinterParameterized(WIN_FLY_TO_WHERE, FONT_NORMAL, sText_FlyToWhere, 0, 1, 0, NULL);
         ScheduleBgCopyTilemapToVram(0);
         gMain.state++;
         break;

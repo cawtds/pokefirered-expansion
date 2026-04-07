@@ -12,12 +12,6 @@ const u8 gText_Pokedex[] = _("POKéDEX");
 const u8 gText_Badges[] = _("BADGES");
 const u8 gText_Player[] = _("PLAYER");
 
-const u8 gText_Controls[] = _("CONTROLS");
-ALIGNED(4) const u8 gText_ABUTTONNext[] = _("{A_BUTTON}NEXT");
-ALIGNED(4) const u8 gText_ABUTTONNext_BBUTTONBack[] = _("{A_BUTTON}NEXT {B_BUTTON}BACK");
-const u8 gText_Boy[] = _("BOY");
-const u8 gText_Girl[] = _("GIRL");
-
 const u8 gText_PickOKExit[] = _("{DPAD_UPDOWN}PICK {A_BUTTON}OK {B_BUTTON}CANCEL");
 
 const u8 gText_SearchingPleaseWait[] = _("Searching…\nPlease wait.");
@@ -32,21 +26,7 @@ const u8 gText_ListByFirstLetter[] = _("List by the first letter in the name.\nS
 const u8 gText_ListByBodyColor[] = _("List by body color.\nSpotted POKéMON only.");
 const u8 gText_ListByType[] = _("List by type.\nOwned POKéMON only.");
 const u8 gText_ExecuteSearchSwitch[] = _("Execute search/switch.");
-ALIGNED(4) const u8 gText_WelcomeToHOF[] = _("Welcome to the HALL OF FAME!");
-ALIGNED(4) const u8 gText_HOFDexRating[] = _("みつけた ポケモン {STR_VAR_1}!\nつかまえた ポケモン {STR_VAR_2}!\pオダマキはかせの\nポケモンずかん ひょうか!\pオダマキ“どれどれ\p");
-ALIGNED(4) const u8 gText_HOFDexSaving[] = _("ここまでの レポ-トを かきしるしています!\nでんげんを きらないでください");
-ALIGNED(4) const u8 gText_HOFCorrupted[] = _("The HALL OF FAME data is\ncorrupted.");
-const u8 gText_HOFNumber[] = _("HALL OF FAME No. {STR_VAR_1}");
-const u8 gText_LeagueChamp[] = _("LEAGUE CHAMPION!\nCONGRATULATIONS!");
-ALIGNED(4) const u8 gText_Number[] = _("No. ");
-ALIGNED(4) const u8 gText_Level[] = _("Lv. ");
-ALIGNED(4) const u8 gText_Name[] = _("NAME");
-ALIGNED(4) const u8 gText_IDNumber[] = _("IDNo.");
-const u8 gText_BirchInTrouble[] = _("{HIGHLIGHT DYNAMIC_COLOR6}{COLOR WHITE}オダマキはかせが ピンチだ!\nポケモンを だして たすけてあげよう!");
-const u8 gText_ConfirmStarterChoice[] = _("{HIGHLIGHT DYNAMIC_COLOR6}{COLOR WHITE}このポケモンにしますか?");
-const u8 gText_Pokemon4[] = _("ポケモン");
-const u8 gText_SaveError_PleaseExchangeBackupMemory[] = _("Save error.\pPlease exchange the\nbackup memory.");
-const u8 gText_FlyToWhere[] = _("どこへ とびますか?");
+
 const u8 gMenuText_Use[] = _("USE");
 const u8 gMenuText_Toss[] = _("TOSS");
 const u8 gOtherText_Register[] = _("REGISTER");
@@ -679,17 +659,6 @@ const u8 gText_PickSwitchCancel[] = _("{DPAD_UPDOWN}PICK {DPAD_LEFTRIGHT}SWITCH 
 const u8 gText_SaveFailed[] = _("レポ-トの かきこみに\nしっぱい しました‥");
 const u8 gText_SavingDontTurnOffThePower2[] = _("SAVING…\nDON'T TURN OFF THE POWER.");
 
-// Start menu option descriptions
-const u8 gStartMenuDesc_Pokedex[] = _("A device that records POKéMON secrets\nupon meeting or catching them.");
-const u8 gStartMenuDesc_Pokemon[] = _("Check and organize POKéMON that are\ntraveling with you in your party.");
-const u8 gStartMenuDesc_Bag[] = _("Equipped with pockets for storing items\nyou bought, received, or found.");
-const u8 gStartMenuDesc_Player[] = _("Check your money and other game data.");
-const u8 gStartMenuDesc_Save[] = _("Save your game with a complete record\nof your progress to take a break.");
-const u8 gStartMenuDesc_Option[] = _("Adjust various game settings such as text\nspeed, game rules, etc.");
-const u8 gStartMenuDesc_Exit[] = _("Close this MENU window.");
-const u8 gStartMenuDesc_Retire[] = _("Retire from the SAFARI GAME and return to\nthe registration counter.");
-const u8 gStartMenuDesc_Debug[] = _("Debug Menu.");
-
 #include "data/text/quest_log.h"
 
 const u8 gText_WasUsedOn[] = _(" was used on\n");
@@ -923,23 +892,7 @@ ALIGNED(4) const u8 gCreditsString_Braille_Code_Check_4[] = _("\nBraille Code Ch
 ALIGNED(4) const u8 gCreditsString_The_Royal_New_Zealand_Foundation_of_the_Blind_Greg_Moran[] = _("\n\nThe Royal New Zealand\nFoundation of the Blind\nGreg Moran\n\n");
 ALIGNED(4) const u8 gCreditsString_Graphic_Designer[] = _("\n\nGraphic Designer\n\n\n\n");
 ALIGNED(4) const u8 gCreditsString_Akira_Kinashi[] = _("\n\n\nAkira Kinashi\n\n\n");
-const u8 gJPText_MysteryGift[] = _("");
-const u8 gJPText_DecideStop[] = _("");
-const u8 gJPText_ReceiveMysteryGiftWithEReader[] = _("");
-const u8 gJPText_SelectConnectFromEReaderMenu[] = _("");
-const u8 gJPText_SelectConnectWithGBA[] = _("");
-const u8 gJPText_SelectConnectAndPressA[] = _("カ-ドeリ-ダ-{PLUS}の ‘つうしん'を\nえらんで Aボタンを おしてください");
-const u8 gJPText_LinkIsIncorrect[] = _("");
-const u8 gJPText_CardReadingHasBeenHalted[] = _("");
-const u8 gJPText_UnableConnectWithEReader[] = _("カ-ドeリ-ダ-{PLUS}と\nつうしん できません");
-const u8 gJPText_Connecting[] = _("");
-const u8 gJPText_ConnectionErrorCheckLink[] = _("");
-const u8 gJPText_ConnectionErrorTryAgain[] = _("");
-const u8 gJPText_AllowEReaderToLoadCard[] = _("");
-const u8 gJPText_ConnectionComplete[] = _("");
-const u8 gJPText_NewTrainerHasComeToSevii[] = _("");
-const u8 gJPText_PleaseWaitAMoment[] = _("");
-const u8 gJPText_WriteErrorUnableToSaveData[] = _("");
+
 const u8 gText_CommErrorCheckConnections[] = _("Communication error…\nPlease check all connections,\nthen turn the power OFF and ON.");
 const u8 gText_CommErrorEllipsis[] = _("Communication error…");
 const u8 gText_MoveCloserToLinkPartner[] = _("Move closer to your link partner(s).\nAvoid obstacles between partners.");
