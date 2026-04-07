@@ -254,18 +254,6 @@
       "blockdata_filepath": "data/layouts/House5/map.bin"
     },
     {
-      "id": "LAYOUT_UNUSED1",
-      "name": "Unused1_Layout",
-      "width": 12,
-      "height": 12,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "NULL",
-      "secondary_tileset": "gTileset_Dummy1",
-      "border_filepath": "data/layouts/Unused1/border.bin",
-      "blockdata_filepath": "data/layouts/Unused1/map.bin"
-    },
-    {
       "id": "LAYOUT_VERMILION_CITY_GYM",
       "name": "VermilionCity_Gym_Layout",
       "width": 11,

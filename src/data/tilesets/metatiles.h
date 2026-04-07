@@ -61,9 +61,6 @@ const u32 gMetatileAttributes_ViridianGym[] = INCBIN_U32("data/tilesets/secondar
 const u16 gMetatiles_Building[] = INCBIN_U16("data/tilesets/primary/building/metatiles.bin");
 const u32 gMetatileAttributes_Building[] = INCBIN_U32("data/tilesets/primary/building/metatile_attributes.bin");
 
-const u16 gMetatiles_Dummy1[] = INCBIN_U16("data/tilesets/secondary/dummy_1/metatiles.bin");
-const u32 gMetatileAttributes_Dummy1[] = INCBIN_U32("data/tilesets/secondary/dummy_1/metatile_attributes.bin");
-
 const u16 gMetatiles_HoennBuilding[] = INCBIN_U16("data/tilesets/secondary/hoenn_building/metatiles.bin");
 const u32 gMetatileAttributes_HoennBuilding[] = INCBIN_U32("data/tilesets/secondary/hoenn_building/metatile_attributes.bin");
 
@@ -90,9 +87,6 @@ const u32 gMetatileAttributes_Lab[] = INCBIN_U32("data/tilesets/secondary/lab/me
 
 const u16 gMetatiles_SSAnne[] = INCBIN_U16("data/tilesets/secondary/ss_anne/metatiles.bin");
 const u32 gMetatileAttributes_SSAnne[] = INCBIN_U32("data/tilesets/secondary/ss_anne/metatile_attributes.bin");
-
-const u16 gMetatiles_Dummy2[] = INCBIN_U16("data/tilesets/secondary/dummy_2/metatiles.bin");
-const u32 gMetatileAttributes_Dummy2[] = INCBIN_U32("data/tilesets/secondary/dummy_2/metatile_attributes.bin");
 
 const u16 gMetatiles_ViridianForest[] = INCBIN_U16("data/tilesets/secondary/viridian_forest/metatiles.bin");
 const u32 gMetatileAttributes_ViridianForest[] = INCBIN_U32("data/tilesets/secondary/viridian_forest/metatile_attributes.bin");
@@ -162,12 +156,6 @@ const u32 gMetatileAttributes_Condominiums[] = INCBIN_U32("data/tilesets/seconda
 
 const u16 gMetatiles_BurgledHouse[] = INCBIN_U16("data/tilesets/secondary/burgled_house/metatiles.bin");
 const u32 gMetatileAttributes_BurgledHouse[] = INCBIN_U32("data/tilesets/secondary/burgled_house/metatile_attributes.bin");
-
-const u16 gMetatiles_Dummy3[] = INCBIN_U16("data/tilesets/secondary/dummy_3/metatiles.bin");
-const u32 gMetatileAttributes_Dummy3[] = INCBIN_U32("data/tilesets/secondary/dummy_3/metatile_attributes.bin");
-
-const u16 gMetatiles_Dummy4[] = INCBIN_U16("data/tilesets/secondary/dummy_4/metatiles.bin");
-const u32 gMetatileAttributes_Dummy4[] = INCBIN_U32("data/tilesets/secondary/dummy_4/metatile_attributes.bin");
 
 const u16 gMetatiles_MtEmber[] = INCBIN_U16("data/tilesets/secondary/mt_ember/metatiles.bin");
 const u32 gMetatileAttributes_MtEmber[] = INCBIN_U32("data/tilesets/secondary/mt_ember/metatile_attributes.bin");
