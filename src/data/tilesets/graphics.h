@@ -658,28 +658,6 @@ const u16 gTilesetPalettes_ViridianForest[][16] =
 	INCBIN_U16("data/tilesets/secondary/viridian_forest/palettes/15.gbapal"),
 };
 
-const u32 gTilesetTiles_UnusedGatehouse1[] = INCBIN_U32("data/tilesets/secondary/unused_gatehouse_1/tiles.4bpp.smol");
-
-const u16 gTilesetPalettes_UnusedGatehouse1[][16] =
-{
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/00.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/01.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/02.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/03.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/04.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/05.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/06.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/07.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/08.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/09.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/10.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/11.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/12.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/13.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/14.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_1/palettes/15.gbapal"),
-};
-
 const u32 gTilesetTiles_RockTunnel[] = INCBIN_U32("data/tilesets/secondary/rock_tunnel/tiles.4bpp.smol");
 
 const u16 gTilesetPalettes_RockTunnel[][16] =
@@ -744,28 +722,6 @@ const u16 gTilesetPalettes_SeafoamIslands[][16] =
 	INCBIN_U16("data/tilesets/secondary/seafoam_islands/palettes/13.gbapal"),
 	INCBIN_U16("data/tilesets/secondary/seafoam_islands/palettes/14.gbapal"),
 	INCBIN_U16("data/tilesets/secondary/seafoam_islands/palettes/15.gbapal"),
-};
-
-const u32 gTilesetTiles_UnusedGatehouse2[] = INCBIN_U32("data/tilesets/secondary/unused_gatehouse_2/tiles.4bpp.smol");
-
-const u16 gTilesetPalettes_UnusedGatehouse2[][16] =
-{
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/00.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/01.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/02.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/03.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/04.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/05.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/06.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/07.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/08.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/09.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/10.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/11.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/12.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/13.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/14.gbapal"),
-	INCBIN_U16("data/tilesets/secondary/unused_gatehouse_2/palettes/15.gbapal"),
 };
 
 const u32 gTilesetTiles_CeruleanCave[] = INCBIN_U32("data/tilesets/secondary/cerulean_cave/tiles.4bpp.smol");
