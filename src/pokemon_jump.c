@@ -450,6 +450,20 @@ enum {
     ANIM_START_RIGHT,
 };
 
+static const u8 sText_SpacePoints2[] = _(" points");
+static const u8 sText_SpaceTimes3[] = _(" time(s)");
+static const u8 sText_PkmnJumpRecords[] = _("POKéMON JUMP RECORDS");
+static const u8 sText_JumpsInARow[] = _("Jumps in a row:");
+static const u8 sText_BestScore2[] = _("Best score:");
+static const u8 sText_ExcellentsInARow[] = _("EXCELLENTS in a row:");
+static const u8 sText_AwesomeWonF701F700[] = _("Awesome score! You've\nwon {DYNAMIC 01} {DYNAMIC 00}!");
+static const u8 sText_FilledStorageSpace2[] = _("There's no room left now.");
+static const u8 sText_CantHoldMore[] = _("You can't hold any more!");
+static const u8 sText_WantToPlayAgain2[] = _("Want to play again?");
+static const u8 sText_SomeoneDroppedOut2[] = _("Somebody dropped out.\nThe link will be canceled.");
+static const u8 sText_SavingDontTurnOffPower[] = _("SAVING…\nDON'T TURN OFF THE POWER.");
+static const u8 sText_CommunicationStandby4[] = _("Communication standby…");
+
 static const u16 s321Start_Static_Pal[] = INCBIN_U16("graphics/link/321start.gbapal");
 static const u32 s321Start_Static_Gfx[] = INCBIN_U32("graphics/link/321start.4bpp.smol");
 
@@ -2983,7 +2997,7 @@ static void Msg_WantToPlayAgain(void)
     {
     case 0:
         sPokemonJumpGfx->msgWindowId = AddMessageWindow(1, 8, 20, 2);
-        AddTextPrinterParameterized(sPokemonJumpGfx->msgWindowId, FONT_NORMAL, gText_WantToPlayAgain2, 0, 2, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(sPokemonJumpGfx->msgWindowId, FONT_NORMAL, sText_WantToPlayAgain2, 0, 2, TEXT_SKIP_DRAW, NULL);
         CopyWindowToVram(sPokemonJumpGfx->msgWindowId, COPYWIN_GFX);
         sPokemonJumpGfx->mainState++;
         break;
@@ -3010,7 +3024,7 @@ static void Msg_SavingDontTurnOff(void)
     {
     case 0:
         sPokemonJumpGfx->msgWindowId = AddMessageWindow(2, 7, 26, 4);
-        AddTextPrinterParameterized(sPokemonJumpGfx->msgWindowId, FONT_NORMAL, gText_SavingDontTurnOffPower, 0, 2, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(sPokemonJumpGfx->msgWindowId, FONT_NORMAL, sText_SavingDontTurnOffPower, 0, 2, TEXT_SKIP_DRAW, NULL);
         CopyWindowToVram(sPokemonJumpGfx->msgWindowId, COPYWIN_GFX);
         sPokemonJumpGfx->mainState++;
         break;
@@ -3053,7 +3067,7 @@ static void Msg_SomeoneDroppedOut(void)
     {
     case 0:
         sPokemonJumpGfx->msgWindowId = AddMessageWindow(2, 8, 22, 4);
-        AddTextPrinterParameterized(sPokemonJumpGfx->msgWindowId, FONT_NORMAL, gText_SomeoneDroppedOut2, 0, 2, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(sPokemonJumpGfx->msgWindowId, FONT_NORMAL, sText_SomeoneDroppedOut2, 0, 2, TEXT_SKIP_DRAW, NULL);
         CopyWindowToVram(sPokemonJumpGfx->msgWindowId, COPYWIN_GFX);
         sPokemonJumpGfx->mainState++;
         break;
@@ -3079,7 +3093,7 @@ static void Msg_CommunicationStandby(void)
     {
     case 0:
         sPokemonJumpGfx->msgWindowId = AddMessageWindow(7, 10, 16, 2);
-        AddTextPrinterParameterized(sPokemonJumpGfx->msgWindowId, FONT_NORMAL, gText_CommunicationStandby4, 0, 2, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(sPokemonJumpGfx->msgWindowId, FONT_NORMAL, sText_CommunicationStandby4, 0, 2, TEXT_SKIP_DRAW, NULL);
         CopyWindowToVram(sPokemonJumpGfx->msgWindowId, COPYWIN_GFX);
         sPokemonJumpGfx->mainState++;
         break;
@@ -3170,7 +3184,7 @@ static void PrintPrizeMessage(enum Item itemId, u16 quantity)
     DynamicPlaceholderTextUtil_Reset();
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, sPokemonJumpGfx->itemName);
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, sPokemonJumpGfx->itemQuantityStr);
-    DynamicPlaceholderTextUtil_ExpandPlaceholders(sPokemonJumpGfx->prizeMsg, gText_AwesomeWonF701F700);
+    DynamicPlaceholderTextUtil_ExpandPlaceholders(sPokemonJumpGfx->prizeMsg, sText_AwesomeWonF701F700);
     sPokemonJumpGfx->msgWindowId = AddMessageWindow(4, 8, 22, 4);
     AddTextPrinterParameterized(sPokemonJumpGfx->msgWindowId, FONT_NORMAL, sPokemonJumpGfx->prizeMsg, 0, 2, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(sPokemonJumpGfx->msgWindowId, COPYWIN_GFX);
@@ -3183,7 +3197,7 @@ static void PrintPrizeFilledBagMessage(enum Item itemId)
     CopyItemName(itemId, sPokemonJumpGfx->itemName);
     DynamicPlaceholderTextUtil_Reset();
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, sPokemonJumpGfx->itemName);
-    DynamicPlaceholderTextUtil_ExpandPlaceholders(sPokemonJumpGfx->prizeMsg, gText_FilledStorageSpace2);
+    DynamicPlaceholderTextUtil_ExpandPlaceholders(sPokemonJumpGfx->prizeMsg, sText_FilledStorageSpace2);
     sPokemonJumpGfx->msgWindowId = AddMessageWindow(4, 8, 22, 4);
     AddTextPrinterParameterized(sPokemonJumpGfx->msgWindowId, FONT_NORMAL, sPokemonJumpGfx->prizeMsg, 0, 2, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(sPokemonJumpGfx->msgWindowId, COPYWIN_GFX);
@@ -3196,7 +3210,7 @@ static void PrintNoRoomForPrizeMessage(enum Item itemId)
     CopyItemName(itemId, sPokemonJumpGfx->itemName);
     DynamicPlaceholderTextUtil_Reset();
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, sPokemonJumpGfx->itemName);
-    DynamicPlaceholderTextUtil_ExpandPlaceholders(sPokemonJumpGfx->prizeMsg, gText_CantHoldMore);
+    DynamicPlaceholderTextUtil_ExpandPlaceholders(sPokemonJumpGfx->prizeMsg, sText_CantHoldMore);
     sPokemonJumpGfx->msgWindowId = AddMessageWindow(4, 9, 22, 2);
     AddTextPrinterParameterized(sPokemonJumpGfx->msgWindowId, FONT_NORMAL, sPokemonJumpGfx->prizeMsg, 0, 2, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(sPokemonJumpGfx->msgWindowId, COPYWIN_GFX);
@@ -3319,8 +3333,8 @@ static void PrintScoreSuffixes(void)
     PutWindowTilemap(WIN_TIMES);
     FillWindowPixelBuffer(WIN_POINTS, PIXEL_FILL(0));
     FillWindowPixelBuffer(WIN_TIMES, PIXEL_FILL(0));
-    AddTextPrinterParameterized3(WIN_POINTS, FONT_SMALL, 0, 2, color, 0, gText_SpacePoints2);
-    AddTextPrinterParameterized3(WIN_TIMES, FONT_SMALL, 0, 2, color, 0, gText_SpaceTimes3);
+    AddTextPrinterParameterized3(WIN_POINTS, FONT_SMALL, 0, 2, color, 0, sText_SpacePoints2);
+    AddTextPrinterParameterized3(WIN_TIMES, FONT_SMALL, 0, 2, color, 0, sText_SpaceTimes3);
 }
 
 // The venusaurs in the background are actually an empty 256x512 bg with 3 pairs of venusaurs on it.
@@ -4325,7 +4339,7 @@ static const struct WindowTemplate sWindowTemplate_Records =
     .baseBlock = 0x1,
 };
 
-static const u8 *const sRecordsTexts[] = {gText_JumpsInARow, gText_BestScore2, gText_ExcellentsInARow};
+static const u8 *const sRecordsTexts[] = {sText_JumpsInARow, sText_BestScore2, sText_ExcellentsInARow};
 
 #define tState data[0]
 #define tWindowId data[1]
@@ -4382,7 +4396,7 @@ static void PrintRecordsText(u16 windowId)
     LoadStdWindowGfx(windowId, 0x21D, BG_PLTT_ID(13));
     DrawTextBorderOuter(windowId, 0x21D, 13);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    AddTextPrinterParameterized5(windowId, FONT_NORMAL, gText_PkmnJumpRecords, 0, 0, TEXT_SKIP_DRAW, NULL, 1, 0);
+    AddTextPrinterParameterized5(windowId, FONT_NORMAL, sText_PkmnJumpRecords, 0, 0, TEXT_SKIP_DRAW, NULL, 1, 0);
     for (i = 0; i < ARRAY_COUNT(sRecordsTexts); i++)
     {
         AddTextPrinterParameterized5(windowId, FONT_NORMAL, sRecordsTexts[i], 0, 20 + (i * 14), TEXT_SKIP_DRAW, NULL, 1, 0);

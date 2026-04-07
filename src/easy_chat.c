@@ -40,29 +40,30 @@ static bool8 IsWordUnlocked(u16 word);
 #include "data/easy_chat/easy_chat_groups.h"
 #include "data/easy_chat/easy_chat_words_by_letter.h"
 
-static const u8 *const sEasyChatGroupNamePointers[] = {
-    [EC_GROUP_POKEMON] = gEasyChatGroupName_Pokemon,
-    [EC_GROUP_TRAINER] = gEasyChatGroupName_Trainer,
-    [EC_GROUP_STATUS] = gEasyChatGroupName_Status,
-    [EC_GROUP_BATTLE] = gEasyChatGroupName_Battle,
-    [EC_GROUP_GREETINGS] = gEasyChatGroupName_Greetings,
-    [EC_GROUP_PEOPLE] = gEasyChatGroupName_People,
-    [EC_GROUP_VOICES] = gEasyChatGroupName_Voices,
-    [EC_GROUP_SPEECH] = gEasyChatGroupName_Speech,
-    [EC_GROUP_ENDINGS] = gEasyChatGroupName_Endings,
-    [EC_GROUP_FEELINGS] = gEasyChatGroupName_Feelings,
-    [EC_GROUP_CONDITIONS] = gEasyChatGroupName_Conditions,
-    [EC_GROUP_ACTIONS] = gEasyChatGroupName_Actions,
-    [EC_GROUP_LIFESTYLE] = gEasyChatGroupName_Lifestyle,
-    [EC_GROUP_HOBBIES] = gEasyChatGroupName_Hobbies,
-    [EC_GROUP_TIME] = gText_Time,
-    [EC_GROUP_MISC] = gEasyChatGroupName_Misc,
-    [EC_GROUP_ADJECTIVES] = gEasyChatGroupName_Adjectives,
-    [EC_GROUP_EVENTS] = gEasyChatGroupName_Events,
-    [EC_GROUP_MOVE_1] = gEasyChatGroupName_Move1,
-    [EC_GROUP_MOVE_2] = gEasyChatGroupName_Move2,
-    [EC_GROUP_TRENDY_SAYING] = gEasyChatGroupName_TrendySaying,
-    [EC_GROUP_POKEMON_2] = gEasyChatGroupName_Pokemon2,
+static const u8 *const sEasyChatGroupNamePointers[] =
+{
+    [EC_GROUP_POKEMON]       = COMPOUND_STRING("POKéMON"),
+    [EC_GROUP_TRAINER]       = COMPOUND_STRING("TRAINER"),
+    [EC_GROUP_STATUS]        = COMPOUND_STRING("STATUS"),
+    [EC_GROUP_BATTLE]        = COMPOUND_STRING("BATTLE"),
+    [EC_GROUP_GREETINGS]     = COMPOUND_STRING("GREETINGS"),
+    [EC_GROUP_PEOPLE]        = COMPOUND_STRING("PEOPLE"),
+    [EC_GROUP_VOICES]        = COMPOUND_STRING("VOICES"),
+    [EC_GROUP_SPEECH]        = COMPOUND_STRING("SPEECH"),
+    [EC_GROUP_ENDINGS]       = COMPOUND_STRING("ENDINGS"),
+    [EC_GROUP_FEELINGS]      = COMPOUND_STRING("FEELINGS"),
+    [EC_GROUP_CONDITIONS]    = COMPOUND_STRING("CONDITIONS"),
+    [EC_GROUP_ACTIONS]       = COMPOUND_STRING("ACTIONS"),
+    [EC_GROUP_LIFESTYLE]     = COMPOUND_STRING("LIFESTYLE"),
+    [EC_GROUP_HOBBIES]       = COMPOUND_STRING("HOBBIES"),
+    [EC_GROUP_TIME]          = gText_Time,
+    [EC_GROUP_MISC]          = COMPOUND_STRING("MISC."),
+    [EC_GROUP_ADJECTIVES]    = COMPOUND_STRING("ADJECTIVES"),
+    [EC_GROUP_EVENTS]        = COMPOUND_STRING("EVENTS"),
+    [EC_GROUP_MOVE_1]        = COMPOUND_STRING("MOVE 1"),
+    [EC_GROUP_MOVE_2]        = COMPOUND_STRING("MOVE 2"),
+    [EC_GROUP_TRENDY_SAYING] = COMPOUND_STRING("TRENDY SAYING"),
+    [EC_GROUP_POKEMON_2]     = COMPOUND_STRING("POKéMON2"),
 };
 
 static const u16 sDefaultProfileWords[] = {
