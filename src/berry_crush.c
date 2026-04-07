@@ -415,16 +415,22 @@ static void ResetCrusherPos(struct BerryCrushGame *game);
 static void HideTimer(struct BerryCrushGame_Gfx *gfx);
 static void SpriteCB_DropBerryIntoCrusher(struct Sprite *sprite);
 
-static const u8 sBitTable[] = {
-    1 << 0,
-    1 << 1,
-    1 << 2,
-    1 << 3,
-    1 << 4,
-    1 << 5,
-    1 << 6,
-    1 << 7,
-};
+static const u8 sText_1_ClrBluShdwLtBlu_Dynamic0[] = _("1. {COLOR BLUE}{SHADOW LIGHT_BLUE}{DYNAMIC 0x00}");
+static const u8 sText_1_Dynamic0[] = _("1. {DYNAMIC 0x00}");
+static const u8 sText_TimeColon[] = _("Time:");
+static const u8 sText_PressingSpeed[] = _("Pressing Speed:");
+static const u8 sText_Silkiness[] = _("Silkiness:");
+static const u8 sText_StrVar1[] = _("{STR_VAR_1}");
+static const u8 sText_SpaceMin[] = _("min.");
+static const u8 sText_XDotY2[] = _("{STR_VAR_1}.{STR_VAR_2}");
+static const u8 sText_SpaceSec[] = _("sec.");
+static const u8 sText_XDotY3[] = _("{STR_VAR_1}.{STR_VAR_2}");
+static const u8 sText_TimesPerSec[] = _("Times/sec.");
+static const u8 sText_Var1Percent[] = _("{STR_VAR_1}%");
+static const u8 sText_PressesRankings[] = _("No. of Presses Rankings");
+static const u8 sText_CrushingResults[] = _("Crushing Results");
+static const u8 sText_PressingSpeedRankings[] = _("Pressing-Speed Rankings");
+static const u8 sText_Var1Players[] = _("{STR_VAR_1} PLAYERS");
 
 // Additional A presses are counted depending on the number of players
 // The bonus of 5 is unobtainable
@@ -449,15 +455,15 @@ const u8 sVibrationData[MAX_RFU_PLAYERS][4] = {
 };
 
 static const u8 *const sMessages[] = {
-    [MSG_PICK_BERRY]   = gText_BerryCrush_AreYouReady,
-    [MSG_WAIT_PICK]    = gText_BerryCrush_WaitForOthersToChooseBerry,
-    [MSG_POWDER]       = gText_BerryCrush_GainedXUnitsOfPowder,
-    [MSG_SAVING]       = gText_BerryCrush_RecordingGameResults,
-    [MSG_PLAY_AGAIN]   = gText_BerryCrush_WantToPlayAgain,
-    [MSG_NO_BERRIES]   = gText_BerryCrush_NoBerries,
-    [MSG_DROPPED]      = gText_BerryCrush_MemberDroppedOut,
-    [MSG_TIMES_UP]     = gText_BerryCrush_TimeUp,
-    [MSG_COMM_STANDBY] = gText_BerryCrush_CommunicationStandby
+    [MSG_PICK_BERRY]   = COMPOUND_STRING("Are you ready to BERRY-CRUSH?\nPlease pick a BERRY for use.\p"),
+    [MSG_WAIT_PICK]    = COMPOUND_STRING("Please wait while each member\nchooses a BERRY."),
+    [MSG_POWDER]       = COMPOUND_STRING("{PAUSE_MUSIC}{PLAY_BGM MUS_LEVEL_UP}You ended up with {STR_VAR_1} units of\nsilky-smooth BERRY POWDER.{RESUME_MUSIC}\pYour total amount of BERRY POWDER\nis {STR_VAR_2}.\p"),
+    [MSG_SAVING]       = COMPOUND_STRING("Recording your game results in the\nsave file.\nPlease wait."),
+    [MSG_PLAY_AGAIN]   = COMPOUND_STRING("Want to play BERRY CRUSH again?"),
+    [MSG_NO_BERRIES]   = COMPOUND_STRING("You have no BERRIES.\nThe game will be canceled."),
+    [MSG_DROPPED]      = COMPOUND_STRING("A member dropped out.\nThe game will be canceled."),
+    [MSG_TIMES_UP]     = COMPOUND_STRING("Time's up.\pGood BERRY POWDER could not be\nmade…\p"),
+    [MSG_COMM_STANDBY] = COMPOUND_STRING("Communication standby…"),
 };
 
 static u32 (*const sBerryCrushCommands[])(struct BerryCrushGame * berryCrushGame, u8 *args) = {
@@ -934,14 +940,15 @@ static const struct DigitObjUtilTemplate sDigitObjTemplates[] = {
     }
 };
 
-static const u8 *const sBCRankingHeaders[] = {
-    [RESULTS_PAGE_PRESSES]  = gText_SpaceTimes2,
-    [RESULTS_PAGE_RANDOM]   = gText_XDotY,
-    [RESULTS_PAGE_CRUSHING] = gText_StrVar1Berry,
+static const u8 *const sBCRankingHeaders[] =
+{
+    [RESULTS_PAGE_PRESSES]  = COMPOUND_STRING(" times"),
+    [RESULTS_PAGE_RANDOM]   = COMPOUND_STRING("{STR_VAR_1}.{STR_VAR_2}"),
+    [RESULTS_PAGE_CRUSHING] = COMPOUND_STRING("{STR_VAR_1} BERRY"),
 
-    [RESULTS_PAGE_NEATNESS + NUM_RESULTS_PAGES]    = gText_NeatnessRankings,
-    [RESULTS_PAGE_COOPERATIVE + NUM_RESULTS_PAGES] = gText_CooperativeRankings,
-    [RESULTS_PAGE_POWER + NUM_RESULTS_PAGES]       = gText_PressingPowerRankings
+    [RESULTS_PAGE_NEATNESS + NUM_RESULTS_PAGES]    = COMPOUND_STRING("Neatness Rankings"),
+    [RESULTS_PAGE_COOPERATIVE + NUM_RESULTS_PAGES] = COMPOUND_STRING("Cooperative Rankings"),
+    [RESULTS_PAGE_POWER + NUM_RESULTS_PAGES]       = COMPOUND_STRING("Pressing-Power Rankings"),
 };
 
 static struct BerryCrushGame *GetBerryCrushGame(void)
@@ -1571,7 +1578,7 @@ static void HandlePartnerInput(struct BerryCrushGame * game)
 
         if (linkState->pushedAButton)
         {
-            game->localState.playerPressedAFlags |= sBitTable[i];
+            game->localState.playerPressedAFlags |= (1u << i);
             game->players[i].inputState = 1;
             ++game->players[i].numAPresses;
             ++numPlayersPressed;
@@ -2959,9 +2966,9 @@ static void PrintResultsText(struct BerryCrushGame * game, u8 command, u8 x, u8 
             break;
         }
         if (linkPlayerId == game->localId)
-            StringCopy(gStringVar3, gText_1_ClrBluShdwLtBlu_Dynamic0);
+            StringCopy(gStringVar3, sText_1_ClrBluShdwLtBlu_Dynamic0);
         else
-            StringCopy(gStringVar3, gText_1_Dynamic0);
+            StringCopy(gStringVar3, sText_1_Dynamic0);
         gStringVar3[0] = linkIdToPrint + CHAR_1;
         DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, game->players[linkPlayerId].name);
         DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, gStringVar3);
@@ -2978,37 +2985,37 @@ static void printCrushingResults(struct BerryCrushGame * game)
     u8 y = GetWindowAttribute(game->gfx.resultsWindowId, WINDOW_HEIGHT) * 8 - 42;
 
     FramesToMinSec(&game->gfx, players->time);
-    AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, 2, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, gText_TimeColon);
+    AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, 2, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, sText_TimeColon);
 
-    x = 190 - (u8)GetStringWidth(FONT_NORMAL, gText_SpaceSec, 0);
-    AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, x, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, gText_SpaceSec);
+    x = 190 - (u8)GetStringWidth(FONT_NORMAL, sText_SpaceSec, 0);
+    AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, x, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, sText_SpaceSec);
 
     x -= 32;
     ConvertIntToDecimalStringN(gStringVar1, game->gfx.secondsInt, STR_CONV_MODE_LEADING_ZEROS, 2);
     ConvertIntToDecimalStringN(gStringVar2, game->gfx.secondsFrac, STR_CONV_MODE_LEADING_ZEROS, 2);
-    StringExpandPlaceholders(gStringVar4, gText_XDotY2);
+    StringExpandPlaceholders(gStringVar4, sText_XDotY2);
     AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, x, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, gStringVar4);
 
-    x -= (u8)GetStringWidth(FONT_NORMAL, gText_SpaceMin, 0) + 3;
-    AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, x, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, gText_SpaceMin);
+    x -= (u8)GetStringWidth(FONT_NORMAL, sText_SpaceMin, 0) + 3;
+    AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, x, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, sText_SpaceMin);
 
     x -= 9;
     ConvertIntToDecimalStringN(gStringVar1, game->gfx.minutes, STR_CONV_MODE_LEADING_ZEROS, 1);
-    StringExpandPlaceholders(gStringVar4, gText_StrVar1);
+    StringExpandPlaceholders(gStringVar4, sText_StrVar1);
     AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, x, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, gStringVar4);
 
     y += 14;
-    AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, 2, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, gText_PressingSpeed);
+    AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, 2, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, sText_PressingSpeed);
 
-    x = 190 - (u8)GetStringWidth(FONT_NORMAL, gText_TimesPerSec, 0);
-    AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL_COPY_2, x, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, gText_TimesPerSec);
+    x = 190 - (u8)GetStringWidth(FONT_NORMAL, sText_TimesPerSec, 0);
+    AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL_COPY_2, x, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, sText_TimesPerSec);
 
     for (i = 0; i < 8; ++i)
         if (((u8)game->pressingSpeed >> (7 - i)) & 1)
             score += *(i + sPressingSpeedConversionTable); // It's accessed in a different way here for unknown reason
     ConvertIntToDecimalStringN(gStringVar1, game->pressingSpeed >> 8, STR_CONV_MODE_RIGHT_ALIGN, 3);
     ConvertIntToDecimalStringN(gStringVar2, score / 1000000, STR_CONV_MODE_LEADING_ZEROS, 2);
-    StringExpandPlaceholders(gStringVar4, gText_XDotY3);
+    StringExpandPlaceholders(gStringVar4, sText_XDotY3);
     x -= 38;
     if (game->newRecord)
         AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, x, y, sBerryCrushTextColorTable[COLORID_RED], 0, gStringVar4);
@@ -3016,10 +3023,10 @@ static void printCrushingResults(struct BerryCrushGame * game)
         AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, x, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, gStringVar4);
 
     y += 14;
-    AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, 2, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, gText_Silkiness);
+    AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, 2, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, sText_Silkiness);
 
     ConvertIntToDecimalStringN(gStringVar1, players->silkiness, STR_CONV_MODE_RIGHT_ALIGN, 3);
-    StringExpandPlaceholders(gStringVar4, gText_Var1Percent);
+    StringExpandPlaceholders(gStringVar4, sText_Var1Percent);
     x = 190 - (u8)GetStringWidth(FONT_NORMAL, gStringVar4, 0);
     AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, x, y, sBerryCrushTextColorTable[COLORID_GRAY], 0, gStringVar4);
 }
@@ -3055,7 +3062,7 @@ static bool32 OpenResultsWindow(struct BerryCrushGame * game, struct BerryCrushG
         switch (game->gameState)
         {
         case STATE_RESULTS_PRESSES:
-            PrintTextCentered(spriteManager->resultsWindowId, 22, COLORID_BLUE, gText_PressesRankings);
+            PrintTextCentered(spriteManager->resultsWindowId, 22, COLORID_BLUE, sText_PressesRankings);
             PrintResultsText(game, RESULTS_PAGE_PRESSES, 0xB0, 8 * sResultsWindowHeights[0][playerCountMinus2] - game->playerCount * 14);
             spriteManager->resultsState = 5;
             return FALSE;
@@ -3065,7 +3072,7 @@ static bool32 OpenResultsWindow(struct BerryCrushGame * game, struct BerryCrushG
             spriteManager->resultsState = 5;
             return FALSE;
         case STATE_RESULTS_CRUSHING:
-            PrintTextCentered(spriteManager->resultsWindowId, 24, COLORID_BLUE, gText_CrushingResults);
+            PrintTextCentered(spriteManager->resultsWindowId, 24, COLORID_BLUE, sText_CrushingResults);
             PrintResultsText(game, RESULTS_PAGE_CRUSHING, 0xC0, 0x10);
             break;
         }
@@ -3120,7 +3127,7 @@ static void Task_ShowBerryCrushRankings(u8 taskId)
             0,
             gText_BerryCrush
         );
-        xPos = 96 - GetStringWidth(FONT_NORMAL, gText_PressingSpeedRankings, -1) / 2u;
+        xPos = 96 - GetStringWidth(FONT_NORMAL, sText_PressingSpeedRankings, -1) / 2u;
         AddTextPrinterParameterized3(
             tWindowId,
             FONT_NORMAL,
@@ -3128,13 +3135,13 @@ static void Task_ShowBerryCrushRankings(u8 taskId)
             18,
             sBerryCrushTextColorTable[COLORID_BLUE],
             0,
-            gText_PressingSpeedRankings
+            sText_PressingSpeedRankings
         );
         yPos = 42;
         for (i = 0; i < 4; ++i)
         {
             ConvertIntToDecimalStringN(gStringVar1, i + 2, STR_CONV_MODE_LEFT_ALIGN, 1);
-            StringExpandPlaceholders(gStringVar4, gText_Var1Players);
+            StringExpandPlaceholders(gStringVar4, sText_Var1Players);
             AddTextPrinterParameterized3(
                 tWindowId,
                 FONT_NORMAL,
@@ -3151,9 +3158,9 @@ static void Task_ShowBerryCrushRankings(u8 taskId)
             }
             ConvertIntToDecimalStringN(gStringVar1, (u16)tPressingSpeeds(i) >> 8, STR_CONV_MODE_RIGHT_ALIGN, 3);
             ConvertIntToDecimalStringN(gStringVar2, score / 1000000, STR_CONV_MODE_LEADING_ZEROS, 2);
-            str = StringExpandPlaceholders(gStringVar4, gText_XDotY3);
+            str = StringExpandPlaceholders(gStringVar4, sText_XDotY3);
             *str++ = CHAR_SPACE;
-            StringCopy(str, gText_TimesPerSec);
+            StringCopy(str, sText_TimesPerSec);
             xPos = 192 - (u8)GetStringWidth(FONT_NORMAL_COPY_2, gStringVar4, 0);
             AddTextPrinterParameterized3(
                 tWindowId,

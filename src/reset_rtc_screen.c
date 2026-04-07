@@ -75,6 +75,17 @@ static void VBlankCB(void);
 static void Task_ResetRtcScreen(u8 taskId);
 static void InitResetRtcScreenBgAndWindows(void);
 
+static const u8 sText_ResetRTCConfirmCancel[] = _("Reset RTC?\nA: Confirm, B: Cancel");
+static const u8 sText_PresentTime[] = _("Present time in game");
+static const u8 sText_PreviousTime[] = _("Previous time in game");
+static const u8 sText_PleaseResetTime[] = _("Please reset the time.");
+static const u8 sText_ClockHasBeenReset[] = _("The clock has been reset.\nData will be saved. Please wait.");
+static const u8 sText_SaveCompleted[] = _("Save completed.");
+static const u8 sText_NoSaveFileCantSetTime[] = _("There is no save file, so the time\ncan't be set.");
+static const u8 sText_SaveFailed[] = _("Save failed…");
+static const u8 sText_Confirm[] = _("CONFIRM");
+static const u8 sText_Day[] = _("DAY");
+
 static const struct BgTemplate sBgTemplates[] =
 {
     {
@@ -453,17 +464,17 @@ static void PrintTime(u8 windowId, u8 x, u8 y, u16 days, u8 hours, u8 minutes, u
     // Print days
     ConvertIntToDecimalStringN(gStringVar1, days, STR_CONV_MODE_RIGHT_ALIGN, 4);
     dest = StringCopy(dest, gStringVar1);
-    dest = StringCopy(dest, gText_Day);
+    dest = StringCopy(dest, sText_Day);
 
     // Print hours
     ConvertIntToDecimalStringN(gStringVar1, hours, STR_CONV_MODE_RIGHT_ALIGN, 3);
     dest = StringCopy(dest, gStringVar1);
-    dest = StringCopy(dest, gText_Colon3);
+    dest = StringCopy(dest, gText_Colon);
 
     // Print minutes
     ConvertIntToDecimalStringN(gStringVar1, minutes, STR_CONV_MODE_LEADING_ZEROS, 2);
     dest = StringCopy(dest, gStringVar1);
-    dest = StringCopy(dest, gText_Colon3);
+    dest = StringCopy(dest, gText_Colon);
 
     // Print seconds
     ConvertIntToDecimalStringN(gStringVar1, seconds, STR_CONV_MODE_LEADING_ZEROS, 2);
@@ -476,7 +487,7 @@ static void ShowChooseTimeWindow(u8 windowId, u16 days, u8 hours, u8 minutes, u8
 {
     DrawStdFrameWithCustomTileAndPalette(windowId, FALSE, 0x214, 0xE);
     PrintTime(windowId, 0, 1, days, hours, minutes, seconds);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_Confirm2, 126, 1, 0, NULL);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_Confirm, 126, 1, 0, NULL);
     ScheduleBgCopyTilemapToVram(0);
 }
 
@@ -601,7 +612,7 @@ static void Task_ResetRtc_Init(u8 taskId)
 }
 
 void CB2_InitResetRtcScreen(void)
-{   
+{
 #ifdef FIRERED
     FillPalette(RGB(30, 18, 11), 0, PLTT_SIZE);
 #endif
@@ -610,7 +621,7 @@ void CB2_InitResetRtcScreen(void)
 #endif
     BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB_BLACK);
 
-    SetGpuReg(REG_OFFSET_DISPCNT, 0);    
+    SetGpuReg(REG_OFFSET_DISPCNT, 0);
     SetGpuReg(REG_OFFSET_BLDY, 0);
     ResetBgsAndClearDma3BusyFlags(FALSE);
     ChangeBgX(0, 0, 0);
@@ -687,7 +698,7 @@ static void Task_ShowResetRtcPrompt(u8 taskId)
     case 0:
         DrawStdFrameWithCustomTileAndPalette(WIN_TIME, FALSE, 0x214, 0xE);
 
-        AddTextPrinterParameterized(WIN_TIME, FONT_NORMAL, gText_PresentTime, 0, 1, TEXT_SKIP_DRAW, 0);
+        AddTextPrinterParameterized(WIN_TIME, FONT_NORMAL, sText_PresentTime, 0, 1, TEXT_SKIP_DRAW, 0);
         PrintTime(
             WIN_TIME,
             0,
@@ -697,7 +708,7 @@ static void Task_ShowResetRtcPrompt(u8 taskId)
             gLocalTime.minutes,
             gLocalTime.seconds);
 
-        AddTextPrinterParameterized(WIN_TIME, FONT_NORMAL, gText_PreviousTime, 0, 33, TEXT_SKIP_DRAW, 0);
+        AddTextPrinterParameterized(WIN_TIME, FONT_NORMAL, sText_PreviousTime, 0, 33, TEXT_SKIP_DRAW, 0);
         PrintTime(
             WIN_TIME,
             0,
@@ -707,7 +718,7 @@ static void Task_ShowResetRtcPrompt(u8 taskId)
             gSaveBlock2Ptr->lastBerryTreeUpdate.minutes,
             gSaveBlock2Ptr->lastBerryTreeUpdate.seconds);
 
-        ShowMessage(gText_ResetRTCConfirmCancel);
+        ShowMessage(sText_ResetRTCConfirmCancel);
         CopyWindowToVram(WIN_TIME, COPYWIN_GFX);
         ScheduleBgCopyTilemapToVram(0);
         tState++;
@@ -760,7 +771,7 @@ static void Task_ResetRtcScreen(u8 taskId)
             if (gSaveFileStatus == SAVE_STATUS_EMPTY
              || gSaveFileStatus == SAVE_STATUS_INVALID)
             {
-                ShowMessage(gText_NoSaveFileCantSetTime);
+                ShowMessage(sText_NoSaveFileCantSetTime);
                 tState = MAINSTATE_WAIT_EXIT;
             }
             else
@@ -776,7 +787,7 @@ static void Task_ResetRtcScreen(u8 taskId)
         if (gTasks[tSubTaskId].isActive != TRUE)
         {
             ClearStdWindowAndFrameToTransparent(WIN_TIME, FALSE);
-            ShowMessage(gText_PleaseResetTime);
+            ShowMessage(sText_PleaseResetTime);
             gLocalTime = gSaveBlock2Ptr->lastBerryTreeUpdate;
             tSubTaskId = CreateTask(Task_ResetRtc_Init, 80);
             tState = MAINSTATE_WAIT_SET_TIME;
@@ -809,7 +820,7 @@ static void Task_ResetRtcScreen(u8 taskId)
                 gSaveBlock2Ptr->lastBerryTreeUpdate = gLocalTime;
                 VarSet(VAR_DAYS, gLocalTime.days);
                 DisableResetRTC();
-                ShowMessage(gText_ClockHasBeenReset);
+                ShowMessage(sText_ClockHasBeenReset);
                 tState = MAINSTATE_SAVE;
             }
         }
@@ -817,12 +828,12 @@ static void Task_ResetRtcScreen(u8 taskId)
     case MAINSTATE_SAVE:
         if (TrySavingData(SAVE_NORMAL) == SAVE_STATUS_OK)
         {
-            ShowMessage(gText_SaveCompleted);
+            ShowMessage(sText_SaveCompleted);
             PlaySE(SE_DING_DONG);
         }
         else
         {
-            ShowMessage(gText_SaveFailed);
+            ShowMessage(sText_SaveFailed);
             PlaySE(SE_BOO);
         }
         tState = MAINSTATE_WAIT_EXIT;

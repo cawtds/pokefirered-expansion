@@ -391,6 +391,36 @@ static void InitFlyMap(void);
 static void FreeFlyMap(u8);
 static void SetFlyWarpDestination(u16);
 
+static const u8 sText_RegionMap_Space[] = _(" ");
+static const u8 sText_RegionMap_AButtonGuide[] = _("{A_BUTTON}GUIDE");
+static const u8 sText_RegionMap_AButtonCancel[] = _("{A_BUTTON}CANCEL");
+static const u8 sText_RegionMap_AButtonCancel2[] = _("{A_BUTTON}CANCEL");
+static const u8 sText_RegionMap_AButtonSwitch[] = _("{A_BUTTON}SWITCH");
+static const u8 sText_RegionMap_AButtonOK[] = _("{A_BUTTON}OK");
+static const u8 sText_RegionMap_DPadMove[] = _("{DPAD_ANY}MOVE");
+static const u8 sText_RegionMap_UpDownPick[] = _("{DPAD_UPDOWN}PICK");
+static const u8 sText_RegionMap_NoData[] = _("No data");
+static const u8 sText_RegionMap_AreaDesc_ViridianForest[] = _("A deep and sprawling forest that\nextends around VIRIDIAN CITY.\nA natural maze, many people\nbecome lost inside.");
+static const u8 sText_RegionMap_AreaDesc_MtMoon[] = _("A mystical mountain that is known\nfor its frequent meteor falls.\nThe shards of stars that fall\nhere are known as MOON STONES.");
+static const u8 sText_RegionMap_AreaDesc_DiglettsCave[] = _("A seemingly plain tunnel that was\ndug by wild DIGLETT.\nIt is famous for connecting\nROUTES 2 and 11.");
+static const u8 sText_RegionMap_AreaDesc_VictoryRoad[] = _("A tunnel situated on ROUTE 23.\nIt earned its name because it\nmust be traveled by all TRAINERS\naiming for the top.");
+static const u8 sText_RegionMap_AreaDesc_PokemonMansion[] = _("A decrepit, burned-down mansion\non CINNABAR ISLAND.\nIt got its name because a famous\nPOKéMON researcher lived there.");
+static const u8 sText_RegionMap_AreaDesc_SafariZone[] = _("An amusement park outside FUCHSIA\nCITY where many rare POKéMON can\nbe observed in the wild.\nCatch them in a popular game!");
+static const u8 sText_RegionMap_AreaDesc_RockTunnel[] = _("A naturally formed underground\ntunnel. Because it has not been\ndeveloped, it is inky dark inside.\nA light is needed to get through.");
+static const u8 sText_RegionMap_AreaDesc_SeafoamIslands[] = _("A pair of islands that is situated\non ROUTE 20.\nThe two islands are shaped the\nsame, as if they were twins.");
+static const u8 sText_RegionMap_AreaDesc_PokemonTower[] = _("A tower that houses the graves of\ncountless POKéMON.\nMany people visit it daily to pay\ntheir respects to the fallen.");
+static const u8 sText_RegionMap_AreaDesc_CeruleanCave[] = _("A mysterious cave that is filled\nwith terribly tough POKéMON.\nIt is so dangerous, the POKéMON\nLEAGUE is in charge of it.");
+static const u8 sText_RegionMap_AreaDesc_PowerPlant[] = _("A power plant that was abandoned\nyears ago, though some of the\nmachines still work. It is infested\nwith electric POKéMON.");
+static const u8 sText_RegionMap_AreaDesc_MtEmber[] = _("Supposedly an inactive volcano.\nHowever, there are persistent\nreports that the peak blazes\nwith fire at night.");
+static const u8 sText_RegionMap_AreaDesc_BerryForest[] = _("A forest on a small islet off the\ncoast of THREE ISLAND. BERRIES\ngrow wildly in profusion, quickly\nreplenishing those that fall off.");
+static const u8 sText_RegionMap_AreaDesc_IcefallCave[] = _("A cave which is covered by water\nand ice on FOUR ISLAND.\nIt seems like the end of the cave\nis connected to the ocean.");
+static const u8 sText_RegionMap_AreaDesc_LostCave[] = _("A bewildering cave off the coast\nof RESORT GORGEOUS.\nSome curious thrill seekers have\nnever emerged from it.");
+static const u8 sText_RegionMap_AreaDesc_TanobyRuins[] = _("An ancient ruin that is rumored to\nbe home to a peculiar POKéMON.\nHowever, so far, the POKéMON\nremains an unconfirmed rumor.");
+static const u8 sText_RegionMap_AreaDesc_AlteringCave[] = _("This island has been known by this\nname since the distant past.\nNo one today knows where it got\nthis name, however.");
+static const u8 sText_RegionMap_AreaDesc_PatternBush[] = _("A lush and bush-like area. \nIn it are patterns where no grass\ngrows. Some study it in the belief\nthat a secret is concealed.");
+static const u8 sText_RegionMap_AreaDesc_DottedHole[] = _("A mysterious, just-discovered\nruin from an ancient time.\nIt got its name from the six dots\non its door.");
+static const u8 sText_RegionMap_AreaDesc_ArtisanCave[] = _("TODO.");
+
 const u32 gPlayerIcon_Red[] = INCBIN_U32("graphics/region_map/player_icon_red.4bpp");
 const u32 gPlayerIcon_Leaf[] = INCBIN_U32("graphics/region_map/player_icon_leaf.4bpp");
 const u16 gPlayerIcon_RedPal[] = INCBIN_U16("graphics/region_map/player_icon_red.gbapal");
@@ -646,83 +676,83 @@ static const struct DungeonMapInfo sDungeonInfo[] = {
     {
         .id = MAPSEC_VIRIDIAN_FOREST,
         .name = sMapName_VIRIDIAN_FOREST,
-        .desc = gText_RegionMap_AreaDesc_ViridianForest
+        .desc = sText_RegionMap_AreaDesc_ViridianForest
     }, {
         .id = MAPSEC_MT_MOON,
         .name = sMapName_MT__MOON,
-        .desc = gText_RegionMap_AreaDesc_MtMoon
+        .desc = sText_RegionMap_AreaDesc_MtMoon
     }, {
         .id = MAPSEC_DIGLETTS_CAVE,
         .name = sMapName_DIGLETT_S_CAVE,
-        .desc = gText_RegionMap_AreaDesc_DiglettsCave
+        .desc = sText_RegionMap_AreaDesc_DiglettsCave
     }, {
         .id = MAPSEC_KANTO_VICTORY_ROAD,
         .name = sMapName_VICTORY_ROAD,
-        .desc = gText_RegionMap_AreaDesc_VictoryRoad
+        .desc = sText_RegionMap_AreaDesc_VictoryRoad
     }, {
         .id = MAPSEC_POKEMON_MANSION,
         .name = sMapName_POK__MON_MANSION,
-        .desc = gText_RegionMap_AreaDesc_PokemonMansion
+        .desc = sText_RegionMap_AreaDesc_PokemonMansion
     }, {
         .id = MAPSEC_KANTO_SAFARI_ZONE,
         .name = sMapName_SAFARI_ZONE,
-        .desc = gText_RegionMap_AreaDesc_SafariZone
+        .desc = sText_RegionMap_AreaDesc_SafariZone
     }, {
         .id = MAPSEC_ROCK_TUNNEL,
         .name = sMapName_ROCK_TUNNEL,
-        .desc = gText_RegionMap_AreaDesc_RockTunnel
+        .desc = sText_RegionMap_AreaDesc_RockTunnel
     }, {
         .id = MAPSEC_SEAFOAM_ISLANDS,
         .name = sMapName_SEAFOAM_ISLANDS,
-        .desc = gText_RegionMap_AreaDesc_SeafoamIslands
+        .desc = sText_RegionMap_AreaDesc_SeafoamIslands
     }, {
         .id = MAPSEC_POKEMON_TOWER,
         .name = sMapName_POK__MON_TOWER,
-        .desc = gText_RegionMap_AreaDesc_PokemonTower
+        .desc = sText_RegionMap_AreaDesc_PokemonTower
     }, {
         .id = MAPSEC_CERULEAN_CAVE,
         .name = sMapName_CERULEAN_CAVE,
-        .desc = gText_RegionMap_AreaDesc_CeruleanCave
+        .desc = sText_RegionMap_AreaDesc_CeruleanCave
     }, {
         .id = MAPSEC_POWER_PLANT,
         .name = sMapName_POWER_PLANT,
-        .desc = gText_RegionMap_AreaDesc_PowerPlant
+        .desc = sText_RegionMap_AreaDesc_PowerPlant
     }, {
         .id = MAPSEC_MT_EMBER,
         .name = sMapName_MT__EMBER,
-        .desc = gText_RegionMap_AreaDesc_MtEmber
+        .desc = sText_RegionMap_AreaDesc_MtEmber
     }, {
         .id = MAPSEC_BERRY_FOREST,
         .name = sMapName_BERRY_FOREST,
-        .desc = gText_RegionMap_AreaDesc_BerryForest
+        .desc = sText_RegionMap_AreaDesc_BerryForest
     }, {
         .id = MAPSEC_ICEFALL_CAVE,
         .name = sMapName_ICEFALL_CAVE,
-        .desc = gText_RegionMap_AreaDesc_IcefallCave
+        .desc = sText_RegionMap_AreaDesc_IcefallCave
     }, {
         .id = MAPSEC_LOST_CAVE,
         .name = sMapName_LOST_CAVE,
-        .desc = gText_RegionMap_AreaDesc_LostCave
+        .desc = sText_RegionMap_AreaDesc_LostCave
     }, {
         .id = MAPSEC_TANOBY_CHAMBERS,
         .name = sMapName_TANOBY_CHAMBERS,
-        .desc = gText_RegionMap_AreaDesc_TanobyRuins
+        .desc = sText_RegionMap_AreaDesc_TanobyRuins
     }, {
         .id = MAPSEC_ALTERING_CAVE_FRLG,
         .name = sMapName_ALTERING_CAVE,
-        .desc = gText_RegionMap_AreaDesc_AlteringCave
+        .desc = sText_RegionMap_AreaDesc_AlteringCave
     }, {
         .id = MAPSEC_PATTERN_BUSH,
         .name = sMapName_PATTERN_BUSH,
-        .desc = gText_RegionMap_AreaDesc_PatternBush
+        .desc = sText_RegionMap_AreaDesc_PatternBush
     }, {
         .id = MAPSEC_DOTTED_HOLE,
         .name = sMapName_DOTTED_HOLE,
-        .desc = gText_RegionMap_AreaDesc_DottedHole
+        .desc = sText_RegionMap_AreaDesc_DottedHole
     }, {
         .id = MAPSEC_ARTISAN_CAVE,
         .name = sMapName_ARTISAN_CAVE,
-        .desc = gText_RegionMap_AreaDesc_ArtisanCave
+        .desc = sText_RegionMap_AreaDesc_ArtisanCave
     }
 };
 
@@ -1208,8 +1238,8 @@ static void Task_RegionMap(u8 taskId)
             ShowBg(0);
             ShowBg(3);
             ShowBg(1);
-            PrintTopBarTextLeft(gText_RegionMap_DPadMove);
-            PrintTopBarTextRight(gText_RegionMap_Space);
+            PrintTopBarTextLeft(sText_RegionMap_DPadMove);
+            PrintTopBarTextRight(sText_RegionMap_Space);
             ClearOrDrawTopBar(FALSE);
             SetPlayerIconInvisibility(FALSE);
             SetMapCursorInvisibility(FALSE);
@@ -1247,11 +1277,11 @@ static void Task_RegionMap(u8 taskId)
                 {
                     if (GetSelectedMapsecType(LAYER_DUNGEON) == MAPSECTYPE_VISITED)
                     {
-                        PrintTopBarTextRight(gText_RegionMap_AButtonGuide);
+                        PrintTopBarTextRight(sText_RegionMap_AButtonGuide);
                     }
                     else
                     {
-                        PrintTopBarTextRight(gText_RegionMap_Space);
+                        PrintTopBarTextRight(sText_RegionMap_Space);
                     }
                 }
             }
@@ -1259,15 +1289,15 @@ static void Task_RegionMap(u8 taskId)
             {
                 if (GetMapCursorX() == SWITCH_BUTTON_X && GetMapCursorY() == SWITCH_BUTTON_Y && GetRegionMapPermission(MAPPERM_HAS_SWITCH_BUTTON) == TRUE)
                 {
-                    PrintTopBarTextRight(gText_RegionMap_AButtonSwitch);
+                    PrintTopBarTextRight(sText_RegionMap_AButtonSwitch);
                 }
                 else if (GetMapCursorX() == CANCEL_BUTTON_X && GetMapCursorY() == CANCEL_BUTTON_Y)
                 {
-                    PrintTopBarTextRight(gText_RegionMap_AButtonCancel);
+                    PrintTopBarTextRight(sText_RegionMap_AButtonCancel);
                 }
                 else
                 {
-                    PrintTopBarTextRight(gText_RegionMap_Space);
+                    PrintTopBarTextRight(sText_RegionMap_Space);
                 }
             }
             break;
@@ -1581,7 +1611,7 @@ static void InitSwitchMapMenu(u8 whichMap, u8 taskId, TaskFunc taskFunc)
     sSwitchMapMenu->exitTask = taskFunc;
     sSwitchMapMenu->chosenRegion = GetRegionMapPlayerIsOn();
     SaveRegionMapGpuRegs(0);
-    PrintTopBarTextRight(gText_RegionMap_AButtonOK);
+    PrintTopBarTextRight(sText_RegionMap_AButtonOK);
     gTasks[taskId].func = Task_SwitchMapMenu;
 }
 
@@ -1626,7 +1656,7 @@ static void Task_SwitchMapMenu(u8 taskId)
     {
     case 0:
         NullVBlankHBlankCallbacks();
-        PrintTopBarTextLeft(gText_RegionMap_UpDownPick);
+        PrintTopBarTextLeft(sText_RegionMap_UpDownPick);
         sSwitchMapMenu->mainState++;
         break;
     case 1:
@@ -1711,8 +1741,8 @@ static void FreeSwitchMapMenu(u8 taskId)
 {
     gTasks[taskId].func = sSwitchMapMenu->exitTask;
     HideBg(2);
-    PrintTopBarTextLeft(gText_RegionMap_DPadMove);
-    PrintTopBarTextRight(gText_RegionMap_AButtonSwitch);
+    PrintTopBarTextLeft(sText_RegionMap_DPadMove);
+    PrintTopBarTextRight(sText_RegionMap_AButtonSwitch);
     UpdateMapsecNameBox();
     DrawDungeonNameBox();
     SetGpuWindowDims(0, &sMapsecNameWindowDims[CLEAR_NAME]);
@@ -1818,7 +1848,7 @@ static bool8 HandleSwitchMapInput(void)
     if (changedSelection)
     {
         BufferRegionMapBg(0, sRegionMap->layouts[sSwitchMapMenu->currentSelection]);
-        PrintTopBarTextRight(gText_RegionMap_AButtonOK);
+        PrintTopBarTextRight(sText_RegionMap_AButtonOK);
         CopyBgTilemapBufferToVram(0);
         CopyBgTilemapBufferToVram(3);
         SetFlyIconInvisibility(0xFF, ARRAY_COUNT(sMapIcons->flyIcons), TRUE);
@@ -1921,7 +1951,7 @@ static const u8 *GetDungeonFlavorText(u16 mapsec)
         if (sDungeonInfo[i].id == mapsec)
             return sDungeonInfo[i].desc;
     }
-    return gText_RegionMap_NoData;
+    return sText_RegionMap_NoData;
 }
 
 static const u8 *GetDungeonName(u16 mapsec)
@@ -1932,7 +1962,7 @@ static const u8 *GetDungeonName(u16 mapsec)
         if (sDungeonInfo[i].id == mapsec)
             return sDungeonInfo[i].name;
     }
-    return gText_RegionMap_NoData;
+    return sText_RegionMap_NoData;
 }
 
 static void InitDungeonMapPreview(u8 unused, u8 taskId, TaskFunc taskFunc)
@@ -1992,7 +2022,7 @@ static void Task_DungeonMapPreview(u8 taskId)
         break;
     case 2:
         InitScreenForDungeonMapPreview();
-        PrintTopBarTextRight(gText_RegionMap_AButtonCancel2);
+        PrintTopBarTextRight(sText_RegionMap_AButtonCancel2);
         sDungeonMapPreview->mainState++;
         break;
     case 3:
@@ -2098,7 +2128,7 @@ static void FreeDungeonMapPreview(u8 taskId)
     DisplayCurrentDungeonName();
     UpdateMapsecNameBox();
     DrawDungeonNameBox();
-    PrintTopBarTextRight(gText_RegionMap_AButtonGuide);
+    PrintTopBarTextRight(sText_RegionMap_AButtonGuide);
     FREE_IF_NOT_NULL(sDungeonMapPreview);
 }
 
@@ -2404,11 +2434,11 @@ static void Task_MapOpenAnim(u8 taskId)
         sMapOpenCloseAnim->openState++;
         break;
     case 9:
-        PrintTopBarTextLeft(gText_RegionMap_DPadMove);
+        PrintTopBarTextLeft(sText_RegionMap_DPadMove);
         if (GetSelectedMapsecType(LAYER_DUNGEON) != MAPSECTYPE_VISITED)
-            PrintTopBarTextRight(gText_RegionMap_Space);
+            PrintTopBarTextRight(sText_RegionMap_Space);
         else
-            PrintTopBarTextRight(gText_RegionMap_AButtonGuide);
+            PrintTopBarTextRight(sText_RegionMap_AButtonGuide);
         ClearOrDrawTopBar(FALSE);
         sMapOpenCloseAnim->openState++;
         break;
@@ -3898,14 +3928,14 @@ static void Task_FlyMap(u8 taskId)
             ShowBg(0);
             ShowBg(3);
             ShowBg(1);
-            PrintTopBarTextLeft(gText_RegionMap_DPadMove);
+            PrintTopBarTextLeft(sText_RegionMap_DPadMove);
             SetFlyIconInvisibility(GetSelectedRegionMap(), ARRAY_COUNT(sMapIcons->flyIcons), FALSE);
             SetDungeonIconInvisibility(GetSelectedRegionMap(), ARRAY_COUNT(sMapIcons->dungeonIcons), FALSE);
         }
         sFlyMap->state++;
         break;
     case 2:
-        PrintTopBarTextRight(gText_RegionMap_AButtonOK);
+        PrintTopBarTextRight(sText_RegionMap_AButtonOK);
         ClearOrDrawTopBar(FALSE);
         sFlyMap->state++;
         break;
@@ -3940,15 +3970,15 @@ static void Task_FlyMap(u8 taskId)
             if (GetMapCursorX() == CANCEL_BUTTON_X && GetMapCursorY() == CANCEL_BUTTON_Y)
             {
                 PlaySE(SE_M_SPIT_UP);
-                PrintTopBarTextRight(gText_RegionMap_AButtonCancel);
+                PrintTopBarTextRight(sText_RegionMap_AButtonCancel);
             }
             else if (GetSelectedMapsecType(LAYER_MAP) == MAPSECTYPE_VISITED || GetSelectedMapsecType(LAYER_MAP) == MAPSECTYPE_BATTLE_FRONTIER)
             {
-                PrintTopBarTextRight(gText_RegionMap_AButtonOK);
+                PrintTopBarTextRight(sText_RegionMap_AButtonOK);
             }
             else
             {
-                PrintTopBarTextRight(gText_RegionMap_Space);
+                PrintTopBarTextRight(sText_RegionMap_Space);
             }
             break;
         case MAP_INPUT_A_BUTTON:

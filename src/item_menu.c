@@ -221,6 +221,12 @@ static const u8 sText_DepositedVar2Var1s[] = _("Deposited {STR_VAR_2}\n{STR_VAR_
 static const u8 sText_NoRoomForItems[] = _("There's no room to\nstore items.");
 static const u8 sText_CantStoreImportantItems[] = _("Important items\ncan't be stored in\nthe PC!");
 
+static const u8 *const sPocketNamesStringsTable[] = {
+    [POCKET_ITEMS] = COMPOUND_STRING("ITEMS"),
+    [POCKET_KEY_ITEMS] = COMPOUND_STRING("KEY ITEMS"),
+    [POCKET_POKE_BALLS] = COMPOUND_STRING("POKé BALLS"),
+};
+
 static void Task_LoadBagSortOptions(u8 taskId);
 static void ItemMenu_SortByName(u8 taskId);
 static void ItemMenu_SortByType(u8 taskId);
@@ -2660,7 +2666,7 @@ static void Task_Bag_TeachyTvTMs(u8 taskId)
 
 static void PrintPocketName(void)
 {
-    const u8 *str = gPocketNamesStringsTable[gBagPosition.pocket];
+    const u8 *str = sPocketNamesStringsTable[gBagPosition.pocket];
     u32 x = (72 - GetStringWidth(FONT_NORMAL_COPY_1, str, 0)) / 2;
 
     FillWindowPixelBuffer(WIN_POCKET_NAME, PIXEL_FILL(0));

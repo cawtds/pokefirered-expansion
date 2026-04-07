@@ -9,6 +9,7 @@
 
 // Exported ROM declarations
 
+extern const u8 gText_None[];
 extern const u8 gText_FromSpace[];
 extern const u8 gText_Lv50[];
 extern const u8 gText_OpenLevel[];
@@ -69,7 +70,6 @@ extern const u8 gText_ApostropheSBase[];
 extern const u8 gText_NoRegistry[];
 extern const u8 gText_OkayToDeleteFromRegistry[];
 extern const u8 gText_RegisteredDataDeleted[];
-extern const u8 gText_Confirm3[];
 extern const u8 gText_Cancel4[];
 extern const u8 gText_IsThisTheCorrectTime[];
 extern const u8 gText_PkmnFainted_FldPsn[];
@@ -303,6 +303,10 @@ extern const u8 gText_PkmnCantParticipate[];
 extern const u8 gText_CancelParticipation[];
 extern const u8 gText_OakThisIsListOfPokemon[];
 extern const u8 gText_PartyMenu_OK[];
+extern const u8 gText_BasePointsResetToZero[];
+extern const u8 gText_PkmnFriendlyBaseVar2Fell[];
+extern const u8 gText_PkmnFriendlyBaseVar2CantFall[];
+extern const u8 gText_PkmnAdoresBaseVar2Fell[];
 
 // Battle pyramid menu texts
 extern const u8 gText_BattlePyramidConfirmRest[];
@@ -368,8 +372,6 @@ extern const u8 gText_PkmnCantSwitchOut[];
 
 extern const u8 gString_Dummy[];
 
-extern const u8 *const gPocketNamesStringsTable[];
-
 // berry_pouch
 extern const u8 gText_Var1CantBeHeldHere[];
 extern const u8 gText_TossHowManyVar1s[];
@@ -398,7 +400,6 @@ extern const u8 gText_Player[];
 extern const u8 gText_Register[];
 
 // wallclock
-extern const u8 gText_Confirm3[];
 extern const u8 gText_Cancel4[];
 extern const u8 gText_IsThisTheCorrectTime[];
 
@@ -504,19 +505,6 @@ extern const u8 gText_WhatWouldYouLikeToDoWithPlayersMail[];
 extern const u8 gText_MessageWillBeLost[];
 extern const u8 gText_BagIsFull[];
 extern const u8 gText_MailReturnedToBagMessageErased[];
-
-// reset rtc screen texts
-extern const u8 gText_Day[];
-extern const u8 gText_Colon3[];
-extern const u8 gText_Confirm2[];
-extern const u8 gText_PresentTime[];
-extern const u8 gText_PreviousTime[];
-extern const u8 gText_ResetRTCConfirmCancel[];
-extern const u8 gText_NoSaveFileCantSetTime[];
-extern const u8 gText_PleaseResetTime[];
-extern const u8 gText_ClockHasBeenReset[];
-extern const u8 gText_SaveCompleted[];
-extern const u8 gText_SaveFailed[];
 
 // start_menu
 extern const u8 gText_MenuBag[];
@@ -752,7 +740,6 @@ extern const u8 gText_TrainerCardIDNo[];
 extern const u8 gText_TrainerCardMoney[];
 extern const u8 gText_TrainerCardYen[];
 extern const u8 gText_TrainerCardNull[];
-extern const u8 gText_Colon2[];
 extern const u8 gText_Var1sTrainerCard[];
 extern const u8 gText_HallOfFameDebut[];
 extern const u8 gText_WinLossRatio[];
@@ -760,37 +747,6 @@ extern const u8 gText_PokemonTrades[];
 extern const u8 gText_UnionRoomTradesBattles[];
 extern const u8 gText_LinkBattles[];
 extern const u8 gText_LinkCableBattles[];
-
-// region_map
-extern const u8 gText_RegionMap_DPadMove[];
-extern const u8 gText_RegionMap_Space[];
-extern const u8 gText_RegionMap_AButtonGuide[];
-extern const u8 gText_RegionMap_AButtonCancel[];
-extern const u8 gText_RegionMap_AButtonCancel2[];
-extern const u8 gText_RegionMap_AButtonSwitch[];
-extern const u8 gText_RegionMap_AButtonOK[];
-extern const u8 gText_RegionMap_UpDownPick[];
-extern const u8 gText_RegionMap_NoData[];
-extern const u8 gText_RegionMap_AreaDesc_ViridianForest[];
-extern const u8 gText_RegionMap_AreaDesc_MtMoon[];
-extern const u8 gText_RegionMap_AreaDesc_DiglettsCave[];
-extern const u8 gText_RegionMap_AreaDesc_VictoryRoad[];
-extern const u8 gText_RegionMap_AreaDesc_PokemonMansion[];
-extern const u8 gText_RegionMap_AreaDesc_SafariZone[];
-extern const u8 gText_RegionMap_AreaDesc_RockTunnel[];
-extern const u8 gText_RegionMap_AreaDesc_SeafoamIslands[];
-extern const u8 gText_RegionMap_AreaDesc_PokemonTower[];
-extern const u8 gText_RegionMap_AreaDesc_CeruleanCave[];
-extern const u8 gText_RegionMap_AreaDesc_PowerPlant[];
-extern const u8 gText_RegionMap_AreaDesc_MtEmber[];
-extern const u8 gText_RegionMap_AreaDesc_BerryForest[];
-extern const u8 gText_RegionMap_AreaDesc_IcefallCave[];
-extern const u8 gText_RegionMap_AreaDesc_LostCave[];
-extern const u8 gText_RegionMap_AreaDesc_TanobyRuins[];
-extern const u8 gText_RegionMap_AreaDesc_AlteringCave[];
-extern const u8 gText_RegionMap_AreaDesc_PatternBush[];
-extern const u8 gText_RegionMap_AreaDesc_DottedHole[];
-extern const u8 gText_RegionMap_AreaDesc_ArtisanCave[];
 
 // field_screen_effect
 extern const u8 gText_PlayerScurriedToCenter[];
@@ -882,39 +838,6 @@ extern const u8 gText_BronzeCard[];
 extern const u8 gText_CopperCard[];
 extern const u8 gText_SilverCard[];
 extern const u8 gText_GoldCard[];
-
-// berry_crush
-extern const u8 gText_BerryCrush_AreYouReady[];
-extern const u8 gText_BerryCrush_WaitForOthersToChooseBerry[];
-extern const u8 gText_BerryCrush_GainedXUnitsOfPowder[];
-extern const u8 gText_BerryCrush_RecordingGameResults[];
-extern const u8 gText_BerryCrush_WantToPlayAgain[];
-extern const u8 gText_BerryCrush_NoBerries[];
-extern const u8 gText_BerryCrush_MemberDroppedOut[];
-extern const u8 gText_BerryCrush_TimeUp[];
-extern const u8 gText_BerryCrush_CommunicationStandby[];
-extern const u8 gText_1_ClrBluShdwLtBlu_Dynamic0[];
-extern const u8 gText_1_Dynamic0[];
-extern const u8 gText_SpaceTimes2[];
-extern const u8 gText_XDotY[];
-extern const u8 gText_StrVar1Berry[];
-extern const u8 gText_TimeColon[];
-extern const u8 gText_PressingSpeed[];
-extern const u8 gText_Silkiness[];
-extern const u8 gText_StrVar1[];
-extern const u8 gText_SpaceMin[];
-extern const u8 gText_XDotY2[];
-extern const u8 gText_SpaceSec[];
-extern const u8 gText_XDotY3[];
-extern const u8 gText_TimesPerSec[];
-extern const u8 gText_Var1Percent[];
-extern const u8 gText_PressesRankings[];
-extern const u8 gText_CrushingResults[];
-extern const u8 gText_PressingSpeedRankings[];
-extern const u8 gText_Var1Players[];
-extern const u8 gText_NeatnessRankings[];
-extern const u8 gText_CooperativeRankings[];
-extern const u8 gText_PressingPowerRankings[];
 
 // quest log
 extern const u8 gText_QuestLog_PreviouslyOnYourQuest[];
@@ -1172,52 +1095,6 @@ extern const u8 gText_LevelUp_SpDef[];
 extern const u8 gText_LevelUp_Speed[];
 extern const u8 gText_LevelUp_Minus[];
 extern const u8 gText_LevelUp_Plus[];
-
-// pokemon_summary_screen
-extern const u8 gText_PokeSum_PageName_KnownMoves[];
-extern const u8 gText_PokeSum_Controls_PickSwitch[];
-extern const u8 gText_PokeSum_Controls_Pick[];
-extern const u8 gText_PokeSum_NoData[];
-extern const u8 gText_PokeSum_Controls_PageDetail[];
-extern const u8 gText_PokeSum_DexNoUnknown[];
-extern const u8 gText_PokeSum_Item_None[];
-extern const u8 gText_PokeSum_OneHyphen[];
-extern const u8 gText_PokeSum_TwoHyphens[];
-extern const u8 gText_PokeSum_PP[];
-extern const u8 gText_Somewhere[];
-extern const u8 gText_PokeSum_ATrade[];
-extern const u8 gText_PokeSum_FatefulEncounterHatched_BoldGentleGrammar[];
-extern const u8 gText_PokeSum_FatefulEncounterHatched[];
-extern const u8 gText_PokeSum_Hatched_BoldGentleGrammar[];
-extern const u8 gText_PokeSum_Hatched[];
-extern const u8 gText_PokeSum_FatefulEncounterMet_BoldGentleGrammar[];
-extern const u8 gText_PokeSum_FatefulEncounterMet[];
-extern const u8 gText_PokeSum_Met_BoldGentleGrammar[];
-extern const u8 gText_PokeSum_Met[];
-extern const u8 gText_PokeSum_MetInATrade_BoldGentleGrammar[];
-extern const u8 gText_PokeSum_MetInATrade[];
-extern const u8 gText_PokeSum_ApparentlyFatefulEncounterHatched_BoldGentleGrammar[];
-extern const u8 gText_PokeSum_ApparentlyFatefulEncounterHatched[];
-extern const u8 gText_PokeSum_ApparentlyMet[];
-extern const u8 gText_PokeSum_ApparentlyMet_BoldGentleGrammar[];
-extern const u8 gText_PokeSum_ExpPoints[];
-extern const u8 gText_PokeSum_NextLv[];
-extern const u8 gText_PokeSum_PageName_PokemonInfo[];
-extern const u8 gText_PokeSum_Controls_PageCancel[];
-extern const u8 gText_PokeSum_Controls_Cancel[];
-extern const u8 gText_PokeSum_PageName_PokemonSkills[];
-extern const u8 gText_PokeSum_Controls_Page[];
-extern const u8 gText_PokeSum_Controls_PageStats[];
-extern const u8 gText_PokeSum_Controls_PageEVs[];
-extern const u8 gText_PokeSum_Controls_PageIVs[];
-extern const u8 gText_PokeSum_Controls_PickDelete[];
-extern const u8 gText_PokeSum_HmMovesCantBeForgotten[];
-
-
-extern const u8 gText_BasePointsResetToZero[];
-extern const u8 gText_PkmnFriendlyBaseVar2Fell[];
-extern const u8 gText_PkmnFriendlyBaseVar2CantFall[];
-extern const u8 gText_PkmnAdoresBaseVar2Fell[];
 
 // Rotom Catalog text
 extern const u8 gText_LightBulb[];
