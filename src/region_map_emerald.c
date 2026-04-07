@@ -1856,61 +1856,6 @@ void TrySetPlayerIconBlink(void)
 #undef sVisible
 #undef sTimer
 
-// u8 *GetMapName(u8 *dest, mapsec_u16_t regionMapId, u16 padLength)
-// {
-//     u8 *str;
-//     u16 i;
-
-//     if (regionMapId == MAPSEC_SECRET_BASE)
-//     {
-//         str = GetSecretBaseMapName(dest);
-//     }
-//     else
-//     if (regionMapId < MAPSEC_NONE)
-//     {
-//         str = StringCopy(dest, gRegionMapEntries[regionMapId].name);
-//     }
-//     else
-//     {
-//         if (padLength == 0)
-//         {
-//             padLength = 18;
-//         }
-//         return StringFill(dest, CHAR_SPACE, padLength);
-//     }
-//     if (padLength != 0)
-//     {
-//         for (i = str - dest; i < padLength; i++)
-//         {
-//             *str++ = CHAR_SPACE;
-//         }
-//         *str = EOS;
-//     }
-//     return str;
-// }
-
-// TODO: probably needs a better name
-// u8 *GetMapNameGeneric(u8 *dest, mapsec_u16_t mapSecId)
-// {
-//     switch (mapSecId)
-//     {
-//     case MAPSEC_DYNAMIC:
-//         return StringCopy(dest, gText_Ferry);
-//     case MAPSEC_SECRET_BASE:
-//         return StringCopy(dest, gText_SecretBase);
-//     default:
-//         return GetMapName(dest, mapSecId, 0);
-//     }
-// }
-
-u8 *GetMapNameHandleAquaHideout(u8 *dest, mapsec_u16_t mapSecId)
-{
-    if (mapSecId == MAPSEC_AQUA_HIDEOUT_OLD)
-        return StringCopy(dest, gText_Hideout);
-    else
-        return GetMapNameGeneric(dest, mapSecId);
-}
-
 static void GetMapSecDimensions(mapsec_u16_t mapSecId, u16 *x, u16 *y, u16 *width, u16 *height)
 {
     *x = gRegionMapEntries[mapSecId].x;
