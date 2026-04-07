@@ -182,18 +182,6 @@
       "blockdata_filepath": "data/layouts/CeladonCity_Gym/map.bin"
     },
     {
-      "id": "LAYOUT_RS_POKEMON_CENTER_1F",
-      "name": "RS_PokemonCenter_1F_Layout",
-      "width": 14,
-      "height": 9,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_PokemonCenter",
-      "border_filepath": "data/layouts/RS_PokemonCenter_1F/border.bin",
-      "blockdata_filepath": "data/layouts/RS_PokemonCenter_1F/map.bin"
-    },
-    {
       "id": "LAYOUT_FIVE_ISLAND_RESORT_GORGEOUS_HOUSE",
       "name": "FiveIsland_ResortGorgeous_House_Layout",
       "width": 11,
@@ -326,18 +314,6 @@
       "blockdata_filepath": "data/layouts/ThreeIsland_House1/map.bin"
     },
     {
-      "id": "LAYOUT_RUSTBORO_CITY_CUTTERS_HOUSE",
-      "name": "RustboroCity_CuttersHouse_Layout",
-      "width": 11,
-      "height": 9,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/RustboroCity_CuttersHouse/border.bin",
-      "blockdata_filepath": "data/layouts/RustboroCity_CuttersHouse/map.bin"
-    },
-    {
       "id": "LAYOUT_FORTREE_CITY_HOUSE1",
       "name": "FortreeCity_House1_Layout",
       "width": 8,
@@ -396,18 +372,6 @@
       "secondary_tileset": "gTileset_ViridianGym",
       "border_filepath": "data/layouts/ViridianCity_Gym/border.bin",
       "blockdata_filepath": "data/layouts/ViridianCity_Gym/map.bin"
-    },
-    {
-      "id": "LAYOUT_RS_SAFARI_ZONE_ENTRANCE",
-      "name": "RS_SafariZone_Entrance_Layout",
-      "width": 18,
-      "height": 14,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_Mart",
-      "border_filepath": "data/layouts/RS_SafariZone_Entrance/border.bin",
-      "blockdata_filepath": "data/layouts/RS_SafariZone_Entrance/map.bin"
     },
     {
       "id": "LAYOUT_BATTLE_COLOSSEUM_2P",
@@ -470,42 +434,6 @@
       "blockdata_filepath": "data/layouts/FuchsiaCity_SafariZone_Entrance/map.bin"
     },
     {
-      "id": "LAYOUT_RS_SAFARI_ZONE_NORTHEAST",
-      "name": "RS_SafariZone_Northeast_Layout",
-      "width": 40,
-      "height": 40,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_CinnabarIsland",
-      "border_filepath": "data/layouts/RS_SafariZone_Northeast/border.bin",
-      "blockdata_filepath": "data/layouts/RS_SafariZone_Northeast/map.bin"
-    },
-    {
-      "id": "LAYOUT_RS_SAFARI_ZONE_SOUTHWEST",
-      "name": "RS_SafariZone_Southwest_Layout",
-      "width": 40,
-      "height": 40,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_CinnabarIsland",
-      "border_filepath": "data/layouts/RS_SafariZone_Southwest/border.bin",
-      "blockdata_filepath": "data/layouts/RS_SafariZone_Southwest/map.bin"
-    },
-    {
-      "id": "LAYOUT_RS_SAFARI_ZONE_SOUTHEAST",
-      "name": "RS_SafariZone_Southeast_Layout",
-      "width": 40,
-      "height": 40,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_CinnabarIsland",
-      "border_filepath": "data/layouts/RS_SafariZone_Southeast/border.bin",
-      "blockdata_filepath": "data/layouts/RS_SafariZone_Southeast/map.bin"
-    },
-    {
       "id": "LAYOUT_FORTREE_CITY_DECORATION_SHOP",
       "name": "FortreeCity_DecorationShop_Layout",
       "width": 8,
@@ -516,90 +444,6 @@
       "secondary_tileset": "gTileset_HoennBuilding",
       "border_filepath": "data/layouts/FortreeCity_DecorationShop/border.bin",
       "blockdata_filepath": "data/layouts/FortreeCity_DecorationShop/map.bin"
-    },
-    {
-      "id": "LAYOUT_RS_BATTLE_TOWER",
-      "name": "RS_BattleTower_Layout",
-      "width": 29,
-      "height": 30,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_PewterCity",
-      "border_filepath": "data/layouts/RS_BattleTower/border.bin",
-      "blockdata_filepath": "data/layouts/RS_BattleTower/map.bin"
-    },
-    {
-      "id": "LAYOUT_SS_TIDAL_CORRIDOR",
-      "name": "SSTidal_Corridor_Layout",
-      "width": 18,
-      "height": 13,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_SSAnne",
-      "border_filepath": "data/layouts/SSTidal_Corridor/border.bin",
-      "blockdata_filepath": "data/layouts/SSTidal_Corridor/map.bin"
-    },
-    {
-      "id": "LAYOUT_SS_TIDAL_LOWER_DECK",
-      "name": "SSTidal_LowerDeck_Layout",
-      "width": 17,
-      "height": 13,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_SSAnne",
-      "border_filepath": "data/layouts/SSTidal_LowerDeck/border.bin",
-      "blockdata_filepath": "data/layouts/SSTidal_LowerDeck/map.bin"
-    },
-    {
-      "id": "LAYOUT_SS_TIDAL_ROOMS",
-      "name": "SSTidal_Rooms_Layout",
-      "width": 36,
-      "height": 18,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_SSAnne",
-      "border_filepath": "data/layouts/SSTidal_Rooms/border.bin",
-      "blockdata_filepath": "data/layouts/SSTidal_Rooms/map.bin"
-    },
-    {
-      "id": "LAYOUT_RUSTBORO_CITY_FLAT2_1F",
-      "name": "RustboroCity_Flat2_1F_Layout",
-      "width": 14,
-      "height": 9,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/RustboroCity_Flat2_1F/border.bin",
-      "blockdata_filepath": "data/layouts/RustboroCity_Flat2_1F/map.bin"
-    },
-    {
-      "id": "LAYOUT_RUSTBORO_CITY_FLAT2_2F",
-      "name": "RustboroCity_Flat2_2F_Layout",
-      "width": 14,
-      "height": 9,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/RustboroCity_Flat2_2F/border.bin",
-      "blockdata_filepath": "data/layouts/RustboroCity_Flat2_2F/map.bin"
-    },
-    {
-      "id": "LAYOUT_RUSTBORO_CITY_FLAT2_3F",
-      "name": "RustboroCity_Flat2_3F_Layout",
-      "width": 14,
-      "height": 9,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/RustboroCity_Flat2_3F/border.bin",
-      "blockdata_filepath": "data/layouts/RustboroCity_Flat2_3F/map.bin"
     },
     {
       "id": "LAYOUT_EVER_GRANDE_CITY_HALL_OF_FAME",
@@ -672,42 +516,6 @@
       "secondary_tileset": "gTileset_HoennBuilding",
       "border_filepath": "data/layouts/SootopolisCity_House3/border.bin",
       "blockdata_filepath": "data/layouts/SootopolisCity_House3/map.bin"
-    },
-    {
-      "id": "LAYOUT_RUSTBORO_CITY_FLAT1_1F",
-      "name": "RustboroCity_Flat1_1F_Layout",
-      "width": 14,
-      "height": 8,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/RustboroCity_Flat1_1F/border.bin",
-      "blockdata_filepath": "data/layouts/RustboroCity_Flat1_1F/map.bin"
-    },
-    {
-      "id": "LAYOUT_RUSTBORO_CITY_FLAT1_2F",
-      "name": "RustboroCity_Flat1_2F_Layout",
-      "width": 14,
-      "height": 8,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/RustboroCity_Flat1_2F/border.bin",
-      "blockdata_filepath": "data/layouts/RustboroCity_Flat1_2F/map.bin"
-    },
-    {
-      "id": "LAYOUT_RS_SAFARI_ZONE_REST_HOUSE",
-      "name": "RS_SafariZone_RestHouse_Layout",
-      "width": 10,
-      "height": 9,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_HoennBuilding",
-      "border_filepath": "data/layouts/RS_SafariZone_RestHouse/border.bin",
-      "blockdata_filepath": "data/layouts/RS_SafariZone_RestHouse/map.bin"
     },
     {
       "id": "LAYOUT_PALLET_TOWN",
