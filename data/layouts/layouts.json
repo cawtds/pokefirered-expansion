@@ -38,18 +38,6 @@
       "blockdata_filepath": "data/layouts/PalletTown_RivalsHouse/map.bin"
     },
     {
-      "id": "LAYOUT_LITTLEROOT_TOWN_MAYS_HOUSE_2F",
-      "name": "LittlerootTown_MaysHouse_2F_Layout",
-      "width": 9,
-      "height": 8,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_GenericBuilding1",
-      "border_filepath": "data/layouts/LittlerootTown_MaysHouse_2F/border.bin",
-      "blockdata_filepath": "data/layouts/LittlerootTown_MaysHouse_2F/map.bin"
-    },
-    {
       "id": "LAYOUT_PALLET_TOWN_PROFESSOR_OAKS_LAB",
       "name": "PalletTown_ProfessorOaksLab_Layout",
       "width": 13,
@@ -156,18 +144,6 @@
       "secondary_tileset": "gTileset_GenericBuilding2",
       "border_filepath": "data/layouts/House4/border.bin",
       "blockdata_filepath": "data/layouts/House4/map.bin"
-    },
-    {
-      "id": "LAYOUT_LAVARIDGE_TOWN_HERB_SHOP",
-      "name": "LavaridgeTown_HerbShop_Layout",
-      "width": 11,
-      "height": 8,
-      "border_width": 2,
-      "border_height": 2,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_Mart",
-      "border_filepath": "data/layouts/LavaridgeTown_HerbShop/border.bin",
-      "blockdata_filepath": "data/layouts/LavaridgeTown_HerbShop/map.bin"
     },
     {
       "id": "LAYOUT_CELADON_CITY_GYM",
