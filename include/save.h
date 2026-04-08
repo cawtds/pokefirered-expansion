@@ -11,6 +11,12 @@
 
 #define NUM_SAVE_SLOTS 2
 
+// SaveBlock sizes
+#define SAVEBLOCK1_SIZE     (SECTOR_DATA_SIZE * (SECTOR_ID_SAVEBLOCK1_END - SECTOR_ID_SAVEBLOCK1_START + 1))
+#define SAVEBLOCK2_SIZE     (SECTOR_DATA_SIZE)
+#define SAVEBLOCK3_SIZE     (SAVE_BLOCK_3_CHUNK_SIZE * NUM_SECTORS_PER_SLOT)
+#define PKMN_STORAGE_SIZE   (SECTOR_DATA_SIZE * (SECTOR_ID_PKMN_STORAGE_END - SECTOR_ID_PKMN_STORAGE_START + 1))
+
 // If the sector's signature field is not this value then the sector is either invalid or empty.
 #define SECTOR_SIGNATURE 0x08012025
 

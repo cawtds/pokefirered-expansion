@@ -15,7 +15,7 @@ static bool32 IsCurMapInLocationList(const u16 *list)
     return FALSE;
 }
 
-static const u16 sSaveLocationPokeCenterList[] = 
+static const u16 sSaveLocationPokeCenterList[] =
 {
     MAP_VIRIDIAN_CITY_POKEMON_CENTER_1F, MAP_VIRIDIAN_CITY_POKEMON_CENTER_2F,
     MAP_PEWTER_CITY_POKEMON_CENTER_1F, MAP_PEWTER_CITY_POKEMON_CENTER_2F,
@@ -34,11 +34,11 @@ static const u16 sSaveLocationPokeCenterList[] =
     MAP_THREE_ISLAND_POKEMON_CENTER_1F, MAP_THREE_ISLAND_POKEMON_CENTER_2F,
     MAP_FOUR_ISLAND_POKEMON_CENTER_1F, MAP_FOUR_ISLAND_POKEMON_CENTER_2F,
     MAP_FIVE_ISLAND_POKEMON_CENTER_1F, MAP_FIVE_ISLAND_POKEMON_CENTER_2F,
-    MAP_SEVEN_ISLAND_POKEMON_CENTER_1F, MAP_SEVEN_ISLAND_POKEMON_CENTER_2F, 
+    MAP_SEVEN_ISLAND_POKEMON_CENTER_1F, MAP_SEVEN_ISLAND_POKEMON_CENTER_2F,
     MAP_SIX_ISLAND_POKEMON_CENTER_1F, MAP_SIX_ISLAND_POKEMON_CENTER_2F,
-    MAP_BATTLE_COLOSSEUM_2P, 
+    MAP_BATTLE_COLOSSEUM_2P,
     MAP_TRADE_CENTER,
-    MAP_BATTLE_COLOSSEUM_4P, 
+    MAP_BATTLE_COLOSSEUM_4P,
     MAP_UNION_ROOM,
     MAP_UNDEFINED,
 };
@@ -53,14 +53,6 @@ static const u16 sSaveLocationReloadLocList[] = { MAP_UNDEFINED };
 static bool32 IsCurMapReloadLocation(void)
 {
     return IsCurMapInLocationList(sSaveLocationReloadLocList);
-}
-
-// Nulled out list. Unknown what this would have been.
-static const u16 sEmptyMapList[] = { MAP_UNDEFINED };
-
-static bool32 IsCurMapInEmptyList(void)
-{
-    return IsCurMapInLocationList(sEmptyMapList);
 }
 
 static void TrySetPokeCenterWarpStatus(void)
@@ -79,20 +71,10 @@ static void TrySetReloadWarpStatus(void)
         gSaveBlock2Ptr->specialSaveWarpFlags |= LOBBY_SAVEWARP;
 }
 
-// Unknown save warp flag. Never set because map list is empty.
-static void TrySetUnknownWarpStatus(void)
-{
-    if (!IsCurMapInEmptyList())
-        gSaveBlock2Ptr->specialSaveWarpFlags &= ~(UNK_SPECIAL_SAVE_WARP_FLAG_3);
-    else
-        gSaveBlock2Ptr->specialSaveWarpFlags |= UNK_SPECIAL_SAVE_WARP_FLAG_3;
-}
-
 void TrySetMapSaveWarpStatus(void)
 {
     TrySetPokeCenterWarpStatus();
     TrySetReloadWarpStatus();
-    TrySetUnknownWarpStatus();
 }
 
 void SetUnlockedPokedexFlags(void)

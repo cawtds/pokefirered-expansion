@@ -864,7 +864,7 @@ static void OakOldManHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
     {
-        const u16 *trainerPal = GetTrainerBackPicPalette(gSaveBlock2Ptr->playerGender);
+        const u16 *trainerPal = GetTrainerBackPicPalette(GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION));
         BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, trainerPal, 31, Intro_TryShinyAnimShowHealthbox);
     }
     else

@@ -77,10 +77,10 @@ struct
 
 // These will produce an error if a save struct is larger than the space
 // alloted for it in the flash.
-STATIC_ASSERT(sizeof(struct SaveBlock3) <= SAVE_BLOCK_3_CHUNK_SIZE * NUM_SECTORS_PER_SLOT, SaveBlock3FreeSpace);
-STATIC_ASSERT(sizeof(struct SaveBlock2) <= SECTOR_DATA_SIZE, SaveBlock2FreeSpace);
-STATIC_ASSERT(sizeof(struct SaveBlock1) <= SECTOR_DATA_SIZE * (SECTOR_ID_SAVEBLOCK1_END - SECTOR_ID_SAVEBLOCK1_START + 1), SaveBlock1FreeSpace);
-STATIC_ASSERT(sizeof(struct PokemonStorage) <= SECTOR_DATA_SIZE * (SECTOR_ID_PKMN_STORAGE_END - SECTOR_ID_PKMN_STORAGE_START + 1), PokemonStorageFreeSpace);
+STATIC_ASSERT(sizeof(struct SaveBlock3) <= SAVEBLOCK3_SIZE, SaveBlock3FreeSpace);
+STATIC_ASSERT(sizeof(struct SaveBlock2) <= SAVEBLOCK2_SIZE, SaveBlock2FreeSpace);
+STATIC_ASSERT(sizeof(struct SaveBlock1) <= SAVEBLOCK1_SIZE, SaveBlock1FreeSpace);
+STATIC_ASSERT(sizeof(struct PokemonStorage) <= PKMN_STORAGE_SIZE, PokemonStorageFreeSpace);
 
 // Sector num to begin writing save data. Sectors are rotated each time the game is saved. (possibly to avoid wear on flash memory?)
 COMMON_DATA u16 gLastWrittenSector = 0;
