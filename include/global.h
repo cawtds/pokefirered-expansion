@@ -1041,9 +1041,9 @@ struct SaveBlock1
     u8 playerPartyCount;
     u8 rivalName[PLAYER_NAME_LENGTH + 1];
     u8 weatherCycleStage;
-#if FREE_TRAINER_HILL == FALSE
+#if FREE_TRAINER_TOWER == FALSE
     struct TrainerTower trainerTower[NUM_TOWER_CHALLENGE_TYPES];
-#endif //FREE_TRAINER_HILL
+#endif //FREE_TRAINER_TOWER
 #if FREE_MYSTERY_EVENT_BUFFERS == FALSE
     struct RamScript ramScript;
 #endif //FREE_MYSTERY_EVENT_BUFFERS
