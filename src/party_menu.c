@@ -466,6 +466,45 @@ static EWRAM_DATA u16 sEvAfter = 0;
 
 COMMON_DATA void (*gItemUseCB)(u8, TaskFunc) = NULL;
 
+static const u8 gText_ItemEffect_Attack[] = _("Attack");
+static const u8 gText_ItemEffect_Defense[] = _("Defense");
+static const u8 gText_ItemEffect_HP[] = _("HP");
+static const u8 gText_ItemEffect_SpAtk[] = _("SP. ATK");
+static const u8 gText_ItemEffect_SpDef[] = _("SP. DEF");
+static const u8 gText_ItemEffect_Speed[] = _("Speed");
+static const u8 gText_MovesPPIncreased[] = _("{STR_VAR_1}'s PP increased.{PAUSE_UNTIL_PRESS}");
+static const u8 gText_PPWasRestored[] = _("PP was restored.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_BasePointsResetToZero[] = _("{STR_VAR_1}'s base points\nwere all reset to zero!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_CancelParticipation[] = _("Cancel participation?");
+static const u8 sText_PkmnAdoresBaseVar2Fell[] = _("{STR_VAR_1} adores you!\nThe base {STR_VAR_2} fell!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnAlreadyHoldingItemSwitch[] = _("{STR_VAR_1} is already holding\none {STR_VAR_2}.\pWould you like to switch the\ntwo items?");
+static const u8 sText_PkmnAlreadyInBattle[] = _("{STR_VAR_1} is already\nin battle!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnAlreadySelected[] = _("{STR_VAR_1} has already been\nselected.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnBaseVar2StatIncreased[] = _("{STR_VAR_1}'s base {STR_VAR_2}\nstat was raised.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnBecameHealthy[] = _("{STR_VAR_1} became healthy.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnBurnHealed[] = _("{STR_VAR_1}'s burn was healed.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnCantParticipate[] = _("That POKéMON can't participate.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnCantSwitchOut[] = _("{STR_VAR_1} can't be switched\nout!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnCuredOfParalysis[] = _("{STR_VAR_1} was cured of\nparalysis.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnCuredOfPoison[] = _("{STR_VAR_1} was cured of its\npoisoning.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnElevatedToLvVar2[] = _("{STR_VAR_1} was elevated to\nLv. {STR_VAR_2}.");
+static const u8 sText_PkmnFriendlyBaseVar2CantFall[] = _("{STR_VAR_1} turned friendly.\nThe base {STR_VAR_2} can't fall!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnFriendlyBaseVar2Fell[] = _("{STR_VAR_1} turned friendly.\nThe base {STR_VAR_2} fell!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnFrostbiteHealed[] = _("{STR_VAR_1}'s frostbite was healed.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnGainedExp[] = _("{STR_VAR_1} gained {STR_VAR_2} Exp. Points!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnGainedExpAndElevatedToLvVar3[] = _("{STR_VAR_1} gained {STR_VAR_2} Exp. Points\nand was elevated to Lv. {STR_VAR_3}!");
+static const u8 sText_PkmnGotOverInfatuation[] = _("{STR_VAR_1} got over its\ninfatuation.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnHasNoEnergy[] = _("{STR_VAR_1} has no energy\nleft to battle!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnHoldingItemCantHoldMail[] = _("This POKéMON is holding an\nitem. It cannot hold MAIL.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnLearnedMove3[] = _("{STR_VAR_1} learned\n{STR_VAR_2}!");
+static const u8 sText_PkmnNotHolding[] = _("{STR_VAR_1} isn't holding\nanything.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnSnappedOutOfConfusion[] = _("{STR_VAR_1} snapped out of its\nconfusion.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnThawedOut[] = _("{STR_VAR_1} was thawed out.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnTransformed[] = _("{STR_VAR_1} transformed!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnWasGivenItem[] = _("{STR_VAR_1} was given the\n{STR_VAR_2} to hold.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnWokeUp2[] = _("{STR_VAR_1} woke up.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_ReturnToHealingSpot[] = _("Want to return to the healing spot\nused last in {STR_VAR_1}?");
+
 #include "data/party_menu.h"
 
 void InitPartyMenu(u8 menuType, u8 layout, u8 partyAction, bool8 keepCursorPos, u8 messageId, TaskFunc task, MainCallback callback)
@@ -1850,7 +1889,7 @@ static void DisplayGaveHeldItemMessage(struct Pokemon *mon, enum Item item, bool
         ItemUse_SetQuestLogEvent(QL_EVENT_GAVE_HELD_ITEM_BAG, mon, item, 0xFFFF);
     GetMonNickname(mon, gStringVar1);
     CopyItemName(item, gStringVar2);
-    StringExpandPlaceholders(gStringVar4, gText_PkmnWasGivenItem);
+    StringExpandPlaceholders(gStringVar4, sText_PkmnWasGivenItem);
     DisplayPartyMenuMessage(gStringVar4, keepOpen);
     ScheduleBgCopyTilemapToVram(2);
 }
@@ -1869,7 +1908,7 @@ static void DisplayAlreadyHoldingItemSwitchMessage(struct Pokemon *mon, enum Ite
 {
     GetMonNickname(mon, gStringVar1);
     CopyItemName(item, gStringVar2);
-    StringExpandPlaceholders(gStringVar4, gText_PkmnAlreadyHoldingItemSwitch);
+    StringExpandPlaceholders(gStringVar4, sText_PkmnAlreadyHoldingItemSwitch);
     DisplayPartyMenuMessage(gStringVar4, keepOpen);
     ScheduleBgCopyTilemapToVram(2);
 }
@@ -2097,7 +2136,7 @@ static void TryEnterMonForMinigame(u8 taskId, u8 slot)
     else
     {
         PlaySE(SE_FAILURE);
-        DisplayPartyMenuMessage(gText_PkmnCantParticipate, FALSE);
+        DisplayPartyMenuMessage(sText_PkmnCantParticipate, FALSE);
         ScheduleBgCopyTilemapToVram(2);
         gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
     }
@@ -2105,7 +2144,7 @@ static void TryEnterMonForMinigame(u8 taskId, u8 slot)
 
 static void CancelParticipationPrompt(u8 taskId)
 {
-    DisplayPartyMenuMessage(gText_CancelParticipation, TRUE);
+    DisplayPartyMenuMessage(sText_CancelParticipation, TRUE);
     ScheduleBgCopyTilemapToVram(2);
     gTasks[taskId].func = Task_CancelParticipationYesNo;
 }
@@ -3351,7 +3390,7 @@ static bool8 CreateSelectionWindow(u8 taskId)
         }
         else
         {
-            StringExpandPlaceholders(gStringVar4, gText_PkmnNotHolding);
+            StringExpandPlaceholders(gStringVar4, sText_PkmnNotHolding);
             DisplayPartyMenuMessage(gStringVar4, TRUE);
             ScheduleBgCopyTilemapToVram(2);
             gTasks[taskId].func = Task_UpdateHeldItemSprite;
@@ -3928,7 +3967,7 @@ static void CursorCB_TakeItem(u8 taskId)
     {
     case 0: // Not holding item
         GetMonNickname(mon, gStringVar1);
-        StringExpandPlaceholders(gStringVar4, gText_PkmnNotHolding);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnNotHolding);
         DisplayPartyMenuMessage(gStringVar4, TRUE);
         break;
     case 1: // No room to take item
@@ -3954,7 +3993,7 @@ static void CursorCb_Toss(u8 taskId)
     if (item == ITEM_NONE)
     {
         GetMonNickname(mon, gStringVar1);
-        StringExpandPlaceholders(gStringVar4, gText_PkmnNotHolding);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnNotHolding);
         DisplayPartyMenuMessage(gStringVar4, TRUE);
         gTasks[taskId].func = Task_UpdateHeldItemSprite;
     }
@@ -4338,7 +4377,7 @@ static void CursorCB_FieldMove(u8 taskId)
             case FIELD_MOVE_TELEPORT:
                 mapHeader = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->lastHealLocation.mapGroup, gSaveBlock1Ptr->lastHealLocation.mapNum);
                 GetMapNameGeneric(gStringVar1, mapHeader->regionMapSectionId);
-                StringExpandPlaceholders(gStringVar4, gText_ReturnToHealingSpot);
+                StringExpandPlaceholders(gStringVar4, sText_ReturnToHealingSpot);
                 DisplayFieldMoveExitAreaMessage(taskId);
                 sPartyMenuInternal->data[0] = fieldMove;
                 break;
@@ -4819,55 +4858,55 @@ static void GetMedicineItemEffectMessage(enum Item item, u32 statusCured)
     switch (GetItemEffectType(item))
     {
     case ITEM_EFFECT_CURE_POISON:
-        StringExpandPlaceholders(gStringVar4, gText_PkmnCuredOfPoison);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnCuredOfPoison);
         break;
     case ITEM_EFFECT_CURE_SLEEP:
-        StringExpandPlaceholders(gStringVar4, gText_PkmnWokeUp2);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnWokeUp2);
         break;
     case ITEM_EFFECT_CURE_BURN:
-        StringExpandPlaceholders(gStringVar4, gText_PkmnBurnHealed);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnBurnHealed);
         break;
     case ITEM_EFFECT_CURE_FREEZE_FROSTBITE:
         if (statusCured & STATUS1_FREEZE)
-            StringExpandPlaceholders(gStringVar4, gText_PkmnThawedOut);
+            StringExpandPlaceholders(gStringVar4, sText_PkmnThawedOut);
         if (statusCured & STATUS1_FROSTBITE)
-            StringExpandPlaceholders(gStringVar4, gText_PkmnFrostbiteHealed);
+            StringExpandPlaceholders(gStringVar4, sText_PkmnFrostbiteHealed);
         break;
     case ITEM_EFFECT_CURE_PARALYSIS:
-        StringExpandPlaceholders(gStringVar4, gText_PkmnCuredOfParalysis);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnCuredOfParalysis);
         break;
     case ITEM_EFFECT_CURE_CONFUSION:
-        StringExpandPlaceholders(gStringVar4, gText_PkmnSnappedOutOfConfusion);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnSnappedOutOfConfusion);
         break;
     case ITEM_EFFECT_CURE_INFATUATION:
-        StringExpandPlaceholders(gStringVar4, gText_PkmnGotOverInfatuation);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnGotOverInfatuation);
         break;
     case ITEM_EFFECT_CURE_ALL_STATUS:
-        StringExpandPlaceholders(gStringVar4, gText_PkmnBecameHealthy);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnBecameHealthy);
         break;
     case ITEM_EFFECT_HP_EV:
         StringCopy(gStringVar2, gText_ItemEffect_HP);
-        StringExpandPlaceholders(gStringVar4, gText_PkmnBaseVar2StatIncreased);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnBaseVar2StatIncreased);
         break;
     case ITEM_EFFECT_ATK_EV:
         StringCopy(gStringVar2, gText_ItemEffect_Attack);
-        StringExpandPlaceholders(gStringVar4, gText_PkmnBaseVar2StatIncreased);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnBaseVar2StatIncreased);
         break;
     case ITEM_EFFECT_DEF_EV:
         StringCopy(gStringVar2, gText_ItemEffect_Defense);
-        StringExpandPlaceholders(gStringVar4, gText_PkmnBaseVar2StatIncreased);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnBaseVar2StatIncreased);
         break;
     case ITEM_EFFECT_SPEED_EV:
         StringCopy(gStringVar2, gText_ItemEffect_Speed);
-        StringExpandPlaceholders(gStringVar4, gText_PkmnBaseVar2StatIncreased);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnBaseVar2StatIncreased);
         break;
     case ITEM_EFFECT_SPATK_EV:
         StringCopy(gStringVar2, gText_ItemEffect_SpAtk);
-        StringExpandPlaceholders(gStringVar4, gText_PkmnBaseVar2StatIncreased);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnBaseVar2StatIncreased);
         break;
     case ITEM_EFFECT_SPDEF_EV:
         StringCopy(gStringVar2, gText_ItemEffect_SpDef);
-        StringExpandPlaceholders(gStringVar4, gText_PkmnBaseVar2StatIncreased);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnBaseVar2StatIncreased);
         break;
     case ITEM_EFFECT_PP_UP:
     case ITEM_EFFECT_PP_MAX:
@@ -5423,13 +5462,13 @@ void ItemUseCB_ReduceEVStep(u8 taskId, TaskFunc task)
     if (sFriendshipBefore != sFriendshipAfter)
     {
         if (sEvBefore != sEvAfter)
-            StringExpandPlaceholders(gStringVar4, gText_PkmnFriendlyBaseVar2Fell);
+            StringExpandPlaceholders(gStringVar4, sText_PkmnFriendlyBaseVar2Fell);
         else
-            StringExpandPlaceholders(gStringVar4, gText_PkmnFriendlyBaseVar2CantFall);
+            StringExpandPlaceholders(gStringVar4, sText_PkmnFriendlyBaseVar2CantFall);
     }
     else
     {
-        StringExpandPlaceholders(gStringVar4, gText_PkmnAdoresBaseVar2Fell);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnAdoresBaseVar2Fell);
     }
     DisplayPartyMenuMessage(gStringVar4, TRUE);
     ScheduleBgCopyTilemapToVram(2);
@@ -5470,7 +5509,7 @@ void ItemUseCB_ResetEVsStep(u8 taskId, TaskFunc task)
     PlaySE(SE_USE_ITEM);
     RemoveBagItem(gSpecialVar_ItemId, 1);
     GetMonNickname(&gPlayerParty[gPartyMenu.slotId], gStringVar1);
-    StringExpandPlaceholders(gStringVar4, gText_BasePointsResetToZero);
+    StringExpandPlaceholders(gStringVar4, sText_BasePointsResetToZero);
     DisplayPartyMenuMessage(gStringVar4, TRUE);
     ScheduleBgCopyTilemapToVram(2);
     gTasks[taskId].func = task;
@@ -5742,7 +5781,7 @@ static void Task_LearnedMove(u8 taskId)
     }
     GetMonNickname(mon, gStringVar1);
     StringCopy(gStringVar2, gMovesInfo[learnMoveId].name);
-    StringExpandPlaceholders(gStringVar4, gText_PkmnLearnedMove3);
+    StringExpandPlaceholders(gStringVar4, sText_PkmnLearnedMove3);
     DisplayPartyMenuMessage(gStringVar4, TRUE);
     ScheduleBgCopyTilemapToVram(2);
     gTasks[taskId].func = Task_DoLearnedMoveFanfareAfterText;
@@ -6030,13 +6069,13 @@ static void ItemUseCB_RareCandyStep(u8 taskId, TaskFunc func)
         if (holdEffectParam == 0)
         {
             ConvertIntToDecimalStringN(gStringVar2, sFinalLevel, STR_CONV_MODE_LEFT_ALIGN, 3);
-            StringExpandPlaceholders(gStringVar4, gText_PkmnElevatedToLvVar2);
+            StringExpandPlaceholders(gStringVar4, sText_PkmnElevatedToLvVar2);
         }
         else
         {
             ConvertIntToDecimalStringN(gStringVar2, sExpCandyExperienceTable[holdEffectParam - 1], STR_CONV_MODE_LEFT_ALIGN, 6);
             ConvertIntToDecimalStringN(gStringVar3, sFinalLevel, STR_CONV_MODE_LEFT_ALIGN, 3);
-            StringExpandPlaceholders(gStringVar4, gText_PkmnGainedExpAndElevatedToLvVar3);
+            StringExpandPlaceholders(gStringVar4, sText_PkmnGainedExpAndElevatedToLvVar3);
         }
         DisplayPartyMenuMessage(gStringVar4, TRUE);
         ScheduleBgCopyTilemapToVram(2);
@@ -6046,7 +6085,7 @@ static void ItemUseCB_RareCandyStep(u8 taskId, TaskFunc func)
     {
             PlaySE(SE_USE_ITEM);
             ConvertIntToDecimalStringN(gStringVar2, sExpCandyExperienceTable[holdEffectParam - 1], STR_CONV_MODE_LEFT_ALIGN, 6);
-            StringExpandPlaceholders(gStringVar4, gText_PkmnGainedExp);
+            StringExpandPlaceholders(gStringVar4, sText_PkmnGainedExp);
             DisplayPartyMenuMessage(gStringVar4, FALSE);
             ScheduleBgCopyTilemapToVram(2);
             gTasks[taskId].func = Task_ClosePartyMenuAfterText;
@@ -6215,7 +6254,7 @@ static void DisplayMonLearnedMove(u8 taskId, enum Move move)
 {
     GetMonNickname(&gPlayerParty[gPartyMenu.slotId], gStringVar1);
     StringCopy(gStringVar2, gMovesInfo[move].name);
-    StringExpandPlaceholders(gStringVar4, gText_PkmnLearnedMove3);
+    StringExpandPlaceholders(gStringVar4, sText_PkmnLearnedMove3);
     DisplayPartyMenuMessage(gStringVar4, TRUE);
     ScheduleBgCopyTilemapToVram(2);
     gPartyMenu.learnMoveId = move;
@@ -6704,7 +6743,7 @@ static void TryGiveMailToSelectedMon(u8 taskId)
     mail = &gSaveBlock1Ptr->mail[gPlayerPcMenuManager.cursorPos + 6 + gPlayerPcMenuManager.itemsAbove];
     if (GetMonData(mon, MON_DATA_HELD_ITEM) != ITEM_NONE)
     {
-        DisplayPartyMenuMessage(gText_PkmnHoldingItemCantHoldMail, TRUE);
+        DisplayPartyMenuMessage(sText_PkmnHoldingItemCantHoldMail, TRUE);
     }
     else
     {
@@ -7039,7 +7078,7 @@ static bool8 TrySwitchInPokemon(void)
     if (GetMonData(&gPlayerParty[slot], MON_DATA_HP) == 0)
     {
         GetMonNickname(&gPlayerParty[slot], gStringVar1);
-        StringExpandPlaceholders(gStringVar4, gText_PkmnHasNoEnergy);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnHasNoEnergy);
         return FALSE;
     }
     for (i = 0; i < gBattlersCount; ++i)
@@ -7047,7 +7086,7 @@ static bool8 TrySwitchInPokemon(void)
         if (GetBattlerSide(i) == B_SIDE_PLAYER && GetPartyIdFromBattleSlot(slot) == gBattlerPartyIndexes[i])
         {
             GetMonNickname(&gPlayerParty[slot], gStringVar1);
-            StringExpandPlaceholders(gStringVar4, gText_PkmnAlreadyInBattle);
+            StringExpandPlaceholders(gStringVar4, sText_PkmnAlreadyInBattle);
             return FALSE;
         }
     }
@@ -7059,7 +7098,7 @@ static bool8 TrySwitchInPokemon(void)
     if (GetPartyIdFromBattleSlot(slot) == gBattleStruct->prevSelectedPartySlot)
     {
         GetMonNickname(&gPlayerParty[slot], gStringVar1);
-        StringExpandPlaceholders(gStringVar4, gText_PkmnAlreadySelected);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnAlreadySelected);
         return FALSE;
     }
     if (gPartyMenu.action == PARTY_ACTION_ABILITY_PREVENTS)
@@ -7072,7 +7111,7 @@ static bool8 TrySwitchInPokemon(void)
         u8 currBattler = gBattlerInMenuId;
 
         GetMonNickname(&gPlayerParty[GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[currBattler])], gStringVar1);
-        StringExpandPlaceholders(gStringVar4, gText_PkmnCantSwitchOut);
+        StringExpandPlaceholders(gStringVar4, sText_PkmnCantSwitchOut);
         return FALSE;
     }
     gSelectedMonPartyId = GetPartyIdFromBattleSlot(slot);
@@ -7741,7 +7780,7 @@ static void Task_TryItemUseFusionChange(u8 taskId)
         if (IsCryFinished())
         {
             GetMonNickname(mon, gStringVar1);
-            StringExpandPlaceholders(gStringVar4, gText_PkmnTransformed);
+            StringExpandPlaceholders(gStringVar4, sText_PkmnTransformed);
             DisplayPartyMenuMessage(gStringVar4, FALSE);
             ScheduleBgCopyTilemapToVram(2);
             gTasks[taskId].tState++;
@@ -7958,7 +7997,7 @@ static void Task_TryItemUseFormChange(u8 taskId)
         if (IsCryFinished())
         {
             GetMonNickname(mon, gStringVar1);
-            StringExpandPlaceholders(gStringVar4, gText_PkmnTransformed);
+            StringExpandPlaceholders(gStringVar4, sText_PkmnTransformed);
             DisplayPartyMenuMessage(gStringVar4, FALSE);
             ScheduleBgCopyTilemapToVram(2);
             gTasks[taskId].tState++;

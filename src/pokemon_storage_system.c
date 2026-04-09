@@ -39,7 +39,6 @@
 #include "constants/pokemon_icon.h"
 #include "constants/songs.h"
 
-
 enum
 {
     RELEASE_MON_NOT_ALLOWED,
@@ -871,6 +870,75 @@ static void TilemapUtil_Update(u8 tilemapId);
 static void TilemapUtil_DrawPrev(u8 tilemapId);
 static void TilemapUtil_Draw(u8 tilemapId);
 
+static const u8 sPCText_Bag[] = _("BAG");
+static const u8 sPCText_Beach[] = _("BEACH");
+static const u8 sPCText_Cancel[] = _("CANCEL");
+static const u8 sPCText_Cave[] = _("CAVE");
+static const u8 sPCText_City[] = _("CITY");
+static const u8 sPCText_Crag[] = _("CRAG");
+static const u8 sPCText_Desert[] = _("DESERT");
+static const u8 sPCText_Etcetera[] = _("ETCETERA");
+static const u8 sPCText_Forest[] = _("FOREST");
+static const u8 sPCText_Give[] = _("GIVE");
+static const u8 sPCText_Jump[] = _("JUMP");
+static const u8 sPCText_Machine[] = _("TILES");
+static const u8 sPCText_Mark[] = _("MARK");
+static const u8 sPCText_Move[] = _("MOVE");
+static const u8 sPCText_Name[] = _("NAME");
+static const u8 sPCText_Place[] = _("PLACE");
+static const u8 sPCText_Pokecenter[] = _("POKéCENTER");
+static const u8 sPCText_PolkaDot[] = _("STARS");
+static const u8 sPCText_Release[] = _("RELEASE");
+static const u8 sPCText_River[] = _("RIVER");
+static const u8 sPCText_Savanna[] = _("SAVANNA");
+static const u8 sPCText_Scenery1[] = _("SCENERY 1");
+static const u8 sPCText_Scenery2[] = _("SCENERY 2");
+static const u8 sPCText_Scenery3[] = _("SCENERY 3");
+static const u8 sPCText_Seafloor[] = _("SEAFLOOR");
+static const u8 sPCText_Shift[] = _("SHIFT");
+static const u8 sPCText_Simple[] = _("SIMPLE");
+static const u8 sPCText_Sky[] = _("SKY");
+static const u8 sPCText_Snow[] = _("SNOW");
+static const u8 sPCText_Store[] = _("STORE");
+static const u8 sPCText_Summary[] = _("SUMMARY");
+static const u8 sPCText_Switch[] = _("SWITCH");
+static const u8 sPCText_Take[] = _("TAKE");
+static const u8 sPCText_Volcano[] = _("VOLCANO");
+static const u8 sPCText_Wallpaper[] = _("WALLPAPER");
+static const u8 sPCText_Withdraw[] = _("WITHDRAW");
+static const u8 sText_BagIsFull2[] = _("The BAG is full.");
+static const u8 sText_Box[] = _("BOX");
+static const u8 sText_BoxIsFull2[] = _("The BOX is full.");
+static const u8 sText_ByeByePkmn[] = _("Bye-bye, {DYNAMIC 0x00}!");
+static const u8 sText_ChangedToNewItem[] = _("Changed to {DYNAMIC 0x00}.");
+static const u8 sText_ContinueBoxOperations[] = _("Continue BOX operations?");
+static const u8 sText_DepositInWhichBox[] = _("Deposit in which BOX?");
+static const u8 sText_ExitFromBox[] = _("Exit from the BOX.");
+static const u8 sText_FourEllipsesExclamation[] = _("‥ ‥ ‥ ‥ ‥!");
+static const u8 sText_GiveToAPkmn[] = _("GIVE to a POKéMON?");
+static const u8 sText_ItemIsNowHeld[] = _("{DYNAMIC 0x00} is now held.");
+static const u8 sText_JumpToWhichBox[] = _("Jump to which BOX?");
+static const u8 sText_JustOnePkmn[] = _("Can't deposit the last POKéMON!");
+static const u8 sText_MailCantBeStored[] = _("MAIL can't be stored!");
+static const u8 sText_MarkYourPkmn[] = _("Mark your POKéMON.");
+static const u8 sText_PartyFull[] = _("Can't take any more POKéMON.");
+static const u8 sText_PickTheWallpaper[] = _("Pick the wallpaper.");
+static const u8 sText_PkmnCameBack[] = _("{DYNAMIC 0x00} came back!");
+static const u8 sText_PkmnIsSelected[] = _("{DYNAMIC 0x00} is selected.");
+static const u8 sText_PkmnWasDeposited[] = _("{DYNAMIC 0x00} was deposited.");
+static const u8 sText_PkmnWasReleased[] = _("{DYNAMIC 0x00} was released.");
+static const u8 sText_PlacedItemInBag[] = _("Placed item in the BAG.");
+static const u8 sText_PleasePickATheme[] = _("Please pick a theme.");
+static const u8 sText_PleaseRemoveTheMail[] = _("Please remove the MAIL.");
+static const u8 sText_PutItemInBag[] = _("Put this item in the BAG?");
+static const u8 sText_ReleaseThisPokemon[] = _("Release this POKéMON?");
+static const u8 sText_ThatsYourLastPkmn[] = _("That's your last POKéMON!");
+static const u8 sText_WasItWorriedAboutYou[] = _("Was it worried about you?");
+static const u8 sText_WhatDoYouWantToDo[] = _("What do you want to do?");
+static const u8 sText_WhichOneWillYouTake[] = _("Which one will you take?");
+static const u8 sText_YouCantReleaseAnEgg[] = _("You can't release an EGG.");
+static const u8 sText_YoureHoldingAPkmn[] = _("You're holding a POKéMON!");
+
 struct {
     const u8 *text;
     const u8 *desc;
@@ -1038,37 +1106,37 @@ static const struct SpriteTemplate sSpriteTemplate_DisplayMon = {
 };
 
 static const struct StorageMessage sMessages[] = {
-    [MSG_EXIT_BOX]             = {gText_ExitFromBox,             MSG_FMT_NONE},
-    [MSG_WHAT_YOU_DO]          = {gText_WhatDoYouWantToDo,       MSG_FMT_NONE},
-    [MSG_PICK_A_THEME]         = {gText_PleasePickATheme,        MSG_FMT_NONE},
-    [MSG_PICK_A_WALLPAPER]     = {gText_PickTheWallpaper,        MSG_FMT_NONE},
-    [MSG_IS_SELECTED]          = {gText_PkmnIsSelected,          MSG_FMT_MON_NAME_1},
-    [MSG_JUMP_TO_WHICH_BOX]    = {gText_JumpToWhichBox,          MSG_FMT_NONE},
-    [MSG_DEPOSIT_IN_WHICH_BOX] = {gText_DepositInWhichBox,       MSG_FMT_NONE},
-    [MSG_WAS_DEPOSITED]        = {gText_PkmnWasDeposited,        MSG_FMT_MON_NAME_1},
-    [MSG_BOX_IS_FULL]          = {gText_BoxIsFull2,              MSG_FMT_NONE},
-    [MSG_RELEASE_POKE]         = {gText_ReleaseThisPokemon,      MSG_FMT_NONE},
-    [MSG_WAS_RELEASED]         = {gText_PkmnWasReleased,         MSG_FMT_RELEASE_MON_1},
-    [MSG_BYE_BYE]              = {gText_ByeByePkmn,              MSG_FMT_RELEASE_MON_3},
-    [MSG_MARK_POKE]            = {gText_MarkYourPkmn,            MSG_FMT_NONE},
-    [MSG_LAST_POKE]            = {gText_ThatsYourLastPkmn,       MSG_FMT_NONE},
+    [MSG_EXIT_BOX]             = {sText_ExitFromBox,             MSG_FMT_NONE},
+    [MSG_WHAT_YOU_DO]          = {sText_WhatDoYouWantToDo,       MSG_FMT_NONE},
+    [MSG_PICK_A_THEME]         = {sText_PleasePickATheme,        MSG_FMT_NONE},
+    [MSG_PICK_A_WALLPAPER]     = {sText_PickTheWallpaper,        MSG_FMT_NONE},
+    [MSG_IS_SELECTED]          = {sText_PkmnIsSelected,          MSG_FMT_MON_NAME_1},
+    [MSG_JUMP_TO_WHICH_BOX]    = {sText_JumpToWhichBox,          MSG_FMT_NONE},
+    [MSG_DEPOSIT_IN_WHICH_BOX] = {sText_DepositInWhichBox,       MSG_FMT_NONE},
+    [MSG_WAS_DEPOSITED]        = {sText_PkmnWasDeposited,        MSG_FMT_MON_NAME_1},
+    [MSG_BOX_IS_FULL]          = {sText_BoxIsFull2,              MSG_FMT_NONE},
+    [MSG_RELEASE_POKE]         = {sText_ReleaseThisPokemon,      MSG_FMT_NONE},
+    [MSG_WAS_RELEASED]         = {sText_PkmnWasReleased,         MSG_FMT_RELEASE_MON_1},
+    [MSG_BYE_BYE]              = {sText_ByeByePkmn,              MSG_FMT_RELEASE_MON_3},
+    [MSG_MARK_POKE]            = {sText_MarkYourPkmn,            MSG_FMT_NONE},
+    [MSG_LAST_POKE]            = {sText_ThatsYourLastPkmn,       MSG_FMT_NONE},
     [MSG_PARTY_FULL]           = {gText_YourPartysFull,          MSG_FMT_NONE},
-    [MSG_HOLDING_POKE]         = {gText_YoureHoldingAPkmn,       MSG_FMT_NONE},
-    [MSG_WHICH_ONE_WILL_TAKE]  = {gText_WhichOneWillYouTake,     MSG_FMT_NONE},
-    [MSG_CANT_RELEASE_EGG]     = {gText_YouCantReleaseAnEgg,     MSG_FMT_NONE},
-    [MSG_CONTINUE_BOX]         = {gText_ContinueBoxOperations,   MSG_FMT_NONE},
-    [MSG_CAME_BACK]            = {gText_PkmnCameBack,            MSG_FMT_MON_NAME_1},
-    [MSG_WORRIED]              = {gText_WasItWorriedAboutYou,    MSG_FMT_NONE},
-    [MSG_SURPRISE]             = {gText_FourEllipsesExclamation, MSG_FMT_NONE},
-    [MSG_PLEASE_REMOVE_MAIL]   = {gText_PleaseRemoveTheMail,     MSG_FMT_NONE},
-    [MSG_IS_SELECTED2]         = {gText_PkmnIsSelected,          MSG_FMT_ITEM_NAME},
-    [MSG_GIVE_TO_MON]          = {gText_GiveToAPkmn,             MSG_FMT_NONE},
-    [MSG_PLACED_IN_BAG]        = {gText_PlacedItemInBag,         MSG_FMT_ITEM_NAME},
-    [MSG_BAG_FULL]             = {gText_BagIsFull2,              MSG_FMT_NONE},
-    [MSG_PUT_IN_BAG]           = {gText_PutItemInBag,            MSG_FMT_NONE},
-    [MSG_ITEM_IS_HELD]         = {gText_ItemIsNowHeld,           MSG_FMT_ITEM_NAME},
-    [MSG_CHANGED_TO_ITEM]      = {gText_ChangedToNewItem,        MSG_FMT_ITEM_NAME},
-    [MSG_CANT_STORE_MAIL]      = {gText_MailCantBeStored,        MSG_FMT_NONE},
+    [MSG_HOLDING_POKE]         = {sText_YoureHoldingAPkmn,       MSG_FMT_NONE},
+    [MSG_WHICH_ONE_WILL_TAKE]  = {sText_WhichOneWillYouTake,     MSG_FMT_NONE},
+    [MSG_CANT_RELEASE_EGG]     = {sText_YouCantReleaseAnEgg,     MSG_FMT_NONE},
+    [MSG_CONTINUE_BOX]         = {sText_ContinueBoxOperations,   MSG_FMT_NONE},
+    [MSG_CAME_BACK]            = {sText_PkmnCameBack,            MSG_FMT_MON_NAME_1},
+    [MSG_WORRIED]              = {sText_WasItWorriedAboutYou,    MSG_FMT_NONE},
+    [MSG_SURPRISE]             = {sText_FourEllipsesExclamation, MSG_FMT_NONE},
+    [MSG_PLEASE_REMOVE_MAIL]   = {sText_PleaseRemoveTheMail,     MSG_FMT_NONE},
+    [MSG_IS_SELECTED2]         = {sText_PkmnIsSelected,          MSG_FMT_ITEM_NAME},
+    [MSG_GIVE_TO_MON]          = {sText_GiveToAPkmn,             MSG_FMT_NONE},
+    [MSG_PLACED_IN_BAG]        = {sText_PlacedItemInBag,         MSG_FMT_ITEM_NAME},
+    [MSG_BAG_FULL]             = {sText_BagIsFull2,              MSG_FMT_NONE},
+    [MSG_PUT_IN_BAG]           = {sText_PutItemInBag,            MSG_FMT_NONE},
+    [MSG_ITEM_IS_HELD]         = {sText_ItemIsNowHeld,           MSG_FMT_ITEM_NAME},
+    [MSG_CHANGED_TO_ITEM]      = {sText_ChangedToNewItem,        MSG_FMT_ITEM_NAME},
+    [MSG_CANT_STORE_MAIL]      = {sText_MailCantBeStored,        MSG_FMT_NONE},
 };
 
 static const struct WindowTemplate sYesNoWindowTemplate = {
@@ -1504,14 +1572,14 @@ static void Task_PCMainMenu(u8 taskId)
             {
                 // Can't withdraw
                 FillWindowPixelBuffer(0, PIXEL_FILL(1));
-                AddTextPrinterParameterized2(0, FONT_NORMAL, gText_PartyFull, 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+                AddTextPrinterParameterized2(0, FONT_NORMAL, sText_PartyFull, 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
                 task->tState = STATE_ERROR_MSG;
             }
             else if (task->tInput == OPTION_DEPOSIT && CountPartyMons() == 1)
             {
                 // Can't deposit
                 FillWindowPixelBuffer(0, PIXEL_FILL(1));
-                AddTextPrinterParameterized2(0, FONT_NORMAL, gText_JustOnePkmn, 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+                AddTextPrinterParameterized2(0, FONT_NORMAL, sText_JustOnePkmn, 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
                 task->tState = STATE_ERROR_MSG;
             }
             else
@@ -1615,7 +1683,7 @@ void ResetPokemonStorageSystem(void)
     }
     for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
     {
-        u8 *dest = StringCopy(GetBoxNamePtr(boxId), gText_Box);
+        u8 *dest = StringCopy(GetBoxNamePtr(boxId), sText_Box);
         ConvertIntToDecimalStringN(dest, boxId + 1, STR_CONV_MODE_LEFT_ALIGN, 2);
     }
 
@@ -7597,44 +7665,44 @@ static void InitMenu(void)
 }
 
 static const u8 *const sMenuTexts[] = {
-    [MENU_TEXT_CANCEL]     = gPCText_Cancel,
-    [MENU_TEXT_STORE]      = gPCText_Store,
-    [MENU_TEXT_WITHDRAW]   = gPCText_Withdraw,
-    [MENU_TEXT_MOVE]       = gPCText_Move,
-    [MENU_TEXT_SHIFT]      = gPCText_Shift,
-    [MENU_TEXT_PLACE]      = gPCText_Place,
-    [MENU_TEXT_SUMMARY]    = gPCText_Summary,
-    [MENU_TEXT_RELEASE]    = gPCText_Release,
-    [MENU_TEXT_MARK]       = gPCText_Mark,
-    [MENU_TEXT_JUMP]       = gPCText_Jump,
-    [MENU_TEXT_WALLPAPER]  = gPCText_Wallpaper,
-    [MENU_TEXT_NAME]       = gPCText_Name,
-    [MENU_TEXT_TAKE]       = gPCText_Take,
-    [MENU_TEXT_GIVE]       = gPCText_Give,
-    [MENU_TEXT_GIVE2]      = gPCText_Give,
-    [MENU_TEXT_SWITCH]     = gPCText_Switch,
-    [MENU_TEXT_BAG]        = gPCText_Bag,
+    [MENU_TEXT_CANCEL]     = sPCText_Cancel,
+    [MENU_TEXT_STORE]      = sPCText_Store,
+    [MENU_TEXT_WITHDRAW]   = sPCText_Withdraw,
+    [MENU_TEXT_MOVE]       = sPCText_Move,
+    [MENU_TEXT_SHIFT]      = sPCText_Shift,
+    [MENU_TEXT_PLACE]      = sPCText_Place,
+    [MENU_TEXT_SUMMARY]    = sPCText_Summary,
+    [MENU_TEXT_RELEASE]    = sPCText_Release,
+    [MENU_TEXT_MARK]       = sPCText_Mark,
+    [MENU_TEXT_JUMP]       = sPCText_Jump,
+    [MENU_TEXT_WALLPAPER]  = sPCText_Wallpaper,
+    [MENU_TEXT_NAME]       = sPCText_Name,
+    [MENU_TEXT_TAKE]       = sPCText_Take,
+    [MENU_TEXT_GIVE]       = sPCText_Give,
+    [MENU_TEXT_GIVE2]      = sPCText_Give,
+    [MENU_TEXT_SWITCH]     = sPCText_Switch,
+    [MENU_TEXT_BAG]        = sPCText_Bag,
     [MENU_TEXT_INFO]       = gText_Info,
-    [MENU_TEXT_SCENERY_1]  = gPCText_Scenery1,
-    [MENU_TEXT_SCENERY_2]  = gPCText_Scenery2,
-    [MENU_TEXT_SCENERY_3]  = gPCText_Scenery3,
-    [MENU_TEXT_ETCETERA]   = gPCText_Etcetera,
-    [MENU_TEXT_FOREST]     = gPCText_Forest,
-    [MENU_TEXT_CITY]       = gPCText_City,
-    [MENU_TEXT_DESERT]     = gPCText_Desert,
-    [MENU_TEXT_SAVANNA]    = gPCText_Savanna,
-    [MENU_TEXT_CRAG]       = gPCText_Crag,
-    [MENU_TEXT_VOLCANO]    = gPCText_Volcano,
-    [MENU_TEXT_SNOW]       = gPCText_Snow,
-    [MENU_TEXT_CAVE]       = gPCText_Cave,
-    [MENU_TEXT_BEACH]      = gPCText_Beach,
-    [MENU_TEXT_SEAFLOOR]   = gPCText_Seafloor,
-    [MENU_TEXT_RIVER]      = gPCText_River,
-    [MENU_TEXT_SKY]        = gPCText_Sky,
-    [MENU_TEXT_POLKADOT]   = gPCText_PolkaDot,
-    [MENU_TEXT_POKECENTER] = gPCText_Pokecenter,
-    [MENU_TEXT_MACHINE]    = gPCText_Machine,
-    [MENU_TEXT_SIMPLE]     = gPCText_Simple,
+    [MENU_TEXT_SCENERY_1]  = sPCText_Scenery1,
+    [MENU_TEXT_SCENERY_2]  = sPCText_Scenery2,
+    [MENU_TEXT_SCENERY_3]  = sPCText_Scenery3,
+    [MENU_TEXT_ETCETERA]   = sPCText_Etcetera,
+    [MENU_TEXT_FOREST]     = sPCText_Forest,
+    [MENU_TEXT_CITY]       = sPCText_City,
+    [MENU_TEXT_DESERT]     = sPCText_Desert,
+    [MENU_TEXT_SAVANNA]    = sPCText_Savanna,
+    [MENU_TEXT_CRAG]       = sPCText_Crag,
+    [MENU_TEXT_VOLCANO]    = sPCText_Volcano,
+    [MENU_TEXT_SNOW]       = sPCText_Snow,
+    [MENU_TEXT_CAVE]       = sPCText_Cave,
+    [MENU_TEXT_BEACH]      = sPCText_Beach,
+    [MENU_TEXT_SEAFLOOR]   = sPCText_Seafloor,
+    [MENU_TEXT_RIVER]      = sPCText_River,
+    [MENU_TEXT_SKY]        = sPCText_Sky,
+    [MENU_TEXT_POLKADOT]   = sPCText_PolkaDot,
+    [MENU_TEXT_POKECENTER] = sPCText_Pokecenter,
+    [MENU_TEXT_MACHINE]    = sPCText_Machine,
+    [MENU_TEXT_SIMPLE]     = sPCText_Simple,
     [MENU_SELECT]          = COMPOUND_STRING("SELECT"),
 };
 
