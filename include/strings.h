@@ -251,10 +251,8 @@ extern const u8 gText_CantSurfHere[];
 extern const u8 gText_AlreadySurfing[];
 extern const u8 gText_CurrentIsTooFast[];
 extern const u8 gText_EnjoyCycling[];
-extern const u8 gText_InUseAlready_PM[];
 extern const u8 gText_CantUseHere[];
 extern const u8 gText_NoPokemonForBattle[];
-extern const u8 gText_ChoosePokemon2[];
 extern const u8 gText_NotEnoughHp[];
 extern const u8 gText_PokemonAreNeeded[];
 extern const u8 gText_PokemonCantBeSame[];
@@ -265,16 +263,6 @@ extern const u8 gText_BoostPp[];
 extern const u8 gText_DoWhatWithItem[];
 extern const u8 gText_DoWhatWithMail[];
 extern const u8 gText_AlreadyHoldingOne[];
-extern const u8 gText_NoUse[];
-extern const u8 gText_Able[];
-extern const u8 gText_First_PM[];
-extern const u8 gText_Second_PM[];
-extern const u8 gText_Third_PM[];
-extern const u8 gText_NotAble[];
-extern const u8 gText_Able3[];
-extern const u8 gText_NotAble2[];
-extern const u8 gText_Learned[];
-extern const u8 gText_Able2[];
 extern const u8 gText_Summary5[];
 extern const u8 gText_Switch2[];
 extern const u8 gText_Item[];
@@ -307,8 +295,6 @@ extern const u8 gText_MaleSymbol[];
 extern const u8 gText_FemaleSymbol[];
 extern const u8 gText_Slash[];
 extern const u8 gText_OakImportantToGetToKnowPokemonThroughly[];
-extern const u8 gText_ThrowAwayItem[];
-extern const u8 gText_ItemThrownAway[];
 extern const u8 gText_PCMailboxFull[];
 extern const u8 gText_MailSentToPC[];
 extern const u8 gText_MailMessageWillBeLost[];
@@ -938,9 +924,6 @@ extern const u8 gText_Exit[];
 // Zygarde Cube text
 extern const u8 gText_ChangeForm[];
 extern const u8 gText_ChangeAbility[];
-
-extern const u8 gText_WhichAppliance[];
-extern const u8 gText_NextFusionMon[];
 
 // Exp. Share
 extern const u8 gText_ExpShareOn[];

@@ -466,45 +466,6 @@ static EWRAM_DATA u16 sEvAfter = 0;
 
 COMMON_DATA void (*gItemUseCB)(u8, TaskFunc) = NULL;
 
-static const u8 gText_ItemEffect_Attack[] = _("Attack");
-static const u8 gText_ItemEffect_Defense[] = _("Defense");
-static const u8 gText_ItemEffect_HP[] = _("HP");
-static const u8 gText_ItemEffect_SpAtk[] = _("SP. ATK");
-static const u8 gText_ItemEffect_SpDef[] = _("SP. DEF");
-static const u8 gText_ItemEffect_Speed[] = _("Speed");
-static const u8 gText_MovesPPIncreased[] = _("{STR_VAR_1}'s PP increased.{PAUSE_UNTIL_PRESS}");
-static const u8 gText_PPWasRestored[] = _("PP was restored.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_BasePointsResetToZero[] = _("{STR_VAR_1}'s base points\nwere all reset to zero!{PAUSE_UNTIL_PRESS}");
-static const u8 sText_CancelParticipation[] = _("Cancel participation?");
-static const u8 sText_PkmnAdoresBaseVar2Fell[] = _("{STR_VAR_1} adores you!\nThe base {STR_VAR_2} fell!{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnAlreadyHoldingItemSwitch[] = _("{STR_VAR_1} is already holding\none {STR_VAR_2}.\pWould you like to switch the\ntwo items?");
-static const u8 sText_PkmnAlreadyInBattle[] = _("{STR_VAR_1} is already\nin battle!{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnAlreadySelected[] = _("{STR_VAR_1} has already been\nselected.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnBaseVar2StatIncreased[] = _("{STR_VAR_1}'s base {STR_VAR_2}\nstat was raised.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnBecameHealthy[] = _("{STR_VAR_1} became healthy.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnBurnHealed[] = _("{STR_VAR_1}'s burn was healed.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnCantParticipate[] = _("That POKéMON can't participate.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnCantSwitchOut[] = _("{STR_VAR_1} can't be switched\nout!{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnCuredOfParalysis[] = _("{STR_VAR_1} was cured of\nparalysis.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnCuredOfPoison[] = _("{STR_VAR_1} was cured of its\npoisoning.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnElevatedToLvVar2[] = _("{STR_VAR_1} was elevated to\nLv. {STR_VAR_2}.");
-static const u8 sText_PkmnFriendlyBaseVar2CantFall[] = _("{STR_VAR_1} turned friendly.\nThe base {STR_VAR_2} can't fall!{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnFriendlyBaseVar2Fell[] = _("{STR_VAR_1} turned friendly.\nThe base {STR_VAR_2} fell!{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnFrostbiteHealed[] = _("{STR_VAR_1}'s frostbite was healed.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnGainedExp[] = _("{STR_VAR_1} gained {STR_VAR_2} Exp. Points!{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnGainedExpAndElevatedToLvVar3[] = _("{STR_VAR_1} gained {STR_VAR_2} Exp. Points\nand was elevated to Lv. {STR_VAR_3}!");
-static const u8 sText_PkmnGotOverInfatuation[] = _("{STR_VAR_1} got over its\ninfatuation.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnHasNoEnergy[] = _("{STR_VAR_1} has no energy\nleft to battle!{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnHoldingItemCantHoldMail[] = _("This POKéMON is holding an\nitem. It cannot hold MAIL.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnLearnedMove3[] = _("{STR_VAR_1} learned\n{STR_VAR_2}!");
-static const u8 sText_PkmnNotHolding[] = _("{STR_VAR_1} isn't holding\nanything.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnSnappedOutOfConfusion[] = _("{STR_VAR_1} snapped out of its\nconfusion.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnThawedOut[] = _("{STR_VAR_1} was thawed out.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnTransformed[] = _("{STR_VAR_1} transformed!{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnWasGivenItem[] = _("{STR_VAR_1} was given the\n{STR_VAR_2} to hold.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PkmnWokeUp2[] = _("{STR_VAR_1} woke up.{PAUSE_UNTIL_PRESS}");
-static const u8 sText_ReturnToHealingSpot[] = _("Want to return to the healing spot\nused last in {STR_VAR_1}?");
-
 #include "data/party_menu.h"
 
 void InitPartyMenu(u8 menuType, u8 layout, u8 partyAction, bool8 keepCursorPos, u8 messageId, TaskFunc task, MainCallback callback)
@@ -3753,7 +3714,7 @@ static void CursorCB_Cancel1(u8 taskId)
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
     if (gPartyMenu.menuType == PARTY_MENU_TYPE_DAYCARE)
-        DisplayPartyMenuStdMessage(PARTY_MSG_CHOOSE_MON_2);
+        DisplayPartyMenuStdMessage(PARTY_MSG_CHOOSE_MON_DAYCARE);
     else
         DisplayPartyMenuStdMessage(PARTY_MSG_CHOOSE_MON);
     gTasks[taskId].func = Task_HandleChooseMonInput;
@@ -4000,7 +3961,7 @@ static void CursorCb_Toss(u8 taskId)
     else
     {
         CopyItemName(item, gStringVar1);
-        StringExpandPlaceholders(gStringVar4, gText_ThrowAwayItem);
+        StringExpandPlaceholders(gStringVar4, sText_ThrowAwayItem);
         DisplayPartyMenuMessage(gStringVar4, TRUE);
         gTasks[taskId].func = Task_TossHeldItemYesNo;
     }
@@ -4023,7 +3984,7 @@ static void Task_HandleTossHeldItemYesNoInput(u8 taskId)
     {
     case 0:
         CopyItemName(GetMonData(mon, MON_DATA_HELD_ITEM), gStringVar1);
-        StringExpandPlaceholders(gStringVar4, gText_ItemThrownAway);
+        StringExpandPlaceholders(gStringVar4, sText_ItemThrownAway);
         DisplayPartyMenuMessage(gStringVar4, FALSE);
         gTasks[taskId].func = Task_TossHeldItem;
         break;
@@ -7447,7 +7408,7 @@ static void SlideMultiPartyMenuBoxSpritesOneStep(u8 taskId)
 void ChooseMonForDaycare(void)
 {
     gFieldCallback2 = CB2_FadeFromPartyMenu;
-    InitPartyMenu(PARTY_MENU_TYPE_DAYCARE, PARTY_LAYOUT_SINGLE, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_CHOOSE_MON_2, Task_HandleChooseMonInput, CB2_ReturnToField);
+    InitPartyMenu(PARTY_MENU_TYPE_DAYCARE, PARTY_LAYOUT_SINGLE, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_CHOOSE_MON_DAYCARE, Task_HandleChooseMonInput, CB2_ReturnToField);
 }
 
 static void BufferMonSelection(void)
