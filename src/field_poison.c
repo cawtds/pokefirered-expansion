@@ -16,6 +16,12 @@
 #include "constants/field_poison.h"
 #include "constants/form_change_types.h"
 
+#if OW_POISON_DAMAGE < GEN_4
+static const u8 sText_PkmnFainted_FldPsn[] = _("{STR_VAR_1} fainted…\p\n");
+#else
+static const u8 sText_PkmnFainted_FldPsn[] = _("{STR_VAR_1} survived the poisoning.\nThe poison faded away!\p");
+#endif
+
 static bool32 IsMonValidSpecies(struct Pokemon *pokemon)
 {
     enum Species species = GetMonData(pokemon, MON_DATA_SPECIES_OR_EGG);
@@ -67,7 +73,7 @@ static void Task_TryFieldPoisonWhiteOut(u8 taskId)
             if (MonFaintedFromPoison(tPartyId))
             {
                 FaintFromFieldPoison(tPartyId);
-                ShowFieldMessage(gText_PkmnFainted_FldPsn);
+                ShowFieldMessage(sText_PkmnFainted_FldPsn);
                 tState++;
                 return;
             }

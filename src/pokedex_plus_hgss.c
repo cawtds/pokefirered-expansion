@@ -231,6 +231,11 @@ static const u8 sText_FORMS_Buttons_Submenu_Decapped_PE[] = _("{START_BUTTON}Evo
 static const u8 sText_FORMS_NONE[] = _("{STR_VAR_1} has no alternate forms.");
 static const u8 sText_PlusSymbol[] = _("+");
 
+static const u8 sText_Power[] = _("POWER");
+static const u8 sText_Accuracy2[] = _("ACCURACY");
+static const u8 sText_Appeal[] = _("APPEAL");
+static const u8 sText_Jam[] = _("JAM");
+
 // static .rodata graphics
 
 static const u16 sPokedexPlusHGSS_Default_Pal[] = INCBIN_U16("graphics/pokedex/hgss/palette_default.gbapal");
@@ -5292,13 +5297,13 @@ static void PrintStatsScreen_Moves_BottomText(u8 taskId)
     u8 moves_y = 3;
     if (gTasks[taskId].data[5] == 0)
     {
-        PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, gText_Power,  moves_x, moves_y);
-        PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, gText_Accuracy2,  moves_x + 66, moves_y);
+        PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, sText_Power,  moves_x, moves_y);
+        PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, sText_Accuracy2,  moves_x + 66, moves_y);
     }
     else
     {
-        PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, gText_Appeal,  moves_x, moves_y);
-        PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, gText_Jam,  moves_x + 66, moves_y);
+        PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, sText_Appeal,  moves_x, moves_y);
+        PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, sText_Jam,  moves_x + 66, moves_y);
     }
 }
 

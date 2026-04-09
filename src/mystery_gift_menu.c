@@ -34,11 +34,69 @@ static void CreateMysteryGiftTask(void);
 void Task_MysteryGift(u8 taskId);
 extern void CreateEReaderTask(void);
 
-static const u16 sTextboxBorder_Pal[] = INCBIN_U16("graphics/interface/mystery_gift_textbox_border.gbapal");
-static const u32 sTextboxBorder_Gfx[] = INCBIN_U32("graphics/interface/mystery_gift_textbox_border.4bpp.smol");
-
+static const u8 sText_VarietyOfEventsImportedWireless[] = _("A variety of events will be imported\nover Wireless Communication.");
+static const u8 sText_WonderCardsInPossession[] = _("Read the WONDER CARDS in your\npossession.");
+static const u8 sText_ReadNewsThatArrived[] = _("Read the NEWS that arrived.");
+static const u8 sText_ReturnToTitle[] = _("Return to the title screen.");
+static const u8 sText_DontHaveCardNewOneInput[] = _("You don't have a WONDER CARD,\nso a new CARD will be input.");
+static const u8 sText_DontHaveNewsNewOneInput[] = _("You don't have any WONDER NEWS,\nso new NEWS will be input.");
+static const u8 sText_WhereShouldCardBeAccessed[] = _("Where should the WONDER CARD\nbe accessed?");
+static const u8 sText_WhereShouldNewsBeAccessed[] = _("Where should the WONDER NEWS\nbe accessed?");
+static const u8 sText_LinkStandyBButtonCancel[] = _("Link standby...\n... ... B Button: Cancel");
+static const u8 sText_Communicating[] = _("Communicating…");
+static const u8 sText_CommunicationCompleted[] = _("Communication completed.");
+static const u8 sText_CommunicationCanceled[] = _("Communication has been canceled.");
+static const u8 sText_ThrowAwayWonderCard[] = _("Throw away the WONDER CARD\nand input a new CARD?");
+static const u8 sText_HaventReceivedCardsGift[] = _("You haven't received the CARD's gift\nyet. Input a new CARD anyway?");
+static const u8 sText_WonderCardReceivedFrom[] = _("A WONDER CARD has been received\nfrom {STR_VAR_1}.");
+static const u8 sText_WonderNewsReceivedFrom[] = _("A WONDER NEWS item has been\nreceived from {STR_VAR_1}.");
+static const u8 sText_WonderCardReceived[] = _("A new WONDER CARD has been\nreceived.");
+static const u8 sText_WonderNewsReceived[] = _("A new WONDER NEWS item has been\nreceived.");
+static const u8 sText_NewStampReceived[] = _("A new STAMP has been received.");
+static const u8 sText_NewTrainerReceived[] = _("A new TRAINER has arrived.");
+static const u8 sText_AlreadyHadCard[] = _("You already had that\nWONDER CARD.");
+static const u8 sText_AlreadyHadNews[] = _("You already had that\nWONDER NEWS item.");
+static const u8 sText_AlreadyHadStamp[] = _("You already had that\nSTAMP.");
+static const u8 sText_NoMoreRoomForStamps[] = _("There's no more room for adding\nSTAMPS.");
+static const u8 sText_RecordUploadedViaWireless[] = _("Your record has been uploaded via\nWIRELESS COMMUNICATION.");
+static const u8 sText_CantAcceptCardFromTrainer[] = _("You can't accept a WONDER CARD\nfrom this TRAINER.");
+static const u8 sText_CantAcceptNewsFromTrainer[] = _("You can't accept WONDER NEWS\nfrom this TRAINER.");
+static const u8 sText_NothingSentOver[] = _("Nothing was sent over…");
+static const u8 sText_WhatToDoWithCards[] = _("What would you like to do\nwith the WONDER CARDS?");
+static const u8 sText_WhatToDoWithNews[] = _("What would you like to do\nwith the WONDER NEWS?");
+static const u8 sText_SendingWonderCard[] = _("Sending your WONDER CARD…");
+static const u8 sText_SendingWonderNews[] = _("Sending your WONDER NEWS item…");
+static const u8 sText_WonderCardSentTo[] = _("Your WONDER CARD has been sent\nto {STR_VAR_1}.");
+static const u8 sText_WonderNewsSentTo[] = _("Your WONDER NEWS item has been\nsent to {STR_VAR_1}.");
+static const u8 sText_StampSentTo[] = _("A STAMP has been sent to {STR_VAR_1}.");
+static const u8 sText_GiftSentTo[] = _("A GIFT has been sent to {STR_VAR_1}.");
+static const u8 sText_OtherTrainerHasCard[] = _("The other TRAINER has the same\nWONDER CARD already.");
+static const u8 sText_OtherTrainerHasNews[] = _("The other TRAINER has the same\nWONDER NEWS already.");
+static const u8 sText_OtherTrainerHasStamp[] = _("The other TRAINER has the same\nSTAMP already.");
+static const u8 sText_OtherTrainerCanceled[] = _("The other TRAINER canceled\ncommunication.");
+static const u8 sText_CantSendGiftToTrainer[] = _("You can't send a MYSTERY GIFT to\nthis TRAINER.");
+static const u8 sText_IfThrowAwayCardEventWontHappen[] = _("If you throw away the CARD,\nits event won't happen. Okay?");
+static const u8 sText_OkayToDiscardNews[] = _("Is it okay to discard this\nNEWS item?");
+static const u8 sText_HaventReceivedGiftOkayToDiscard[] = _("You haven't received the\nGIFT. Is it okay to discard?");
+static const u8 sText_DataWillBeSaved[] = _("Data will be saved.\nPlease wait.");
+static const u8 sText_SaveCompletedPressA[] = _("Save completed.\nPlease press the A Button.");
+static const u8 sText_WonderCardThrownAway[] = _("The WONDER CARD was thrown away.");
+static const u8 sText_WonderNewsThrownAway[] = _("The WONDER NEWS was thrown away.");
+static const u8 sText_MysteryGift2[] = _("MYSTERY GIFT");
+static const u8 sText_PickOKCancel[] = _("{DPAD_UPDOWN}PICK {A_BUTTON}OK {B_BUTTON}EXIT");
+static const u8 sText_WonderCards[] = _("WONDER CARDS");
+static const u8 sText_WonderNews[] = _("WONDER NEWS");
+static const u8 sText_WirelessCommunication[] = _("WIRELESS COMMUNICATION");
+static const u8 sText_Friend2[] = _("FRIEND");
+static const u8 sText_Exit3[] = _("EXIT");
+static const u8 sText_Receive[] = _("RECEIVE");
+static const u8 sText_Send[] = _("SEND");
+static const u8 sText_Toss[] = _("TOSS");
 static const u8 sJPText_MysteryGift[] = _("");
 static const u8 sJPText_DecideStop[] = _("");
+
+static const u16 sTextboxBorder_Pal[] = INCBIN_U16("graphics/interface/mystery_gift_textbox_border.gbapal");
+static const u32 sTextboxBorder_Gfx[] = INCBIN_U32("graphics/interface/mystery_gift_textbox_border.4bpp.smol");
 
 struct MysteryGiftTaskData
 {
@@ -202,14 +260,14 @@ static const struct WindowTemplate sWindowTemplate_GiftSelect_1Option = {
 };
 
 static const struct ListMenuItem sListMenuItems_CardsOrNews[] = {
-    { gText_WonderCards,  0 },
-    { gText_WonderNews,   1 },
-    { gText_Exit3,        LIST_CANCEL }
+    { sText_WonderCards,  0 },
+    { sText_WonderNews,   1 },
+    { sText_Exit3,        LIST_CANCEL }
 };
 
 static const struct ListMenuItem sListMenuItems_WirelessOrFriend[] = {
-    { gText_WirelessCommunication,  0 },
-    { gText_Friend2,                1 },
+    { sText_WirelessCommunication,  0 },
+    { sText_Friend2,                1 },
     { gFameCheckerText_Cancel,      LIST_CANCEL }
 };
 
@@ -235,26 +293,26 @@ static const struct ListMenuTemplate sListMenuTemplate_ThreeOptions = {
 };
 
 static const struct ListMenuItem sListMenuItems_ReceiveSendToss[] = {
-    { gText_Receive,  0 },
-    { gText_Send,     1 },
-    { gText_Toss,     2 },
+    { sText_Receive,  0 },
+    { sText_Send,     1 },
+    { sText_Toss,     2 },
     { gFameCheckerText_Cancel, LIST_CANCEL }
 };
 
 static const struct ListMenuItem sListMenuItems_ReceiveToss[] = {
-    { gText_Receive,  0 },
-    { gText_Toss,     2 },
+    { sText_Receive,  0 },
+    { sText_Toss,     2 },
     { gFameCheckerText_Cancel, LIST_CANCEL }
 };
 
 static const struct ListMenuItem sListMenuItems_ReceiveSend[] = {
-    { gText_Receive,  0 },
-    { gText_Send,     1 },
+    { sText_Receive,  0 },
+    { sText_Send,     1 },
     { gFameCheckerText_Cancel, LIST_CANCEL }
 };
 
 static const struct ListMenuItem sListMenuItems_Receive[] = {
-    { gText_Receive,  0 },
+    { sText_Receive,  0 },
     { gFameCheckerText_Cancel, LIST_CANCEL }
 };
 
@@ -343,10 +401,10 @@ static const struct ListMenuTemplate sListMenu_Receive = {
 };
 
 static const u8 *const sUnusedMenuTexts[] = {
-    gText_VarietyOfEventsImportedWireless,
-    gText_WonderCardsInPossession,
-    gText_ReadNewsThatArrived,
-    gText_ReturnToTitle
+    sText_VarietyOfEventsImportedWireless,
+    sText_WonderCardsInPossession,
+    sText_ReadNewsThatArrived,
+    sText_ReturnToTitle
 };
 
 ALIGNED(4) static const u8 sTextColors_TopMenu[3]      = { 0, 1, 2 };
@@ -474,8 +532,8 @@ void PrintMysteryGiftOrEReaderTopMenu(bool8 isEReader, bool32 useCancel)
     FillWindowPixelBuffer(0, 0x00);
     if (!isEReader)
     {
-        options = useCancel == TRUE ? gText_PickOKExit : gText_PickOKCancel;
-        AddTextPrinterParameterized4(0, FONT_NORMAL, 2, 2, 0, 0, sTextColors_TopMenu, 0, gText_MysteryGift2);
+        options = useCancel == TRUE ? gText_PickOKExit : sText_PickOKCancel;
+        AddTextPrinterParameterized4(0, FONT_NORMAL, 2, 2, 0, 0, sTextColors_TopMenu, 0, sText_MysteryGift2);
         width = 222 - GetStringWidth(FONT_SMALL, options, 0);
         AddTextPrinterParameterized4(0, FONT_SMALL, width, 2, 0, 0, sTextColors_TopMenu, 0, options);
     }
@@ -689,9 +747,9 @@ static s32 HandleMysteryGiftListMenu(u8 * textState, u16 * windowId, bool32 cann
     case 0:
         // Print menu message
         if (!cannotToss)
-            StringExpandPlaceholders(gStringVar4, gText_WhatToDoWithCards);
+            StringExpandPlaceholders(gStringVar4, sText_WhatToDoWithCards);
         else
-            StringExpandPlaceholders(gStringVar4, gText_WhatToDoWithNews);
+            StringExpandPlaceholders(gStringVar4, sText_WhatToDoWithNews);
         *windowId = AddWindow(&sWindowTemplate_GiftSelect);
         FillWindowPixelBuffer(*windowId, 0x11);
         AddTextPrinterParameterized4(*windowId, FONT_NORMAL, 0, 2, 0, 2, sMG_Ereader_TextColor_2, 0, gStringVar4);
@@ -815,17 +873,17 @@ static bool32 ExitWonderCardOrNews(bool32 isWonderNews, bool32 useCancel)
 static s32 AskDiscardGift(u8 * textState, u16 * windowId, bool32 isWonderNews)
 {
     if (!isWonderNews)
-        return DoMysteryGiftYesNo(textState, windowId, TRUE, gText_IfThrowAwayCardEventWontHappen);
+        return DoMysteryGiftYesNo(textState, windowId, TRUE, sText_IfThrowAwayCardEventWontHappen);
     else
-        return DoMysteryGiftYesNo(textState, windowId, TRUE, gText_OkayToDiscardNews);
+        return DoMysteryGiftYesNo(textState, windowId, TRUE, sText_OkayToDiscardNews);
 }
 
 static bool32 PrintThrownAway(u8 * textState, bool32 isWonderNews)
 {
     if (!isWonderNews)
-        return PrintMysteryGiftMenuMessage(textState, gText_WonderCardThrownAway);
+        return PrintMysteryGiftMenuMessage(textState, sText_WonderCardThrownAway);
     else
-        return PrintMysteryGiftMenuMessage(textState, gText_WonderNewsThrownAway);
+        return PrintMysteryGiftMenuMessage(textState, sText_WonderNewsThrownAway);
 }
 
 static bool32 SaveOnMysteryGiftMenu(u8 * state)
@@ -833,7 +891,7 @@ static bool32 SaveOnMysteryGiftMenu(u8 * state)
     switch (*state)
     {
     case 0:
-        AddTextPrinterToWindow1(gText_DataWillBeSaved);
+        AddTextPrinterToWindow1(sText_DataWillBeSaved);
         (*state)++;
         break;
     case 1:
@@ -841,7 +899,7 @@ static bool32 SaveOnMysteryGiftMenu(u8 * state)
         (*state)++;
         break;
     case 2:
-        AddTextPrinterToWindow1(gText_SaveCompletedPressA);
+        AddTextPrinterToWindow1(sText_SaveCompletedPressA);
         (*state)++;
         break;
     case 3:
@@ -866,47 +924,47 @@ static const u8 * GetClientResultMessage(bool32 * successMsg, bool8 isWonderNews
     {
     case CLI_MSG_NOTHING_SENT:
         *successMsg = FALSE;
-        msg = gText_NothingSentOver;
+        msg = sText_NothingSentOver;
         break;
     case CLI_MSG_RECORD_UPLOADED:
         *successMsg = FALSE;
-        msg = gText_RecordUploadedViaWireless;
+        msg = sText_RecordUploadedViaWireless;
         break;
     case CLI_MSG_CARD_RECEIVED:
         *successMsg = TRUE;
-        msg = !sourceIsFriend ? gText_WonderCardReceived : gText_WonderCardReceivedFrom;
+        msg = !sourceIsFriend ? sText_WonderCardReceived : sText_WonderCardReceivedFrom;
         break;
     case CLI_MSG_NEWS_RECEIVED:
         *successMsg = TRUE;
-        msg = !sourceIsFriend ? gText_WonderNewsReceived : gText_WonderNewsReceivedFrom;
+        msg = !sourceIsFriend ? sText_WonderNewsReceived : sText_WonderNewsReceivedFrom;
         break;
     case CLI_MSG_STAMP_RECEIVED:
         *successMsg = TRUE;
-        msg = gText_NewStampReceived;
+        msg = sText_NewStampReceived;
         break;
     case CLI_MSG_HAD_CARD:
         *successMsg = FALSE;
-        msg = gText_AlreadyHadCard;
+        msg = sText_AlreadyHadCard;
         break;
     case CLI_MSG_HAD_STAMP:
         *successMsg = FALSE;
-        msg = gText_AlreadyHadStamp;
+        msg = sText_AlreadyHadStamp;
         break;
     case CLI_MSG_HAD_NEWS:
         *successMsg = FALSE;
-        msg = gText_AlreadyHadNews;
+        msg = sText_AlreadyHadNews;
         break;
     case CLI_MSG_NO_ROOM_STAMPS:
         *successMsg = FALSE;
-        msg = gText_NoMoreRoomForStamps;
+        msg = sText_NoMoreRoomForStamps;
         break;
     case CLI_MSG_COMM_CANCELED:
         *successMsg = FALSE;
-        msg = gText_CommunicationCanceled;
+        msg = sText_CommunicationCanceled;
         break;
     case CLI_MSG_CANT_ACCEPT:
         *successMsg = FALSE;
-        msg = !isWonderNews ? gText_CantAcceptCardFromTrainer : gText_CantAcceptNewsFromTrainer;
+        msg = !isWonderNews ? sText_CantAcceptCardFromTrainer : sText_CantAcceptNewsFromTrainer;
         break;
     case CLI_MSG_COMM_ERROR:
         *successMsg = FALSE;
@@ -914,7 +972,7 @@ static const u8 * GetClientResultMessage(bool32 * successMsg, bool8 isWonderNews
         break;
     case CLI_MSG_TRAINER_RECEIVED:
         *successMsg = TRUE;
-        msg = gText_NewTrainerReceived;
+        msg = sText_NewTrainerReceived;
         break;
     case CLI_MSG_BUFFER_SUCCESS:
         *successMsg = TRUE;
@@ -963,51 +1021,51 @@ static const u8 * GetServerResultMessage(bool32 * wonderSuccess, u8 unused, u32 
     switch (msgId)
     {
     case SVR_MSG_NOTHING_SENT:
-        result = gText_NothingSentOver;
+        result = sText_NothingSentOver;
         break;
     case SVR_MSG_RECORD_UPLOADED:
-        result = gText_RecordUploadedViaWireless;
+        result = sText_RecordUploadedViaWireless;
         break;
     case SVR_MSG_CARD_SENT:
-        result = gText_WonderCardSentTo;
+        result = sText_WonderCardSentTo;
         *wonderSuccess = TRUE;
         break;
     case SVR_MSG_NEWS_SENT:
-        result = gText_WonderNewsSentTo;
+        result = sText_WonderNewsSentTo;
         *wonderSuccess = TRUE;
         break;
     case SVR_MSG_STAMP_SENT:
-        result = gText_StampSentTo;
+        result = sText_StampSentTo;
         break;
     case SVR_MSG_HAS_CARD:
-        result = gText_OtherTrainerHasCard;
+        result = sText_OtherTrainerHasCard;
         break;
     case SVR_MSG_HAS_STAMP:
-        result = gText_OtherTrainerHasStamp;
+        result = sText_OtherTrainerHasStamp;
         break;
     case SVR_MSG_HAS_NEWS:
-        result = gText_OtherTrainerHasNews;
+        result = sText_OtherTrainerHasNews;
         break;
     case SVR_MSG_NO_ROOM_STAMPS:
-        result = gText_NoMoreRoomForStamps;
+        result = sText_NoMoreRoomForStamps;
         break;
     case SVR_MSG_CLIENT_CANCELED:
-        result = gText_OtherTrainerCanceled;
+        result = sText_OtherTrainerCanceled;
         break;
     case SVR_MSG_CANT_SEND_GIFT_1:
-        result = gText_CantSendGiftToTrainer;
+        result = sText_CantSendGiftToTrainer;
         break;
     case SVR_MSG_COMM_ERROR:
         result = gText_CommunicationError;
         break;
     case SVR_MSG_GIFT_SENT_1:
-        result = gText_GiftSentTo;
+        result = sText_GiftSentTo;
         break;
     case SVR_MSG_GIFT_SENT_2:
-        result = gText_GiftSentTo;
+        result = sText_GiftSentTo;
         break;
     case SVR_MSG_CANT_SEND_GIFT_2:
-        result = gText_CantSendGiftToTrainer;
+        result = sText_CantSendGiftToTrainer;
         break;
     }
     return result;
@@ -1126,7 +1184,7 @@ void Task_MysteryGift(u8 taskId)
         // Start prompt to ask where to read one from
         if (!data->isWonderNews)
         {
-            if (PrintMysteryGiftMenuMessage(&data->textState, gText_DontHaveCardNewOneInput))
+            if (PrintMysteryGiftMenuMessage(&data->textState, sText_DontHaveCardNewOneInput))
             {
                 data->state = MG_STATE_SOURCE_PROMPT;
                 PrintMysteryGiftOrEReaderTopMenu(FALSE, TRUE);
@@ -1134,7 +1192,7 @@ void Task_MysteryGift(u8 taskId)
         }
         else
         {
-            if (PrintMysteryGiftMenuMessage(&data->textState, gText_DontHaveNewsNewOneInput))
+            if (PrintMysteryGiftMenuMessage(&data->textState, sText_DontHaveNewsNewOneInput))
             {
                 data->state = MG_STATE_SOURCE_PROMPT;
                 PrintMysteryGiftOrEReaderTopMenu(FALSE, TRUE);
@@ -1144,9 +1202,9 @@ void Task_MysteryGift(u8 taskId)
     }
     case MG_STATE_SOURCE_PROMPT:
         if (!data->isWonderNews)
-            AddTextPrinterToWindow1(gText_WhereShouldCardBeAccessed);
+            AddTextPrinterToWindow1(sText_WhereShouldCardBeAccessed);
         else
-            AddTextPrinterToWindow1(gText_WhereShouldNewsBeAccessed);
+            AddTextPrinterToWindow1(sText_WhereShouldNewsBeAccessed);
         data->state = MG_STATE_SOURCE_PROMPT_INPUT;
         break;
     case MG_STATE_SOURCE_PROMPT_INPUT:
@@ -1214,7 +1272,7 @@ void Task_MysteryGift(u8 taskId)
         }
         break;
     case MG_STATE_CLIENT_COMMUNICATING:
-        AddTextPrinterToWindow1(gText_Communicating);
+        AddTextPrinterToWindow1(sText_Communicating);
         data->state = MG_STATE_CLIENT_LINK;
         break;
     case MG_STATE_CLIENT_LINK:
@@ -1268,7 +1326,7 @@ void Task_MysteryGift(u8 taskId)
     case MG_STATE_CLIENT_ASK_TOSS:
         // Player is receiving a new Wonder Card/News but needs to toss an existing one to make room.
         // Ask for confirmation.
-        input = DoMysteryGiftYesNo(&data->textState, &data->var, FALSE, gText_ThrowAwayWonderCard);
+        input = DoMysteryGiftYesNo(&data->textState, &data->var, FALSE, sText_ThrowAwayWonderCard);
         switch (input)
         {
         case 0: // Yes
@@ -1294,7 +1352,7 @@ void Task_MysteryGift(u8 taskId)
     case MG_STATE_CLIENT_ASK_TOSS_UNRECEIVED:
         // Player has selected to toss a Wonder Card that they haven't received the gift for.
         // Ask for confirmation again.
-        input = DoMysteryGiftYesNo(&data->textState, &data->var, FALSE, gText_HaventReceivedCardsGift);
+        input = DoMysteryGiftYesNo(&data->textState, &data->var, FALSE, sText_HaventReceivedCardsGift);
         switch (input)
         {
         case 0: // Yes
@@ -1318,7 +1376,7 @@ void Task_MysteryGift(u8 taskId)
         }
         break;
     case MG_STATE_CLIENT_COMM_COMPLETED:
-        if (PrintStringAndWait2Seconds(&data->textState, gText_CommunicationCompleted))
+        if (PrintStringAndWait2Seconds(&data->textState, sText_CommunicationCompleted))
         {
             if (data->sourceIsFriend == TRUE)
                 StringCopy(gStringVar1, gLinkPlayers[0].name);
@@ -1446,7 +1504,7 @@ void Task_MysteryGift(u8 taskId)
     case MG_STATE_ASK_TOSS_UNRECEIVED:
         // Player has selected to toss a Wonder Card that they haven't received the gift for.
         // Ask for confirmation again.
-        switch ((u32)DoMysteryGiftYesNo(&data->textState, &data->var, TRUE, gText_HaventReceivedGiftOkayToDiscard))
+        switch ((u32)DoMysteryGiftYesNo(&data->textState, &data->var, TRUE, sText_HaventReceivedGiftOkayToDiscard))
         {
         case 0: // Yes
             data->state = MG_STATE_TOSS;
@@ -1517,12 +1575,12 @@ void Task_MysteryGift(u8 taskId)
         *gStringVar3 = EOS;
         if (!data->isWonderNews)
         {
-            AddTextPrinterToWindow1(gText_SendingWonderCard);
+            AddTextPrinterToWindow1(sText_SendingWonderCard);
             MysterGiftServer_CreateForCard();
         }
         else
         {
-            AddTextPrinterToWindow1(gText_SendingWonderNews);
+            AddTextPrinterToWindow1(sText_SendingWonderNews);
             MysterGiftServer_CreateForNews();
         }
         data->state = MG_STATE_SERVER_LINK;

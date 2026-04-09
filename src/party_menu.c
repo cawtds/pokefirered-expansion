@@ -1435,7 +1435,7 @@ static void HandleChooseMonSelection(u8 taskId, s8 *slotPtr)
             else if (DoesSelectedMonKnowHM((u8 *)slotPtr))
             {
                 PlaySE(SE_FAILURE);
-                DisplayPartyMenuMessage(gText_CannotSendMonToBoxHM, FALSE);
+                DisplayPartyMenuMessage(sText_CannotSendMonToBoxHM, FALSE);
                 ScheduleBgCopyTilemapToVram(2);
                 gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
             }

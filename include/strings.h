@@ -72,7 +72,6 @@ extern const u8 gText_OkayToDeleteFromRegistry[];
 extern const u8 gText_RegisteredDataDeleted[];
 extern const u8 gText_Cancel4[];
 extern const u8 gText_IsThisTheCorrectTime[];
-extern const u8 gText_PkmnFainted_FldPsn[];
 extern const u8 gText_EggNickname[];
 extern const u8 gText_MenuPokemon[];
 extern const u8 gText_Time[];
@@ -353,65 +352,8 @@ extern const u8 gText_Cancel4[];
 extern const u8 gText_IsThisTheCorrectTime[];
 
 // mystery_gift_menu
-extern const u8 gText_PickOKExit[];
-extern const u8 gText_PickOKCancel[];
-extern const u8 gText_MysteryGift2[];
-extern const u8 gText_WhatToDoWithCards[];
-extern const u8 gText_WhatToDoWithNews[];
-extern const u8 gText_OkayToDiscardNews[];
-extern const u8 gText_IfThrowAwayCardEventWontHappen[];
-extern const u8 gText_WonderCardThrownAway[];
-extern const u8 gText_WonderNewsThrownAway[];
-extern const u8 gText_DataWillBeSaved[];
-extern const u8 gText_SaveCompletedPressA[];
-extern const u8 gText_WonderCards[];
-extern const u8 gText_WonderNews[];
-extern const u8 gText_Exit3[];
-extern const u8 gText_WirelessCommunication[];
-extern const u8 gText_Friend2[];
-extern const u8 gText_Receive[];
-extern const u8 gText_Send[];
-extern const u8 gText_Toss[];
-extern const u8 gText_VarietyOfEventsImportedWireless[];
-extern const u8 gText_WonderCardsInPossession[];
-extern const u8 gText_ReadNewsThatArrived[];
-extern const u8 gText_ReturnToTitle[];
-extern const u8 gText_NothingSentOver[];
-extern const u8 gText_RecordUploadedViaWireless[];
-extern const u8 gText_WonderCardReceived[];
-extern const u8 gText_WonderCardReceivedFrom[];
-extern const u8 gText_WonderNewsReceived[];
-extern const u8 gText_WonderNewsReceivedFrom[];
-extern const u8 gText_NewStampReceived[];
-extern const u8 gText_AlreadyHadCard[];
-extern const u8 gText_AlreadyHadStamp[];
-extern const u8 gText_AlreadyHadNews[];
-extern const u8 gText_NoMoreRoomForStamps[];
-extern const u8 gText_CommunicationCanceled[];
-extern const u8 gText_CantAcceptCardFromTrainer[];
-extern const u8 gText_CantAcceptNewsFromTrainer[];
 extern const u8 gText_CommunicationError[];
-extern const u8 gText_NewTrainerReceived[];
-extern const u8 gText_WonderCardSentTo[];
-extern const u8 gText_WonderNewsSentTo[];
-extern const u8 gText_StampSentTo[];
-extern const u8 gText_OtherTrainerHasCard[];
-extern const u8 gText_OtherTrainerHasStamp[];
-extern const u8 gText_OtherTrainerHasNews[];
-extern const u8 gText_OtherTrainerCanceled[];
-extern const u8 gText_GiftSentTo[];
-extern const u8 gText_CantSendGiftToTrainer[];
-extern const u8 gText_DontHaveCardNewOneInput[];
-extern const u8 gText_DontHaveNewsNewOneInput[];
-extern const u8 gText_WhereShouldCardBeAccessed[];
-extern const u8 gText_WhereShouldNewsBeAccessed[];
-extern const u8 gText_Communicating[];
-extern const u8 gText_ThrowAwayWonderCard[];
-extern const u8 gText_HaventReceivedCardsGift[];
-extern const u8 gText_CommunicationCompleted[];
-extern const u8 gText_HaventReceivedGiftOkayToDiscard[];
-extern const u8 gText_SendingWonderCard[];
-extern const u8 gText_SendingWonderNews[];
+extern const u8 gText_PickOKExit[];
 
 // player_pc
 extern const u8 gText_WhatWouldYouLikeToDo[];
@@ -929,20 +871,6 @@ extern const u8 gText_ChangeAbility[];
 extern const u8 gText_ExpShareOn[];
 extern const u8 gText_ExpShareOff[];
 
-// stats
-extern const u8 gText_Attack[];
-extern const u8 gText_Defense[];
-extern const u8 gText_SpAtk[];
-extern const u8 gText_SpDef[];
-extern const u8 gText_Speed[];
-
-// Map name pop-up
-extern const u8 gText_AM[];
-extern const u8 gText_PM[];
-
-// Switch Caught Mon into Party
-extern const u8 gText_CannotSendMonToBoxHM[];
-
 //Pokédex text
 extern const u8 gText_CryOf[];
 extern const u8 gText_SizeComparedTo[];
@@ -959,12 +887,6 @@ extern const u8 gText_SearchingPleaseWait[];
 extern const u8 gText_SearchCompleted[];
 extern const u8 gText_NoMatchingPkmnWereFound[];
 extern const u8 gText_SelectorArrow[];
-
-extern const u8 gText_Power[];
-extern const u8 gText_Accuracy2[];
-extern const u8 gText_Appeal[];
-extern const u8 gText_Jam[];
-
 
 // Pokédex strings
 extern const u8 gText_SearchForPkmnBasedOnParameters[];
