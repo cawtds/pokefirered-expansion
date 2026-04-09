@@ -2600,6 +2600,14 @@ enum EscapeRopeWarpInState
     ESCAPE_ROPE_WARP_IN_SPIN,
 };
 
+enum EscapeRopeWarpFollowerState
+{
+    ESCAPE_ROPE_FOLLOWER_STATE_1,
+    ESCAPE_ROPE_FOLLOWER_STATE_2,
+    ESCAPE_ROPE_FOLLOWER_STATE_3,
+    ESCAPE_ROPE_FOLLOWER_STATE_4,
+};
+
 // Task data for Task_EscapeRopeWarpIn
 #define tState         data[0]
 #define tMovingState   data[1]
@@ -2612,7 +2620,7 @@ enum EscapeRopeWarpInState
 #define tCurrentDir    data[8]
 #define tSpinDelay     data[9]
 #define tNumTurns      data[10]
-#define tState2        data[11]
+#define tFollowerState data[11]
 #define tStartDir   data[15]
 
 
@@ -2693,17 +2701,17 @@ static void EscapeRopeWarpInEffect_Init(struct Task *task)
     PlaySE(SE_WARP_OUT);
     task->tStartDir = GetPlayerFacingDirection();
     task->tState = ESCAPE_ROPE_WARP_IN_SPIN;
-    task->tState2 = 0;
+    task->tFollowerState = ESCAPE_ROPE_FOLLOWER_STATE_1;
 
 }
 
 static void EscapeRopeWarpInEffect_Spin(struct Task *task)
 {
     struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+    struct ObjectEvent *followerObj = &gObjectEvents[GetFollowerNPCObjectId()];
     bool32 moving = WarpInObjectEventDownwards(playerObj, &task->tMovingState, &task->tOffsetY, &task->tPriority, &task->tSubpriority, &task->tSubspriteMode);
 
     playerObj->invisible = FALSE;
-    // TODO: Follower NPC?
     if (task->tTimer < 8)
     {
         task->tTimer++;
@@ -2716,7 +2724,33 @@ static void EscapeRopeWarpInEffect_Spin(struct Task *task)
             task->tSpinEnded = TRUE;
     }
 
-    if (!moving && task->tCurrentDir == task->tStartDir && ObjectEventCheckHeldMovementStatus(playerObj) == TRUE)
+    if (!moving && task->tCurrentDir == task->tStartDir && ObjectEventCheckHeldMovementStatus(playerObj) == TRUE && task->tFollowerState == ESCAPE_ROPE_FOLLOWER_STATE_1)
+        task->tFollowerState = ESCAPE_ROPE_FOLLOWER_STATE_2;
+
+    if (task->tFollowerState == ESCAPE_ROPE_FOLLOWER_STATE_2)
+    {
+        if (FNPC_NPC_FOLLOWER_SHOW_AFTER_LEAVE_ROUTE)
+            FollowerNPCReappearAfterLeaveMap(followerObj, playerObj);
+
+        task->tFollowerState = ESCAPE_ROPE_FOLLOWER_STATE_3;
+    }
+
+    if (task->tFollowerState == ESCAPE_ROPE_FOLLOWER_STATE_3)
+    {
+        if (PlayerHasFollowerNPC() && ObjectEventClearHeldMovementIfFinished(followerObj))
+        {
+            if (FNPC_NPC_FOLLOWER_SHOW_AFTER_LEAVE_ROUTE)
+                FollowerNPCFaceAfterLeaveMap();
+
+            task->tFollowerState = ESCAPE_ROPE_FOLLOWER_STATE_4;
+        }
+        else if (!PlayerHasFollowerNPC())
+        {
+            task->tFollowerState = ESCAPE_ROPE_FOLLOWER_STATE_4;
+        }
+    }
+
+    if (task->tFollowerState == ESCAPE_ROPE_FOLLOWER_STATE_4)
     {
         playerObj->invisible = FALSE;
         playerObj->fixedPriority = FALSE;
@@ -2737,6 +2771,7 @@ static void EscapeRopeWarpInEffect_Spin(struct Task *task)
 #undef tCurrentDir
 #undef tSpinDelay
 #undef tNumTurns
+#undef tFollowerState
 #undef tStartDir
 
 enum TeleportWarpOutState
