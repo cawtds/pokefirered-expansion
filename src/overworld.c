@@ -152,7 +152,7 @@ s16 gTimeUpdateCounter; // playTimeVBlanks will eventually overflow, so this is 
 
 static u8 CountBadgesForOverworldWhiteOutLossCalculation(void);
 static void Overworld_ResetStateAfterWhitingOut(void);
-static void Overworld_SetWhiteoutRespawnPoint(void);
+static void SetWhiteoutWarpDestination(void);
 static u8 GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, u16 metatileBehavior, u8 mapType);
 static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, u8 transitionFlags, u16 metatileBehavior, u8 mapType);
 static u16 GetCenterScreenMetatileBehavior(void);
@@ -286,7 +286,7 @@ static void DoWhiteOut(void)
         RemoveMoney(&gSaveBlock1Ptr->money, ComputeWhiteOutMoneyLoss());
     HealPlayerParty();
     Overworld_ResetStateAfterWhitingOut();
-    Overworld_SetWhiteoutRespawnPoint();
+    SetWhiteoutWarpDestination();
     WarpIntoMap();
 }
 
@@ -676,9 +676,19 @@ void SetWarpDestinationToLastHealLocation(void)
     sWarpDestination = gSaveBlock1Ptr->lastHealLocation;
 }
 
-static void Overworld_SetWhiteoutRespawnPoint(void)
+static bool32 IsWhiteoutCutscene(void)
 {
-    SetWhiteoutRespawnWarpAndHealerNpc(&sWarpDestination);
+    if (OW_WHITEOUT_CUTSCENE < GEN_4)
+        return FALSE;
+    return GetHealNpcLocalId(GetHealLocationIndexByWarpData(&gSaveBlock1Ptr->lastHealLocation)) != LOCALID_NONE;
+}
+
+static void SetWhiteoutWarpDestination(void)
+{
+    if (IsWhiteoutCutscene())
+        SetWhiteoutRespawnWarpAndHealerNPC(&sWarpDestination);
+    else
+        sWarpDestination = gSaveBlock1Ptr->lastHealLocation;
 }
 
 void SetLastHealLocationWarp(u8 healLocationId)
@@ -1777,10 +1787,18 @@ void CB2_WhiteOut(void)
         StopMapMusic();
         ResetSafariZoneFlag_();
         DoWhiteOut();
-        SetInitialPlayerAvatarStateWithDirection(DIR_NORTH);
+        if (IsWhiteoutCutscene())
+        {
+            SetInitialPlayerAvatarStateWithDirection(DIR_NORTH);
+            gFieldCallback = FieldCB_RushInjuredPokemonToCenter;
+        }
+        else
+        {
+            SetInitialPlayerAvatarStateWithDirection(DIR_SOUTH);
+            gFieldCallback = FieldCB_WarpExitFadeFromBlack;
+        }
         ScriptContext_Init();
         UnlockPlayerFieldControls();
-        gFieldCallback = FieldCB_RushInjuredPokemonToCenter;
         val = 0;
         SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
         DoMapLoadLoop(&val);

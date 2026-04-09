@@ -1,11 +1,10 @@
 #include "global.h"
-#include "heal_location.h"
 #include "event_data.h"
-#include "constants/maps.h"
-#include "constants/map_event_ids.h"
+#include "heal_location.h"
+#include "constants/event_objects.h"
 #include "constants/heal_locations.h"
-
-static void SetWhiteoutRespawnHealerNpcAsLastTalked(u32 healLocationIdx);
+#include "constants/map_event_ids.h"
+#include "constants/maps.h"
 
 // Arrays described here because mapjson will overrwrite the below data file
 
@@ -27,32 +26,32 @@ static void SetWhiteoutRespawnHealerNpcAsLastTalked(u32 healLocationIdx);
 
 #include "data/heal_locations.h"
 
-static u32 GetHealLocationIndexFromMapGroupAndNum(u16 mapGroup, u16 mapNum)
+enum HealLocationID GetHealLocationIndexByWarpData(struct WarpData *warp)
 {
-    u32 i;
-
-    for (i = 0; i < ARRAY_COUNT(sHealLocations); i++) {
-        if (sHealLocations[i].mapGroup == mapGroup && sHealLocations[i].mapNum == mapNum)
-        {
+    for (enum HealLocationID i = HEAL_LOCATION_NONE; i < ARRAY_COUNT(sHealLocations); i++)
+    {
+        if (sHealLocations[i].mapGroup == warp->mapGroup
+        && sHealLocations[i].mapNum == warp->mapNum
+        && sHealLocations[i].x == warp->x
+        && sHealLocations[i].y == warp->y)
             return i + 1;
-        }
     }
-
     return HEAL_LOCATION_NONE;
 }
 
-const struct HealLocation * GetHealLocation(u32 idx)
+const struct HealLocation *GetHealLocation(enum HealLocationID healLocationId)
 {
-    if (idx == HEAL_LOCATION_NONE)
+    if (healLocationId == HEAL_LOCATION_NONE)
         return NULL;
-    if (idx > ARRAY_COUNT(sHealLocations))
+    if (healLocationId > ARRAY_COUNT(sHealLocations))
         return NULL;
-    return &sHealLocations[idx - 1];
+    return &sHealLocations[healLocationId - 1];
 }
 
-void SetWhiteoutRespawnWarpAndHealerNpc(struct WarpData * warp)
+void SetWhiteoutRespawnWarpAndHealerNPC(struct WarpData *warp)
 {
-    u32 healLocationIdx;
+    enum HealLocationID healLocationId;
+    u32 healNpcLocalId;
 
     if (VarGet(VAR_MAP_SCENE_TRAINER_TOWER) == 1)
     {
@@ -60,56 +59,34 @@ void SetWhiteoutRespawnWarpAndHealerNpc(struct WarpData * warp)
         if (!gSaveBlock1Ptr->trainerTower[gSaveBlock1Ptr->towerChallengeId].spokeToOwner)
 #endif //FREE_TRAINER_TOWER
             VarSet(VAR_MAP_SCENE_TRAINER_TOWER, 0);
-        gSpecialVar_LastTalked = LOCALID_TOWER_NURSE;
-        warp->x = 4;
-        warp->y = 11;
-        warp->mapGroup = MAP_GROUP(MAP_TRAINER_TOWER_LOBBY);
-        warp->mapNum = MAP_NUM(MAP_TRAINER_TOWER_LOBBY);
-        warp->warpId = WARP_ID_NONE;
+
+        healLocationId = HEAL_LOCATION_TRAINER_TOWER;
     }
     else
     {
-        healLocationIdx = GetHealLocationIndexFromMapGroupAndNum(gSaveBlock1Ptr->lastHealLocation.mapGroup, gSaveBlock1Ptr->lastHealLocation.mapNum);
-#ifdef BUGFIX
-        // Avoid out of bounds read
-        if (healLocationIdx == HEAL_LOCATION_NONE)
-            return;
-#endif
-        warp->mapGroup = sWhiteoutRespawnHealCenterMapIdxs[healLocationIdx - 1][0];
-        warp->mapNum = sWhiteoutRespawnHealCenterMapIdxs[healLocationIdx - 1][1];
-        warp->warpId = WARP_ID_NONE;
-
-        if (sWhiteoutRespawnHealCenterMapIdxs[healLocationIdx - 1][0] == MAP_GROUP(MAP_PALLET_TOWN_PLAYERS_HOUSE_1F) && sWhiteoutRespawnHealCenterMapIdxs[healLocationIdx - 1][1] == MAP_NUM(MAP_PALLET_TOWN_PLAYERS_HOUSE_1F))
-        {
-            warp->x = 8;
-            warp->y = 5;
-        }
-        else if (sWhiteoutRespawnHealCenterMapIdxs[healLocationIdx - 1][0] == MAP_GROUP(MAP_INDIGO_PLATEAU_POKEMON_CENTER_1F) && sWhiteoutRespawnHealCenterMapIdxs[healLocationIdx - 1][1] == MAP_NUM(MAP_INDIGO_PLATEAU_POKEMON_CENTER_1F))
-        {
-            warp->x = 13;
-            warp->y = 12;
-        }
-        else if (sWhiteoutRespawnHealCenterMapIdxs[healLocationIdx - 1][0] == MAP_GROUP(MAP_ONE_ISLAND_POKEMON_CENTER_1F) && sWhiteoutRespawnHealCenterMapIdxs[healLocationIdx - 1][1] == MAP_NUM(MAP_ONE_ISLAND_POKEMON_CENTER_1F))
-        {
-            warp->x = 5;
-            warp->y = 4;
-        }
-        else if (sWhiteoutRespawnHealCenterMapIdxs[healLocationIdx - 1][0] == MAP_GROUP(MAP_TRAINER_TOWER_LOBBY) && sWhiteoutRespawnHealCenterMapIdxs[healLocationIdx - 1][1] == MAP_NUM(MAP_TRAINER_TOWER_LOBBY))
-        {
-            warp->x = 4;
-            warp->y = 11;
-            VarSet(VAR_MAP_SCENE_TRAINER_TOWER, 0);
-        }
-        else
-        {
-            warp->x = 7;
-            warp->y = 4;
-        }
-        SetWhiteoutRespawnHealerNpcAsLastTalked(healLocationIdx);
+        healLocationId = GetHealLocationIndexByWarpData(&gSaveBlock1Ptr->lastHealLocation);
     }
+
+    healNpcLocalId = GetHealNpcLocalId(healLocationId);
+
+    if (healNpcLocalId == LOCALID_NONE)
+    {
+        *(warp) = gSaveBlock1Ptr->lastHealLocation;
+        return;
+    }
+
+    warp->mapGroup = sWhiteoutRespawnHealCenterMapIdxs[healLocationId - 1].mapGroup;
+    warp->mapNum = sWhiteoutRespawnHealCenterMapIdxs[healLocationId - 1].mapNum;
+    warp->warpId = WARP_ID_NONE;
+    warp->x = sWhiteoutRespawnHealCenterMapIdxs[healLocationId - 1].x;
+    warp->y = sWhiteoutRespawnHealCenterMapIdxs[healLocationId - 1].y;
+    gSpecialVar_LastTalked = healNpcLocalId;
 }
 
-static void SetWhiteoutRespawnHealerNpcAsLastTalked(u32 healLocationIdx)
+u32 GetHealNpcLocalId(enum HealLocationID healLocationId)
 {
-    gSpecialVar_LastTalked = sWhiteoutRespawnHealerNpcIds[healLocationIdx - 1];
+    if (healLocationId == HEAL_LOCATION_NONE || healLocationId >= NUM_HEAL_LOCATIONS)
+        return LOCALID_NONE;
+
+    return sWhiteoutRespawnHealerNpcIds[healLocationId - 1];
 }

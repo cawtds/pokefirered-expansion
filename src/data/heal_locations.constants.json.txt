@@ -3,7 +3,8 @@
 
 {{ doNotModifyHeader }}
 
-enum {
+enum HealLocationID
+{
     HEAL_LOCATION_NONE,
 ## for heal_location in heal_locations
     {{ heal_location.id }},

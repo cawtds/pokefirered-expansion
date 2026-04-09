@@ -2,6 +2,7 @@
 #define GUARD_HEAL_LOCATION_H
 
 #include "global.h"
+#include "constants/heal_locations.h"
 
 struct HealLocation
 {
@@ -11,7 +12,9 @@ struct HealLocation
     s16 y;
 };
 
-const struct HealLocation *GetHealLocation(u32 loc);
-void SetWhiteoutRespawnWarpAndHealerNpc(struct WarpData * warp);
+const struct HealLocation *GetHealLocation(enum HealLocationID healLocationId);
+void SetWhiteoutRespawnWarpAndHealerNPC(struct WarpData *warp);
+u32 GetHealNpcLocalId(enum HealLocationID healLocationId);
+enum HealLocationID GetHealLocationIndexByWarpData(struct WarpData *warp);
 
 #endif // GUARD_HEAL_LOCATION_H
