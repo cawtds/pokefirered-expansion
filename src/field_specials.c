@@ -124,6 +124,11 @@ static void Task_LinkRetireStatusWithBattleTowerPartner(u8);
 static void CB2_ReturnToFieldWhileLearningMove(void);
 static void Task_ReturnToFieldWhileLearningMove(u8);
 
+static const u8 sText_BigGuy[] = _("Big guy");
+static const u8 sText_BigGirl[] = _("Big girl");
+static const u8 sText_Son[] = _("son");
+static const u8 sText_Daughter[] = _("daughter");
+
 static u8 *const sStringVarPtrs[] = {
     gStringVar1,
     gStringVar2,
@@ -161,17 +166,17 @@ static const u8 *const sScrollMultiLabels_SilphCoFloors[] =
 
 static const u8 *const sScrollMultiLabels_BerryPowder[] =
 {
-    gText_Energypowder_50,
-    gText_EnergyRoot_80,
-    gText_HealPowder_50,
-    gText_RevivalHerb_300,
-    gText_Protein_1000,
-    gText_Iron_1000,
-    gText_Carbos_1000,
-    gText_Calcium_1000,
-    gText_Zinc_1000,
-    gText_HpUp_1000,
-    gText_PpUp_3000,
+    COMPOUND_STRING("ENERGYPOWDER{CLEAR_TO 0x74}{FONT_SMALL}50"),
+    COMPOUND_STRING("ENERGY ROOT{CLEAR_TO 0x74}{FONT_SMALL}80"),
+    COMPOUND_STRING("HEAL POWDER{CLEAR_TO 0x74}{FONT_SMALL}50"),
+    COMPOUND_STRING("REVIVAL HERB{CLEAR_TO 0x6F}{FONT_SMALL}300"),
+    COMPOUND_STRING("PROTEIN{CLEAR_TO 0x65}{FONT_SMALL}1,000"),
+    COMPOUND_STRING("IRON{CLEAR_TO 0x65}{FONT_SMALL}1,000"),
+    COMPOUND_STRING("CARBOS{CLEAR_TO 0x65}{FONT_SMALL}1,000"),
+    COMPOUND_STRING("CALCIUM{CLEAR_TO 0x65}{FONT_SMALL}1,000"),
+    COMPOUND_STRING("ZINC{CLEAR_TO 0x65}{FONT_SMALL}1,000"),
+    COMPOUND_STRING("HP UP{CLEAR_TO 0x65}{FONT_SMALL}1,000"),
+    COMPOUND_STRING("PP UP{CLEAR_TO 0x65}{FONT_SMALL}3,000"),
     gOtherText_Exit,
 };
 
@@ -325,17 +330,17 @@ u8 GetPlayerTrainerIdOnesDigit(void)
 void BufferBigGuyOrBigGirlString(void)
 {
     if (gSaveBlock2Ptr->playerGender == MALE)
-        StringCopy(gStringVar1, gText_BigGuy);
+        StringCopy(gStringVar1, sText_BigGuy);
     else
-        StringCopy(gStringVar1, gText_BigGirl);
+        StringCopy(gStringVar1, sText_BigGirl);
 }
 
 void BufferSonOrDaughterString(void)
 {
     if (gSaveBlock2Ptr->playerGender == MALE)
-        StringCopy(gStringVar1, gText_Daughter);
+        StringCopy(gStringVar1, sText_Daughter);
     else
-        StringCopy(gStringVar1, gText_Son);
+        StringCopy(gStringVar1, sText_Son);
 }
 
 u8 GetBattleOutcome(void)

@@ -479,10 +479,6 @@ extern const u8 gText_SeasonWinter[];
 extern const u8 gText_From[];
 
 // field_specials
-extern const u8 gText_BigGuy[];
-extern const u8 gText_BigGirl[];
-extern const u8 gText_Son[];
-extern const u8 gText_Daughter[];
 extern const u8 gText_NowOn[];
 extern const u8 gText_B4F[];
 extern const u8 gText_B3F[];
@@ -508,25 +504,9 @@ extern const u8 gText_SoulBadge[];
 extern const u8 gText_MarshBadge[];
 extern const u8 gText_VolcanoBadge[];
 extern const u8 gText_EarthBadge[];
-extern const u8 gText_Energypowder_50[];
-extern const u8 gText_EnergyRoot_80[];
-extern const u8 gText_HealPowder_50[];
-extern const u8 gText_RevivalHerb_300[];
-extern const u8 gText_Protein_1000[];
-extern const u8 gText_Iron_1000[];
-extern const u8 gText_Carbos_1000[];
-extern const u8 gText_Calcium_1000[];
-extern const u8 gText_Zinc_1000[];
-extern const u8 gText_HpUp_1000[];
-extern const u8 gText_PpUp_3000[];
 
 // script_menu
 extern const u8 gText_WhichPCShouldBeAccessed[];
-extern const u8 gText_SomeoneSPc[];
-extern const u8 gText_BillSPc[];
-extern const u8 gText_SPc[];
-extern const u8 gText_LogOff[];
-extern const u8 gText_ProfOakSPc[];
 extern const u8 gText_Other[];
 extern const u8 gOtherText_Double[];
 extern const u8 gOtherText_Knockout[];
@@ -534,11 +514,6 @@ extern const u8 gOtherText_Mixed[];
 extern const u8 gOtherText_Single[];
 extern const u8 gText_Info[];
 extern const u8 gText_HallOfFame[];
-extern const u8 gText_Psn[];
-extern const u8 gText_Par[];
-extern const u8 gText_Slp[];
-extern const u8 gText_Brn[];
-extern const u8 gText_Frz[];
 extern const u8 gText_Yes[];
 extern const u8 gText_No[];
 extern const u8 gText_SingleBattle[];

@@ -94,6 +94,11 @@ static const u8 sText_Retire[] = _("RETIRE");
 static const u8 sText_Other[] = _("OTHER");
 static const u8 sText_NoThanks[] = _("NO THANKS");
 static const u8 sText_Quit[] = _("QUIT");
+static const u8 sText_SomeoneSPc[] = _("SOMEONE'S PC");
+static const u8 sText_BillsPc[] = _("BILL'S PC");
+static const u8 sText_PlayersPc[] = _("{PLAYER}'s PC");
+static const u8 sText_LogOff[] = _("LOG OFF");
+static const u8 sText_ProfOaksPc[] = _("PROF. OAK's PC");
 
 static const struct DynamicListMenuEventCollection sDynamicListMenuEventCollections[] =
 {
@@ -1406,7 +1411,7 @@ static void CreatePCMultichoice(void)
     u8 numItems;
     u8 windowId;
 
-    switch (GetStringTilesWide(gText_SPc))
+    switch (GetStringTilesWide(sText_PlayersPc))
     {
     default:
         if (FlagGet(FLAG_SYS_POKEDEX_GET))
@@ -1425,9 +1430,9 @@ static void CreatePCMultichoice(void)
         numItems = 5;
         windowId = CreateWindowFromRect(0, 0, windowWidth, 10);
         SetStandardWindowBorderStyle(windowId, FALSE);
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_ProfOakSPc, cursorWidth, 34, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_ProfOaksPc, cursorWidth, 34, TEXT_SKIP_DRAW, NULL);
         AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_HallOfFame, cursorWidth, 50, TEXT_SKIP_DRAW, NULL);
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_LogOff, cursorWidth, 66, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_LogOff, cursorWidth, 66, TEXT_SKIP_DRAW, NULL);
     }
     else
     {
@@ -1439,17 +1444,17 @@ static void CreatePCMultichoice(void)
         windowId = CreateWindowFromRect(0, 0, windowWidth, numItems * 2);
         SetStandardWindowBorderStyle(windowId, FALSE);
         if (FlagGet(FLAG_SYS_POKEDEX_GET))
-            AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_ProfOakSPc, cursorWidth, 34, TEXT_SKIP_DRAW, NULL);
+            AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_ProfOaksPc, cursorWidth, 34, TEXT_SKIP_DRAW, NULL);
 
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_LogOff, cursorWidth, 2 + 16 * (numItems - 1), TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_LogOff, cursorWidth, 2 + 16 * (numItems - 1), TEXT_SKIP_DRAW, NULL);
     }
 
     if (FlagGet(FLAG_SYS_NOT_SOMEONES_PC))
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_BillSPc, cursorWidth, 2 , TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_BillsPc, cursorWidth, 2 , TEXT_SKIP_DRAW, NULL);
     else
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_SomeoneSPc, cursorWidth, 2 , TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_SomeoneSPc, cursorWidth, 2 , TEXT_SKIP_DRAW, NULL);
 
-    StringExpandPlaceholders(gStringVar4, gText_SPc);
+    StringExpandPlaceholders(gStringVar4, sText_PlayersPc);
     PrintPlayerNameOnWindow(windowId, gStringVar4, cursorWidth, 18);
     InitMenuNormal(windowId, FONT_NORMAL, 0, 2, 16, numItems, 0);
     InitMultichoiceCheckWrap(FALSE, numItems, windowId, MULTI_NONE);
