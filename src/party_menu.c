@@ -2379,8 +2379,8 @@ static void CreateCancelConfirmWindows(bool8 chooseMultiple)
         // Branches are functionally identical. Second branch is never reached, Spin Trade wasnt fully implemented
         if (gPartyMenu.menuType != PARTY_MENU_TYPE_SPIN_TRADE)
         {
-            offset += (48 - GetStringWidth(FONT_SMALL, gFameCheckerText_Cancel, 0)) / 2;
-            AddTextPrinterParameterized3(cancelWindowId, FONT_SMALL, offset, 1, sFontColorTable[0], -1, gFameCheckerText_Cancel);
+            offset += (48 - GetStringWidth(FONT_SMALL, gText_Cancel, 0)) / 2;
+            AddTextPrinterParameterized3(cancelWindowId, FONT_SMALL, offset, 1, sFontColorTable[0], -1, gText_Cancel);
         }
         else
         {

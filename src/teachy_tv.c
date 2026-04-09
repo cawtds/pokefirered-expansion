@@ -198,7 +198,7 @@ static const struct ListMenuItem sListMenuItems[] =
     },
 
     {
-        .name = gTeachyTvString_Cancel,
+        .name = gText_Cancel,
         .id = -2
     },
 };
@@ -222,7 +222,7 @@ static const struct ListMenuItem sListMenuItems_NoTMCase[] =
         .id = TTVSCR_CATCHING
     },
     {
-        .name = gTeachyTvString_Cancel,
+        .name = gText_Cancel,
         .id = -2
     },
 };

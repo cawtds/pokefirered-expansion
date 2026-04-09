@@ -3165,7 +3165,7 @@ static void PrintMovesPage(void)
         else
             AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], FONT_NORMAL,
                                          3, GetMoveNamePrinterYpos(4),
-                                         sPrintMoveTextColors[0], TEXT_SKIP_DRAW, gFameCheckerText_Cancel);
+                                         sPrintMoveTextColors[0], TEXT_SKIP_DRAW, gText_Cancel);
     }
 }
 

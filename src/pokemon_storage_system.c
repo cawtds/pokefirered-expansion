@@ -872,7 +872,6 @@ static void TilemapUtil_Draw(u8 tilemapId);
 
 static const u8 sPCText_Bag[] = _("BAG");
 static const u8 sPCText_Beach[] = _("BEACH");
-static const u8 sPCText_Cancel[] = _("CANCEL");
 static const u8 sPCText_Cave[] = _("CAVE");
 static const u8 sPCText_City[] = _("CITY");
 static const u8 sPCText_Crag[] = _("CRAG");
@@ -7665,7 +7664,7 @@ static void InitMenu(void)
 }
 
 static const u8 *const sMenuTexts[] = {
-    [MENU_TEXT_CANCEL]     = sPCText_Cancel,
+    [MENU_TEXT_CANCEL]     = gText_Cancel,
     [MENU_TEXT_STORE]      = sPCText_Store,
     [MENU_TEXT_WITHDRAW]   = sPCText_Withdraw,
     [MENU_TEXT_MOVE]       = sPCText_Move,

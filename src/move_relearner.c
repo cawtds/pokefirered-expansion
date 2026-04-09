@@ -807,7 +807,7 @@ static void CreateLearnableMovesList(void)
         sMoveRelearnerStruct->menuItems[i].name = GetMoveName(sMoveRelearnerStruct->movesToLearn[i]);
         sMoveRelearnerStruct->menuItems[i].id = sMoveRelearnerStruct->movesToLearn[i];
     }
-    sMoveRelearnerStruct->menuItems[i].name = gFameCheckerText_Cancel;
+    sMoveRelearnerStruct->menuItems[i].name = gText_Cancel;
     sMoveRelearnerStruct->menuItems[i].id = LIST_CANCEL;
     sMoveRelearnerStruct->numMenuChoices++;
     sMoveRelearnerStruct->numToShowAtOnce = LoadMoveRelearnerMovesList(sMoveRelearnerStruct->menuItems, sMoveRelearnerStruct->numMenuChoices);

@@ -1570,7 +1570,7 @@ static u8 FC_PopulateListMenu(void)
             nitems++;
         }
     }
-    sListMenuItems[nitems].name = gFameCheckerText_Cancel;
+    sListMenuItems[nitems].name = gText_Cancel;
     sListMenuItems[nitems].id = nitems;
     sFameCheckerData->unlockedPersons[nitems] = 0xFF;
     nitems++;

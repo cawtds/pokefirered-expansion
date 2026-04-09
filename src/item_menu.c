@@ -287,7 +287,7 @@ static const struct MenuAction sItemMenuActions[] = {
     [ACTION_TOSS] = {gMenuText_Toss, {.void_u8 = ItemMenu_Toss}},
     [ACTION_REGISTER] = {gOtherText_Register, {.void_u8 = ItemMenu_Register}},
     [ACTION_GIVE] = {gMenuText_Give, {.void_u8 = ItemMenu_Give}},
-    [ACTION_CANCEL] = {gFameCheckerText_Cancel, {.void_u8 = ItemMenu_Cancel}},
+    [ACTION_CANCEL] = {gText_Cancel, {.void_u8 = ItemMenu_Cancel}},
     [ACTION_BATTLE_USE] = {gMenuText_Use, {.void_u8 = ItemMenu_UseInBattle}},
     [ACTION_CHECK] = {gOtherText_Check, {.void_u8 = ItemMenu_UseOutOfBattle}},
     [ACTION_OPEN] = {gOtherText_Open, {.void_u8 = ItemMenu_UseOutOfBattle}},
@@ -1003,7 +1003,7 @@ static void LoadBagItemListBuffers(u8 pocketId)
             subBuffer[i].id = i;
         }
         StringCopy(sListBuffer2->name[i], sListItemTextColor_RegularItem);
-        StringAppend(sListBuffer2->name[i], gFameCheckerText_Cancel);
+        StringAppend(sListBuffer2->name[i], gText_Cancel);
         subBuffer = sListBuffer1->subBuffers;
         subBuffer[i].name = sListBuffer2->name[i];
         subBuffer[i].id = LIST_CANCEL;

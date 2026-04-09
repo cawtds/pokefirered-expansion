@@ -93,7 +93,7 @@ static const u8 sItemOrder_PlayerPC[] = { 0, 1, 2 };
 static const struct MenuAction sMenuActions_ItemPc[] = {
     {gText_WithdrawItem2, {Task_PlayerPcWithdrawItem}},
     {gText_DepositItem2, {Task_PlayerPcDepositItem}},
-    {gFameCheckerText_Cancel, {Task_PlayerPcCancel}}
+    {gText_Cancel, {Task_PlayerPcCancel}}
 };
 
 static const struct ItemSlot gNewGamePCItems[] = {

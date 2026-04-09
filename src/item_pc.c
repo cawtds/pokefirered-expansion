@@ -121,7 +121,7 @@ static const struct BgTemplate sBgTemplates[2] = {
 static const struct MenuAction sItemPcSubmenuOptions[] = {
     {gText_Withdraw,          {.void_u8 = Task_ItemPcWithdraw}},
     {gMenuText_Give,         {.void_u8 = Task_ItemPcGive}},
-    {gFameCheckerText_Cancel, {.void_u8 = Task_ItemPcCancel}}
+    {gText_Cancel, {.void_u8 = Task_ItemPcCancel}}
 };
 
 static const u8 sTextColors[][3] = {
@@ -493,7 +493,7 @@ static void ItemPc_BuildListMenuTemplate(void)
         sListMenuItems[i].name = GetItemName(gSaveBlock1Ptr->pcItems[i].itemId);
         sListMenuItems[i].id = i;
     }
-    sListMenuItems[i].name = gFameCheckerText_Cancel;
+    sListMenuItems[i].name = gText_Cancel;
     sListMenuItems[i].id = -2;
 
     gMultiuseListMenuTemplate.items = sListMenuItems;

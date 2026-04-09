@@ -268,7 +268,7 @@ static const struct ListMenuItem sListMenuItems_CardsOrNews[] = {
 static const struct ListMenuItem sListMenuItems_WirelessOrFriend[] = {
     { sText_WirelessCommunication,  0 },
     { sText_Friend2,                1 },
-    { gFameCheckerText_Cancel,      LIST_CANCEL }
+    { gText_Cancel,      LIST_CANCEL }
 };
 
 static const struct ListMenuTemplate sListMenuTemplate_ThreeOptions = {
@@ -296,24 +296,24 @@ static const struct ListMenuItem sListMenuItems_ReceiveSendToss[] = {
     { sText_Receive,  0 },
     { sText_Send,     1 },
     { sText_Toss,     2 },
-    { gFameCheckerText_Cancel, LIST_CANCEL }
+    { gText_Cancel, LIST_CANCEL }
 };
 
 static const struct ListMenuItem sListMenuItems_ReceiveToss[] = {
     { sText_Receive,  0 },
     { sText_Toss,     2 },
-    { gFameCheckerText_Cancel, LIST_CANCEL }
+    { gText_Cancel, LIST_CANCEL }
 };
 
 static const struct ListMenuItem sListMenuItems_ReceiveSend[] = {
     { sText_Receive,  0 },
     { sText_Send,     1 },
-    { gFameCheckerText_Cancel, LIST_CANCEL }
+    { gText_Cancel, LIST_CANCEL }
 };
 
 static const struct ListMenuItem sListMenuItems_Receive[] = {
     { sText_Receive,  0 },
-    { gFameCheckerText_Cancel, LIST_CANCEL }
+    { gText_Cancel, LIST_CANCEL }
 };
 
 static const struct ListMenuTemplate sListMenu_ReceiveSendToss = {

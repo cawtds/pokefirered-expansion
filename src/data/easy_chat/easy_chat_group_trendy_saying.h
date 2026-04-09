@@ -8,7 +8,6 @@ static const u8 sEasyChatWord_YeehawExcl[] = _("YEEHAW!");
 static const u8 sEasyChatWord_Mega[] = _("MEGA");
 static const u8 sEasyChatWord_1HitKOExcl[] = _("1-HIT KO!");
 static const u8 sEasyChatWord_Destiny[] = _("DESTINY");
-static const u8 sEasyChatWord_Cancel[] = _("CANCEL");
 static const u8 sEasyChatWord_New[] = _("NEW");
 static const u8 sEasyChatWord_Flatten[] = _("FLATTEN");
 static const u8 sEasyChatWord_Kidding[] = _("KIDDING");
@@ -80,7 +79,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_TrendySaying[] = {
         .enabled = FALSE
     },
     {
-        .text = sEasyChatWord_Cancel,
+        .text = gText_Cancel,
         .alphabeticalOrder = 15,
         .enabled = FALSE
     },

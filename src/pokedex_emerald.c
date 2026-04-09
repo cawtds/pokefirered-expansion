@@ -385,6 +385,19 @@ const u8 gText_DexSortSmallestDescription[] = _("Owned POKéMON are listed from 
 const u8 gText_DexEmptyString[] = _("");
 const u8 gText_DexSearchDontSpecify[] = _("DON'T SPECIFY.");
 
+const u8 gText_UnkHeight[] = _("{CLEAR_TO 0x0A}??'??”");
+const u8 gText_UnkHeightMetric[] = _("???.? m");
+const u8 gText_UnkWeight[] = _("????.? lbs.");
+const u8 gText_UnkWeightMetric[] = _("???.? kg.");
+
+const u8 gText_CryOf[] = _("CRY OF");
+const u8 gText_SizeComparedTo[] = _("SIZE COMPARED TO ");
+const u8 gText_PokedexRegistration[] = _("POKéDEX registration completed.");
+const u8 gText_HTHeight[] = _("HT");
+const u8 gText_WTWeight[] = _("WT");
+const u8 gText_5MarksPokemon[] = _("????? POKéMON");
+const u8 gText_SelectorArrow[] = _("▶");
+
 static const struct OamData sOamData_ScrollBar =
 {
     .y = DISPLAY_HEIGHT,

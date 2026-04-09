@@ -35,7 +35,6 @@ extern const u8 gText_Second[];
 extern const u8 gText_Third[];
 extern const u8 gText_NoDecorations[];
 extern const u8 gText_NoDecorationsInUse[];
-extern const u8 gText_Cancel[];
 extern const u8 gText_Color161Shadow161[];
 extern const u8 gText_GoBackPrevMenu[];
 extern const u8 gText_CantPlaceInRoom[];
@@ -70,7 +69,6 @@ extern const u8 gText_ApostropheSBase[];
 extern const u8 gText_NoRegistry[];
 extern const u8 gText_OkayToDeleteFromRegistry[];
 extern const u8 gText_RegisteredDataDeleted[];
-extern const u8 gText_Cancel4[];
 extern const u8 gText_IsThisTheCorrectTime[];
 extern const u8 gText_EggNickname[];
 extern const u8 gText_MenuPokemon[];
@@ -98,7 +96,7 @@ extern const u8 gText_ICanPayThisMuch_WouldThatBeOkay[];
 extern const u8 gText_TurnedOverVar1ForVar2[];
 extern const u8 gPokedudeText_TMTypes[];
 extern const u8 gPokedudeText_ReadTMDescription[];
-extern const u8 gFameCheckerText_Cancel[];
+extern const u8 gText_Cancel[];
 extern const u8 gText_SelectorArrow2[];
 extern const u8 gFameCheckerText_FameCheckerWillBeClosed[];
 extern const u8 gFameCheckerText_ClearTextbox[];
@@ -117,7 +115,6 @@ extern const u8 gTeachyTvString_TypeMatchups[];
 extern const u8 gTeachyTvString_CatchPkmn[];
 extern const u8 gTeachyTvString_AboutTMs[];
 extern const u8 gTeachyTvString_RegisterItem[];
-extern const u8 gTeachyTvString_Cancel[];
 extern const u8 gTeachyTvText_PokedudeSaysHello[];
 extern const u8 gTeachyTvText_BattleScript1[];
 extern const u8 gTeachyTvText_StatusScript1[];
@@ -348,7 +345,6 @@ extern const u8 gText_Player[];
 extern const u8 gText_Register[];
 
 // wallclock
-extern const u8 gText_Cancel4[];
 extern const u8 gText_IsThisTheCorrectTime[];
 
 // mystery_gift_menu
@@ -463,7 +459,6 @@ extern const u8 gText_ByeByeVar1[];
 extern const u8 gText_XSentOverY[];
 extern const u8 gText_TakeGoodCareOfX[];
 extern const u8 gText_CommunicationStandby5[];
-extern const u8 gTradeText_Cancel[];
 extern const u8 gTradeText_ChooseAPokemon[];
 extern const u8 gTradeText_Summary[];
 extern const u8 gTradeText_Trade[];
@@ -526,7 +521,6 @@ extern const u8 gText_BattleStyle[];
 extern const u8 gText_Sound[];
 extern const u8 gText_ButtonMode[];
 extern const u8 gText_Frame[];
-extern const u8 gText_OptionMenuCancel[];
 extern const u8 gText_TextSpeedSlow[];
 extern const u8 gText_TextSpeedMid[];
 extern const u8 gText_TextSpeedFast[];
@@ -854,15 +848,6 @@ extern const u8 gText_LevelUp_Speed[];
 extern const u8 gText_LevelUp_Minus[];
 extern const u8 gText_LevelUp_Plus[];
 
-// Rotom Catalog text
-extern const u8 gText_LightBulb[];
-extern const u8 gText_MicrowaveOven[];
-extern const u8 gText_WashingMachine[];
-extern const u8 gText_Refrigerator[];
-extern const u8 gText_ElectricFan[];
-extern const u8 gText_LawnMower[];
-extern const u8 gText_Exit[];
-
 // Zygarde Cube text
 extern const u8 gText_ChangeForm[];
 extern const u8 gText_ChangeAbility[];
@@ -1110,7 +1095,6 @@ extern const u8 gText_Swap[];
 extern const u8 gText_Summary2[];
 extern const u8 gText_PkmnForSwap[];
 extern const u8 gText_SamePkmnInPartyAlready[];
-extern const u8 gText_Cancel3[];
 
 extern const u8 gText_Rest[];
 
