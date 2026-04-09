@@ -2602,10 +2602,10 @@ enum EscapeRopeWarpInState
 
 enum EscapeRopeWarpFollowerState
 {
-    ESCAPE_ROPE_FOLLOWER_STATE_1,
-    ESCAPE_ROPE_FOLLOWER_STATE_2,
-    ESCAPE_ROPE_FOLLOWER_STATE_3,
-    ESCAPE_ROPE_FOLLOWER_STATE_4,
+    ESCAPE_ROPE_FOLLOWER_WAIT_FOR_PLAYER,
+    ESCAPE_ROPE_FOLLOWER_REAPPEAR,
+    ESCAPE_ROPE_FOLLOWER_FACE_PLAYER,
+    ESCAPE_ROPE_FOLLOWER_END,
 };
 
 // Task data for Task_EscapeRopeWarpIn
@@ -2701,7 +2701,7 @@ static void EscapeRopeWarpInEffect_Init(struct Task *task)
     PlaySE(SE_WARP_OUT);
     task->tStartDir = GetPlayerFacingDirection();
     task->tState = ESCAPE_ROPE_WARP_IN_SPIN;
-    task->tFollowerState = ESCAPE_ROPE_FOLLOWER_STATE_1;
+    task->tFollowerState = ESCAPE_ROPE_FOLLOWER_WAIT_FOR_PLAYER;
 
 }
 
@@ -2724,33 +2724,33 @@ static void EscapeRopeWarpInEffect_Spin(struct Task *task)
             task->tSpinEnded = TRUE;
     }
 
-    if (!moving && task->tCurrentDir == task->tStartDir && ObjectEventCheckHeldMovementStatus(playerObj) == TRUE && task->tFollowerState == ESCAPE_ROPE_FOLLOWER_STATE_1)
-        task->tFollowerState = ESCAPE_ROPE_FOLLOWER_STATE_2;
+    if (!moving && task->tCurrentDir == task->tStartDir && ObjectEventCheckHeldMovementStatus(playerObj) == TRUE && task->tFollowerState == ESCAPE_ROPE_FOLLOWER_WAIT_FOR_PLAYER)
+        task->tFollowerState = ESCAPE_ROPE_FOLLOWER_REAPPEAR;
 
-    if (task->tFollowerState == ESCAPE_ROPE_FOLLOWER_STATE_2)
+    if (task->tFollowerState == ESCAPE_ROPE_FOLLOWER_REAPPEAR)
     {
         if (FNPC_NPC_FOLLOWER_SHOW_AFTER_LEAVE_ROUTE)
             FollowerNPCReappearAfterLeaveMap(followerObj, playerObj);
 
-        task->tFollowerState = ESCAPE_ROPE_FOLLOWER_STATE_3;
+        task->tFollowerState = ESCAPE_ROPE_FOLLOWER_FACE_PLAYER;
     }
 
-    if (task->tFollowerState == ESCAPE_ROPE_FOLLOWER_STATE_3)
+    if (task->tFollowerState == ESCAPE_ROPE_FOLLOWER_FACE_PLAYER)
     {
         if (PlayerHasFollowerNPC() && ObjectEventClearHeldMovementIfFinished(followerObj))
         {
             if (FNPC_NPC_FOLLOWER_SHOW_AFTER_LEAVE_ROUTE)
                 FollowerNPCFaceAfterLeaveMap();
 
-            task->tFollowerState = ESCAPE_ROPE_FOLLOWER_STATE_4;
+            task->tFollowerState = ESCAPE_ROPE_FOLLOWER_END;
         }
         else if (!PlayerHasFollowerNPC())
         {
-            task->tFollowerState = ESCAPE_ROPE_FOLLOWER_STATE_4;
+            task->tFollowerState = ESCAPE_ROPE_FOLLOWER_END;
         }
     }
 
-    if (task->tFollowerState == ESCAPE_ROPE_FOLLOWER_STATE_4)
+    if (task->tFollowerState == ESCAPE_ROPE_FOLLOWER_END)
     {
         playerObj->invisible = FALSE;
         playerObj->fixedPriority = FALSE;
