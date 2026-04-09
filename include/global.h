@@ -301,7 +301,7 @@ struct SaveBlock3
     struct LinkBattleRecords linkBattleRecords;
 #endif //FREE_LINK_BATTLE_RECORDS
 
-    u8 unused[812];
+    // u8 unused[812];
 };
 
 extern struct SaveBlock3 *gSaveBlock3Ptr;
