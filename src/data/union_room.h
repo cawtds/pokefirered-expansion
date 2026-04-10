@@ -180,7 +180,7 @@ static const struct ListMenuItem sListMenuItems_InviteToActivity[] = {
     {gText_UR_Greetings, ACTIVITY_CARD | LINK_GROUP_CAPACITY(0, 2)},
     {gText_UR_Battle,    ACTIVITY_BATTLE_SINGLE | IN_UNION_ROOM | LINK_GROUP_CAPACITY(0, 2)},
     {gText_UR_Chat2,     ACTIVITY_CHAT | IN_UNION_ROOM | LINK_GROUP_CAPACITY(0, 2)},
-    {gText_UR_Exit,      ACTIVITY_NONE | IN_UNION_ROOM }
+    {gText_Exit,      ACTIVITY_NONE | IN_UNION_ROOM }
 };
 
 static const struct ListMenuTemplate sListMenuTemplate_InviteToActivity = {
@@ -217,7 +217,7 @@ static const struct WindowTemplate sWindowTemplate_RegisterForTrade = {
 static const struct ListMenuItem sListMenuItems_RegisterForTrade[] = {
     {gText_Register,  1},
     {gText_Info,   2},
-    {gText_UR_Exit,   3}
+    {gText_Exit,   3}
 };
 
 static const struct ListMenuTemplate sListMenuTemplate_RegisterForTrade = {
@@ -270,7 +270,7 @@ static const struct ListMenuItem sListMenuItems_TypeNames[NUMBER_OF_MON_TYPES] =
     { gTypesInfo[TYPE_STEEL].name,    TYPE_STEEL          },
     { gTypesInfo[TYPE_DARK].name,     TYPE_DARK           },
     { gTypesInfo[TYPE_FAIRY].name,    TYPE_FAIRY          },
-    { gText_UR_Exit,             NUMBER_OF_MON_TYPES }
+    { gText_Exit,             NUMBER_OF_MON_TYPES }
 };
 
 static const struct ListMenuTemplate sListMenuTemplate_TypeNames = {
@@ -324,7 +324,7 @@ static const struct ListMenuItem sListMenuItems_TradeBoard[] = {
     {gText_UR_EmptyString, 5},
     {gText_UR_EmptyString, 6},
     {gText_UR_EmptyString, 7},
-    {gText_UR_Exit2, 8}
+    {gText_Exit, 8}
 };
 
 static const struct ListMenuTemplate sListMenuTemplate_TradeBoard = {

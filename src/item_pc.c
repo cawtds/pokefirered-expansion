@@ -120,7 +120,7 @@ static const struct BgTemplate sBgTemplates[2] = {
 
 static const struct MenuAction sItemPcSubmenuOptions[] = {
     {gText_Withdraw,          {.void_u8 = Task_ItemPcWithdraw}},
-    {gMenuText_Give,         {.void_u8 = Task_ItemPcGive}},
+    {gText_Give,         {.void_u8 = Task_ItemPcGive}},
     {gText_Cancel, {.void_u8 = Task_ItemPcCancel}}
 };
 

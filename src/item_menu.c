@@ -283,22 +283,22 @@ static const struct ListMenuTemplate sItemListMenu =
 };
 
 static const struct MenuAction sItemMenuActions[] = {
-    [ACTION_USE] = {gMenuText_Use, {.void_u8 = ItemMenu_UseOutOfBattle}},
-    [ACTION_TOSS] = {gMenuText_Toss, {.void_u8 = ItemMenu_Toss}},
-    [ACTION_REGISTER] = {gOtherText_Register, {.void_u8 = ItemMenu_Register}},
-    [ACTION_GIVE] = {gMenuText_Give, {.void_u8 = ItemMenu_Give}},
+    [ACTION_USE] = {gText_Use, {.void_u8 = ItemMenu_UseOutOfBattle}},
+    [ACTION_TOSS] = {gText_Toss, {.void_u8 = ItemMenu_Toss}},
+    [ACTION_REGISTER] = {gText_Register, {.void_u8 = ItemMenu_Register}},
+    [ACTION_GIVE] = {gText_Give, {.void_u8 = ItemMenu_Give}},
     [ACTION_CANCEL] = {gText_Cancel, {.void_u8 = ItemMenu_Cancel}},
-    [ACTION_BATTLE_USE] = {gMenuText_Use, {.void_u8 = ItemMenu_UseInBattle}},
+    [ACTION_BATTLE_USE] = {gText_Use, {.void_u8 = ItemMenu_UseInBattle}},
     [ACTION_CHECK] = {gOtherText_Check, {.void_u8 = ItemMenu_UseOutOfBattle}},
     [ACTION_OPEN] = {gOtherText_Open, {.void_u8 = ItemMenu_UseOutOfBattle}},
     [ACTION_OPEN_BERRIES] = {gOtherText_Open, {.void_u8 = ItemMenu_UseInBattle}},
-    [ACTION_WALK] = {gOtherText_Walk, {.void_u8 = ItemMenu_UseOutOfBattle}},
+    [ACTION_WALK] = {gText_Walk, {.void_u8 = ItemMenu_UseOutOfBattle}},
     [ACTION_DESELECT] = {gOtherText_Deselect, {.void_u8 = ItemMenu_Register}},
     [ACTION_BY_NAME]           = {COMPOUND_STRING("Name"),      {ItemMenu_SortByName}},
     [ACTION_BY_TYPE]           = {COMPOUND_STRING("Type"),      {ItemMenu_SortByType}},
     [ACTION_BY_AMOUNT]         = {COMPOUND_STRING("Amount"),    {ItemMenu_SortByAmount}},
     [ACTION_BY_INDEX]          = {COMPOUND_STRING("Index"),     {ItemMenu_SortByIndex}},
-    [ACTION_DUMMY] = {gString_Dummy, {.void_u8 = NULL}}
+    [ACTION_DUMMY] = {gText_EmptyString, {.void_u8 = NULL}}
 };
 
 static const u8 sContextMenuItems_Field[][4] = {

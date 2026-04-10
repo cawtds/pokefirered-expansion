@@ -88,10 +88,8 @@ static const u8 sText_WonderCards[] = _("WONDER CARDS");
 static const u8 sText_WonderNews[] = _("WONDER NEWS");
 static const u8 sText_WirelessCommunication[] = _("WIRELESS COMMUNICATION");
 static const u8 sText_Friend2[] = _("FRIEND");
-static const u8 sText_Exit3[] = _("EXIT");
 static const u8 sText_Receive[] = _("RECEIVE");
 static const u8 sText_Send[] = _("SEND");
-static const u8 sText_Toss[] = _("TOSS");
 static const u8 sJPText_MysteryGift[] = _("");
 static const u8 sJPText_DecideStop[] = _("");
 
@@ -262,7 +260,7 @@ static const struct WindowTemplate sWindowTemplate_GiftSelect_1Option = {
 static const struct ListMenuItem sListMenuItems_CardsOrNews[] = {
     { sText_WonderCards,  0 },
     { sText_WonderNews,   1 },
-    { sText_Exit3,        LIST_CANCEL }
+    { gText_Exit,        LIST_CANCEL }
 };
 
 static const struct ListMenuItem sListMenuItems_WirelessOrFriend[] = {
@@ -295,13 +293,13 @@ static const struct ListMenuTemplate sListMenuTemplate_ThreeOptions = {
 static const struct ListMenuItem sListMenuItems_ReceiveSendToss[] = {
     { sText_Receive,  0 },
     { sText_Send,     1 },
-    { sText_Toss,     2 },
+    { gText_Toss,     2 },
     { gText_Cancel, LIST_CANCEL }
 };
 
 static const struct ListMenuItem sListMenuItems_ReceiveToss[] = {
     { sText_Receive,  0 },
-    { sText_Toss,     2 },
+    { gText_Toss,     2 },
     { gText_Cancel, LIST_CANCEL }
 };
 

@@ -75,6 +75,9 @@ struct ApprenticeQuestionData
     u16 move2;
 };
 
+static const u8 sText_Give[] = _("Give");
+static const u8 sText_NoNeed[] = _("No need");
+
 // IWRAM common
 COMMON_DATA struct ApprenticePartyMovesData *gApprenticePartyMovesData = NULL;
 COMMON_DATA struct ApprenticeQuestionData *gApprenticeQuestionData = NULL;
@@ -589,8 +592,8 @@ static void CreateApprenticeMenu(u8 menu)
     case APPRENTICE_ASK_GIVE:
         left = 18;
         top = 8;
-        strings[0] = gText_Give;
-        strings[1] = gText_NoNeed;
+        strings[0] = sText_Give;
+        strings[1] = sText_NoNeed;
         break;
     case APPRENTICE_ASK_YES_NO:
         left = 20;

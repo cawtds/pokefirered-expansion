@@ -19,7 +19,6 @@ static const u8 sEasyChatWord_Rpg[] = _("RPG");
 static const u8 sEasyChatWord_Collection[] = _("COLLECTION");
 static const u8 sEasyChatWord_Complete[] = _("COMPLETE");
 static const u8 sEasyChatWord_Magazine[] = _("MAGAZINE");
-static const u8 sEasyChatWord_Walk[] = _("WALK");
 static const u8 sEasyChatWord_Bike[] = _("BIKE");
 static const u8 sEasyChatWord_Hobby[] = _("HOBBY");
 static const u8 sEasyChatWord_Sports[] = _("SPORTS");
@@ -156,7 +155,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Hobbies[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_Walk,
+        .text = gText_Walk,
         .alphabeticalOrder = 32,
         .enabled = TRUE
     },

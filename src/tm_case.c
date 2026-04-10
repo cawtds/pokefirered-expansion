@@ -218,9 +218,9 @@ static void (*const sSelectTMActionTasks[])(u8 taskId) = {
 };
 
 static const struct MenuAction sMenuActions[] = {
-    [TMCASE_ACTION_USE]  = {gMenuText_Use,  {Action_Use}  },
-    [TMCASE_ACTION_GIVE] = {gMenuText_Give, {Action_Give} },
-    [TMCASE_ACTION_EXIT] = {gOtherText_Exit, {Action_Exit} },
+    [TMCASE_ACTION_USE]  = {gText_Use,  {Action_Use}  },
+    [TMCASE_ACTION_GIVE] = {gText_Give, {Action_Give} },
+    [TMCASE_ACTION_EXIT] = {gText_Exit, {Action_Exit} },
 };
 
 static const u8 sMenuActionIndices_Field[] = {TMCASE_ACTION_USE, TMCASE_ACTION_GIVE, TMCASE_ACTION_EXIT};

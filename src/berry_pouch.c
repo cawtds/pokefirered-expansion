@@ -188,11 +188,11 @@ static const struct YesNoFuncTable sYesNoFuncs_Sell =
 
 static const struct MenuAction sContextMenuActions[] =
 {
-    {gMenuText_Use,  {Task_BerryPouch_Use}},
-    {gMenuText_Toss, {Task_BerryPouch_Toss}},
-    {gMenuText_Give, {Task_BerryPouch_Give}},
-    {gOtherText_Exit, {Task_BerryPouch_Exit}},
-    {gString_Dummy,   {NULL}}
+    {gText_Use,  {Task_BerryPouch_Use}},
+    {gText_Toss, {Task_BerryPouch_Toss}},
+    {gText_Give, {Task_BerryPouch_Give}},
+    {gText_Exit, {Task_BerryPouch_Exit}},
+    {gText_EmptyString,   {NULL}}
 };
 
 static const u8 sOptions_UseGiveTossExit[] = {

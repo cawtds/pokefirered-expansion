@@ -75,24 +75,38 @@ static void Task_WaitFadeAndGoToPartyMenu(u8 taskId);
 static void Task_Error_NoPokemon(u8 taskId);
 static void Task_PlayerPcExitMailSubmenu(u8 taskId);
 
+const u8 gText_StoreItemsInThePC[] = _("Store items in the PC.");
+const u8 gText_TakeOutItemsFromThePC[] = _("Take out items from the PC.");
+const u8 gText_ThereAreNoItems[] = _("There are no items.{PAUSE_UNTIL_PRESS}");
+const u8 gText_NoMoreRoomInBag[] = _("There is no more\nroom in the BAG.");
+const u8 gText_WithdrawHowMany[] = _("Withdraw how many\n{STR_VAR_1}(s)?");
+const u8 gOtherText_MoveToBag[] = _("MOVE TO BAG");
+const u8 gText_TheresNoMailHere[] = _("There's no MAIL here.{PAUSE_UNTIL_PRESS}");
+const u8 gText_WhatWouldYouLikeToDoWithPlayersMail[] = _("What would you like to do with\n{STR_VAR_1}'s MAIL?");
+const u8 gText_MessageWillBeLost[] = _("The message will be lost.\nIs that okay?");
+const u8 gText_BagIsFull[] = _("The BAG is full.{PAUSE_UNTIL_PRESS}");
+const u8 gText_MailReturnedToBagMessageErased[] = _("The MAIL was returned to the BAG\nwith its message erased.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_Mailbox[] = _("MAILBOX");
+
 static const u8 *const sItemStorageActionDescriptionPtrs[] = {
     gText_TakeOutItemsFromThePC,
     gText_StoreItemsInThePC,
     gText_GoBackToThePreviousMenu
 };
 
-static const struct MenuAction sMenuActions_TopMenu[] = {
-    {gText_ItemStorage, {Task_PlayerPcItemStorage}},
-    {gText_Mailbox, {Task_PlayerPcMailbox}},
-    {gText_TurnOff, {Task_PlayerPcTurnOff}}
+static const struct MenuAction sMenuActions_TopMenu[] =
+{
+    {COMPOUND_STRING("ITEM STORAGE"),   {Task_PlayerPcItemStorage}},
+    {sText_Mailbox,                     {Task_PlayerPcMailbox}},
+    {COMPOUND_STRING("TURN OFF"),       {Task_PlayerPcTurnOff}}
 };
 
 static const u8 sItemOrder_BedroomPC[] = { 0, 1, 2 };
 static const u8 sItemOrder_PlayerPC[] = { 0, 1, 2 };
 
 static const struct MenuAction sMenuActions_ItemPc[] = {
-    {gText_WithdrawItem2, {Task_PlayerPcWithdrawItem}},
-    {gText_DepositItem2, {Task_PlayerPcDepositItem}},
+    {COMPOUND_STRING("WITHDRAW ITEM"), {Task_PlayerPcWithdrawItem}},
+    {gText_DepositItem, {Task_PlayerPcDepositItem}},
     {gText_Cancel, {Task_PlayerPcCancel}}
 };
 
@@ -102,10 +116,10 @@ static const struct ItemSlot gNewGamePCItems[] = {
 };
 
 static const struct MenuAction sMenuActions_MailSubmenu[] = {
-    {gOtherText_Read, {Task_PlayerPcReadMail}},
+    {gText_Read, {Task_PlayerPcReadMail}},
     {gOtherText_MoveToBag, {Task_PlayerPcMoveMailToBag}},
-    {gOtherText_Give2, {Task_PlayerPcGiveMailToMon}},
-    {gOtherText_Exit, {Task_PlayerPcExitMailSubmenu}}
+    {gText_Give, {Task_PlayerPcGiveMailToMon}},
+    {gText_Exit, {Task_PlayerPcExitMailSubmenu}}
 };
 
 static const struct WindowTemplate sWindowTemplate_TopMenu_3Items = {
@@ -452,9 +466,9 @@ static void PCMailCompaction(void)
 static void Task_DrawMailboxPcMenu(u8 taskId)
 {
     u8 windowId = MailboxPC_GetAddWindow(0);
-    s32 width = GetStringWidth(FONT_NORMAL, gText_Mailbox, 0);
+    s32 width = GetStringWidth(FONT_NORMAL, sText_Mailbox, 0);
     MailboxPC_GetAddWindow(1);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_Mailbox, (80 - width) / 2, 2, 0, NULL);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_Mailbox, (80 - width) / 2, 2, 0, NULL);
     ScheduleBgCopyTilemapToVram(0);
     gTasks[taskId].tListMenuTaskId = MailboxPC_InitListMenu(&gPlayerPcMenuManager);
     MailboxPC_AddScrollIndicatorArrows(&gPlayerPcMenuManager);

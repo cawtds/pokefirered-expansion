@@ -2384,8 +2384,8 @@ static void CreateCancelConfirmWindows(bool8 chooseMultiple)
         }
         else
         {
-            offset += (48 - GetStringWidth(FONT_SMALL, gOtherText_Exit, 0)) / 2;
-            AddTextPrinterParameterized3(cancelWindowId, FONT_SMALL, offset, 1, sFontColorTable[0], -1, gOtherText_Exit);
+            offset += (48 - GetStringWidth(FONT_SMALL, gText_Exit, 0)) / 2;
+            AddTextPrinterParameterized3(cancelWindowId, FONT_SMALL, offset, 1, sFontColorTable[0], -1, gText_Exit);
         }
         PutWindowTilemap(cancelWindowId);
         CopyWindowToVram(cancelWindowId, COPYWIN_GFX);

@@ -28,14 +28,12 @@ static const u8 sEasyChatWord_Test[] = _("TEST");
 static const u8 sEasyChatWord_DeptStore[] = _("DEPT. STORE");
 static const u8 sEasyChatWord_Television[] = _("TELEVISION");
 static const u8 sEasyChatWord_Phone[] = _("PHONE");
-static const u8 sEasyChatWord_Item[] = _("ITEM");
 static const u8 sEasyChatWord_Name[] = _("NAME");
 static const u8 sEasyChatWord_News[] = _("NEWS");
 static const u8 sEasyChatWord_Popular[] = _("POPULAR");
 static const u8 sEasyChatWord_Party[] = _("PARTY");
 static const u8 sEasyChatWord_Study[] = _("STUDY");
 static const u8 sEasyChatWord_Machine[] = _("MACHINE");
-static const u8 sEasyChatWord_Mail[] = _("MAIL");
 static const u8 sEasyChatWord_Message[] = _("MESSAGE");
 static const u8 sEasyChatWord_Promise[] = _("PROMISE");
 static const u8 sEasyChatWord_Dream[] = _("DREAM");
@@ -192,7 +190,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Lifestyle[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_Item,
+        .text = gText_Item,
         .alphabeticalOrder = 38,
         .enabled = TRUE
     },
@@ -227,7 +225,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Lifestyle[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_Mail,
+        .text = gText_Mail,
         .alphabeticalOrder = 14,
         .enabled = TRUE
     },

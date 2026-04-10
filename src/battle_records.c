@@ -30,6 +30,12 @@ static void RemoveBattleRecordsWindow(u8 windowId);
 EWRAM_DATA u8 gRecordsWindowId = 0;
 EWRAM_DATA static u16 * sTilemapBuffer = NULL;
 
+static const u8 sString_BattleRecords_PlayersBattleResults[] = _("{PLAYER}'s BATTLE RESULTS");
+static const u8 sString_BattleRecords_TotalRecord[] = _("TOTAL RECORD W:{STR_VAR_1} L:{STR_VAR_2} D:{STR_VAR_3}");
+static const u8 sString_BattleRecords_ColumnHeaders[] = _("WIN{CLEAR_TO 0x30}LOSE{CLEAR_TO 0x60}DRAW");
+static const u8 sString_BattleRecords_7Dashes[] = _("-------");
+static const u8 sString_BattleRecords_4Dashes[] = _("----");
+
 static const u16 sBattleRecordsWindowTiles[] = INCBIN_U16("graphics/battle_records/bg_tiles.4bpp");
 static const u16 sBattleRecordsWindowPalette[] = INCBIN_U16("graphics/battle_records/bg_tiles.gbapal");
 static const u16 sBattleRecordsWindowTilemap[] = INCBIN_U16("graphics/battle_records/bg_tiles.bin");
@@ -302,7 +308,7 @@ static void PrintLinkBattleWinsLossesDraws(struct LinkBattleRecords *records)
         *strvar = 0xFF;
     }
 
-    StringExpandPlaceholders(gStringVar4, gString_BattleRecords_TotalRecord);
+    StringExpandPlaceholders(gStringVar4, sString_BattleRecords_TotalRecord);
     AddTextPrinterParameterized4(0, FONT_NORMAL, 12, 24, 0, 2, sTextColor, 0, gStringVar4);
 }
 
@@ -313,7 +319,7 @@ static void PrintLinkBattleRecord(struct LinkBattleRecord * record, u8 y)
 
     if (record->wins == 0 && record->losses == 0 && record->draws == 0)
     {
-        AddTextPrinterParameterized4(0, FONT_NORMAL, 0, y, 0, 2, sTextColor, 0, gString_BattleRecords_7Dashes);
+        AddTextPrinterParameterized4(0, FONT_NORMAL, 0, y, 0, 2, sTextColor, 0, sString_BattleRecords_7Dashes);
         for (i = 0; i < 3; i++)
         {
             if (i == 0)
@@ -322,7 +328,7 @@ static void PrintLinkBattleRecord(struct LinkBattleRecord * record, u8 y)
                 x = 0x84;
             else
                 x = 0xB4;
-            AddTextPrinterParameterized4(0, FONT_NORMAL, x, y, 0, 2, sTextColor, 0, gString_BattleRecords_4Dashes);
+            AddTextPrinterParameterized4(0, FONT_NORMAL, x, y, 0, 2, sTextColor, 0, sString_BattleRecords_4Dashes);
         }
     }
     else
@@ -363,11 +369,11 @@ static void PrintLinkBattleRecords(void)
     s32 i;
 
     FillWindowPixelRect(0, PIXEL_FILL(0), 0, 0, 0xD8, 0x90);
-    StringExpandPlaceholders(gStringVar4, gString_BattleRecords_PlayersBattleResults);
+    StringExpandPlaceholders(gStringVar4, sString_BattleRecords_PlayersBattleResults);
     left = 208 - GetStringWidth(FONT_NORMAL, gStringVar4, -1);
     AddTextPrinterParameterized4(0, FONT_NORMAL, left / 2, 4, 0, 2, sTextColor, 0, gStringVar4);
     PrintLinkBattleWinsLossesDraws(&gSaveBlock3Ptr->linkBattleRecords);
-    AddTextPrinterParameterized4(0, FONT_NORMAL, 0x54, 0x30, 0, 2, sTextColor, 0, gString_BattleRecords_ColumnHeaders);
+    AddTextPrinterParameterized4(0, FONT_NORMAL, 0x54, 0x30, 0, 2, sTextColor, 0, sString_BattleRecords_ColumnHeaders);
     for (i = 0; i < LINK_B_RECORDS_COUNT; i++)
         PrintLinkBattleRecord(&gSaveBlock3Ptr->linkBattleRecords.entries[i], 0x3D + 14 * i);
 

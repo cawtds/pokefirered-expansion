@@ -74,10 +74,9 @@ extern const u8 gText_EggNickname[];
 extern const u8 gText_MenuPokemon[];
 extern const u8 gText_Time[];
 
-extern const u8 gMenuText_Use[];
-extern const u8 gMenuText_Toss[];
-extern const u8 gMenuText_Give[];
-extern const u8 gOtherText_Exit[];
+extern const u8 gText_Use[];
+extern const u8 gText_Toss[];
+extern const u8 gText_Give[];
 extern const u8 gText_ThreeHyphens[];
 extern const u8 gText_SevenHyphens[];
 extern const u8 gText_NumberClear01[];
@@ -98,15 +97,6 @@ extern const u8 gPokedudeText_TMTypes[];
 extern const u8 gPokedudeText_ReadTMDescription[];
 extern const u8 gText_Cancel[];
 extern const u8 gText_SelectorArrow2[];
-extern const u8 gFameCheckerText_FameCheckerWillBeClosed[];
-extern const u8 gFameCheckerText_ClearTextbox[];
-extern const u8 gFameCheckerText_MainScreenUI[]; // "{DPAD_ANY}PICK {DPAD_UPDOWN}SELECT {A_BUTTON}OK$"
-extern const u8 gFameCheckerText_PickScreenUI[]; // "{DPAD_ANY}PICK {DPAD_UPDOWN}SELECT {B_BUTTON}CANCEL$"
-extern const u8 gFameCheckerText_FlavorTextUI[]; // "{START_BUTTON}PICK {A_BUTTON}READ {B_BUTTON}CANCEL$"
-extern const u8 gFameCheckerOakName[]; // "OAK$"
-extern const u8 gFameCheckerDaisyName[]; // "DAISY$"
-extern const u8 gFameCheckerBillName[]; // "BILL$"
-extern const u8 gFameCheckerMrFujiName[]; // "FUJI$"
 
 // teachy_tv
 extern const u8 gTeachyTvString_TeachBattle[];
@@ -186,13 +176,6 @@ extern const u8 gText_Diploma_GameFreak[];
 extern const u8 gText_Diploma_National[];
 extern const u8 gText_Diploma_Kanto[];
 
-// battle_records
-extern const u8 gString_BattleRecords_PlayersBattleResults[];
-extern const u8 gString_BattleRecords_TotalRecord[];
-extern const u8 gString_BattleRecords_ColumnHeaders[];
-extern const u8 gString_BattleRecords_7Dashes[];
-extern const u8 gString_BattleRecords_4Dashes[];
-
 // slot_machine
 extern const u8 gString_OutOfCoins[];
 extern const u8 gString_QuitPlaying[];
@@ -265,7 +248,7 @@ extern const u8 gText_Item[];
 extern const u8 gText_Take[];
 extern const u8 gText_Mail[];
 extern const u8 gText_Take2[];
-extern const u8 gText_Read2[];
+extern const u8 gText_Read[];
 extern const u8 gText_Shift[];
 extern const u8 gText_SendOut[];
 extern const u8 gText_Enter[];
@@ -315,8 +298,6 @@ extern const u8 gText_RemoveMailBeforeItem[];
 extern const u8 gText_CantSwitchWithAlly[];
 extern const u8 gText_EggCantBattle[];
 
-extern const u8 gString_Dummy[];
-
 // berry_pouch
 extern const u8 gText_Var1CantBeHeldHere[];
 extern const u8 gText_TossHowManyVar1s[];
@@ -356,14 +337,7 @@ extern const u8 gText_WhatWouldYouLikeToDo[];
 extern const u8 gText_TakeOutItemsFromThePC[];
 extern const u8 gText_StoreItemsInThePC[];
 extern const u8 gText_GoBackToThePreviousMenu[];
-extern const u8 gText_ItemStorage[];
-extern const u8 gText_Mailbox[];
-extern const u8 gText_TurnOff[];
-extern const u8 gText_WithdrawItem2[];
-extern const u8 gText_DepositItem2[];
-extern const u8 gOtherText_Read[];
 extern const u8 gOtherText_MoveToBag[];
-extern const u8 gOtherText_Give2[];
 extern const u8 gText_TheresNoMailHere[];
 extern const u8 gText_ThereAreNoItems[];
 extern const u8 gText_WhatWouldYouLikeToDoWithPlayersMail[];
@@ -376,7 +350,6 @@ extern const u8 gText_MenuBag[];
 extern const u8 gText_MenuPlayer[];
 extern const u8 gText_MenuSave[];
 extern const u8 gText_MenuOption[];
-extern const u8 gText_MenuExit[];
 extern const u8 gText_MenuRetire[];
 extern const u8 gText_MenuSafariStats[];
 extern const u8 gText_MenuDexNav[];
@@ -599,8 +572,7 @@ extern const u8 gText_SaveCompletePressA[];
 extern const u8 gText_DepositItem[];
 
 // item_menu
-extern const u8 gOtherText_Register[];
-extern const u8 gOtherText_Walk[];
+extern const u8 gText_Walk[];
 extern const u8 gOtherText_Check[];
 extern const u8 gOtherText_Open[];
 extern const u8 gOtherText_Deselect[];
@@ -641,7 +613,6 @@ extern const u8 gText_IfLeaderLeavesChatWillEnd[];
 extern const u8 gText_Upper[];
 extern const u8 gText_Lower[];
 extern const u8 gText_Symbols[];
-extern const u8 gText_Register2[];
 extern const u8 gText_Exit[];
 
 // wireless_communication_status_screen
@@ -1646,10 +1617,6 @@ extern const u8 gText_BattleArenaDesc[];
 extern const u8 gText_BattleFactoryDesc[];
 extern const u8 gText_BattlePikeDesc[];
 extern const u8 gText_BattlePyramidDesc[];
-
-// Apprentice
-extern const u8 gText_Give[];
-extern const u8 gText_NoNeed[];
 
 // Move Relearner
 extern const u8 MoveRelearner_Text_LevelUpMoveLWR[];

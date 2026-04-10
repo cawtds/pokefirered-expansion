@@ -343,7 +343,7 @@ static const struct MenuAction sKeyboardSwapTexts[] = {
     {gText_Upper},
     {gText_Lower},
     {gText_Symbols},
-    {gText_Register2},
+    {gText_Register},
     {gText_Exit}
 };
 

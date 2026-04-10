@@ -4,27 +4,25 @@
 #include "constants/item.h"
 
 const u8 gText_EmptyString[] = _("");
-
 const u8 gText_EggNickname[POKEMON_NAME_LENGTH + 1] = _("EGG");
 const u8 gText_MenuPokemon[POKEMON_NAME_LENGTH + 1] = _("POKéMON");
 const u8 gText_Time[] = _("TIME");
 const u8 gText_Pokedex[] = _("POKéDEX");
 const u8 gText_Badges[] = _("BADGES");
 const u8 gText_Player[] = _("PLAYER");
-
 const u8 gText_PickOKExit[] = _("{DPAD_UPDOWN}PICK {A_BUTTON}OK {B_BUTTON}CANCEL");
 const u8 gText_CommunicationError[] = _("Communication error.");
-
+const u8 gText_YourPartysFull[] = _("Your party's full!{PAUSE_UNTIL_PRESS}");
+const u8 gText_Give[] = _("GIVE");
 const u8 gText_Cancel[] = _("CANCEL");
-const u8 gMenuText_Use[] = _("USE");
-const u8 gMenuText_Toss[] = _("TOSS");
-const u8 gOtherText_Register[] = _("REGISTER");
-const u8 gMenuText_Give[] = _("GIVE");
-const u8 gOtherText_Walk[] = _("WALK");
-const u8 gOtherText_Exit[] = _("EXIT");
-const u8 gString_Dummy[] = _("");
+const u8 gText_Use[] = _("USE");
+const u8 gText_Toss[] = _("TOSS");
+const u8 gText_Register[] = _("REGISTER");
+const u8 gText_Walk[] = _("WALK");
+const u8 gText_Exit[] = _("EXIT");
 const u8 gText_Item[] = _("ITEM");
 const u8 gText_Mail[] = _("MAIL");
+
 const u8 gText_Take[] = _("TAKE");
 const u8 gText_Store[] = _("STORE");
 const u8 gOtherText_Check[] = _("CHECK");
@@ -49,7 +47,6 @@ const u8 gText_MenuBag[] = _("BAG");
 const u8 gText_MenuPlayer[] = _("{PLAYER}");
 const u8 gText_MenuSave[] = _("SAVE");
 const u8 gText_MenuOption[] = _("OPTION");
-const u8 gText_MenuExit[] = _("EXIT");
 const u8 gText_MenuRetire[] = _("RETIRE");
 const u8 gText_MenuDexNav[] = _("DEXNAV");
 const u8 gText_MenuSafariStats[] = _("{STR_VAR_1}/{STR_VAR_2}\nBALLS  {STR_VAR_3}");
@@ -117,7 +114,7 @@ const u8 gText_Summary5[] = _("SUMMARY");
 const u8 gText_Enter[] = _("ENTER");
 const u8 gText_NoEntry[] = _("NO ENTRY");
 const u8 gText_Take2[] = _("TAKE");
-const u8 gText_Read2[] = _("READ");
+const u8 gText_Read[] = _("READ");
 const u8 gText_Trade4[] = _("TRADE");
 const u8 gText_PartyMenu_OK[] = _("OK");
 const u8 gText_Empty[] = _("");
@@ -160,25 +157,7 @@ const u8 gText_OakImportantToGetToKnowPokemonThroughly[] = _("OAK: It's importan
 const u8 gText_OakThisIsListOfPokemon[] = _("This is a list of your POKéMON,\n{PLAYER}.\pOpen this to check the skills\nand moves of your POKéMON.\pYou also choose POKéMON here if\nyou want to use an item on one.{PAUSE_UNTIL_PRESS}");
 const u8 gText_EscapeFromHereAndReturnTo[] = _("Want to escape from here and return\nto {STR_VAR_1}?");
 const u8 gText_CancelBattle[] = _("Cancel the battle?");
-const u8 gText_TurnOff[] = _("TURN OFF");
-const u8 gText_ItemStorage[] = _("ITEM STORAGE");
-const u8 gText_Mailbox[] = _("MAILBOX");
-const u8 gText_DepositItem2[] = _("DEPOSIT ITEM");
-const u8 gText_WithdrawItem2[] = _("WITHDRAW ITEM");
-const u8 gText_StoreItemsInThePC[] = _("Store items in the PC.");
-const u8 gText_TakeOutItemsFromThePC[] = _("Take out items from the PC.");
-const u8 gText_ThereAreNoItems[] = _("There are no items.{PAUSE_UNTIL_PRESS}");
-const u8 gText_NoMoreRoomInBag[] = _("There is no more\nroom in the BAG.");
-const u8 gText_WithdrawHowMany[] = _("Withdraw how many\n{STR_VAR_1}(s)?");
 const u8 gText_WithdrewQuantItem[] = _("Withdrew {STR_VAR_2}\n{STR_VAR_1}(s).");
-const u8 gOtherText_Read[] = _("READ");
-const u8 gOtherText_MoveToBag[] = _("MOVE TO BAG");
-const u8 gOtherText_Give2[] = _("GIVE");
-const u8 gText_TheresNoMailHere[] = _("There's no MAIL here.{PAUSE_UNTIL_PRESS}");
-const u8 gText_WhatWouldYouLikeToDoWithPlayersMail[] = _("What would you like to do with\n{STR_VAR_1}'s MAIL?");
-const u8 gText_MessageWillBeLost[] = _("The message will be lost.\nIs that okay?");
-const u8 gText_BagIsFull[] = _("The BAG is full.{PAUSE_UNTIL_PRESS}");
-const u8 gText_MailReturnedToBagMessageErased[] = _("The MAIL was returned to the BAG\nwith its message erased.{PAUSE_UNTIL_PRESS}");
 const u8 gText_WithdrawItem[] = _("WITHDRAW\nITEM");
 const u8 gText_Withdraw[] = _("WITHDRAW");
 const u8 gText_ReturnToPC[] = _("Return to the PC.");
@@ -227,15 +206,6 @@ const u8 gText_Rooftop[] = _("ROOFTOP");
 const u8 gText_NowOn[] = _("Now on:");
 const u8 gText_BP[] = _("BP");
 
-const u8 gString_BattleRecords_PlayersBattleResults[] = _("{PLAYER}'s BATTLE RESULTS");
-const u8 gString_BattleRecords_TotalRecord[] = _("TOTAL RECORD W:{STR_VAR_1} L:{STR_VAR_2} D:{STR_VAR_3}");
-const u8 gString_BattleRecords_ColumnHeaders[] = _("WIN{CLEAR_TO 0x30}LOSE{CLEAR_TO 0x60}DRAW");
-const u8 gString_BattleRecords_7Dashes[] = _("-------");
-const u8 gString_BattleRecords_4Dashes[] = _("----");
-const u8 gFameCheckerText_FameCheckerWillBeClosed[] = _("The FAME CHECKER will be closed.");
-const u8 gFameCheckerText_ClearTextbox[] = _("\n                              ");
-
-const u8 gText_YourPartysFull[] = _("Your party's full!{PAUSE_UNTIL_PRESS}");
 
 const u8 gText_CombineFourWordsOrPhrases[] = _("Combine four words or phrases");
 const u8 gText_AndMakeYourProfile[] = _("and make your profile.");
@@ -346,8 +316,6 @@ const u8 gText_Upper[] = _("UPPER");
 const u8 gText_Lower[] = _("lower");
 const u8 gText_Others[] = _("OTHERS");
 const u8 gText_Symbols[] = _("SYMBOLS");
-const u8 gText_Register2[] = _("REGISTER");
-const u8 gText_Exit[] = _("EXIT");
 const u8 gText_QuitChatting[] = _("Quit chatting?");
 const u8 gText_RegisterTextWhere[] = _("Register text where?");
 const u8 gText_RegisterTextHere[] = _("Register text here?");
@@ -382,7 +350,6 @@ const u8 gText_ClearAllSaveData[] = _("Clear all save data areas?");
 const u8 gText_ClearingData[] = _("Clearing data‥\nPlease wait.");
 const u8 gText_IsThisTheCorrectTime[] = _("Is this the correct time?");
 const u8 gText_Colon[] = _(":");
-const u8 gText_Register[] = _("REGISTER");
 const u8 gText_HatchedFromEgg[] = _("{STR_VAR_1} hatched from the EGG!");
 const u8 gText_NickHatchPrompt[] = _("Would you like to nickname the newly\nhatched {STR_VAR_1}?");
 const u8 gString_OutOfCoins[] = _("You've run out of COINS.\nGame over!");
@@ -459,13 +426,6 @@ const u8 gText_TenDashes[] = _("----------");
 const u8 gText_CommStandbyAwaitingOtherPlayer[] = _("Communication standby‥\nAwaiting another player to choose.");
 const u8 gText_BattleWasRefused[] = _("The battle was refused.{PAUSE 0x3C}");
 const u8 gText_RefusedBattle[] = _("Refused the battle.{PAUSE 0x3C}");
-const u8 gFameCheckerText_MainScreenUI[] = _("{START_BUTTON}PICK {DPAD_UPDOWN}SELECT {A_BUTTON}OK");
-const u8 gFameCheckerText_PickScreenUI[] = _("{START_BUTTON}PICK {DPAD_UPDOWN}SELECT {B_BUTTON}CANCEL");
-const u8 gFameCheckerText_FlavorTextUI[] = _("{DPAD_ANY}PICK {A_BUTTON}READ {B_BUTTON}CANCEL");
-const u8 gFameCheckerOakName[] = _("OAK");
-const u8 gFameCheckerDaisyName[] = _("DAISY");
-const u8 gFameCheckerBillName[] = _("BILL");
-const u8 gFameCheckerMrFujiName[] = _("FUJI");
 const u8 gText_DelAllCancelOk[] = _("DEL. ALL{CLEAR_TO 0x57}CANCEL{CLEAR_TO 0xA4}OK");
 
 const u8 gText_ExpShareOn[] = _("The Exp. Share has been turned on.{PAUSE_UNTIL_PRESS}");
@@ -583,8 +543,6 @@ const u8 gText_Floor6[] = _("Floor 6");
 const u8 gText_Floor7[] = _("Floor 7");
 const u8 gText_Peak[] = _("Peak");
 
-const u8 gText_Give[] = _("Give");
-const u8 gText_NoNeed[] = _("No need");
 
 const u8 gText_SymbolsEarned[] = _("Symbols Earned");
 const u8 gText_BattleRecord[] = _("Battle Record");

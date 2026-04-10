@@ -145,7 +145,7 @@ static const u8 *const sScrollMultiLabels_Badges[] =
     gText_MarshBadge,
     gText_VolcanoBadge,
     gText_EarthBadge,
-    gOtherText_Exit,
+    gText_Exit,
 };
 
 static const u8 *const sScrollMultiLabels_SilphCoFloors[] =
@@ -161,7 +161,7 @@ static const u8 *const sScrollMultiLabels_SilphCoFloors[] =
     gText_3F,
     gText_2F,
     gText_1F,
-    gOtherText_Exit,
+    gText_Exit,
 };
 
 static const u8 *const sScrollMultiLabels_BerryPowder[] =
@@ -177,7 +177,7 @@ static const u8 *const sScrollMultiLabels_BerryPowder[] =
     COMPOUND_STRING("ZINC{CLEAR_TO 0x65}{FONT_SMALL}1,000"),
     COMPOUND_STRING("HP UP{CLEAR_TO 0x65}{FONT_SMALL}1,000"),
     COMPOUND_STRING("PP UP{CLEAR_TO 0x65}{FONT_SMALL}3,000"),
-    gOtherText_Exit,
+    gText_Exit,
 };
 
 static const u8 *const sScrollMultiLabels_BFReceptionist[] =

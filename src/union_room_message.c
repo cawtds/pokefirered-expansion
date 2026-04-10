@@ -515,9 +515,6 @@ const u8 *const gTexts_UR_NoWonderShared[] = {
 ALIGNED(4) const u8 gText_UR_Battle[] = _("BATTLE");
 ALIGNED(4) const u8 gText_UR_Chat2[] = _("CHAT");
 ALIGNED(4) const u8 gText_UR_Greetings[] = _("GREETINGS");
-ALIGNED(4) const u8 gText_UR_Exit[] = _("EXIT");
-
-ALIGNED(4) const u8 gText_UR_Exit2[] = _("EXIT");
 ALIGNED(4) const u8 gText_UR_NameWantedOfferLv[] = _("NAME{CLEAR_TO 0x3C}WANTED{CLEAR_TO 0x6E}OFFER{CLEAR_TO 0xC6}LV.");
 
 ALIGNED(4) const u8 gText_UR_PokemonTrades[] = _("POKéMON TRADES");

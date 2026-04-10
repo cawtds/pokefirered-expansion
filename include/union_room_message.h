@@ -87,8 +87,6 @@ extern const u8 *const gTexts_UR_NoWonderShared[];
 extern const u8 gText_UR_Battle[];
 extern const u8 gText_UR_Chat2[];
 extern const u8 gText_UR_Greetings[];
-extern const u8 gText_UR_Exit[];
-extern const u8 gText_UR_Exit2[];
 extern const u8 gText_UR_NameWantedOfferLv[];
 extern const u8 gText_UR_PokemonTrades[];
 extern const u8 gText_UR_Chat[];
