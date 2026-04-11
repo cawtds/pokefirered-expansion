@@ -1239,39 +1239,6 @@ extern const u8 BattlePyramid_Text_FiveTrainersRemaining6[];
 extern const u8 BattlePyramid_Text_SixTrainersRemaining6[];
 extern const u8 BattlePyramid_Text_SevenTrainersRemaining6[];
 
-// Frontier Pass
-extern const u8 gText_SymbolsEarned[];
-extern const u8 gText_BattleRecord[];
-extern const u8 gText_BattlePoints[];
-extern const u8 gText_ThereIsNoBattleRecord[];
-extern const u8 gText_CheckFrontierMap[];
-extern const u8 gText_CheckTrainerCard[];
-extern const u8 gText_ViewRecordedBattle[];
-extern const u8 gText_PutAwayFrontierPass[];
-extern const u8 gText_CurrentBattlePoints[];
-extern const u8 gText_CollectedSymbols[];
-extern const u8 gText_BattleTowerAbilitySymbol[];
-extern const u8 gText_BattleDomeTacticsSymbol[];
-extern const u8 gText_BattlePalaceSpiritsSymbol[];
-extern const u8 gText_BattleArenaGutsSymbol[];
-extern const u8 gText_BattleFactoryKnowledgeSymbol[];
-extern const u8 gText_BattlePikeLuckSymbol[];
-extern const u8 gText_BattlePyramidBraveSymbol[];
-extern const u8 gText_BattleTower3[];
-extern const u8 gText_BattleDome2[];
-extern const u8 gText_BattlePalace2[];
-extern const u8 gText_BattleArena2[];
-extern const u8 gText_BattleFactory2[];
-extern const u8 gText_BattlePike2[];
-extern const u8 gText_BattlePyramid2[];
-extern const u8 gText_BattleTowerDesc[];
-extern const u8 gText_BattleDomeDesc[];
-extern const u8 gText_BattlePalaceDesc[];
-extern const u8 gText_BattleArenaDesc[];
-extern const u8 gText_BattleFactoryDesc[];
-extern const u8 gText_BattlePikeDesc[];
-extern const u8 gText_BattlePyramidDesc[];
-
 // Move Relearner
 extern const u8 MoveRelearner_Text_LevelUpMoveLWR[];
 extern const u8 MoveRelearner_Text_EggMoveLWR[];

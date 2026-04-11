@@ -155,6 +155,10 @@ struct FrontierMapData
     u8 tilemapBuff2[BG_SCREEN_SIZE * 2];
 };
 
+static const u8 sText_SymbolsEarned[] = _("Symbols Earned");
+static const u8 sText_BattleRecord[] = _("Battle Record");
+static const u8 sText_BattlePoints[] = _("Battle Points");
+
 static EWRAM_DATA struct FrontierPassData *sPassData = NULL;
 static EWRAM_DATA struct FrontierPassGfx *sPassGfx = NULL;
 static EWRAM_DATA struct FrontierMapData *sMapData = NULL;
@@ -518,20 +522,20 @@ static const struct SpriteTemplate sSpriteTemplate_PlayerHead =
 
 static const u8 *const sPassAreaDescriptions[CURSOR_AREA_COUNT + 1] =
 {
-    [CURSOR_AREA_NOTHING]        = gText_ThereIsNoBattleRecord, // NOTHING is re-used for CURSOR_AREA_RECORD when no Record is present
-    [CURSOR_AREA_MAP]            = gText_CheckFrontierMap,
-    [CURSOR_AREA_CARD]           = gText_CheckTrainerCard,
-    [CURSOR_AREA_RECORD]         = gText_ViewRecordedBattle,
-    [CURSOR_AREA_CANCEL]         = gText_PutAwayFrontierPass,
-    [CURSOR_AREA_POINTS]         = gText_CurrentBattlePoints,
-    [CURSOR_AREA_EARNED_SYMBOLS] = gText_CollectedSymbols,
-    [CURSOR_AREA_SYMBOL_TOWER]   = gText_BattleTowerAbilitySymbol,
-    [CURSOR_AREA_SYMBOL_DOME]    = gText_BattleDomeTacticsSymbol,
-    [CURSOR_AREA_SYMBOL_PALACE]  = gText_BattlePalaceSpiritsSymbol,
-    [CURSOR_AREA_SYMBOL_ARENA]   = gText_BattleArenaGutsSymbol,
-    [CURSOR_AREA_SYMBOL_FACTORY] = gText_BattleFactoryKnowledgeSymbol,
-    [CURSOR_AREA_SYMBOL_PIKE]    = gText_BattlePikeLuckSymbol,
-    [CURSOR_AREA_SYMBOL_PYRAMID] = gText_BattlePyramidBraveSymbol,
+    [CURSOR_AREA_NOTHING]        = COMPOUND_STRING("There is no Battle Record."), // NOTHING is re-used for CURSOR_AREA_RECORD when no Record is present
+    [CURSOR_AREA_MAP]            = COMPOUND_STRING("Check BATTLE FRONTIER MAP."),
+    [CURSOR_AREA_CARD]           = COMPOUND_STRING("Check TRAINER CARD."),
+    [CURSOR_AREA_RECORD]         = COMPOUND_STRING("View recorded battle."),
+    [CURSOR_AREA_CANCEL]         = COMPOUND_STRING("Put away the FRONTIER PASS."),
+    [CURSOR_AREA_POINTS]         = COMPOUND_STRING("Your current Battle Points."),
+    [CURSOR_AREA_EARNED_SYMBOLS] = COMPOUND_STRING("Your collected Symbols."),
+    [CURSOR_AREA_SYMBOL_TOWER]   = COMPOUND_STRING("Battle Tower - Ability Symbol"),
+    [CURSOR_AREA_SYMBOL_DOME]    = COMPOUND_STRING("Battle Dome - Tactics Symbol"),
+    [CURSOR_AREA_SYMBOL_PALACE]  = COMPOUND_STRING("Battle Palace - Spirits Symbol"),
+    [CURSOR_AREA_SYMBOL_ARENA]   = COMPOUND_STRING("Battle Arena - Guts Symbol"),
+    [CURSOR_AREA_SYMBOL_FACTORY] = COMPOUND_STRING("Battle Factory - Knowledge Symbol"),
+    [CURSOR_AREA_SYMBOL_PIKE]    = COMPOUND_STRING("Battle Pike - Luck Symbol"),
+    [CURSOR_AREA_SYMBOL_PYRAMID] = COMPOUND_STRING("Battle Pyramid - Brave Symbol"),
     [CURSOR_AREA_COUNT]          = gText_EmptyString3,
 };
 
@@ -544,13 +548,13 @@ struct
     u8 animNum;
 } static const sMapLandmarks[NUM_FRONTIER_FACILITIES] =
 {
-    [FRONTIER_FACILITY_TOWER]   = {gText_BattleTower3,   gText_BattleTowerDesc,    89,  40, MAP_INDICATOR_SQUARE},
-    [FRONTIER_FACILITY_DOME]    = {gText_BattleDome2,    gText_BattleDomeDesc,     33,  42, MAP_INDICATOR_SQUARE},
-    [FRONTIER_FACILITY_PALACE]  = {gText_BattlePalace2,  gText_BattlePalaceDesc,  120,  86, MAP_INDICATOR_RECTANGLE},
-    [FRONTIER_FACILITY_ARENA]   = {gText_BattleArena2,   gText_BattleArenaDesc,   114,  59, MAP_INDICATOR_RECTANGLE},
-    [FRONTIER_FACILITY_FACTORY] = {gText_BattleFactory2, gText_BattleFactoryDesc,  25,  67, MAP_INDICATOR_RECTANGLE},
-    [FRONTIER_FACILITY_PIKE]    = {gText_BattlePike2,    gText_BattlePikeDesc,     57,  57, MAP_INDICATOR_SQUARE},
-    [FRONTIER_FACILITY_PYRAMID] = {gText_BattlePyramid2, gText_BattlePyramidDesc, 134,  41, MAP_INDICATOR_SQUARE},
+    [FRONTIER_FACILITY_TOWER]   = {COMPOUND_STRING("BATTLE TOWER"),   COMPOUND_STRING("KO opponents and aim for the top!\nYour ability will be tested."),       89,  40, MAP_INDICATOR_SQUARE},
+    [FRONTIER_FACILITY_DOME]    = {COMPOUND_STRING("BATTLE DOME"),    COMPOUND_STRING("Keep winning at the tournament!\nYour tactics will be tested."),         33,  42, MAP_INDICATOR_SQUARE},
+    [FRONTIER_FACILITY_PALACE]  = {COMPOUND_STRING("BATTLE PALACE"),  COMPOUND_STRING("Watch your POKéMON battle!\nYour spirit will be tested."),               120, 86, MAP_INDICATOR_RECTANGLE},
+    [FRONTIER_FACILITY_ARENA]   = {COMPOUND_STRING("BATTLE ARENA"),   COMPOUND_STRING("Win battles with teamed-up POKéMON!\nYour guts will be tested."),        114, 59, MAP_INDICATOR_RECTANGLE},
+    [FRONTIER_FACILITY_FACTORY] = {COMPOUND_STRING("BATTLE FACTORY"), COMPOUND_STRING("Aim for victory using rental POKéMON!\nYour knowledge will be tested."), 25,  67, MAP_INDICATOR_RECTANGLE},
+    [FRONTIER_FACILITY_PIKE]    = {COMPOUND_STRING("BATTLE PIKE"),    COMPOUND_STRING("Select one of three paths to battle!\nYour luck will be tested."),       57,  57, MAP_INDICATOR_SQUARE},
+    [FRONTIER_FACILITY_PYRAMID] = {COMPOUND_STRING("BATTLE PYRAMID"), COMPOUND_STRING("Aim for the top with exploration!\nYour bravery will be tested."),       134, 41, MAP_INDICATOR_SQUARE},
 };
 
 static void ResetGpuRegsAndBgs(void)
@@ -1151,13 +1155,13 @@ static void ShowAndPrintWindows(void)
         FillWindowPixelBuffer(i, PIXEL_FILL(0));
     }
 
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, gText_SymbolsEarned, 96);
-    AddTextPrinterParameterized3(WINDOW_EARNED_SYMBOLS, FONT_NORMAL, x, 5, sTextColors[0], 0, gText_SymbolsEarned);
+    x = GetStringCenterAlignXOffset(FONT_NORMAL, sText_SymbolsEarned, 96);
+    AddTextPrinterParameterized3(WINDOW_EARNED_SYMBOLS, FONT_NORMAL, x, 5, sTextColors[0], 0, sText_SymbolsEarned);
 
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, gText_BattleRecord, 96);
-    AddTextPrinterParameterized3(WINDOW_BATTLE_RECORD, FONT_NORMAL, x, 5, sTextColors[0], 0, gText_BattleRecord);
+    x = GetStringCenterAlignXOffset(FONT_NORMAL, sText_BattleRecord, 96);
+    AddTextPrinterParameterized3(WINDOW_BATTLE_RECORD, FONT_NORMAL, x, 5, sTextColors[0], 0, sText_BattleRecord);
 
-    AddTextPrinterParameterized3(WINDOW_BATTLE_POINTS, FONT_SMALL_NARROW, 5, 4, sTextColors[0], 0, gText_BattlePoints);
+    AddTextPrinterParameterized3(WINDOW_BATTLE_POINTS, FONT_SMALL_NARROW, 5, 4, sTextColors[0], 0, sText_BattlePoints);
     ConvertIntToDecimalStringN(gStringVar4, sPassData->battlePoints, STR_CONV_MODE_LEFT_ALIGN, 5);
     x = GetStringRightAlignXOffset(FONT_SMALL_NARROW, gStringVar4, 91);
     AddTextPrinterParameterized3(WINDOW_BATTLE_POINTS, FONT_SMALL_NARROW, x, 16, sTextColors[0], 0, gStringVar4);
