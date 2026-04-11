@@ -33,7 +33,6 @@ EWRAM_DATA static u16 * sTilemapBuffer = NULL;
 static const u8 sString_BattleRecords_PlayersBattleResults[] = _("{PLAYER}'s BATTLE RESULTS");
 static const u8 sString_BattleRecords_TotalRecord[] = _("TOTAL RECORD W:{STR_VAR_1} L:{STR_VAR_2} D:{STR_VAR_3}");
 static const u8 sString_BattleRecords_ColumnHeaders[] = _("WIN{CLEAR_TO 0x30}LOSE{CLEAR_TO 0x60}DRAW");
-static const u8 sString_BattleRecords_7Dashes[] = _("-------");
 static const u8 sString_BattleRecords_4Dashes[] = _("----");
 
 static const u16 sBattleRecordsWindowTiles[] = INCBIN_U16("graphics/battle_records/bg_tiles.4bpp");
@@ -319,7 +318,7 @@ static void PrintLinkBattleRecord(struct LinkBattleRecord * record, u8 y)
 
     if (record->wins == 0 && record->losses == 0 && record->draws == 0)
     {
-        AddTextPrinterParameterized4(0, FONT_NORMAL, 0, y, 0, 2, sTextColor, 0, sString_BattleRecords_7Dashes);
+        AddTextPrinterParameterized4(0, FONT_NORMAL, 0, y, 0, 2, sTextColor, 0, gText_SevenHyphens);
         for (i = 0; i < 3; i++)
         {
             if (i == 0)

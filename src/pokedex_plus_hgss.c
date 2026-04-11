@@ -8812,7 +8812,7 @@ static void EraseSelectorArrow(u32 y)
 
 static void PrintSelectorArrow(u32 y)
 {
-    PrintSearchText(gText_SelectorArrow2, 144, y * 16 + 9);
+    PrintSearchText(gText_SelectorArrow, 144, y * 16 + 9);
 }
 
 static void PrintSearchParameterTitle(u32 y, const u8 *str)

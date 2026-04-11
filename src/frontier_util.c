@@ -1871,7 +1871,7 @@ static void AppendCaughtBannedMonSpeciesName(u16 species, u8 count, s32 numBanne
     else if (numBannedMonsCaught > count)
         StringAppend(gStringVar1, gText_CommaSpace);
     if (count == 3)
-        StringAppend(gStringVar1, gText_NewLine);
+        StringAppend(gStringVar1, gText_Newline);
     else if (count == 6)
         StringAppend(gStringVar1, gText_LineBreak);
     StringAppend(gStringVar1, GetSpeciesName(species));

@@ -76,6 +76,20 @@ struct ShopData
     u8 itemSpriteIds[2];
 };
 
+static const u8 sText_ShopBuy[] = _("BUY");
+static const u8 sText_ShopSell[] = _("SELL");
+static const u8 sText_ShopQuit[] = _("SEE YA!");
+static const u8 sText_InBagVar1[] = _("IN BAG:{FONT_SMALL} {STR_VAR_1}");
+static const u8 sText_QuitShopping[] = _("Quit shopping.");
+static const u8 sText_Var1CertainlyHowMany[] = _("{STR_VAR_1}? Certainly.\nHow many would you like?");
+static const u8 sText_Var1AndYouWantedVar2[] = _("{STR_VAR_1}, and you want {STR_VAR_2}.\nThat will be ¥{STR_VAR_3}. Okay?");
+static const u8 sText_HereYouGoThankYou[] = _("Here you are!\nThank you!");
+static const u8 sText_YouDontHaveMoney[] = _("You don't have enough money.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_NoMoreRoomForThis[] = _("You have no more room for this\nitem.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_AnythingElseICanHelp[] = _("Is there anything else I can do?");
+static const u8 sText_ThrowInPremierBall[] = _("I'll throw in a Premier Ball, too.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_ThrowInPremierBalls[] = _("I'll throw in {STR_VAR_1} Premier Balls, too.{PAUSE_UNTIL_PRESS}");
+
 static EWRAM_DATA s16 sViewportObjectEvents[OBJECT_EVENTS_COUNT][4] = {0};
 static EWRAM_DATA struct ShopData sShopData = {0};
 static EWRAM_DATA u8 sShopMenuWindowId = 0;
@@ -152,9 +166,9 @@ static void BuyMenuConfirmPurchase(u8 taskId, const struct YesNoFuncTable *yesNo
 
 static const struct MenuAction sShopMenuActions_BuySellQuit[] =
 {
-    {gText_ShopBuy, {.void_u8 = Task_HandleShopMenuBuy}},
-    {gText_ShopSell, {.void_u8 = Task_HandleShopMenuSell}},
-    {gText_ShopQuit, {.void_u8 = Task_HandleShopMenuQuit}}
+    {sText_ShopBuy, {.void_u8 = Task_HandleShopMenuBuy}},
+    {sText_ShopSell, {.void_u8 = Task_HandleShopMenuSell}},
+    {sText_ShopQuit, {.void_u8 = Task_HandleShopMenuQuit}}
 };
 
 static const struct YesNoFuncTable sShopMenuActions_BuyQuit =
@@ -478,7 +492,7 @@ static void Task_ReturnToShopMenu(u8 taskId)
     if (IsWeatherNotFadingIn() != TRUE)
         return;
 
-    DisplayItemMessageOnField(taskId, GetMartFontId(), gText_AnythingElseICanHelp, ShowShopMenuAfterExitingBuyOrSellMenu);
+    DisplayItemMessageOnField(taskId, GetMartFontId(), sText_AnythingElseICanHelp, ShowShopMenuAfterExitingBuyOrSellMenu);
 }
 
 static void ShowShopMenuAfterExitingBuyOrSellMenu(u8 taskId)
@@ -804,7 +818,7 @@ static void BuyMenuPrintItemDescriptionAndShowItemIcon(s32 item, bool8 onInit, s
     if (item != INDEX_CANCEL)
         description = GetItemDescription(item);
     else
-        description = gText_QuitShopping;
+        description = sText_QuitShopping;
 
     FillWindowPixelBuffer(5, PIXEL_FILL(0));
     if (sShopData.martType != MART_TYPE_TMHM)
@@ -880,7 +894,7 @@ static void BuyMenuPrintCursorAtYPosition(u8 y, u8 a1)
     }
     else
     {
-        BuyMenuPrint(4, FONT_NORMAL, gText_SelectorArrow2, 1, y, 0, 0, 0, a1);
+        BuyMenuPrint(4, FONT_NORMAL, gText_SelectorArrow, 1, y, 0, 0, 0, a1);
     }
 }
 
@@ -1117,12 +1131,12 @@ static void Task_BuyMenu(u8 taskId)
             sShopData.itemPrice = GetItemPrice(itemId);
             if (!IsEnoughMoney(&gSaveBlock1Ptr->money, sShopData.itemPrice))
             {
-                BuyMenuDisplayMessage(taskId, gText_YouDontHaveMoney, BuyMenuReturnToItemList);
+                BuyMenuDisplayMessage(taskId, sText_YouDontHaveMoney, BuyMenuReturnToItemList);
             }
             else
             {
                 CopyItemName(itemId, gStringVar1);
-                BuyMenuDisplayMessage(taskId, gText_Var1CertainlyHowMany, Task_BuyHowManyDialogueInit);
+                BuyMenuDisplayMessage(taskId, sText_Var1CertainlyHowMany, Task_BuyHowManyDialogueInit);
             }
             break;
         }
@@ -1137,7 +1151,7 @@ static void Task_BuyHowManyDialogueInit(u8 taskId)
 
     BuyMenuQuantityBoxThinBorder(1, 0);
     ConvertIntToDecimalStringN(gStringVar1, quantityInBag, STR_CONV_MODE_RIGHT_ALIGN, MAX_ITEM_DIGITS + 1);
-    StringExpandPlaceholders(gStringVar4, gText_InBagVar1);
+    StringExpandPlaceholders(gStringVar4, sText_InBagVar1);
     BuyMenuPrint(1, FONT_NORMAL, gStringVar4, 0, 2, 0, 0, 0, 1);
     tItemCount = 1;
     BuyMenuQuantityBoxNormalBorder(3, 0);
@@ -1183,7 +1197,7 @@ static void Task_BuyHowManyDialogueHandleInput(u8 taskId)
             CopyItemName(tItemId, gStringVar1);
             ConvertIntToDecimalStringN(gStringVar2, tItemCount, STR_CONV_MODE_LEFT_ALIGN, 2);
             ConvertIntToDecimalStringN(gStringVar3, sShopData.itemPrice, STR_CONV_MODE_LEFT_ALIGN, 8);
-            BuyMenuDisplayMessage(taskId, gText_Var1AndYouWantedVar2, CreateBuyMenuConfirmPurchaseWindow);
+            BuyMenuDisplayMessage(taskId, sText_Var1AndYouWantedVar2, CreateBuyMenuConfirmPurchaseWindow);
         }
         else if (JOY_NEW(B_BUTTON))
         {
@@ -1211,13 +1225,13 @@ static void BuyMenuTryMakePurchase(u8 taskId)
     if (AddBagItem(tItemId, tItemCount) == TRUE)
     {
         GetSetItemObtained(tItemId, FLAG_SET_ITEM_OBTAINED);
-        BuyMenuDisplayMessage(taskId, gText_HereYouGoThankYou, BuyMenuSubtractMoney);
+        BuyMenuDisplayMessage(taskId, sText_HereYouGoThankYou, BuyMenuSubtractMoney);
         DebugFunc_PrintPurchaseDetails(taskId);
         RecordItemTransaction(tItemId, tItemCount, QL_EVENT_BOUGHT_ITEM - QL_EVENT_USED_POKEMART);
     }
     else
     {
-        BuyMenuDisplayMessage(taskId, gText_NoMoreRoomForThis, BuyMenuReturnToItemList);
+        BuyMenuDisplayMessage(taskId, sText_NoMoreRoomForThis, BuyMenuReturnToItemList);
     }
 }
 
@@ -1254,7 +1268,7 @@ static void Task_ReturnToItemListAfterItemPurchase(u8 taskId)
         if (premierBallsToAdd > 0)
         {
             ConvertIntToDecimalStringN(gStringVar1, premierBallsToAdd, STR_CONV_MODE_LEFT_ALIGN, MAX_ITEM_DIGITS);
-            BuyMenuDisplayMessage(taskId, (premierBallsToAdd >= 2 ? gText_ThrowInPremierBalls : gText_ThrowInPremierBall), BuyMenuReturnToItemList);
+            BuyMenuDisplayMessage(taskId, (premierBallsToAdd >= 2 ? sText_ThrowInPremierBalls : sText_ThrowInPremierBall), BuyMenuReturnToItemList);
         }
         else
         {

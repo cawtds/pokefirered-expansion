@@ -870,7 +870,6 @@ static void TilemapUtil_Update(u8 tilemapId);
 static void TilemapUtil_DrawPrev(u8 tilemapId);
 static void TilemapUtil_Draw(u8 tilemapId);
 
-static const u8 sPCText_Bag[] = _("BAG");
 static const u8 sPCText_Beach[] = _("BEACH");
 static const u8 sPCText_Cave[] = _("CAVE");
 static const u8 sPCText_City[] = _("CITY");
@@ -897,10 +896,8 @@ static const u8 sPCText_Shift[] = _("SHIFT");
 static const u8 sPCText_Simple[] = _("SIMPLE");
 static const u8 sPCText_Sky[] = _("SKY");
 static const u8 sPCText_Snow[] = _("SNOW");
-static const u8 sPCText_Store[] = _("STORE");
 static const u8 sPCText_Summary[] = _("SUMMARY");
 static const u8 sPCText_Switch[] = _("SWITCH");
-static const u8 sPCText_Take[] = _("TAKE");
 static const u8 sPCText_Volcano[] = _("VOLCANO");
 static const u8 sPCText_Wallpaper[] = _("WALLPAPER");
 static const u8 sText_BagIsFull2[] = _("The BAG is full.");
@@ -7663,7 +7660,7 @@ static void InitMenu(void)
 
 static const u8 *const sMenuTexts[] = {
     [MENU_TEXT_CANCEL]     = gText_Cancel,
-    [MENU_TEXT_STORE]      = sPCText_Store,
+    [MENU_TEXT_STORE]      = gText_Store,
     [MENU_TEXT_WITHDRAW]   = gText_Withdraw,
     [MENU_TEXT_MOVE]       = sPCText_Move,
     [MENU_TEXT_SHIFT]      = sPCText_Shift,
@@ -7674,11 +7671,11 @@ static const u8 *const sMenuTexts[] = {
     [MENU_TEXT_JUMP]       = sPCText_Jump,
     [MENU_TEXT_WALLPAPER]  = sPCText_Wallpaper,
     [MENU_TEXT_NAME]       = sPCText_Name,
-    [MENU_TEXT_TAKE]       = sPCText_Take,
+    [MENU_TEXT_TAKE]       = gText_Take,
     [MENU_TEXT_GIVE]       = gText_Give,
     [MENU_TEXT_GIVE2]      = gText_Give,
     [MENU_TEXT_SWITCH]     = sPCText_Switch,
-    [MENU_TEXT_BAG]        = sPCText_Bag,
+    [MENU_TEXT_BAG]        = gText_Bag,
     [MENU_TEXT_INFO]       = gText_Info,
     [MENU_TEXT_SCENERY_1]  = sPCText_Scenery1,
     [MENU_TEXT_SCENERY_2]  = sPCText_Scenery2,

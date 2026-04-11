@@ -19,7 +19,6 @@ static const u8 sEasyChatWord_Ruby[] = _("RUBY");
 static const u8 sEasyChatWord_Level[] = _("LEVEL");
 static const u8 sEasyChatWord_Red[] = _("RED");
 static const u8 sEasyChatWord_Green[] = _("GREEN");
-static const u8 sEasyChatWord_Bag[] = _("BAG");
 static const u8 sEasyChatWord_Flame[] = _("FLAME");
 static const u8 sEasyChatWord_Gold[] = _("GOLD");
 static const u8 sEasyChatWord_Leaf[] = _("LEAF");
@@ -132,7 +131,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Trainer[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_Bag,
+        .text = gText_Bag,
         .alphabeticalOrder = 25,
         .enabled = TRUE
     },

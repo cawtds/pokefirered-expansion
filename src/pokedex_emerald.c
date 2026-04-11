@@ -396,7 +396,6 @@ const u8 gText_PokedexRegistration[] = _("POKéDEX registration completed.");
 const u8 gText_HTHeight[] = _("HT");
 const u8 gText_WTWeight[] = _("WT");
 const u8 gText_5MarksPokemon[] = _("????? POKéMON");
-const u8 gText_SelectorArrow[] = _("▶");
 
 static const struct OamData sOamData_ScrollBar =
 {

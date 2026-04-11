@@ -612,7 +612,7 @@ static void ItemPc_PrintOrRemoveCursorAt(u8 y, u8 colorIdx)
     }
     else
     {
-        ItemPc_AddTextPrinterParameterized(0, FONT_NORMAL, gText_SelectorArrow2, 0, y, 0, 0, 0, colorIdx);
+        ItemPc_AddTextPrinterParameterized(0, FONT_NORMAL, gText_SelectorArrow, 0, y, 0, 0, 0, colorIdx);
     }
 }
 

@@ -1921,7 +1921,7 @@ static void BufferBagFullCantTakeItemMessage(enum Item itemId)
     switch (GetItemPocket(itemId))
     {
     default:
-        string = gText_MenuBag;
+        string = gText_Bag;
         break;
     case POCKET_TM_HM:
         string = GetItemName(ITEM_TM_CASE);

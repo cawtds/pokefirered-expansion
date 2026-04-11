@@ -773,7 +773,7 @@ void PlaceListMenuCursor(void)
     u8 glyphHeight = GetFontAttribute(FONT_NORMAL, FONTATTR_MAX_LETTER_HEIGHT) + 1;
     u8 x = gHelpSystemListMenu.sub.left;
     u8 y = gHelpSystemListMenu.sub.top + glyphHeight * gHelpSystemListMenu.cursorPos;
-    HelpSystem_PrintTextAt(gText_SelectorArrow2, x, y);
+    HelpSystem_PrintTextAt(gText_SelectorArrow, x, y);
 }
 
 void HS_RemoveSelectionCursorAt(u8 i)

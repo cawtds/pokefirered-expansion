@@ -803,7 +803,7 @@ static void BerryPouchSetArrowCursorAt(u8 y, u8 colorIdx)
     }
     else
     {
-        BerryPouchPrint(0, FONT_NORMAL, gText_SelectorArrow2, 1, y, 0, 0, 0, colorIdx);
+        BerryPouchPrint(0, FONT_NORMAL, gText_SelectorArrow, 1, y, 0, 0, 0, colorIdx);
     }
 }
 

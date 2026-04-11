@@ -10,7 +10,6 @@ static const u8 sEasyChatWord_Commemorate[] = _("COMMEMORATE");
 static const u8 sEasyChatWord_Habit[] = _("HABIT");
 static const u8 sEasyChatWord_Group[] = _("GROUP");
 static const u8 sEasyChatWord_Word[] = _("WORD");
-static const u8 sEasyChatWord_Store[] = _("STORE");
 static const u8 sEasyChatWord_Service[] = _("SERVICE");
 static const u8 sEasyChatWord_Work[] = _("WORK");
 static const u8 sEasyChatWord_System[] = _("SYSTEM");
@@ -100,7 +99,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Lifestyle[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_Store,
+        .text = gText_Store,
         .alphabeticalOrder = 8,
         .enabled = TRUE
     },

@@ -46,7 +46,6 @@ static const u8 sEasyChatWord_Skill[] = _("SKILL");
 static const u8 sEasyChatWord_Top[] = _("TOP");
 static const u8 sEasyChatWord_NonStop[] = _("NON-STOP");
 static const u8 sEasyChatWord_Preposterous[] = _("PREPOSTEROUS");
-static const u8 sEasyChatWord_None[] = _("NONE");
 static const u8 sEasyChatWord_Nothing[] = _("NOTHING");
 static const u8 sEasyChatWord_Natural[] = _("NATURAL");
 static const u8 sEasyChatWord_Becomes[] = _("BECOMES");
@@ -306,7 +305,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Conditions[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_None,
+        .text = gText_None,
         .alphabeticalOrder = 47,
         .enabled = TRUE
     },

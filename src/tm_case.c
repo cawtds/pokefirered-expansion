@@ -776,7 +776,7 @@ static void PrintListCursorAtRow(u8 y, u8 colorIdx)
     }
     else
     {
-        TMCase_Print(WIN_LIST, FONT_NORMAL, gText_SelectorArrow2, 0, y, 0, 0, 0, colorIdx);
+        TMCase_Print(WIN_LIST, FONT_NORMAL, gText_SelectorArrow, 0, y, 0, 0, 0, colorIdx);
     }
 }
 

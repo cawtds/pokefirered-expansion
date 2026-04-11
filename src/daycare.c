@@ -165,7 +165,6 @@ static const u8 *const sCompatibilityMessages[] =
     gDaycareText_PlayOther
 };
 
-static const u8 sNewLineText[] = _("\n");
 static const u8 sJapaneseEggNickname[] = _("タマゴ"); // "tamago" ("egg" in Japanese)
 
 static const u16 sEggPalette[] = INCBIN_U16("graphics/pokemon/egg/normal.gbapal");
@@ -1688,15 +1687,15 @@ static u8 *AppendGenderSymbol(u8 *name, u8 gender)
     if (gender == MON_MALE)
     {
         if (!NameHasGenderSymbol(name, MON_MALE))
-            return StringAppend(name, gText_MaleSymbol4);
+            return StringAppend(name, gText_MaleSymbol);
     }
     else if (gender == MON_FEMALE)
     {
         if (!NameHasGenderSymbol(name, MON_FEMALE))
-            return StringAppend(name, gText_FemaleSymbol4);
+            return StringAppend(name, gText_FemaleSymbol);
     }
 
-    return StringAppend(name, gText_GenderlessSymbol);
+    return StringAppend(name, gText_EmptyString);
 }
 
 static u8 *AppendMonGenderSymbol(u8 *name, struct BoxPokemon *boxMon)
@@ -1717,9 +1716,9 @@ static void UNUSED GetDaycareLevelMenuText(struct DayCare *daycare, u8 *dest)
     }
 
     StringCopy(dest, monNames[0]);
-    StringAppend(dest, sNewLineText);
+    StringAppend(dest, gText_Newline);
     StringAppend(dest, monNames[1]);
-    StringAppend(dest, sNewLineText);
+    StringAppend(dest, gText_Newline);
     StringAppend(dest, gText_Exit);
 }
 
@@ -1736,7 +1735,7 @@ static void UNUSED GetDaycareLevelMenuLevelText(struct DayCare *daycare, u8 *des
         level = GetLevelAfterDaycareSteps(&daycare->mons[i].mon, daycare->mons[i].steps);
         ConvertIntToDecimalStringN(text, level, STR_CONV_MODE_LEFT_ALIGN, 3);
         StringAppend(dest, text);
-        StringAppend(dest, sNewLineText);
+        StringAppend(dest, gText_Newline);
     }
 }
 

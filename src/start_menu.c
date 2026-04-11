@@ -163,7 +163,7 @@ static const u8 sText_SaveError_PleaseExchangeBackupMemory[] = _("Save error.\pP
 static const struct MenuAction sStartMenuActionTable[] = {
     [MENU_ACTION_POKEDEX]           = {gText_Pokedex,     {.u8_void = StartMenuPokedexCallback}},
     [MENU_ACTION_POKEMON]           = {gText_MenuPokemon, {.u8_void = StartMenuPokemonCallback}},
-    [MENU_ACTION_BAG]               = {gText_MenuBag,     {.u8_void = StartMenuBagCallback}},
+    [MENU_ACTION_BAG]               = {gText_Bag,         {.u8_void = StartMenuBagCallback}},
     [MENU_ACTION_PLAYER]            = {gText_MenuPlayer,  {.u8_void = StartMenuPlayerNameCallback}},
     [MENU_ACTION_SAVE]              = {gText_MenuSave,    {.u8_void = StartMenuSaveCallback}},
     [MENU_ACTION_OPTION]            = {gText_MenuOption,  {.u8_void = StartMenuOptionCallback}},
@@ -172,7 +172,7 @@ static const struct MenuAction sStartMenuActionTable[] = {
     [MENU_ACTION_PLAYER_LINK]       = {gText_MenuPlayer,  {.u8_void = StartMenuLinkPlayerCallback}},
     [MENU_ACTION_REST_FRONTIER]     = {gText_Rest,        {.u8_void = StartMenuSaveCallback}},
     [MENU_ACTION_RETIRE_FRONTIER]   = {gText_MenuRetire,  {.u8_void = StartMenuBattlePyramidRetireCallback}},
-    [MENU_ACTION_PYRAMID_BAG]       = {gText_MenuBag,     {.u8_void = StartMenuBattlePyramidBagCallback}},
+    [MENU_ACTION_PYRAMID_BAG]       = {gText_Bag,         {.u8_void = StartMenuBattlePyramidBagCallback}},
     [MENU_ACTION_DEBUG]             = {sText_MenuDebug,   {.u8_void = StartMenuDebugCallback}},
     [MENU_ACTION_DEXNAV]            = {gText_MenuDexNav,  {.u8_void = StartMenuDexNavCallback}},
 };

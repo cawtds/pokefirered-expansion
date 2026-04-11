@@ -96,7 +96,7 @@ extern const u8 gText_TurnedOverVar1ForVar2[];
 extern const u8 gPokedudeText_TMTypes[];
 extern const u8 gPokedudeText_ReadTMDescription[];
 extern const u8 gText_Cancel[];
-extern const u8 gText_SelectorArrow2[];
+extern const u8 gText_SelectorArrow[];
 
 // teachy_tv
 extern const u8 gTeachyTvString_TeachBattle[];
@@ -155,7 +155,6 @@ extern const u8 gText_PlayedPokeFluteCatchy[];
 extern const u8 gText_PlayedPokeFlute[];
 extern const u8 gText_PokeFluteAwakenedMon[];
 extern const u8 gText_WontHaveEffect[];
-extern const u8 gText_YesNo[];
 extern const u8 gText_Berry[];
 extern const u8 gText_Ghost[];
 
@@ -193,7 +192,7 @@ extern const u8 gText_MoveInterfaceType[];
 extern const u8 gText_LinkStandby[];
 extern const u8 gText_BattleMenu[];
 extern const u8 gText_WhatWillPkmnDo[];
-extern const u8 gText_NewLine[];
+extern const u8 gText_Newline[];
 
 // battle_controller_pokedude
 extern const u8 Pokedude_Text_SpeedierBattlerGoesFirst[];
@@ -247,7 +246,6 @@ extern const u8 gText_Switch2[];
 extern const u8 gText_Item[];
 extern const u8 gText_Take[];
 extern const u8 gText_Mail[];
-extern const u8 gText_Take2[];
 extern const u8 gText_Read[];
 extern const u8 gText_Shift[];
 extern const u8 gText_SendOut[];
@@ -346,7 +344,7 @@ extern const u8 gText_BagIsFull[];
 extern const u8 gText_MailReturnedToBagMessageErased[];
 
 // start_menu
-extern const u8 gText_MenuBag[];
+extern const u8 gText_Bag[];
 extern const u8 gText_MenuPlayer[];
 extern const u8 gText_MenuSave[];
 extern const u8 gText_MenuOption[];
@@ -519,20 +517,7 @@ extern const u8 gText_EllipsisQuestionMark[];
 extern const u8 gText_PkmnStoppedEvolving[];
 
 // shop
-extern const u8 gText_ShopBuy[];
-extern const u8 gText_ShopSell[];
-extern const u8 gText_ShopQuit[];
-extern const u8 gText_AnythingElseICanHelp[];
-extern const u8 gText_QuitShopping[];
 extern const u8 gText_PokedollarVar1[];
-extern const u8 gText_YouDontHaveMoney[];
-extern const u8 gText_Var1CertainlyHowMany[];
-extern const u8 gText_InBagVar1[];
-extern const u8 gText_Var1AndYouWantedVar2[];
-extern const u8 gText_HereYouGoThankYou[];
-extern const u8 gText_NoMoreRoomForThis[];
-extern const u8 gText_ThrowInPremierBall[];
-extern const u8 gText_ThrowInPremierBalls[];
 
 // daycare
 extern const u8 gText_Lv[];
@@ -573,9 +558,8 @@ extern const u8 gText_DepositItem[];
 
 // item_menu
 extern const u8 gText_Walk[];
-extern const u8 gOtherText_Check[];
-extern const u8 gOtherText_Open[];
-extern const u8 gOtherText_Deselect[];
+extern const u8 gText_Check[];
+extern const u8 gText_Open[];
 extern const u8 gText_CloseBag[];
 extern const u8 gText_CantWriteMail[];
 
@@ -842,7 +826,6 @@ extern const u8 gText_WTWeight[];
 extern const u8 gText_SearchingPleaseWait[];
 extern const u8 gText_SearchCompleted[];
 extern const u8 gText_NoMatchingPkmnWereFound[];
-extern const u8 gText_SelectorArrow[];
 
 // Pokédex strings
 extern const u8 gText_SearchForPkmnBasedOnParameters[];
@@ -1105,7 +1088,6 @@ extern const u8 gText_2nd[];
 extern const u8 gText_1st[];
 extern const u8 gText_SpaceAndSpace[];
 extern const u8 gText_CommaSpace[];
-extern const u8 gText_NewLine[];
 extern const u8 gText_LineBreak[];
 extern const u8 gText_Space[];
 extern const u8 gText_Are[];

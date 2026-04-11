@@ -68,7 +68,6 @@ static const u8 sEasyChatWord_Looks[] = _("LOOKS");
 static const u8 sEasyChatWord_Sees[] = _("SEES");
 static const u8 sEasyChatWord_Seek[] = _("SEEK");
 static const u8 sEasyChatWord_Own[] = _("OWN");
-static const u8 sEasyChatWord_Take[] = _("TAKE");
 static const u8 sEasyChatWord_Allow[] = _("ALLOW");
 static const u8 sEasyChatWord_Forget[] = _("FORGET");
 static const u8 sEasyChatWord_Forgets[] = _("FORGETS");
@@ -433,7 +432,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Actions[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_Take,
+        .text = gText_Take,
         .alphabeticalOrder = 13,
         .enabled = TRUE
     },

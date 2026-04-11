@@ -289,11 +289,11 @@ static const struct MenuAction sItemMenuActions[] = {
     [ACTION_GIVE] = {gText_Give, {.void_u8 = ItemMenu_Give}},
     [ACTION_CANCEL] = {gText_Cancel, {.void_u8 = ItemMenu_Cancel}},
     [ACTION_BATTLE_USE] = {gText_Use, {.void_u8 = ItemMenu_UseInBattle}},
-    [ACTION_CHECK] = {gOtherText_Check, {.void_u8 = ItemMenu_UseOutOfBattle}},
-    [ACTION_OPEN] = {gOtherText_Open, {.void_u8 = ItemMenu_UseOutOfBattle}},
-    [ACTION_OPEN_BERRIES] = {gOtherText_Open, {.void_u8 = ItemMenu_UseInBattle}},
+    [ACTION_CHECK] = {gText_Check, {.void_u8 = ItemMenu_UseOutOfBattle}},
+    [ACTION_OPEN] = {gText_Open, {.void_u8 = ItemMenu_UseOutOfBattle}},
+    [ACTION_OPEN_BERRIES] = {gText_Open, {.void_u8 = ItemMenu_UseInBattle}},
     [ACTION_WALK] = {gText_Walk, {.void_u8 = ItemMenu_UseOutOfBattle}},
-    [ACTION_DESELECT] = {gOtherText_Deselect, {.void_u8 = ItemMenu_Register}},
+    [ACTION_DESELECT] = {gText_Deselect, {.void_u8 = ItemMenu_Register}},
     [ACTION_BY_NAME]           = {COMPOUND_STRING("Name"),      {ItemMenu_SortByName}},
     [ACTION_BY_TYPE]           = {COMPOUND_STRING("Type"),      {ItemMenu_SortByType}},
     [ACTION_BY_AMOUNT]         = {COMPOUND_STRING("Amount"),    {ItemMenu_SortByAmount}},
@@ -1112,7 +1112,7 @@ static void BagMenu_PrintCursorAtPos(u8 y, u8 colorIndex)
     if (colorIndex == COLORID_NONE)
         FillWindowPixelRect(WIN_ITEM_LIST, PIXEL_FILL(0), 1, y, GetMenuCursorDimensionByFont(FONT_NORMAL, 0), GetMenuCursorDimensionByFont(FONT_NORMAL, 1));
     else
-        BagMenu_Print(WIN_ITEM_LIST, FONT_NORMAL, gText_SelectorArrow2, 1, y, 0, 0, 0, colorIndex);
+        BagMenu_Print(WIN_ITEM_LIST, FONT_NORMAL, gText_SelectorArrow, 1, y, 0, 0, 0, colorIndex);
 }
 
 static void CreatePocketScrollArrowPair_SellQuantity(void)
