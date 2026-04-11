@@ -71,6 +71,8 @@ struct FlagOrVarRecord
     u16 value;
 };
 
+#include "data/text/quest_log.h"
+
 COMMON_DATA u8 gQuestLogPlaybackState = 0;
 COMMON_DATA u16 sMaxActionsInScene = 0;
 COMMON_DATA struct FieldInput gQuestLogFieldInput = {0};

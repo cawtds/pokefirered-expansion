@@ -125,20 +125,12 @@ static const struct WindowTemplate sWindowTemplates[] = {
     }, DUMMY_WIN_TEMPLATE
 };
 
-// Unused
-static const u8 *const sPlayersTextPtrs[] = {
-    gText_Dynamic0Players,
-    gText_Dynamic1Players,
-    gText_Dynamic2Players,
-    gText_Dynamic3Players
-};
-
 static const u8 *const sHeaderTexts[NUM_GROUPTYPES + 1] = {
-    [0]                    = gText_WirelessCommunicationStatus,
-    [GROUPTYPE_TRADE + 1]  = gText_PeopleTrading,
-    [GROUPTYPE_BATTLE + 1] = gText_PeopleBattling,
-    [GROUPTYPE_UNION + 1]  = gText_PeopleInUnionRoom,
-    [GROUPTYPE_TOTAL + 1]  = gText_PeopleCommunicating
+    [0]                    = COMPOUND_STRING("Wireless Communication Status"),
+    [GROUPTYPE_TRADE + 1]  = COMPOUND_STRING("People trading:"),
+    [GROUPTYPE_BATTLE + 1] = COMPOUND_STRING("People battling:"),
+    [GROUPTYPE_UNION + 1]  = COMPOUND_STRING("People in the UNION ROOM:"),
+    [GROUPTYPE_TOTAL + 1]  = COMPOUND_STRING("People communicating:"),
 };
 
 // Activity, group type, number of players

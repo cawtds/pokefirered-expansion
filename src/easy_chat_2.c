@@ -54,6 +54,41 @@ struct EasyChatScreen
     /*0x18*/ u16 ecWordBuffer[9];
 };
 
+static const u8 sText_CombineFourWordsOrPhrases[] = _("Combine four words or phrases");
+static const u8 sText_AndMakeYourProfile[] = _("and make your profile.");
+static const u8 sText_MakeMessageSixPhrases[] = _("Make a message of six phrases.");
+static const u8 sText_MaxTwoTwelveLetterPhrases[] = _("Max two 12-letter phrases/line.");
+static const u8 sText_FindWordsThatDescribeYour[] = _("Find words that describe your");
+static const u8 sText_FeelingsRightNow[] = _("feelings right now.");
+static const u8 sText_CombineNineWordsOrPhrases[] = _("Combine nine words or phrases");
+static const u8 sText_AndMakeAMessage[] = _("and make a message.");
+static const u8 sText_ChangeJustOneWordOrPhrase[] = _("Change just one word or phrase");
+static const u8 sText_AndImproveTheBardsSong[] = _("and improve the BARD's song.");
+static const u8 sText_AndFillOutTheQuestionnaire[] = _("and fill out the questionnaire.");
+static const u8 sText_YourProfile[] = _("Your profile");
+static const u8 sText_YourFeelingAtTheBattlesStart[] = _("Your feeling at the battle's start");
+static const u8 sText_WhatYouSayIfYouWin[] = _("What you say if you win a battle");
+static const u8 sText_WhatYouSayIfYouLose[] = _("What you say if you lose a battle");
+static const u8 sText_TheAnswer[] = _("The answer");
+static const u8 sText_TheMailMessage[] = _("The MAIL message");
+static const u8 sText_TheNewSong[] = _("The new song");
+static const u8 sText_CombineTwoWordsOrPhrases[] = _("Combine two words or phrases");
+static const u8 sText_AndMakeATrendySaying[] = _("and make a trendy saying.");
+static const u8 sText_TheTrendySaying[] = _("The trendy saying");
+static const u8 sText_IsAsShownOkay[] = _("is as shown. Okay?");
+static const u8 sText_AllTextBeingEditedWill[] = _("All the text being edited will");
+static const u8 sText_BeDeletedThatOkay[] = _("be deleted. Is that okay?");
+static const u8 sText_QuitEditing[] = _("Quit editing?");
+static const u8 sText_StopGivingPkmnMail[] = _("Stop giving the POKéMON MAIL?");
+static const u8 sText_Profile[] = _("PROFILE");
+static const u8 sText_AtTheBattlesStart[] = _("At the battle's start:");
+static const u8 sText_UponWinningABattle[] = _("Upon winning a battle:");
+static const u8 sText_UponLosingABattle[] = _("Upon losing a battle:");
+static const u8 sText_TheBardsSong[] = _("The BARD's Song");
+static const u8 sText_WhatsHipAndHappening[] = _("What's hip and happening?");
+static const u8 sText_Interview[] = _("Interview");
+static const u8 sText_Questionnaire[] = _("QUESTIONNAIRE");
+
 static EWRAM_DATA struct EasyChatScreen * sEasyChatScreen = NULL;
 
 static void CB2_EasyChatScreen(void);
@@ -319,44 +354,44 @@ static const struct EasyChatScreenTemplate sEasyChatScreenTemplates[] = {
         .numColumns = 2,
         .numRows = 2,
         .frameId = FRAMEID_0,
-        .titleText = gText_Profile,
-        .instructionsText1 = gText_CombineFourWordsOrPhrases,
-        .instructionsText2 = gText_AndMakeYourProfile,
-        .confirmText1 = gText_YourProfile,
-        .confirmText2 = gText_IsAsShownOkay
+        .titleText = sText_Profile,
+        .instructionsText1 = sText_CombineFourWordsOrPhrases,
+        .instructionsText2 = sText_AndMakeYourProfile,
+        .confirmText1 = sText_YourProfile,
+        .confirmText2 = sText_IsAsShownOkay
     },
     [EASY_CHAT_TYPE_BATTLE_START] =
     {
         .numColumns = 2,
         .numRows = 3,
         .frameId = FRAMEID_1,
-        .titleText =  gText_AtTheBattlesStart,
-        .instructionsText1 = gText_MakeMessageSixPhrases,
-        .instructionsText2 = gText_MaxTwoTwelveLetterPhrases,
-        .confirmText1 = gText_YourFeelingAtTheBattlesStart,
-        .confirmText2 = gText_IsAsShownOkay
+        .titleText =  sText_AtTheBattlesStart,
+        .instructionsText1 = sText_MakeMessageSixPhrases,
+        .instructionsText2 = sText_MaxTwoTwelveLetterPhrases,
+        .confirmText1 = sText_YourFeelingAtTheBattlesStart,
+        .confirmText2 = sText_IsAsShownOkay
     },
     [EASY_CHAT_TYPE_BATTLE_WON] =
     {
         .numColumns = 2,
         .numRows = 3,
         .frameId = FRAMEID_1,
-        .titleText =  gText_UponWinningABattle,
-        .instructionsText1 = gText_MakeMessageSixPhrases,
-        .instructionsText2 = gText_MaxTwoTwelveLetterPhrases,
-        .confirmText1 = gText_WhatYouSayIfYouWin,
-        .confirmText2 = gText_IsAsShownOkay
+        .titleText =  sText_UponWinningABattle,
+        .instructionsText1 = sText_MakeMessageSixPhrases,
+        .instructionsText2 = sText_MaxTwoTwelveLetterPhrases,
+        .confirmText1 = sText_WhatYouSayIfYouWin,
+        .confirmText2 = sText_IsAsShownOkay
     },
     [EASY_CHAT_TYPE_BATTLE_LOST] =
     {
         .numColumns = 2,
         .numRows = 3,
         .frameId = FRAMEID_1,
-        .titleText =  gText_UponLosingABattle,
-        .instructionsText1 = gText_MakeMessageSixPhrases,
-        .instructionsText2 = gText_MaxTwoTwelveLetterPhrases,
-        .confirmText1 = gText_WhatYouSayIfYouLose,
-        .confirmText2 = gText_IsAsShownOkay
+        .titleText =  sText_UponLosingABattle,
+        .instructionsText1 = sText_MakeMessageSixPhrases,
+        .instructionsText2 = sText_MaxTwoTwelveLetterPhrases,
+        .confirmText1 = sText_WhatYouSayIfYouLose,
+        .confirmText2 = sText_IsAsShownOkay
     },
     [EASY_CHAT_TYPE_MAIL] =
     {
@@ -364,73 +399,73 @@ static const struct EasyChatScreenTemplate sEasyChatScreenTemplates[] = {
         .numRows = 5,
         .frameId = FRAMEID_MAIL,
         .titleText =  NULL,
-        .instructionsText1 = gText_CombineNineWordsOrPhrases,
-        .instructionsText2 = gText_AndMakeAMessage,
-        .confirmText1 = gText_TheMailMessage,
-        .confirmText2 = gText_IsAsShownOkay
+        .instructionsText1 = sText_CombineNineWordsOrPhrases,
+        .instructionsText2 = sText_AndMakeAMessage,
+        .confirmText1 = sText_TheMailMessage,
+        .confirmText2 = sText_IsAsShownOkay
     },
     [EASY_CHAT_TYPE_MAIL_NO_CONFIRM] =
     {
         .numColumns = 2,
         .numRows = 2,
         .frameId = FRAMEID_0,
-        .instructionsText1 = gText_CombineNineWordsOrPhrases,
-        .instructionsText2 = gText_AndMakeAMessage,
+        .instructionsText1 = sText_CombineNineWordsOrPhrases,
+        .instructionsText2 = sText_AndMakeAMessage,
     },
     [EASY_CHAT_TYPE_BARD_SONG] =
     {
         .numColumns = 2,
         .numRows = 3,
         .frameId = FRAMEID_1,
-        .titleText =  gText_TheBardsSong,
-        .instructionsText1 = gText_ChangeJustOneWordOrPhrase,
-        .instructionsText2 = gText_AndImproveTheBardsSong,
-        .confirmText1 = gText_TheNewSong,
-        .confirmText2 = gText_IsAsShownOkay
+        .titleText =  sText_TheBardsSong,
+        .instructionsText1 = sText_ChangeJustOneWordOrPhrase,
+        .instructionsText2 = sText_AndImproveTheBardsSong,
+        .confirmText1 = sText_TheNewSong,
+        .confirmText2 = sText_IsAsShownOkay
     },
     [EASY_CHAT_TYPE_INTERVIEW] =
     {
         .numColumns = 2,
         .numRows = 3,
         .frameId = FRAMEID_1,
-        .titleText =  gText_Interview,
-        .instructionsText1 = gText_FindWordsThatDescribeYour,
-        .instructionsText2 = gText_FeelingsRightNow,
-        .confirmText1 = gText_TheAnswer,
-        .confirmText2 = gText_IsAsShownOkay
+        .titleText =  sText_Interview,
+        .instructionsText1 = sText_FindWordsThatDescribeYour,
+        .instructionsText2 = sText_FeelingsRightNow,
+        .confirmText1 = sText_TheAnswer,
+        .confirmText2 = sText_IsAsShownOkay
     },
     [EASY_CHAT_TYPE_TRENDY_PHRASE] =
     {
         .numColumns = 2,
         .numRows = 1,
         .frameId = FRAMEID_COMBINE_TWO_WORDS,
-        .titleText =  gText_WhatsHipAndHappening,
-        .instructionsText1 = gText_CombineTwoWordsOrPhrases,
-        .instructionsText2 = gText_AndMakeATrendySaying,
-        .confirmText1 = gText_TheTrendySaying,
-        .confirmText2 = gText_IsAsShownOkay
+        .titleText =  sText_WhatsHipAndHappening,
+        .instructionsText1 = sText_CombineTwoWordsOrPhrases,
+        .instructionsText2 = sText_AndMakeATrendySaying,
+        .confirmText1 = sText_TheTrendySaying,
+        .confirmText2 = sText_IsAsShownOkay
     },
     [EASY_CHAT_TYPE_QUESTIONNAIRE] =
     {
         .numColumns = 2,
         .numRows = 2,
         .frameId = FRAMEID_0,
-        .titleText =  gText_Questionnaire,
-        .instructionsText1 = gText_CombineFourWordsOrPhrases,
-        .instructionsText2 = gText_AndFillOutTheQuestionnaire,
-        .confirmText1 = gText_TheAnswer,
-        .confirmText2 = gText_IsAsShownOkay
+        .titleText =  sText_Questionnaire,
+        .instructionsText1 = sText_CombineFourWordsOrPhrases,
+        .instructionsText2 = sText_AndFillOutTheQuestionnaire,
+        .confirmText1 = sText_TheAnswer,
+        .confirmText2 = sText_IsAsShownOkay
     },
     [EASY_CHAT_TYPE_BATTLE_TOWER_INTERVIEW] =
     {
         .numColumns = 1,
         .numRows = 1,
         .frameId = FRAMEID_INTERVIEW_SHOW_PERSON,
-        .titleText = gText_Interview,
-        .instructionsText1 = gText_FindWordsThatDescribeYour,
-        .instructionsText2 = gText_FeelingsRightNow,
-        .confirmText1 = gText_TheAnswer,
-        .confirmText2 = gText_IsAsShownOkay,
+        .titleText = sText_Interview,
+        .instructionsText1 = sText_FindWordsThatDescribeYour,
+        .instructionsText2 = sText_FeelingsRightNow,
+        .confirmText1 = sText_TheAnswer,
+        .confirmText2 = sText_IsAsShownOkay,
     },
     [EASY_CHAT_TYPE_APPRENTICE] =
     {
@@ -441,7 +476,7 @@ static const struct EasyChatScreenTemplate sEasyChatScreenTemplates[] = {
         .instructionsText1 = COMPOUND_STRING("Find words which fit"),
         .instructionsText2 = COMPOUND_STRING("the TRAINER's image."),
         .confirmText1 = COMPOUND_STRING("Apprentice's phrase:"),
-        .confirmText2 = gText_IsAsShownOkay,
+        .confirmText2 = sText_IsAsShownOkay,
     },
 };
 
@@ -1268,11 +1303,11 @@ void GetEasyChatConfirmCancelText(const u8 **str1, const u8 **str2)
     switch (sEasyChatScreen->type)
     {
     case EASY_CHAT_TYPE_MAIL:
-        *str1 = gText_StopGivingPkmnMail;
+        *str1 = sText_StopGivingPkmnMail;
         *str2 = NULL;
         break;
     default:
-        *str1 = gText_QuitEditing;
+        *str1 = sText_QuitEditing;
         *str2 = NULL;
         break;
     }
@@ -1281,8 +1316,8 @@ void GetEasyChatConfirmCancelText(const u8 **str1, const u8 **str2)
 
 void GetEasyChatConfirmDeletionText(const u8 **str1, const u8 **str2)
 {
-    *str1 = gText_AllTextBeingEditedWill;
-    *str2 = gText_BeDeletedThatOkay;
+    *str1 = sText_AllTextBeingEditedWill;
+    *str2 = sText_BeDeletedThatOkay;
 }
 
 void GetECSelectGroupCursorCoords(u8 *Xp, u8 *Yp)

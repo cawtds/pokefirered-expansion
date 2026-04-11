@@ -563,11 +563,6 @@ extern const u8 gText_Open[];
 extern const u8 gText_CloseBag[];
 extern const u8 gText_CantWriteMail[];
 
-// union_room_battle
-extern const u8 gText_CommStandbyAwaitingOtherPlayer[];
-extern const u8 gText_RefusedBattle[];
-extern const u8 gText_BattleWasRefused[];
-
 // union_room_chat
 extern const u8 gText_F700JoinedChat[];
 extern const u8 gText_F700LeftChat[];
@@ -598,17 +593,6 @@ extern const u8 gText_Upper[];
 extern const u8 gText_Lower[];
 extern const u8 gText_Symbols[];
 extern const u8 gText_Exit[];
-
-// wireless_communication_status_screen
-extern const u8 gText_Dynamic0Players[];
-extern const u8 gText_Dynamic1Players[];
-extern const u8 gText_Dynamic2Players[];
-extern const u8 gText_Dynamic3Players[];
-extern const u8 gText_WirelessCommunicationStatus[];
-extern const u8 gText_PeopleTrading[];
-extern const u8 gText_PeopleBattling[];
-extern const u8 gText_PeopleInUnionRoom[];
-extern const u8 gText_PeopleCommunicating[];
 
 // cable_club
 extern const u8 gText_NumPlayerLink[];
@@ -735,43 +719,6 @@ extern const u8 gText_QuestLog_CeruleanCave[];
 extern const u8 gText_ClearAllSaveData[];
 extern const u8 gText_ClearingData[];
 
-// easy_chat_2
-extern const u8 gText_CombineFourWordsOrPhrases[];
-extern const u8 gText_AndMakeYourProfile[];
-extern const u8 gText_MakeMessageSixPhrases[];
-extern const u8 gText_MaxTwoTwelveLetterPhrases[];
-extern const u8 gText_FindWordsThatDescribeYour[];
-extern const u8 gText_FeelingsRightNow[];
-extern const u8 gText_CombineNineWordsOrPhrases[];
-extern const u8 gText_AndMakeAMessage[];
-extern const u8 gText_ChangeJustOneWordOrPhrase[];
-extern const u8 gText_AndImproveTheBardsSong[];
-extern const u8 gText_AndFillOutTheQuestionnaire[];
-extern const u8 gText_YourProfile[];
-extern const u8 gText_YourFeelingAtTheBattlesStart[];
-extern const u8 gText_WhatYouSayIfYouWin[];
-extern const u8 gText_WhatYouSayIfYouLose[];
-extern const u8 gText_TheAnswer[];
-extern const u8 gText_TheMailMessage[];
-extern const u8 gText_TheNewSong[];
-extern const u8 gText_CombineTwoWordsOrPhrases[];
-extern const u8 gText_AndMakeATrendySaying[];
-extern const u8 gText_TheTrendySaying[];
-extern const u8 gText_IsAsShownOkay[];
-extern const u8 gText_AllTextBeingEditedWill[];
-extern const u8 gText_BeDeletedThatOkay[];
-extern const u8 gText_QuitEditing[];
-extern const u8 gText_StopGivingPkmnMail[];
-extern const u8 gText_Profile[];
-extern const u8 gText_AtTheBattlesStart[];
-extern const u8 gText_UponWinningABattle[];
-extern const u8 gText_UponLosingABattle[];
-extern const u8 gText_TheBardsSong[];
-extern const u8 gText_WhatsHipAndHappening[];
-extern const u8 gText_Interview[];
-extern const u8 gText_Questionnaire[];
-extern const u8 gText_DelAllCancelOk[];
-
 // naming_screen
 extern const u8 gText_MoveOkBack[];
 extern const u8 gText_AlphabetUpperLower[];
@@ -786,9 +733,7 @@ extern const u8 gText_Counting_1[];
 extern const u8 gText_Counting_2And[];
 extern const u8 gText_Poof[];
 extern const u8 gText_WasUsedOn[];
-extern const u8 gText_Period[];
 extern const u8 gText_LevelRoseTo[];
-extern const u8 gText_Period2[];
 extern const u8 gText_MonLearnedTMHM[];
 extern const u8 gText_MonForgotMove[];
 extern const u8 gText_And[];
@@ -802,14 +747,6 @@ extern const u8 gText_LevelUp_SpDef[];
 extern const u8 gText_LevelUp_Speed[];
 extern const u8 gText_LevelUp_Minus[];
 extern const u8 gText_LevelUp_Plus[];
-
-// Zygarde Cube text
-extern const u8 gText_ChangeForm[];
-extern const u8 gText_ChangeAbility[];
-
-// Exp. Share
-extern const u8 gText_ExpShareOn[];
-extern const u8 gText_ExpShareOff[];
 
 //Pokédex text
 extern const u8 gText_CryOf[];

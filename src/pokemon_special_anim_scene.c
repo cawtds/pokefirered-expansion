@@ -403,7 +403,7 @@ void PSA_PrintMessage(u8 messageId)
         str = StringCopy(scene->textBuf, GetItemName(itemId));
         str = StringCopy(str, gText_WasUsedOn);
         GetMonData(pokemon, MON_DATA_NICKNAME, str);
-        StringAppend(scene->textBuf, gText_Period);
+        StringAppend(scene->textBuf, gText_DecimalPoint);
         break;
     case 1: // Mon's level was elevated to level
         level = GetMonData(pokemon, MON_DATA_LEVEL);
@@ -412,7 +412,7 @@ void PSA_PrintMessage(u8 messageId)
         if (level < MAX_LEVEL)
             level++;
         str = ConvertIntToDecimalStringN(str, level, STR_CONV_MODE_LEFT_ALIGN, level < MAX_LEVEL ? 2 : 3);
-        StringAppend(str, gText_Period2);
+        StringAppend(str, gText_DecimalPoint);
         break;
     case 9: // Mon learned move
         DynamicPlaceholderTextUtil_Reset();
