@@ -134,6 +134,9 @@ static const u8 sText_123Dot[][3] = {_("1."), _("2."), _("3.")};
 static const u8 sText_FrontierFacilityTotalCaughtSpeciesBanned[] = _(" and {STR_VAR_2} of the POKéMON species\nyou caught are inelegible");
 static const u8 sText_FrontierFacilityIncluding[] = _(".\pThese include ");
 static const u8 sText_FrontierFacilityAreInelegible[] = _(" are inelegible");
+static const u8 sText_SpaceAndSpace[] = _(" and ");
+static const u8 sText_CommaSpace[] = _(", ");
+static const u8 sText_LineBreak[] = _("\l");
 
 
 // battledBit: Flags to change the conversation when the Frontier Brain is encountered for a battle
@@ -1902,13 +1905,13 @@ static void AppendCaughtBannedMonSpeciesName(u16 species, u8 count, s32 numBanne
     if (count == 1)
         ;
     else if (numBannedMonsCaught == count)
-        StringAppend(gStringVar1, gText_SpaceAndSpace);
+        StringAppend(gStringVar1, sText_SpaceAndSpace);
     else if (numBannedMonsCaught > count)
-        StringAppend(gStringVar1, gText_CommaSpace);
+        StringAppend(gStringVar1, sText_CommaSpace);
     if (count == 3)
         StringAppend(gStringVar1, gText_Newline);
     else if (count == 6)
-        StringAppend(gStringVar1, gText_LineBreak);
+        StringAppend(gStringVar1, sText_LineBreak);
     StringAppend(gStringVar1, GetSpeciesName(species));
 }
 

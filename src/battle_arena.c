@@ -51,6 +51,14 @@ enum {
     ANIM_ICON_LINE,     // Line segment for separating the score total at the bottom
 };
 
+static const u8 sText_PlayerMon1Name[] = _("{B_PLAYER_MON1_NAME}");
+static const u8 sText_OpponentMon1Name[] = _("{B_OPPONENT_MON1_NAME}");
+static const u8 sText_Vs[] = _("VS");
+static const u8 sText_Mind[] = _("Mind");
+static const u8 sText_Skill[] = _("Skill");
+static const u8 sText_Body[] = _("Body");
+static const u8 sText_Judgment[] = _("{B_BUFF1}{CLEAR 13}Judgment{CLEAR 13}{B_BUFF2}");
+
 static const struct OamData sOam_JudgmentIcon =
 {
     .y = 0,
@@ -183,15 +191,15 @@ u8 BattleArena_ShowJudgmentWindow(u8 *state)
             gBattleTextBuff1[1] = EOS;
             gBattleTextBuff2[0] = CHAR_0;
             gBattleTextBuff2[1] = EOS;
-            BattleStringExpandPlaceholdersToDisplayedString(gText_PlayerMon1Name);
+            BattleStringExpandPlaceholdersToDisplayedString(sText_PlayerMon1Name);
             BattlePutTextOnWindow(gDisplayedStringBattle, ARENA_WIN_PLAYER_NAME);
-            BattlePutTextOnWindow(gText_Vs, ARENA_WIN_VS);
-            BattleStringExpandPlaceholdersToDisplayedString(gText_OpponentMon1Name);
+            BattlePutTextOnWindow(sText_Vs, ARENA_WIN_VS);
+            BattleStringExpandPlaceholdersToDisplayedString(sText_OpponentMon1Name);
             BattlePutTextOnWindow(gDisplayedStringBattle, ARENA_WIN_OPPONENT_NAME);
-            BattlePutTextOnWindow(gText_Mind, ARENA_WIN_MIND);
-            BattlePutTextOnWindow(gText_Skill, ARENA_WIN_SKILL);
-            BattlePutTextOnWindow(gText_Body, ARENA_WIN_BODY);
-            BattleStringExpandPlaceholdersToDisplayedString(gText_Judgment);
+            BattlePutTextOnWindow(sText_Mind, ARENA_WIN_MIND);
+            BattlePutTextOnWindow(sText_Skill, ARENA_WIN_SKILL);
+            BattlePutTextOnWindow(sText_Body, ARENA_WIN_BODY);
+            BattleStringExpandPlaceholdersToDisplayedString(sText_Judgment);
             BattlePutTextOnWindow(gDisplayedStringBattle, ARENA_WIN_JUDGMENT_TITLE);
             (*state)++;
         }
@@ -215,7 +223,7 @@ u8 BattleArena_ShowJudgmentWindow(u8 *state)
         PlaySE(SE_ARENA_TIMEUP1);
         ShowJudgmentSprite(80, 40, ARENA_CATEGORY_MIND, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
         ShowJudgmentSprite(160, 40, ARENA_CATEGORY_MIND, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT));
-        BattleStringExpandPlaceholdersToDisplayedString(gText_Judgment);
+        BattleStringExpandPlaceholdersToDisplayedString(sText_Judgment);
         BattlePutTextOnWindow(gDisplayedStringBattle, ARENA_WIN_JUDGMENT_TITLE);
         (*state)++;
         result = ARENA_RESULT_STEP_DONE;
@@ -224,7 +232,7 @@ u8 BattleArena_ShowJudgmentWindow(u8 *state)
         PlaySE(SE_ARENA_TIMEUP1);
         ShowJudgmentSprite(80, 56, ARENA_CATEGORY_SKILL, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
         ShowJudgmentSprite(160, 56, ARENA_CATEGORY_SKILL, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT));
-        BattleStringExpandPlaceholdersToDisplayedString(gText_Judgment);
+        BattleStringExpandPlaceholdersToDisplayedString(sText_Judgment);
         BattlePutTextOnWindow(gDisplayedStringBattle, ARENA_WIN_JUDGMENT_TITLE);
         (*state)++;
         result = ARENA_RESULT_STEP_DONE;
@@ -233,7 +241,7 @@ u8 BattleArena_ShowJudgmentWindow(u8 *state)
         PlaySE(SE_ARENA_TIMEUP1);
         ShowJudgmentSprite(80, 72, ARENA_CATEGORY_BODY, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
         ShowJudgmentSprite(160, 72, ARENA_CATEGORY_BODY, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT));
-        BattleStringExpandPlaceholdersToDisplayedString(gText_Judgment);
+        BattleStringExpandPlaceholdersToDisplayedString(sText_Judgment);
         BattlePutTextOnWindow(gDisplayedStringBattle, ARENA_WIN_JUDGMENT_TITLE);
         (*state)++;
         result = ARENA_RESULT_STEP_DONE;

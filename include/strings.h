@@ -90,6 +90,28 @@ extern const u8 gText_Pink[];
 extern const u8 gText_BerryCrush[];
 extern const u8 gText_PokemonJump[];
 extern const u8 gText_Coins[];
+extern const u8 gText_YourPartnerHasRetired[];
+extern const u8 gText_Summary[];
+extern const u8 gText_Deselect[];
+extern const u8 gText_Rest[];
+extern const u8 gText_Record[];
+extern const u8 gText_Space[];
+extern const u8 gText_PokedollarVar1[];
+extern const u8 gText_Lv[];
+extern const u8 gText_CommunicationStandby[];
+extern const u8 gText_PkmnCantBeTradedNow[];
+extern const u8 gText_EggCantBeTradedNow[];
+extern const u8 gText_OtherTrainersPkmnCantBeTraded[];
+extern const u8 gText_ThreeQuestionMarks[];
+extern const u8 gText_EmptyString[];
+extern const u8 gText_DecimalPoint[];
+extern const u8 gText_Option[];
+extern const u8 gText_On[];
+extern const u8 gText_Off[];
+extern const u8 gText_Fast[];
+extern const u8 gText_Help[];
+extern const u8 gText_Type[];
+extern const u8 gText_TrainerCardMoney[];
 
 // pokemon
 extern const u8 gText_DefendersStatRose[];
@@ -108,7 +130,6 @@ extern const u8 gText_MoveInterfaceType[];
 extern const u8 gText_LinkStandby[];
 extern const u8 gText_BattleMenu[];
 extern const u8 gText_WhatWillPkmnDo[];
-
 extern const u8 gText_Switch[];
 extern const u8 gText_Item[];
 extern const u8 gText_Take[];
@@ -148,34 +169,11 @@ extern const u8 gText_MarshBadge[];
 extern const u8 gText_VolcanoBadge[];
 extern const u8 gText_EarthBadge[];
 
-// trade
-extern const u8 gText_CommunicationStandby[];
-extern const u8 gText_PkmnCantBeTradedNow[];
-extern const u8 gText_EggCantBeTradedNow[];
-extern const u8 gText_OtherTrainersPkmnCantBeTraded[];
-
-extern const u8 gText_ThreeQuestionMarks[];
-
-extern const u8 gText_EmptyString[];
-extern const u8 gText_DecimalPoint[];
-extern const u8 gText_Option[];
-extern const u8 gText_On[];
-extern const u8 gText_Off[];
-extern const u8 gText_Fast[];
-extern const u8 gText_Help[];
-extern const u8 gText_Type[];
-extern const u8 gText_TrainerCardMoney[];
-
 // evolution_scene
 extern const u8 gText_PkmnIsEvolving[];
 extern const u8 gText_CongratsPkmnEvolved[];
 extern const u8 gText_EllipsisQuestionMark[];
 extern const u8 gText_PkmnStoppedEvolving[];
-
-// shop
-extern const u8 gText_PokedollarVar1[];
-
-extern const u8 gText_Lv[];
 
 // bag
 extern const u8 gText_DepositItem[];
@@ -193,19 +191,16 @@ extern const u8 gText_Pokemon[];
 extern const u8 gText_Trade[];
 extern const u8 gText_Battle[];
 extern const u8 gText_Lets[];
-
 extern const u8 gText_Exit[];
 extern const u8 gText_ABUTTONNext[];
 extern const u8 gText_SilverCard[];
 extern const u8 gText_GoldCard[];
-
 extern const u8 gText_YourPartysFull[];
 
 //Pokédex text
 extern const u8 gText_CryOf[];
 extern const u8 gText_SizeComparedTo[];
 extern const u8 gText_PokedexRegistration[];
-extern const u8 gText_NumberClear01[];
 extern const u8 gText_5MarksPokemon[];
 extern const u8 gText_UnkHeight[];
 extern const u8 gText_UnkHeightMetric[];
@@ -265,7 +260,6 @@ extern const u8 gText_DexSortSmallestDescription[];
 extern const u8 gText_DexEmptyString[];
 extern const u8 gText_DexSearchDontSpecify[];
 extern const u8 gText_DexSearchTypeNone[];
-
 extern const u8 gText_BattleTower[];
 extern const u8 gText_BattleDome[];
 extern const u8 gText_BattlePalace[];
@@ -388,35 +382,6 @@ extern const u8 BattleFrontier_Lounge7_Text_PsychUpDesc[];
 extern const u8 BattleFrontier_Lounge7_Text_IcePunchDesc[];
 extern const u8 BattleFrontier_Lounge7_Text_ThunderPunchDesc[];
 extern const u8 BattleFrontier_Lounge7_Text_FirePunchDesc[];
-
-extern const u8 gText_YourPartnerHasRetired[];
-extern const u8 gText_Summary[];
-extern const u8 gText_Deselect[];
-
-extern const u8 gText_Rest[];
-
-// Frontier records
-extern const u8 gText_Record[];
-extern const u8 gText_4th[];
-extern const u8 gText_3rd[];
-extern const u8 gText_2nd[];
-extern const u8 gText_1st[];
-extern const u8 gText_SpaceAndSpace[];
-extern const u8 gText_CommaSpace[];
-extern const u8 gText_LineBreak[];
-extern const u8 gText_Space[];
-extern const u8 gText_Are[];
-extern const u8 gText_Are2[];
-
-extern const u8 gText_PlayerMon1Name[];
-extern const u8 gText_OpponentMon1Name[];
-extern const u8 gText_Vs[];
-extern const u8 gText_Mind[];
-extern const u8 gText_Skill[];
-extern const u8 gText_Body[];
-extern const u8 gText_Judgment[];
-
-extern const u8 gText_BattleTrainers[];
 
 // Battle Tower
 extern const u8 BattleFrontier_BattleTowerMultiPartnerRoom_Text_Apprentice1Intro[];
