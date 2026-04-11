@@ -3944,7 +3944,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         }
         TurnValuesCleanUp(FALSE);
         memset(&gSpecialStatuses, 0, sizeof(gSpecialStatuses));
-        BattlePutTextOnWindow(gText_EmptyString3, B_WIN_MSG);
+        BattlePutTextOnWindow(gText_EmptyString, B_WIN_MSG);
         AssignUsableGimmicks();
         gBattleMainFunc = HandleTurnActionSelectionState;
         ResetSentPokesToOpponentValue();
@@ -4052,7 +4052,7 @@ void BattleTurnPassed(void)
 
     gFieldStatuses &= ~STATUS_FIELD_ION_DELUGE;
 
-    BattlePutTextOnWindow(gText_EmptyString3, B_WIN_MSG);
+    BattlePutTextOnWindow(gText_EmptyString, B_WIN_MSG);
     AssignUsableGimmicks();
     SetShellSideArmCategory();
     SetAiLogicDataForTurn(gAiLogicData); // get assumed abilities, hold effects, etc of all battlers

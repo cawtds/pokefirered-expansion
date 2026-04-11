@@ -483,8 +483,8 @@ static const struct MenuAction sMultichoiceList_TrainerTowerMode[] = {
 static const struct MenuAction sMultichoiceList_FrontierRules[] =
 {
     {COMPOUND_STRING("TWO STYLES")},
-    {COMPOUND_STRING("LV. 50")},
-    {COMPOUND_STRING("OPEN LEVEL")},
+    {gText_Lv50},
+    {gText_OpenLevel},
     {COMPOUND_STRING("{PKMN} TYPE & NO.")},
     {COMPOUND_STRING("HOLD ITEMS")},
     {gText_Exit},
@@ -519,7 +519,7 @@ static const struct MenuAction sMultichoiceList_BattleFactoryRules[] =
     {COMPOUND_STRING("SWAP: PARTNER")},
     {COMPOUND_STRING("SWAP: NUMBER")},
     {COMPOUND_STRING("SWAP: NOTES")},
-    {COMPOUND_STRING("OPEN LEVEL")},
+    {gText_OpenLevel},
     {gText_Exit},
 };
 

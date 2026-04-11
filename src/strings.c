@@ -1,7 +1,4 @@
 #include "global.h"
-#include "battle_pyramid_bag.h"
-#include "strings.h"
-#include "constants/item.h"
 
 const u8 gText_EmptyString[] = _("");
 const u8 gText_EggNickname[POKEMON_NAME_LENGTH + 1] = _("EGG");
@@ -41,8 +38,6 @@ const u8 gText_GoBackToThePreviousMenu[] = _("Go back to the\nprevious menu.");
 const u8 gText_WhatWouldYouLikeToDo[] = _("What would you like to do?");
 const u8 gText_Bag[] = _("BAG");
 const u8 gText_DecimalPoint[] = _(".");
-const u8 gText_MenuPlayer[] = _("{PLAYER}");
-const u8 gText_MenuSave[] = _("SAVE");
 const u8 gText_Option[] = _("OPTION");
 const u8 gText_Retire[] = _("RETIRE");
 const u8 gText_xVar1[] = _("×{STR_VAR_1}");
@@ -150,106 +145,14 @@ const u8 gText_GoldCard[] = _("GOLD");
 const u8 gText_ABUTTONNext[] = _("{A_BUTTON}NEXT");
 const u8 gText_ThreeQuestionMarks[] = _("???");
 const u8 gText_CommunicationStandby[] = _("Communication standby…");
-
-// Frontier util.
-ALIGNED(4) const u8 gText_FacilitySingle[] = _("{STR_VAR_1} SINGLE");
-ALIGNED(4) const u8 gText_FacilityDouble[] = _("{STR_VAR_1} DOUBLE");
-ALIGNED(4) const u8 gText_FacilityMulti[] = _("{STR_VAR_1} MULTI");
-ALIGNED(4) const u8 gText_FacilityLink[] = _("{STR_VAR_1} LINK");
-ALIGNED(4) const u8 gText_Facility[] = _("{STR_VAR_1}");
-
-ALIGNED(4) const u8 gText_RecordsLv50[] = _("LV. 50");
-ALIGNED(4) const u8 gText_RecordsOpenLevel[] = _("OPEN LEVEL");
-ALIGNED(4) const u8 gText_FrontierFacilityWinStreak[] = _("Win streak: {STR_VAR_2}");
-ALIGNED(4) const u8 gText_FrontierFacilityClearStreak[] = _("Clear streak: {STR_VAR_2}");
-ALIGNED(4) const u8 gText_FrontierFacilityRoomsCleared[] = _("Rooms cleared: {STR_VAR_2}");
-ALIGNED(4) const u8 gText_FrontierFacilityKOsStreak[] = _("KOs in a row: {STR_VAR_2}");
-ALIGNED(4) const u8 gText_FrontierFacilityFloorsCleared[] = _("Floors cleared: {STR_VAR_2}");
-ALIGNED(4) const u8 gText_123Dot[][3] = {_("1."), _("2."), _("3.")};
-const u8 gText_FrontierFacilityTotalCaughtSpeciesBanned[] = _(" and {STR_VAR_2} of the POKéMON species\nyou caught are inelegible");
-const u8 gText_FrontierFacilityIncluding[] = _(".\pThese include ");
-const u8 gText_FrontierFacilityAreInelegible[] = _(" are inelegible");
-
-const u8 gText_BattleTower2[] = _("BATTLE TOWER");
+const u8 gText_Lv50[] = _("LV. 50");
+const u8 gText_OpenLevel[] = _("OPEN LEVEL");
+const u8 gText_Rest[] = _("REST");
+const u8 gText_BattleTower[] = _("BATTLE TOWER");
 const u8 gText_BattleDome[] = _("BATTLE DOME");
 const u8 gText_BattlePalace[] = _("BATTLE PALACE");
 const u8 gText_BattleFactory[] = _("BATTLE FACTORY");
 const u8 gText_BattleArena[] = _("BATTLE ARENA");
 const u8 gText_BattlePike[] = _("BATTLE PIKE");
 const u8 gText_BattlePyramid[] = _("BATTLE PYRAMID");
-const u8 gText_RankingHall[] = _("RANKING HALL");
-const u8 gText_ExchangeService[] = _("EXCHANGE SERVICE");
-
-const u8 gText_RentalPkmn2[] = _("RENTAL POKéMON");
-const u8 gText_SelectFirstPkmn[] = _("Select the first POKéMON.");
-const u8 gText_SelectSecondPkmn[] = _("Select the second POKéMON.");
-const u8 gText_SelectThirdPkmn[] = _("Select the third POKéMON.");
-const u8 gText_Rent[] = _("RENT");
-const u8 gText_TheseThreePkmnOkay[] = _("Are these three POKéMON OK?");
-const u8 gText_CantSelectSamePkmn[] = _("Can't select same {PKMN}.");
-const u8 gText_PkmnSwap[] = _("POKéMON SWAP");
-const u8 gText_SelectPkmnToSwap[] = _("Select POKéMON to swap.");
-const u8 gText_SelectPkmnToAccept[] = _("Select POKéMON to accept.");
-const u8 gText_Swap[] = _("SWAP");
-const u8 gText_Rechoose[] = _("RECHOOSE");
-const u8 gText_QuitSwapping[] = _("Quit swapping?");
-const u8 gText_PkmnForSwap[] = _("{PKMN} FOR SWAP");
-const u8 gText_AcceptThisPkmn[] = _("Accept this POKéMON?");
-const u8 gText_SamePkmnInPartyAlready[] = _("Same {PKMN} in party already.");
-
-const u8 gText_Lv50[] = _("LV. 50");
-const u8 gText_OpenLevel[] = _("OPEN LEVEL");
-const u8 gText_Rest[] = _("REST");
-
-const u8 gText_SingleBattleRoomResults[] = _("{PLAYER}'s Single Battle Room Results");
-const u8 gText_DoubleBattleRoomResults[] = _("{PLAYER}'s Double Battle Room Results");
-const u8 gText_MultiBattleRoomResults[] = _("{PLAYER}'s Multi Battle Room Results");
-const u8 gText_LinkMultiBattleRoomResults[] = _("{PLAYER}'s Link Multi Battle Room Results");
-const u8 gText_SingleBattleTourneyResults[] = _("{PLAYER}'s Single Battle Tourney Results");
-const u8 gText_DoubleBattleTourneyResults[] = _("{PLAYER}'s Double Battle Tourney Results");
-const u8 gText_SingleBattleHallResults[] = _("{PLAYER}'s Single Battle Hall Results");
-const u8 gText_DoubleBattleHallResults[] = _("{PLAYER}'s Double Battle Hall Results");
-const u8 gText_BattleChoiceResults[] = _("{PLAYER}'s Battle Choice Results");
-const u8 gText_SetKOTourneyResults[] = _("{PLAYER}'s Set KO Tourney Results");
-const u8 gText_BattleSwapSingleResults[] = _("{PLAYER}'s Battle Swap Single Results");
-const u8 gText_BattleSwapDoubleResults[] = _("{PLAYER}'s Battle Swap Double Results");
-const u8 gText_BattleQuestResults[] = _("{PLAYER}'s Battle Quest Results");
-const u8 gText_Lv502[] = _("LV. 50");
-const u8 gText_OpenLv[] = _("OPEN LV.");
-const u8 gText_WinStreak[] = _("Win streak: {STR_VAR_1}");
-const u8 gText_Current[] = _("CURRENT");
 const u8 gText_Record[] = _("RECORD");
-const u8 gText_Prev[] = _("PREV.");
-const u8 gText_RentalSwap[] = _("Rental/Swap");
-const u8 gText_Total[] = _("Total");
-const u8 gText_ClearStreak[] = _("Clear streak: {STR_VAR_1}");
-const u8 gText_Championships[] = _("Championships: {STR_VAR_1}");
-const u8 gText_RoomsCleared[] = _("Rooms cleared: {STR_VAR_1}");
-const u8 gText_TimesCleared[] = _("Times cleared:{CLEAR 0x05}{STR_VAR_1}");
-const u8 gText_KOsInARow[] = _("KOs in a row: {STR_VAR_1}");
-const u8 gText_TimesVar1[] = _("Times: {STR_VAR_1}");
-const u8 gText_FloorsCleared[] = _("Floors cleared: {STR_VAR_1}");
-
-const u8 gText_TheField[] = _("the field");
-const u8 gText_TheBattle[] = _("the battle");
-const u8 gText_ThePokemonList[] = _("the POKéMON LIST");
-
-const u8 *const gPyramidBagMenu_ReturnToStrings[] =
-{
-    [PYRAMIDBAG_LOC_FIELD]       = gText_TheField,
-    [PYRAMIDBAG_LOC_BATTLE]      = gText_TheBattle,
-    [PYRAMIDBAG_LOC_PARTY]       = gText_ThePokemonList,
-    [PYRAMIDBAG_LOC_CHOOSE_TOSS] = gText_TheField
-};
-
-const u8 gText_ReturnToVar1[] = _("Return to\n{STR_VAR_1}.");
-
-const u8 gText_BattlePyramidFloor[] = _("Battle Pyramid\n{STR_VAR_1}");
-const u8 gText_Floor1[] = _("Floor 1");
-const u8 gText_Floor2[] = _("Floor 2");
-const u8 gText_Floor3[] = _("Floor 3");
-const u8 gText_Floor4[] = _("Floor 4");
-const u8 gText_Floor5[] = _("Floor 5");
-const u8 gText_Floor6[] = _("Floor 6");
-const u8 gText_Floor7[] = _("Floor 7");
-const u8 gText_Peak[] = _("Peak");

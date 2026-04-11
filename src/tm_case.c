@@ -731,7 +731,7 @@ static void List_ItemPrintFunc(u8 windowId, u32 itemIndex, u8 y)
             }
             else
             {
-                StringCopy(gStringVar4, gText_EmptyString3);
+                StringCopy(gStringVar4, gText_EmptyString);
             }
             TMCase_Print(windowId, FONT_SMALL, gStringVar4, 126, y, 0, 0, TEXT_SKIP_DRAW, COLOR_DARK);
         }

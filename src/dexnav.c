@@ -903,7 +903,7 @@ static void DexNavUpdateDirectionArrow(void)
     FillWindowPixelRect(windowId, PIXEL_FILL(1), SEARCH_ARROW_X, SEARCH_ARROW_Y, 12, 12);
     if (deltaX <= 1 && deltaY <= 1)
     {
-        str = gText_EmptyString3;
+        str = gText_EmptyString;
     }
     else if (deltaX > deltaY)
     {

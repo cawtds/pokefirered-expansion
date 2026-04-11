@@ -161,17 +161,19 @@ static const u8 sText_SaveError_PleaseExchangeBackupMemory[] = _("Save error.\pP
 static const u8 sText_MenuSafariStats[] = _("{STR_VAR_1}/{STR_VAR_2}\nBALLS  {STR_VAR_3}");
 static const u8 sText_MenuTime[] = _("Time: {STR_VAR_1}:{STR_VAR_2}");
 static const u8 sText_MenuDay[] = _("{STR_VAR_1} Day {STR_VAR_2}");
+static const u8 sText_BattlePyramidFloor[] = _("Battle Pyramid\n{STR_VAR_1}");
+static const u8 sText_MenuPlayer[] = _("{PLAYER}");
 
 static const struct MenuAction sStartMenuActionTable[] = {
     [MENU_ACTION_POKEDEX]           = {gText_Pokedex,              {.u8_void = StartMenuPokedexCallback}},
     [MENU_ACTION_POKEMON]           = {gText_MenuPokemon,          {.u8_void = StartMenuPokemonCallback}},
     [MENU_ACTION_BAG]               = {gText_Bag,                  {.u8_void = StartMenuBagCallback}},
-    [MENU_ACTION_PLAYER]            = {gText_MenuPlayer,           {.u8_void = StartMenuPlayerNameCallback}},
-    [MENU_ACTION_SAVE]              = {gText_MenuSave,             {.u8_void = StartMenuSaveCallback}},
+    [MENU_ACTION_PLAYER]            = {sText_MenuPlayer,           {.u8_void = StartMenuPlayerNameCallback}},
+    [MENU_ACTION_SAVE]              = {COMPOUND_STRING("SAVE"),    {.u8_void = StartMenuSaveCallback}},
     [MENU_ACTION_OPTION]            = {gText_Option,               {.u8_void = StartMenuOptionCallback}},
     [MENU_ACTION_EXIT]              = {gText_Exit,                 {.u8_void = StartMenuExitCallback}},
     [MENU_ACTION_RETIRE_SAFARI]     = {gText_Retire,               {.u8_void = StartMenuSafariZoneRetireCallback}},
-    [MENU_ACTION_PLAYER_LINK]       = {gText_MenuPlayer,           {.u8_void = StartMenuLinkPlayerCallback}},
+    [MENU_ACTION_PLAYER_LINK]       = {sText_MenuPlayer,           {.u8_void = StartMenuLinkPlayerCallback}},
     [MENU_ACTION_REST_FRONTIER]     = {gText_Rest,                 {.u8_void = StartMenuSaveCallback}},
     [MENU_ACTION_RETIRE_FRONTIER]   = {gText_Retire,               {.u8_void = StartMenuBattlePyramidRetireCallback}},
     [MENU_ACTION_PYRAMID_BAG]       = {gText_Bag,                  {.u8_void = StartMenuBattlePyramidBagCallback}},
@@ -201,14 +203,14 @@ static const struct WindowTemplate sWindowTemplate_SafariZoneStats = {
 
 static const u8 *const sPyramidFloorNames[FRONTIER_STAGES_PER_CHALLENGE + 1] =
 {
-    gText_Floor1,
-    gText_Floor2,
-    gText_Floor3,
-    gText_Floor4,
-    gText_Floor5,
-    gText_Floor6,
-    gText_Floor7,
-    gText_Peak
+    COMPOUND_STRING("Floor 1"),
+    COMPOUND_STRING("Floor 2"),
+    COMPOUND_STRING("Floor 3"),
+    COMPOUND_STRING("Floor 4"),
+    COMPOUND_STRING("Floor 5"),
+    COMPOUND_STRING("Floor 6"),
+    COMPOUND_STRING("Floor 7"),
+    COMPOUND_STRING("Peak"),
 };
 
 static const struct WindowTemplate sWindowTemplate_PyramidFloor = {
@@ -418,7 +420,7 @@ static void ShowPyramidFloorWindow(void)
     PutWindowTilemap(sBattlePyramidFloorWindowId);
     DrawStdWindowFrame(sBattlePyramidFloorWindowId, FALSE);
     StringCopy(gStringVar1, sPyramidFloorNames[gSaveBlock2Ptr->frontier.curChallengeBattleNum]);
-    StringExpandPlaceholders(gStringVar4, gText_BattlePyramidFloor);
+    StringExpandPlaceholders(gStringVar4, sText_BattlePyramidFloor);
     AddTextPrinterParameterized(sBattlePyramidFloorWindowId, FONT_NORMAL, gStringVar4, 0, 1, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(sBattlePyramidFloorWindowId, COPYWIN_GFX);
 }

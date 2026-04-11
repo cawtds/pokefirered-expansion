@@ -536,7 +536,7 @@ static const u8 *const sPassAreaDescriptions[CURSOR_AREA_COUNT + 1] =
     [CURSOR_AREA_SYMBOL_FACTORY] = COMPOUND_STRING("Battle Factory - Knowledge Symbol"),
     [CURSOR_AREA_SYMBOL_PIKE]    = COMPOUND_STRING("Battle Pike - Luck Symbol"),
     [CURSOR_AREA_SYMBOL_PYRAMID] = COMPOUND_STRING("Battle Pyramid - Brave Symbol"),
-    [CURSOR_AREA_COUNT]          = gText_EmptyString3,
+    [CURSOR_AREA_COUNT]          = gText_EmptyString,
 };
 
 struct
@@ -548,13 +548,13 @@ struct
     u8 animNum;
 } static const sMapLandmarks[NUM_FRONTIER_FACILITIES] =
 {
-    [FRONTIER_FACILITY_TOWER]   = {COMPOUND_STRING("BATTLE TOWER"),   COMPOUND_STRING("KO opponents and aim for the top!\nYour ability will be tested."),       89,  40, MAP_INDICATOR_SQUARE},
-    [FRONTIER_FACILITY_DOME]    = {COMPOUND_STRING("BATTLE DOME"),    COMPOUND_STRING("Keep winning at the tournament!\nYour tactics will be tested."),         33,  42, MAP_INDICATOR_SQUARE},
-    [FRONTIER_FACILITY_PALACE]  = {COMPOUND_STRING("BATTLE PALACE"),  COMPOUND_STRING("Watch your POKéMON battle!\nYour spirit will be tested."),               120, 86, MAP_INDICATOR_RECTANGLE},
-    [FRONTIER_FACILITY_ARENA]   = {COMPOUND_STRING("BATTLE ARENA"),   COMPOUND_STRING("Win battles with teamed-up POKéMON!\nYour guts will be tested."),        114, 59, MAP_INDICATOR_RECTANGLE},
-    [FRONTIER_FACILITY_FACTORY] = {COMPOUND_STRING("BATTLE FACTORY"), COMPOUND_STRING("Aim for victory using rental POKéMON!\nYour knowledge will be tested."), 25,  67, MAP_INDICATOR_RECTANGLE},
-    [FRONTIER_FACILITY_PIKE]    = {COMPOUND_STRING("BATTLE PIKE"),    COMPOUND_STRING("Select one of three paths to battle!\nYour luck will be tested."),       57,  57, MAP_INDICATOR_SQUARE},
-    [FRONTIER_FACILITY_PYRAMID] = {COMPOUND_STRING("BATTLE PYRAMID"), COMPOUND_STRING("Aim for the top with exploration!\nYour bravery will be tested."),       134, 41, MAP_INDICATOR_SQUARE},
+    [FRONTIER_FACILITY_TOWER]   = {gText_BattleTower,   COMPOUND_STRING("KO opponents and aim for the top!\nYour ability will be tested."),       89,  40, MAP_INDICATOR_SQUARE},
+    [FRONTIER_FACILITY_DOME]    = {gText_BattleDome,    COMPOUND_STRING("Keep winning at the tournament!\nYour tactics will be tested."),         33,  42, MAP_INDICATOR_SQUARE},
+    [FRONTIER_FACILITY_PALACE]  = {gText_BattlePalace,  COMPOUND_STRING("Watch your POKéMON battle!\nYour spirit will be tested."),               120, 86, MAP_INDICATOR_RECTANGLE},
+    [FRONTIER_FACILITY_ARENA]   = {gText_BattleArena,   COMPOUND_STRING("Win battles with teamed-up POKéMON!\nYour guts will be tested."),        114, 59, MAP_INDICATOR_RECTANGLE},
+    [FRONTIER_FACILITY_FACTORY] = {gText_BattleFactory, COMPOUND_STRING("Aim for victory using rental POKéMON!\nYour knowledge will be tested."), 25,  67, MAP_INDICATOR_RECTANGLE},
+    [FRONTIER_FACILITY_PIKE]    = {gText_BattlePike,    COMPOUND_STRING("Select one of three paths to battle!\nYour luck will be tested."),       57,  57, MAP_INDICATOR_SQUARE},
+    [FRONTIER_FACILITY_PYRAMID] = {gText_BattlePyramid, COMPOUND_STRING("Aim for the top with exploration!\nYour bravery will be tested."),       134, 41, MAP_INDICATOR_SQUARE},
 };
 
 static void ResetGpuRegsAndBgs(void)

@@ -173,14 +173,25 @@ enum {
     ACTION_DUMMY,
 };
 
+static const u8 sText_TheField[] = _("the field");
+static const u8 sText_ReturnToVar1[] = _("Return to\n{STR_VAR_1}.");
+
+static const u8 *const sPyramidBagMenu_ReturnToStrings[] =
+{
+    [PYRAMIDBAG_LOC_FIELD]       = sText_TheField,
+    [PYRAMIDBAG_LOC_BATTLE]      = COMPOUND_STRING("the battle"),
+    [PYRAMIDBAG_LOC_PARTY]       = COMPOUND_STRING("the POKéMON LIST"),
+    [PYRAMIDBAG_LOC_CHOOSE_TOSS] = sText_TheField
+};
+
 static const struct MenuAction sMenuActions[] =
 {
-    [ACTION_USE_FIELD] =    { gText_Use, {BagAction_UseOnField} },
-    [ACTION_TOSS] =         { gText_Toss, {BagAction_Toss} },
-    [ACTION_GIVE] =         { gText_Give, {BagAction_Give} },
-    [ACTION_CANCEL] =       { gText_Cancel, {BagAction_Cancel} },
-    [ACTION_USE_BATTLE] =   { gText_Use, {BagAction_UseInBattle} },
-    [ACTION_DUMMY] =        { gText_EmptyString3, {NULL} },
+    [ACTION_USE_FIELD] =    { gText_Use,         {BagAction_UseOnField} },
+    [ACTION_TOSS] =         { gText_Toss,        {BagAction_Toss} },
+    [ACTION_GIVE] =         { gText_Give,        {BagAction_Give} },
+    [ACTION_CANCEL] =       { gText_Cancel,      {BagAction_Cancel} },
+    [ACTION_USE_BATTLE] =   { gText_Use,         {BagAction_UseInBattle} },
+    [ACTION_DUMMY] =        { gText_EmptyString, {NULL} },
 };
 
 static const u8 sMenuActionIds_Field[] = {ACTION_USE_FIELD, ACTION_GIVE, ACTION_TOSS, ACTION_CANCEL};
@@ -685,8 +696,8 @@ static void PrintItemDescription(s32 listMenuId)
     }
     else
     {
-        StringCopy(gStringVar1, gPyramidBagMenu_ReturnToStrings[gPyramidBagMenuState.location]);
-        StringExpandPlaceholders(gStringVar4, gText_ReturnToVar1);
+        StringCopy(gStringVar1, sPyramidBagMenu_ReturnToStrings[gPyramidBagMenuState.location]);
+        StringExpandPlaceholders(gStringVar4, sText_ReturnToVar1);
         desc = gStringVar4;
     }
     FillWindowPixelBuffer(WIN_INFO, PIXEL_FILL(0));

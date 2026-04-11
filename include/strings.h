@@ -145,9 +145,6 @@ extern const u8 *const gStatNamesTable[];
 extern const u8 gText_National[];
 extern const u8 gText_Kanto[];
 
-// battle_controller_safari
-extern const u8 gText_EmptyString3[];
-
 // battle_controller_player
 extern const u8 gText_BattleSwitchWhich[];
 extern const u8 gText_BattleSwitchWhich5[];
@@ -238,19 +235,7 @@ extern const u8 gText_MailReturnedToBagMessageErased[];
 
 // start_menu
 extern const u8 gText_Bag[];
-extern const u8 gText_MenuPlayer[];
-extern const u8 gText_MenuSave[];
 extern const u8 gText_Retire[];
-extern const u8 gText_Floor1[];
-extern const u8 gText_Floor2[];
-extern const u8 gText_Floor3[];
-extern const u8 gText_Floor4[];
-extern const u8 gText_Floor5[];
-extern const u8 gText_Floor6[];
-extern const u8 gText_Floor7[];
-extern const u8 gText_Peak[];
-extern const u8 gText_SafariBallStock[];
-extern const u8 gText_BattlePyramidFloor[];
 
 extern const u8 gText_SavingDontTurnOffThePower2[];
 
@@ -556,34 +541,15 @@ extern const u8 gText_DexEmptyString[];
 extern const u8 gText_DexSearchDontSpecify[];
 extern const u8 gText_DexSearchTypeNone[];
 
-extern const u8 gText_123Dot[][3];
-// Frontier util.
-extern const u8 gText_FacilitySingle[];
-extern const u8 gText_FacilityDouble[];
-extern const u8 gText_FacilityMulti[];
-extern const u8 gText_FacilityLink[];
-extern const u8 gText_Facility[];
+extern const u8 gText_Lv50[];
 
-extern const u8 gText_RecordsLv50[];
-extern const u8 gText_RecordsOpenLevel[];
-extern const u8 gText_FrontierFacilityWinStreak[];
-extern const u8 gText_FrontierFacilityClearStreak[];
-extern const u8 gText_FrontierFacilityRoomsCleared[];
-extern const u8 gText_FrontierFacilityKOsStreak[];
-extern const u8 gText_FrontierFacilityFloorsCleared[];
-extern const u8 gText_FrontierFacilityTotalCaughtSpeciesBanned[];
-extern const u8 gText_FrontierFacilityIncluding[];
-extern const u8 gText_FrontierFacilityAreInelegible[];
-
-extern const u8 gText_BattleTower2[];
+extern const u8 gText_BattleTower[];
 extern const u8 gText_BattleDome[];
 extern const u8 gText_BattlePalace[];
 extern const u8 gText_BattleArena[];
 extern const u8 gText_BattleFactory[];
 extern const u8 gText_BattlePike[];
 extern const u8 gText_BattlePyramid[];
-extern const u8 gText_RankingHall[];
-extern const u8 gText_ExchangeService[];
 
 // Battle Frontier Maniac
 extern const u8 BattleFrontier_Lounge2_Text_SalonMaidenIsThere[];
@@ -701,58 +667,13 @@ extern const u8 BattleFrontier_Lounge7_Text_ThunderPunchDesc[];
 extern const u8 BattleFrontier_Lounge7_Text_FirePunchDesc[];
 
 extern const u8 gText_YourPartnerHasRetired[];
-
-// Battle Factory Screen
-extern const u8 gText_RentalPkmn2[];
-extern const u8 gText_SelectFirstPkmn[];
-extern const u8 gText_SelectSecondPkmn[];
-extern const u8 gText_SelectThirdPkmn[];
-extern const u8 gText_TheseThreePkmnOkay[];
-extern const u8 gText_CantSelectSamePkmn[];
 extern const u8 gText_Summary[];
-extern const u8 gText_Rechoose[];
 extern const u8 gText_Deselect[];
-extern const u8 gText_Rent[];
-extern const u8 gText_QuitSwapping[];
-extern const u8 gText_AcceptThisPkmn[];
-extern const u8 gText_SelectPkmnToAccept[];
-extern const u8 gText_SelectPkmnToSwap[];
-extern const u8 gText_PkmnSwap[];
-extern const u8 gText_Swap[];
-extern const u8 gText_PkmnForSwap[];
-extern const u8 gText_SamePkmnInPartyAlready[];
 
 extern const u8 gText_Rest[];
 
 // Frontier records
-extern const u8 gText_WinStreak[];
 extern const u8 gText_Record[];
-extern const u8 gText_Current[];
-extern const u8 gText_RoomsCleared[];
-extern const u8 gText_Prev[];
-extern const u8 gText_SingleBattleRoomResults[];
-extern const u8 gText_DoubleBattleRoomResults[];
-extern const u8 gText_MultiBattleRoomResults[];
-extern const u8 gText_LinkMultiBattleRoomResults[];
-extern const u8 gText_Lv502[];
-extern const u8 gText_OpenLv[];
-extern const u8 gText_RentalSwap[];
-extern const u8 gText_ClearStreak[];
-extern const u8 gText_Total[];
-extern const u8 gText_Championships[];
-extern const u8 gText_SingleBattleTourneyResults[];
-extern const u8 gText_DoubleBattleTourneyResults[];
-extern const u8 gText_SingleBattleHallResults[];
-extern const u8 gText_DoubleBattleHallResults[];
-extern const u8 gText_BattleChoiceResults[];
-extern const u8 gText_TimesCleared[];
-extern const u8 gText_KOsInARow[];
-extern const u8 gText_SetKOTourneyResults[];
-extern const u8 gText_TimesVar1[];
-extern const u8 gText_BattleSwapSingleResults[];
-extern const u8 gText_BattleSwapDoubleResults[];
-extern const u8 gText_FloorsCleared[];
-extern const u8 gText_BattleQuestResults[];
 extern const u8 gText_LinkContestResults[];
 extern const u8 gText_4th[];
 extern const u8 gText_3rd[];
@@ -764,7 +685,6 @@ extern const u8 gText_LineBreak[];
 extern const u8 gText_Space[];
 extern const u8 gText_Are[];
 extern const u8 gText_Are2[];
-extern const u8 gText_123Dot[][3];
 
 extern const u8 gText_PlayerMon1Name[];
 extern const u8 gText_OpponentMon1Name[];
@@ -775,9 +695,6 @@ extern const u8 gText_Body[];
 extern const u8 gText_Judgment[];
 
 extern const u8 gText_BattleTrainers[];
-
-extern const u8 *const gPyramidBagMenu_ReturnToStrings[];
-extern const u8 gText_ReturnToVar1[];
 
 // Battle Tower
 extern const u8 BattleFrontier_BattleTowerMultiPartnerRoom_Text_Apprentice1Intro[];

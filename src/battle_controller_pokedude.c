@@ -363,7 +363,7 @@ static void PokedudeHandleChooseAction(enum BattlerId battler)
     if (GetBattlerSide(battler) == B_SIDE_PLAYER)
     {
         gBattlerControllerFuncs[battler] = HandleChooseActionAfterDma3;
-        BattlePutTextOnWindow(gText_EmptyString3, B_WIN_MSG);
+        BattlePutTextOnWindow(gText_EmptyString, B_WIN_MSG);
         BattlePutTextOnWindow(gText_BattleMenu, B_WIN_ACTION_MENU);
         for (i = 0; i < MAX_MON_MOVES; ++i)
             ActionSelectionDestroyCursorAt((u8)i);

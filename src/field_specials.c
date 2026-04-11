@@ -184,15 +184,15 @@ static const u8 *const sScrollMultiLabels_BerryPowder[] =
 
 static const u8 *const sScrollMultiLabels_BFReceptionist[] =
 {
-    gText_BattleTower2,
+    gText_BattleTower,
     gText_BattleDome,
     gText_BattlePalace,
     gText_BattleArena,
     gText_BattleFactory,
     gText_BattlePike,
     gText_BattlePyramid,
-    gText_RankingHall,
-    gText_ExchangeService,
+    COMPOUND_STRING("RANKING HALL"),
+    COMPOUND_STRING("EXCHANGE SERVICE"),
     gText_Exit
 };
 
