@@ -1860,7 +1860,7 @@ static void DisplayTookHeldItemMessage(struct Pokemon *mon, enum Item item, bool
     ItemUse_SetQuestLogEvent(QL_EVENT_TOOK_HELD_ITEM, mon, item, 0xFFFF);
     GetMonNickname(mon, gStringVar1);
     CopyItemName(item, gStringVar2);
-    StringExpandPlaceholders(gStringVar4, gText_ReceivedItemFromPkmn);
+    StringExpandPlaceholders(gStringVar4, sText_ReceivedItemFromPkmn);
     DisplayPartyMenuMessage(gStringVar4, keepOpen);
     ScheduleBgCopyTilemapToVram(2);
 }
@@ -1879,7 +1879,7 @@ static void DisplaySwitchedHeldItemMessage(enum Item item, enum Item item2, bool
     SetSwappedHeldItemQuestLogEvent(&gPlayerParty[gPartyMenu.slotId], item2, item);
     CopyItemName(item, gStringVar1);
     CopyItemName(item2, gStringVar2);
-    StringExpandPlaceholders(gStringVar4, gText_SwitchedPkmnItem);
+    StringExpandPlaceholders(gStringVar4, sText_SwitchedPkmnItem);
     DisplayPartyMenuMessage(gStringVar4, keepOpen);
     ScheduleBgCopyTilemapToVram(2);
 }
@@ -1931,7 +1931,7 @@ static void BufferBagFullCantTakeItemMessage(enum Item itemId)
         break;
     }
     StringCopy(gStringVar1, string);
-    StringExpandPlaceholders(gStringVar4, gText_BagFullCouldNotRemoveItem);
+    StringExpandPlaceholders(gStringVar4, sText_BagFullCouldNotRemoveItem);
 }
 
 #define tHP           data[0]
@@ -2364,7 +2364,7 @@ static void CreateCancelConfirmWindows(bool8 chooseMultiple)
         {
             confirmWindowId = AddWindow(&sConfirmButtonWindowTemplate);
             FillWindowPixelBuffer(confirmWindowId, PIXEL_FILL(0));
-            AddTextPrinterParameterized4(confirmWindowId, FONT_SMALL, (48 - GetStringWidth(FONT_SMALL, gText_PartyMenu_OK, 0)) / 2u, 1, 0, 0, sFontColorTable[0], -1, gText_PartyMenu_OK);
+            AddTextPrinterParameterized4(confirmWindowId, FONT_SMALL, (48 - GetStringWidth(FONT_SMALL, gText_OK, 0)) / 2u, 1, 0, 0, sFontColorTable[0], -1, gText_OK);
             PutWindowTilemap(confirmWindowId);
             CopyWindowToVram(confirmWindowId, COPYWIN_GFX);
             cancelWindowId = AddWindow(&sMultiCancelButtonWindowTemplate);
@@ -4047,7 +4047,7 @@ static void CursorCB_TakeMail(u8 taskId)
     PlaySE(SE_SELECT);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
-    DisplayPartyMenuMessage(gText_SendMailToPC, TRUE);
+    DisplayPartyMenuMessage(sText_SendMailToPC, TRUE);
     gTasks[taskId].func = Task_SendMailToPCYesNo;
 }
 
@@ -4067,12 +4067,12 @@ static void Task_HandleSendMailToPCYesNoInput(u8 taskId)
     case 0: // Yes, send to PC
         if (TakeMailFromMonAndSave(&gPlayerParty[gPartyMenu.slotId]) != 0xFF)
         {
-            DisplayPartyMenuMessage(gText_MailSentToPC, FALSE);
+            DisplayPartyMenuMessage(sText_MailSentToPC, FALSE);
             gTasks[taskId].func = Task_UpdateHeldItemSprite;
         }
         else
         {
-            DisplayPartyMenuMessage(gText_PCMailboxFull, FALSE);
+            DisplayPartyMenuMessage(sText_PCMailboxFull, FALSE);
             gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
         }
         break;
@@ -4080,7 +4080,7 @@ static void Task_HandleSendMailToPCYesNoInput(u8 taskId)
         PlaySE(SE_SELECT);
         // fallthrough
     case 1:
-        DisplayPartyMenuMessage(gText_MailMessageWillBeLost, TRUE);
+        DisplayPartyMenuMessage(sText_MailMessageWillBeLost, TRUE);
         gTasks[taskId].func = Task_LoseMailMessageYesNo;
         break;
     }
@@ -4106,7 +4106,7 @@ static void Task_HandleLoseMailMessageYesNoInput(u8 taskId)
         if (AddBagItem(item, 1) == TRUE)
         {
             TakeMailFromMon(&gPlayerParty[gPartyMenu.slotId]);
-            DisplayPartyMenuMessage(gText_MailTakenFromPkmn, FALSE);
+            DisplayPartyMenuMessage(sText_MailTakenFromPkmn, FALSE);
             gTasks[taskId].func = Task_UpdateHeldItemSprite;
         }
         else
@@ -4188,7 +4188,7 @@ static void CursorCB_Enter(u8 taskId)
         }
     }
     ConvertIntToDecimalStringN(gStringVar1, maxBattlers, STR_CONV_MODE_LEFT_ALIGN, 1);
-    StringExpandPlaceholders(gStringVar4, gText_NoMoreThanVar1Pkmn);
+    StringExpandPlaceholders(gStringVar4, sText_NoMoreThanVar1Pkmn);
     PlaySE(SE_FAILURE);
     DisplayPartyMenuMessage(gStringVar4, TRUE);
     gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
@@ -4267,7 +4267,7 @@ static void CursorCB_Register(u8 taskId)
     PlaySE(SE_FAILURE);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
-    StringAppend(gStringVar4, gText_PauseUntilPress);
+    StringAppend(gStringVar4, sText_PauseUntilPress);
     DisplayPartyMenuMessage(gStringVar4, TRUE);
     gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
 }
@@ -4285,7 +4285,7 @@ static void CursorCB_Trade1(u8 taskId)
         PlaySE(SE_FAILURE);
         PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
         PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
-        StringAppend(gStringVar4, gText_PauseUntilPress);
+        StringAppend(gStringVar4, sText_PauseUntilPress);
         DisplayPartyMenuMessage(gStringVar4, TRUE);
         gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
     }
@@ -4324,7 +4324,7 @@ static void CursorCB_FieldMove(u8 taskId)
     {
         if (gFieldMovesInfo[fieldMove].isUnlockedFunc != NULL && !gFieldMovesInfo[fieldMove].isUnlockedFunc())
         {
-            DisplayPartyMenuMessage(gText_CantUseUntilNewBadge, TRUE);
+            DisplayPartyMenuMessage(sText_CantUseUntilNewBadge, TRUE);
             gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
         }
         else if (gFieldMovesInfo[fieldMove].setUpFunc() == TRUE)
@@ -6675,7 +6675,7 @@ static void Task_HandleSwitchItemsFromBagYesNoInput(u8 taskId)
 
 static void DisplayItemMustBeRemovedFirstMessage(u8 taskId)
 {
-    DisplayPartyMenuMessage(gText_RemoveMailBeforeItem, TRUE);
+    DisplayPartyMenuMessage(sText_RemoveMailBeforeItem, TRUE);
     ScheduleBgCopyTilemapToVram(2);
     gTasks[taskId].func = Task_UpdateHeldItemSpriteAndClosePartyMenu;
 }
@@ -6710,7 +6710,7 @@ static void TryGiveMailToSelectedMon(u8 taskId)
     {
         GiveMailToMon2(mon, mail);
         ClearMailStruct(mail);
-        DisplayPartyMenuMessage(gText_MailTransferredFromMailbox, TRUE);
+        DisplayPartyMenuMessage(sText_MailTransferredFromMailbox, TRUE);
     }
     ScheduleBgCopyTilemapToVram(2);
     gTasks[taskId].func = Task_UpdateHeldItemSpriteAndClosePartyMenu;
@@ -7033,7 +7033,7 @@ static bool8 TrySwitchInPokemon(void)
     if (IsMultiBattle() == TRUE && (slot == 1 || slot == 4 || slot == 5))
     {
         StringCopy(gStringVar1, GetTrainerPartnerName());
-        StringExpandPlaceholders(gStringVar4, gText_CantSwitchWithAlly);
+        StringExpandPlaceholders(gStringVar4, sText_CantSwitchWithAlly);
         return FALSE;
     }
     if (GetMonData(&gPlayerParty[slot], MON_DATA_HP) == 0)
@@ -7053,7 +7053,7 @@ static bool8 TrySwitchInPokemon(void)
     }
     if (GetMonData(&gPlayerParty[slot], MON_DATA_IS_EGG))
     {
-        StringExpandPlaceholders(gStringVar4, gText_EggCantBattle);
+        StringExpandPlaceholders(gStringVar4, sText_EggCantBattle);
         return FALSE;
     }
     if (GetPartyIdFromBattleSlot(slot) == gBattleStruct->prevSelectedPartySlot)

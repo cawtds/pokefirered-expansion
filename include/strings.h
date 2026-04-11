@@ -10,6 +10,7 @@
 // Exported ROM declarations
 
 extern const u8 gText_None[];
+extern const u8 gText_ChooseAPokemon[];
 extern const u8 gText_FromSpace[];
 extern const u8 gText_Lv50[];
 extern const u8 gText_OpenLevel[];
@@ -201,50 +202,16 @@ extern const u8 Pokedude_Text_CantDoubleUpOnStatus[];
 extern const u8 Pokedude_Text_LetMeThrowBall[];
 extern const u8 Pokedude_Text_PickBestKindOfBall[];
 
-// party_menu
-extern const u8 gText_ChoosePokemon[];
-extern const u8 gText_ChoosePokemonCancel[];
-extern const u8 gText_ChoosePokemonConfirm[];
-extern const u8 gText_MoveToWhere[];
-extern const u8 gText_TeachWhichPokemon[];
-extern const u8 gText_UseOnWhichPokemon[];
-extern const u8 gText_GiveToWhichPokemon[];
-extern const u8 gText_NothingToCut[];
-extern const u8 gText_CantSurfHere[];
-extern const u8 gText_AlreadySurfing[];
-extern const u8 gText_CurrentIsTooFast[];
-extern const u8 gText_EnjoyCycling[];
-extern const u8 gText_CantUseHere[];
-extern const u8 gText_NoPokemonForBattle[];
-extern const u8 gText_NotEnoughHp[];
-extern const u8 gText_PokemonAreNeeded[];
-extern const u8 gText_PokemonCantBeSame[];
-extern const u8 gText_NoIdenticalHoldItems[];
-extern const u8 gText_DoWhatWithPokemon[];
-extern const u8 gText_RestoreWhichMove[];
-extern const u8 gText_BoostPp[];
-extern const u8 gText_DoWhatWithItem[];
-extern const u8 gText_DoWhatWithMail[];
-extern const u8 gText_AlreadyHoldingOne[];
 extern const u8 gText_Switch[];
 extern const u8 gText_Item[];
 extern const u8 gText_Take[];
 extern const u8 gText_Mail[];
 extern const u8 gText_Read[];
 extern const u8 gText_Shift[];
-extern const u8 gText_Enter[];
-extern const u8 gText_NoEntry[];
 extern const u8 gText_Store[];
-extern const u8 gText_NotPkmnOtherTrainerWants[];
-extern const u8 gText_ThatIsntAnEgg[];
-extern const u8 gText_OtherTrainerCantAcceptPkmn[];
-extern const u8 gText_CantTradeWithTrainer[];
 extern const u8 gText_CancelBattle[];
-extern const u8 gText_ReceivedItemFromPkmn[];
-extern const u8 gText_SwitchedPkmnItem[];
-extern const u8 gText_BagFullCouldNotRemoveItem[];
 extern const u8 gText_OakThisIsListOfPokemon[];
-extern const u8 gText_PartyMenu_OK[];
+extern const u8 gText_OK[];
 
 // Battle pyramid menu texts
 extern const u8 gText_BattlePyramidConfirmRest[];
@@ -254,29 +221,15 @@ extern const u8 gText_MaleSymbol[];
 extern const u8 gText_FemaleSymbol[];
 extern const u8 gText_Slash[];
 extern const u8 gText_OakImportantToGetToKnowPokemonThroughly[];
-extern const u8 gText_PCMailboxFull[];
-extern const u8 gText_MailSentToPC[];
-extern const u8 gText_MailMessageWillBeLost[];
-extern const u8 gText_SendMailToPC[];
-extern const u8 gText_MailTakenFromPkmn[];
-extern const u8 gText_NoMoreThanVar1Pkmn[];
-extern const u8 gText_PauseUntilPress[];
-extern const u8 gText_CantUseUntilNewBadge[];
 extern const u8 gText_EscapeFromHereAndReturnTo[];
 extern const u8 gText_PkmnHPRestoredByVar2[];
 extern const u8 gText_PkmnNeedsToReplaceMove[];
 extern const u8 gText_PkmnCantLearnMove[];
 extern const u8 gText_PkmnAlreadyKnows[];
-extern const u8 gText_PkmnLearnedMove3[];
-extern const u8 gText_PkmnLearnedMove4[];
 extern const u8 gText_WhichMoveToForget[];
 extern const u8 gText_12PoofForgotMove[];
 extern const u8 gText_StopLearningMove2[];
 extern const u8 gText_MoveNotLearned[];
-extern const u8 gText_MailTransferredFromMailbox[];
-extern const u8 gText_RemoveMailBeforeItem[];
-extern const u8 gText_CantSwitchWithAlly[];
-extern const u8 gText_EggCantBattle[];
 
 // berry_pouch
 extern const u8 gText_TossHowManyVar1s[];
@@ -396,7 +349,6 @@ extern const u8 gText_XSentOverY[];
 extern const u8 gText_TakeGoodCareOfX[];
 extern const u8 gText_CommunicationStandby5[];
 extern const u8 gText_TradeAction_Trade[];
-extern const u8 gText_OnlyPkmnForBattle[];
 extern const u8 gText_PkmnCantBeTradedNow[];
 extern const u8 gText_EggCantBeTradedNow[];
 extern const u8 gText_OtherTrainersPkmnCantBeTraded[];
@@ -442,6 +394,7 @@ extern const u8 gText_Off[];
 extern const u8 gText_Fast[];
 extern const u8 gText_Help[];
 extern const u8 gText_Type[];
+extern const u8 gText_TrainerCardMoney[];
 
 // evolution_scene
 extern const u8 gText_PkmnIsEvolving[];
@@ -461,21 +414,6 @@ extern const u8 gDaycareText_PlayOther[];
 extern const u8 gText_EmptyString[];
 extern const u8 gText_HatchedFromEgg[];
 extern const u8 gText_NickHatchPrompt[];
-
-// trainer card
-extern const u8 gText_WaitingTrainerFinishReading[];
-extern const u8 gText_TrainerCardName[];
-extern const u8 gText_TrainerCardIDNo[];
-extern const u8 gText_TrainerCardMoney[];
-extern const u8 gText_TrainerCardYen[];
-extern const u8 gText_TrainerCardNull[];
-extern const u8 gText_Var1sTrainerCard[];
-extern const u8 gText_HallOfFameDebut[];
-extern const u8 gText_WinLossRatio[];
-extern const u8 gText_PokemonTrades[];
-extern const u8 gText_UnionRoomTradesBattles[];
-extern const u8 gText_LinkBattles[];
-extern const u8 gText_LinkCableBattles[];
 
 // field_screen_effect
 extern const u8 gText_PlayerScurriedToCenter[];

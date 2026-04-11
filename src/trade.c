@@ -216,14 +216,6 @@ static u32 CanTradeSelectedMon(struct Pokemon * party, int partyCount, int curso
 
 static const u8 sText_4Qmark[] = _("????");
 static const u8 sText_IsThisTradeOkay[] = _("Is this trade okay?");
-static const u8 gTradeText_ChooseAPokemon[] = _("Choose a POKéMON.");
-static const u8 sText_CancelTrade[] = _("Cancel trade?");
-static const u8 gTradeText_PressBButtonToExit[] = _("Press the B Button to exit.");
-static const u8 sText_Trade_CommunicationStandby[] = _("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}Communication standby…\nPlease wait.");
-static const u8 sText_TradeHasBeenCanceled[] = _("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}The trade has been canceled.");
-static const u8 sText_Trade_OnlyPkmnForBattle[] = _("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}That's your only POKéMON\nfor battle.");
-static const u8 sText_WaitingForFriendToFinish[] = _("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}Waiting for your friend\nto finish…");
-static const u8 sText_FriendWantsToTrade[] = _("Your friend wants\nto trade POKéMON.");
 
 static const u16 sTradeMovesBoxTilemap[] = INCBIN_U16("graphics/trade/moves_box_map.bin");
 static const u16 sTradePartyBoxTilemap[] = INCBIN_U16("graphics/trade/party_box_map.bin");
@@ -528,11 +520,11 @@ static const u8 sText_ClrWhtHltTranspShdwDrkGry[] = _("{COLOR WHITE}{HIGHLIGHT T
 
 static const u8 *const sActionTexts[] = {
     [TEXT_CANCEL]          = gText_Cancel,
-    [TEXT_CHOOSE_MON]      = gTradeText_ChooseAPokemon,
+    [TEXT_CHOOSE_MON]      = gText_ChooseAPokemon,
     [TEXT_SUMMARY]         = gText_Summary, // Unused, sMenuAction_SummaryTrade is used instead
     [TEXT_TRADE]           = gText_Trade,   // Unused, sMenuAction_SummaryTrade is used instead
-    [TEXT_CANCEL_TRADE]    = sText_CancelTrade,
-    [TEXT_PRESS_B_TO_EXIT] = gTradeText_PressBButtonToExit // Unused
+    [TEXT_CANCEL_TRADE]    = COMPOUND_STRING("Cancel trade?"),
+    [TEXT_PRESS_B_TO_EXIT] = COMPOUND_STRING("Press the B Button to exit.") // Unused
 };
 
 static const struct MenuAction sMenuAction_SummaryTrade[] = {
@@ -540,13 +532,15 @@ static const struct MenuAction sMenuAction_SummaryTrade[] = {
     {gText_Trade, { .void_u8 = Task_DrawSelectionTrade }}
 };
 
-static const u8 *const sMessages[] = {
-    [MSG_STANDBY]                    = sText_Trade_CommunicationStandby,
-    [MSG_CANCELED]                   = sText_TradeHasBeenCanceled,
-    [MSG_ONLY_MON1]                  = sText_Trade_OnlyPkmnForBattle,
-    [MSG_ONLY_MON2]                  = gText_OnlyPkmnForBattle, // Same as above but without color formatting
-    [MSG_WAITING_FOR_FRIEND]         = sText_WaitingForFriendToFinish,
-    [MSG_FRIEND_WANTS_TO_TRADE]      = sText_FriendWantsToTrade,
+
+static const u8 *const sMessages[] =
+{
+    [MSG_STANDBY]                    = COMPOUND_STRING("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}Communication standby…\nPlease wait."),
+    [MSG_CANCELED]                   = COMPOUND_STRING("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}The trade has been canceled."),
+    [MSG_ONLY_MON1]                  = COMPOUND_STRING("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}That's your only POKéMON\nfor battle."),
+    [MSG_ONLY_MON2]                  = COMPOUND_STRING("That's your only\nPOKéMON for battle."), // Same as above but without color formatting
+    [MSG_WAITING_FOR_FRIEND]         = COMPOUND_STRING("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}Waiting for your friend\nto finish…"),
+    [MSG_FRIEND_WANTS_TO_TRADE]      = COMPOUND_STRING("Your friend wants\nto trade POKéMON."),
     [MSG_MON_CANT_BE_TRADED]         = gText_PkmnCantBeTradedNow,
     [MSG_EGG_CANT_BE_TRADED]         = gText_EggCantBeTradedNow,
     [MSG_FRIENDS_MON_CANT_BE_TRADED] = gText_OtherTrainersPkmnCantBeTraded

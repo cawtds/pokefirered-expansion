@@ -31,6 +31,8 @@ struct PcMonSelection
     u32 padding:31;
 };
 
+static const u8 gText_PkmnLearnedMove[] = _("{STR_VAR_1} learned\n{STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
+
 static EWRAM_DATA u8 sSelectionType = 0;
 
 // All these filter functions return 0 when a mon is a valid or a number corresponding to the type of error
@@ -261,7 +263,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
     case LEARNED_MOVE_1:
         GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
-        ui->printMessage(gText_PkmnLearnedMove4);
+        ui->printMessage(gText_PkmnLearnedMove);
         return LEARNED_MOVE_2;
     case LEARNED_MOVE_2:
         gSpecialVar_Result = TRUE;
@@ -282,7 +284,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         gSpecialVar_Result = TRUE;
-        ui->printMessage(gText_PkmnLearnedMove4);
+        ui->printMessage(gText_PkmnLearnedMove);
         return LEARN_MOVE_END;
     }
     case DID_NOT_LEARN_1:

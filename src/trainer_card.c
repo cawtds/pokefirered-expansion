@@ -160,6 +160,19 @@ static void InitTrainerCardData(void);
 static u8 GetCardType(void);
 static void CreateTrainerCardTrainerPic(void);
 
+static const u8 sText_TrainerCardName[] = _("NAME: ");
+static const u8 sText_TrainerCardIDNo[] = _("IDNo.");
+static const u8 sText_TrainerCardYen[] = _("¥");
+static const u8 sText_TrainerCardNull[] = _("");
+static const u8 sText_Var1sTrainerCard[] = _("'s TRAINER CARD");
+static const u8 sText_HallOfFameDebut[] = _("HALL OF FAME DEBUT  ");
+static const u8 sText_LinkBattles[] = _("LINK BATTLES");
+static const u8 sText_LinkCableBattles[] = _("LINK CABLE BATTLES");
+static const u8 sText_WinLossRatio[] = _("W:{CLEAR_TO 0x30}L:");
+static const u8 sText_PokemonTrades[] = _("POKéMON TRADES");
+static const u8 sText_UnionRoomTradesBattles[] = _("UNION TRADES & BATTLES");
+static const u8 sText_WaitingTrainerFinishReading[] = _("Waiting for the other TRAINER to\nfinish reading your TRAINER CARD.");
+
 static const u32 sTrainerCardStickers_Gfx[]           = INCBIN_U32("graphics/trainer_card/stickers.4bpp.smol");
 static const u32 sHoennTrainerCardFront_Tilemap[]     = INCBIN_U32("graphics/trainer_card/rse/front.bin.smolTM");
 static const u32 sKantoTrainerCardFront_Tilemap[]     = INCBIN_U32("graphics/trainer_card/front.bin.smolTM");
@@ -379,7 +392,7 @@ static const u8 sTrainerCardProfilePhraseYPositions[] = {0x82, 0x78};
 static const u8 sTrainerCardBackNameXPositions[] = {0x8A, 0xD8};
 static const u8 sTrainerCardBackNameYPositions[] = {0xB, 0xA};
 static const u8 sTrainerCardHofDebutXPositions[] = {0xA, 0x10, 0x0, 0x0};
-static const u8 *const sLinkTrainerCardRecordStrings[] = {gText_LinkBattles, gText_LinkCableBattles};
+static const u8 *const sLinkTrainerCardRecordStrings[] = {sText_LinkBattles, sText_LinkCableBattles};
 static const u8 sPokemonIconPalSlots[] = {5, 6, 7, 8, 9, 10};
 static const u8 sPokemonIconXOffsets[] = {0, 4, 8, 12, 16, 20};
 static const u8 sStickerPalSlots[] = {11, 12, 13, 14};
@@ -646,7 +659,7 @@ static void Task_TrainerCard(u8 taskId)
     case STATE_WAIT_LINK_PARTNER:
         SetCloseLinkCallback();
         DrawDialogueFrame(0, 1);
-        AddTextPrinterParameterized(0, FONT_NORMAL, gText_WaitingTrainerFinishReading, 0, 1, TEXT_SKIP_DRAW, 0);
+        AddTextPrinterParameterized(0, FONT_NORMAL, sText_WaitingTrainerFinishReading, 0, 1, TEXT_SKIP_DRAW, 0);
         CopyWindowToVram(0, COPYWIN_FULL);
         sTrainerCardDataPtr->mainState = STATE_CLOSE_CARD_LINK;
         break;
@@ -1180,7 +1193,7 @@ static void PrintNameOnCardFront(void)
     u8 buffer[2][32];
     u8 *txtPtr;
 
-    txtPtr = StringCopy(buffer[0], gText_TrainerCardName);
+    txtPtr = StringCopy(buffer[0], sText_TrainerCardName);
     txtPtr = buffer[1];
     StringCopy(txtPtr, sTrainerCardDataPtr->trainerCard.rse.playerName);
     ConvertInternationalString(txtPtr, sTrainerCardDataPtr->language);
@@ -1193,7 +1206,7 @@ static void PrintIdOnCard(void)
     u8 buffer[32];
     u8 *txtPtr;
 
-    txtPtr = StringCopy(buffer, gText_TrainerCardIDNo);
+    txtPtr = StringCopy(buffer, sText_TrainerCardIDNo);
     ConvertIntToDecimalStringN(txtPtr, sTrainerCardDataPtr->trainerCard.rse.trainerId, STR_CONV_MODE_LEADING_ZEROS, 5);
     AddTextPrinterParameterized3(1, sTrainerCardFontIds[1], sTrainerCardIdXPositions[sTrainerCardDataPtr->cardType], sTrainerCardIdYPositions[sTrainerCardDataPtr->cardType], sTrainerCardTextColors, TEXT_SKIP_DRAW, buffer);
 }
@@ -1204,7 +1217,7 @@ static void PrintMoneyOnCard(void)
     u8 *txtPtr;
     u8 x;
 
-    txtPtr = StringCopy(buffer, gText_TrainerCardYen);
+    txtPtr = StringCopy(buffer, sText_TrainerCardYen);
     ConvertIntToDecimalStringN(txtPtr, sTrainerCardDataPtr->trainerCard.rse.money, STR_CONV_MODE_LEFT_ALIGN, MAX_MONEY_DIGITS);
     if (sTrainerCardDataPtr->cardType != CARD_TYPE_RSE)
     {
@@ -1241,14 +1254,14 @@ static void PrintPokedexOnCard(void)
             x = -120 - 6 * StringLength(buffer);
             AddTextPrinterParameterized3(1, sTrainerCardFontIds[1], 20, 72, sTrainerCardTextColors, TEXT_SKIP_DRAW, gText_Pokedex);
             AddTextPrinterParameterized3(1, sTrainerCardFontIds[1], x, 72, sTrainerCardTextColors, TEXT_SKIP_DRAW, buffer);
-            AddTextPrinterParameterized3(1, sTrainerCardFontIds[1], 138, 72, sTrainerCardTextColors, TEXT_SKIP_DRAW, gText_TrainerCardNull);
+            AddTextPrinterParameterized3(1, sTrainerCardFontIds[1], 138, 72, sTrainerCardTextColors, TEXT_SKIP_DRAW, sText_TrainerCardNull);
         }
         else
         {
             x = 120 - 6 * StringLength(buffer);
             AddTextPrinterParameterized3(1, sTrainerCardFontIds[1], 16, 73, sTrainerCardTextColors, TEXT_SKIP_DRAW, gText_Pokedex);
             AddTextPrinterParameterized3(1, sTrainerCardFontIds[1], x, 73, sTrainerCardTextColors, TEXT_SKIP_DRAW, buffer);
-            AddTextPrinterParameterized3(1, sTrainerCardFontIds[1], 138, 73, sTrainerCardTextColors, TEXT_SKIP_DRAW, gText_TrainerCardNull);
+            AddTextPrinterParameterized3(1, sTrainerCardFontIds[1], 138, 73, sTrainerCardTextColors, TEXT_SKIP_DRAW, sText_TrainerCardNull);
         }
     }
 }
@@ -1313,7 +1326,7 @@ static void BufferNameForCardBack(void)
     ConvertInternationalString(sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_NAME], sTrainerCardDataPtr->language);
     if (sTrainerCardDataPtr->cardType == CARD_TYPE_RSE)
     {
-        StringAppend(sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_NAME], gText_Var1sTrainerCard);
+        StringAppend(sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_NAME], sText_Var1sTrainerCard);
     }
 }
 
@@ -1357,7 +1370,7 @@ static void PrintHofDebutTimeOnCard(void)
 {
     if (sTrainerCardDataPtr->hasHofResult)
     {
-        AddTextPrinterParameterized3(1, sTrainerCardFontIds[1], sTrainerCardHofDebutXPositions[sTrainerCardDataPtr->cardType], 35, sTrainerCardTextColors, TEXT_SKIP_DRAW, gText_HallOfFameDebut);
+        AddTextPrinterParameterized3(1, sTrainerCardFontIds[1], sTrainerCardHofDebutXPositions[sTrainerCardDataPtr->cardType], 35, sTrainerCardTextColors, TEXT_SKIP_DRAW, sText_HallOfFameDebut);
         AddTextPrinterParameterized3(1, sTrainerCardFontIds[1], 164, 35, sTrainerCardStatColors, TEXT_SKIP_DRAW, sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_HOF_TIME]);
     }
 }
@@ -1369,7 +1382,7 @@ static void BufferLinkBattleResults(void)
     if (sTrainerCardDataPtr->hasLinkResults)
     {
         StringCopy(sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_LINK_RECORD], sLinkTrainerCardRecordStrings[sTrainerCardDataPtr->cardType]);
-        StringCopy(sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_WIN_LOSS], gText_WinLossRatio);
+        StringCopy(sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_WIN_LOSS], sText_WinLossRatio);
         ConvertIntToDecimalStringN(buffer, sTrainerCardDataPtr->trainerCard.rse.linkBattleWins, STR_CONV_MODE_RIGHT_ALIGN, 4);
         StringCopy(sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_LINK_WINS], buffer);
         ConvertIntToDecimalStringN(buffer, sTrainerCardDataPtr->trainerCard.rse.linkBattleLosses, STR_CONV_MODE_RIGHT_ALIGN, 4);
@@ -1393,7 +1406,7 @@ static void BufferNumTrades(void)
 {
     if (sTrainerCardDataPtr->hasTrades)
     {
-        StringCopy(sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_TRADES], gText_PokemonTrades);
+        StringCopy(sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_TRADES], sText_PokemonTrades);
         ConvertIntToDecimalStringN(sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_TRADE_COUNT], sTrainerCardDataPtr->trainerCard.rse.pokemonTrades, STR_CONV_MODE_RIGHT_ALIGN, 5);
     }
 }
@@ -1429,7 +1442,7 @@ static void BufferUnionRoomStats(void)
 {
     if (sTrainerCardDataPtr->cardType != CARD_TYPE_RSE)
     {
-        StringCopy(sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_UNION_ROOM], gText_UnionRoomTradesBattles);
+        StringCopy(sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_UNION_ROOM], sText_UnionRoomTradesBattles);
         ConvertIntToDecimalStringN(sTrainerCardDataPtr->strings[TRAINER_CARD_STRING_UNION_ROOM_NUM], sTrainerCardDataPtr->trainerCard.unionRoomNum, STR_CONV_MODE_RIGHT_ALIGN, 5);
     }
 }

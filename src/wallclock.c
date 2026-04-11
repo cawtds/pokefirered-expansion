@@ -728,7 +728,7 @@ void CB2_StartWallClock(void)
     WallClockInit();
 
     DrawStdFrameWithCustomTileAndPalette(1, FALSE, 0x250, 0x0d);
-    AddTextPrinterParameterized(1, 1, gText_PartyMenu_OK, 0, 1, 0, NULL);
+    AddTextPrinterParameterized(1, 1, gText_OK, 0, 1, 0, NULL);
     PutWindowTilemap(1);
     ScheduleBgCopyTilemapToVram(2);
 }

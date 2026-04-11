@@ -36,11 +36,26 @@ static const u8 sText_PkmnTransformed[] = _("{STR_VAR_1} transformed!{PAUSE_UNTI
 static const u8 sText_PkmnWasGivenItem[] = _("{STR_VAR_1} was given the\n{STR_VAR_2} to hold.{PAUSE_UNTIL_PRESS}");
 static const u8 sText_PkmnWokeUp2[] = _("{STR_VAR_1} woke up.{PAUSE_UNTIL_PRESS}");
 static const u8 sText_ReturnToHealingSpot[] = _("Want to return to the healing spot\nused last in {STR_VAR_1}?");
-static const u8 sText_ChoosePokemon[] = _("Choose a POKéMON.");
 static const u8 sText_Able[] = _("ABLE");
 static const u8 sText_ThrowAwayItem[] = _("Throw away this\n{STR_VAR_1}?");
 static const u8 sText_ItemThrownAway[] = _("The {STR_VAR_1}\nwas thrown away.{PAUSE_UNTIL_PRESS}");
 static const u8 sText_CannotSendMonToBoxHM[] = _("Cannot send that mon to the box,\nbecause it knows a HM move.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PauseUntilPress[] = _("{PAUSE_UNTIL_PRESS}");
+static const u8 sText_CantSwitchWithAlly[] = _("You can't switch {STR_VAR_1}'s\nPOKéMON with one of yours!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_EggCantBattle[] = _("An EGG can't battle!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_CantUseUntilNewBadge[] = _("This can't be used until a new\nBADGE is obtained.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_NoMoreThanVar1Pkmn[] = _("No more than {STR_VAR_1} POKéMON\nmay enter.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_SendMailToPC[] = _("Send the removed MAIL to\nyour PC?");
+static const u8 sText_MailSentToPC[] = _("The MAIL was sent to your PC.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PCMailboxFull[] = _("Your PC's MAILBOX is full.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_MailMessageWillBeLost[] = _("If the MAIL is removed, the\nmessage will be lost. Okay?");
+static const u8 sText_RemoveMailBeforeItem[] = _("MAIL must be removed before\nholding an item.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_ReceivedItemFromPkmn[] = _("Received the {STR_VAR_2}\nfrom {STR_VAR_1}.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_MailTakenFromPkmn[] = _("MAIL was taken from the\nPOKéMON.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_SwitchedPkmnItem[] = _("The {STR_VAR_2} was taken and\nreplaced with the {STR_VAR_1}.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_MailTransferredFromMailbox[] = _("MAIL was transferred from\nthe MAILBOX.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_BagFullCouldNotRemoveItem[] = _("The {STR_VAR_1} is full. The POKéMON's\nitem could not be removed.{PAUSE_UNTIL_PRESS}");
+static const u8 gText_CantTradeWithTrainer[] = _("You can't trade with that\nTRAINER now.");
 
 static const struct BgTemplate sPartyMenuBgTemplates[] =
 {
@@ -691,7 +706,7 @@ static const u8 sPartyBoxSelectedForActionPalIds2[] = {161, 167, 168};
 
 static const u8 *const sActionStringTable[] =
 {
-    [PARTY_MSG_CHOOSE_MON]             = sText_ChoosePokemon,
+    [PARTY_MSG_CHOOSE_MON]             = gText_ChooseAPokemon,
     [PARTY_MSG_CHOOSE_MON_OR_CANCEL]   = COMPOUND_STRING("Choose POKéMON or CANCEL."),
     [PARTY_MSG_CHOOSE_MON_AND_CONFIRM] = COMPOUND_STRING("Choose POKéMON and confirm."),
     [PARTY_MSG_MOVE_TO_WHERE]          = COMPOUND_STRING("Move to where?"),
@@ -706,7 +721,7 @@ static const u8 *const sActionStringTable[] =
     [PARTY_MSG_ALREADY_IN_USE]         = COMPOUND_STRING("This is in use already."),
     [PARTY_MSG_CANT_USE_HERE]          = COMPOUND_STRING("Can't use that here."),
     [PARTY_MSG_NO_MON_FOR_BATTLE]      = COMPOUND_STRING("No battling this way!"),
-    [PARTY_MSG_CHOOSE_MON_DAYCARE]     = sText_ChoosePokemon,
+    [PARTY_MSG_CHOOSE_MON_DAYCARE]     = gText_ChooseAPokemon,
     [PARTY_MSG_NOT_ENOUGH_HP]          = COMPOUND_STRING("Not enough HP‥"),
     [PARTY_MSG_X_MONS_ARE_NEEDED]      = COMPOUND_STRING("{STR_VAR_1} POKéMON are needed."),
     [PARTY_MSG_MONS_CANT_BE_SAME]      = COMPOUND_STRING("{PKMN} can't be the same."),
@@ -1098,8 +1113,8 @@ static struct
     [CURSOR_OPTION_CANCEL2]         = {gText_Cancel,                       CursorCB_Cancel2             },
     [CURSOR_OPTION_SHIFT]           = {gText_Shift,                        CursorCB_SendMon             },
     [CURSOR_OPTION_SEND_OUT]        = {COMPOUND_STRING("SEND OUT"),        CursorCB_SendMon             },
-    [CURSOR_OPTION_ENTER]           = {gText_Enter,                        CursorCB_Enter               },
-    [CURSOR_OPTION_NO_ENTRY]        = {gText_NoEntry,                      CursorCB_NoEntry             },
+    [CURSOR_OPTION_ENTER]           = {COMPOUND_STRING("ENTER"),           CursorCB_Enter               },
+    [CURSOR_OPTION_NO_ENTRY]        = {COMPOUND_STRING("NO ENTRY"),        CursorCB_NoEntry             },
     [CURSOR_OPTION_STORE]           = {gText_Store,                        CursorCB_Store               },
     [CURSOR_OPTION_REGISTER]        = {gText_Register,                     CursorCB_Register            },
     [CURSOR_OPTION_TRADE1]          = {gText_Trade,                        CursorCB_Trade1              },
@@ -1200,13 +1215,13 @@ static const u8 sPartyMenuActionCounts[] =
 
 static const u8 *const sUnionRoomTradeMessages[] =
 {
-    [UR_TRADE_MSG_NOT_MON_PARTNER_WANTS - 1]       = gText_NotPkmnOtherTrainerWants,
-    [UR_TRADE_MSG_NOT_EGG - 1]                     = gText_ThatIsntAnEgg,
+    [UR_TRADE_MSG_NOT_MON_PARTNER_WANTS - 1]       = COMPOUND_STRING("That isn't the type of POKéMON\nthat the other TRAINER wants."),
+    [UR_TRADE_MSG_NOT_EGG - 1]                     = COMPOUND_STRING("That isn't an EGG."),
     [UR_TRADE_MSG_MON_CANT_BE_TRADED_1 - 1]        = gText_PkmnCantBeTradedNow,
     [UR_TRADE_MSG_MON_CANT_BE_TRADED_2 - 1]        = gText_PkmnCantBeTradedNow,
     [UR_TRADE_MSG_PARTNERS_MON_CANT_BE_TRADED - 1] = gText_OtherTrainersPkmnCantBeTraded,
     [UR_TRADE_MSG_EGG_CANT_BE_TRADED -1]           = gText_EggCantBeTradedNow,
-    [UR_TRADE_MSG_PARTNER_CANT_ACCEPT_MON - 1]     = gText_OtherTrainerCantAcceptPkmn,
+    [UR_TRADE_MSG_PARTNER_CANT_ACCEPT_MON - 1]     = COMPOUND_STRING("The other TRAINER can't accept\nthat POKéMON now."),
     [UR_TRADE_MSG_CANT_TRADE_WITH_PARTNER_1 - 1]   = gText_CantTradeWithTrainer,
     [UR_TRADE_MSG_CANT_TRADE_WITH_PARTNER_2 - 1]   = gText_CantTradeWithTrainer,
 };
