@@ -142,57 +142,14 @@ const u8 gText_ThankYou[] = _("THANK YOU");
 const u8 gText_National[] = _("NATIONAL");
 const u8 gText_Kanto[] = _("KANTO");
 const u8 gText_Colon[] = _(":");
-
-const u8 gText_ClearAllSaveData[] = _("Clear all save data areas?");
-const u8 gText_ClearingData[] = _("Clearing data‥\nPlease wait.");
-const u8 gText_IsThisTheCorrectTime[] = _("Is this the correct time?");
-const u8 gText_HatchedFromEgg[] = _("{STR_VAR_1} hatched from the EGG!");
-const u8 gText_NickHatchPrompt[] = _("Would you like to nickname the newly\nhatched {STR_VAR_1}?");
-const u8 gString_OutOfCoins[] = _("You've run out of COINS.\nGame over!");
-const u8 gString_QuitPlaying[] = _("Quit playing?");
-const u8 gString_SlotMachineControls[] = _("{DPAD_LEFTRIGHT}COMBOS {DPAD_DOWN}WAGER {A_BUTTON}STOP {B_BUTTON}EXIT");
-
-const u8 gString_Bill[] = _("BILL");
-const u8 gString_Someone[] = _("SOMEONE");
-const u8 gString_HelpSystem_ClearTo8[] = _("{CLEAR_TO 8}");
-ALIGNED(4) const u8 gText_Ghost[] = _("GHOST");
-
-const u8 gText_CommErrorCheckConnections[] = _("Communication error…\nPlease check all connections,\nthen turn the power OFF and ON.");
-const u8 gText_CommErrorEllipsis[] = _("Communication error…");
-const u8 gText_MoveCloserToLinkPartner[] = _("Move closer to your link partner(s).\nAvoid obstacles between partners.");
-const u8 gText_ABtnRegistrationCounter[] = _("A Button: Registration Counter");
-const u8 gText_ABtnTitleScreen[] = _("A Button: Title Screen");
-const u8 gText_NumPlayerLink[] = _("{STR_VAR_1}P LINK");
-const u8 gText_BronzeCard[] = _("BRONZE");
-const u8 gText_CopperCard[] = _("COPPER");
+const u8 gText_Bill[] = _("BILL");
+const u8 gText_Someone[] = _("SOMEONE");
+const u8 gText_Ghost[] = _("GHOST");
 const u8 gText_SilverCard[] = _("SILVER");
 const u8 gText_GoldCard[] = _("GOLD");
-const u8 gText_HelpSystemControls_A_Next[] = _("{A_BUTTON}NEXT");
-const u8 gText_HelpSystemControls_PickOkEnd[] = _("{DPAD_UPDOWN}PICK {A_BUTTON}OK {B_BUTTON}END");
-const u8 gText_HelpSystemControls_AorBtoCancel[] = _("{A_BUTTON}{B_BUTTON}CANCEL");
-const u8 gText_HelpSystemControls_PickOkCancel[] = _("{DPAD_UPDOWN}PICK {A_BUTTON}OK {B_BUTTON}CANCEL");
-
+const u8 gText_ABUTTONNext[] = _("{A_BUTTON}NEXT");
 const u8 gText_ThreeQuestionMarks[] = _("???");
-const u8 gText_XWillBeSentToY[] = _("{STR_VAR_2} will be\nsent to {STR_VAR_1}.");
-const u8 gText_ByeByeVar1[] = _("Bye-bye, {STR_VAR_2}!");
-const u8 gText_XSentOverY[] = _("{STR_VAR_1} sent over {STR_VAR_3}.");
-const u8 gText_TakeGoodCareOfX[] = _("Take good care of {STR_VAR_3}!");
-const u8 gText_From[] = _("From ");
-const u8 gText_CommunicationStandby5[] = _("Communication standby…");
-const u8 gDaycareText_GetAlongVeryWell[] = _("The two seem to get along\nvery well.");
-const u8 gDaycareText_GetAlong[] = _("The two seem to get along.");
-const u8 gDaycareText_DontLikeOther[] = _("The two don't seem to like\neach other much.");
-const u8 gDaycareText_PlayOther[] = _("The two prefer to play with other\nPOKéMON than each other.");
-const u8 gText_TeachWhichMoveToMon[] = _("Teach which {STR_VAR_3} to\n{STR_VAR_1}?");
-const u8 gText_TeachMoveQues[] = _("Teach {STR_VAR_2}?");
-const u8 gText_MonLearnedMove[] = _("{STR_VAR_1} learned\n{STR_VAR_2}.");
-const u8 gText_MonIsTryingToLearnMove[] = _("{STR_VAR_1} is trying to learn\n{STR_VAR_2}.\pBut {STR_VAR_1} can't learn more\nthan four moves.\pDelete an older move to make\nroom for {STR_VAR_2}?");
-const u8 gText_StopLearningMove[] = _("Stop learning {STR_VAR_2}?");
-const u8 gText_1_2_and_Poof[] = _("{PAUSE 0x20}1, {PAUSE 0x0F}2, and {PAUSE 0x0F}‥ {PAUSE 0x0F}‥ {PAUSE 0x0F}‥ {PAUSE 0x0F}{PLAY_SE SE_BALL_BOUNCE_1}Poof!\p");
-const u8 gText_MonForgotOldMoveAndMonLearnedNewMove[] = _("{STR_VAR_1} forgot {STR_VAR_3}.\pAnd‥\p{STR_VAR_1}\nlearned {STR_VAR_2}.");
-const u8 gText_GiveUpTryingToTeachNewMove[] = _("Give up trying to teach a new\nmove to {STR_VAR_1}?");
-const u8 gText_WhichMoveShouldBeForgotten[] = _("Which move should be forgotten?\p");
-
+const u8 gText_CommunicationStandby[] = _("Communication standby…");
 
 // Frontier util.
 ALIGNED(4) const u8 gText_FacilitySingle[] = _("{STR_VAR_1} SINGLE");

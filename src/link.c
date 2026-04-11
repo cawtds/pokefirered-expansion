@@ -48,6 +48,12 @@ struct LinkTestBGInfo
 
 #define SIO_MULTI_CNT ((struct SioMultiCnt *)REG_ADDR_SIOCNT)
 
+static const u8 sText_CommErrorCheckConnections[] = _("Communication error…\nPlease check all connections,\nthen turn the power OFF and ON.");
+static const u8 sText_CommErrorEllipsis[] = _("Communication error…");
+static const u8 sText_MoveCloserToLinkPartner[] = _("Move closer to your link partner(s).\nAvoid obstacles between partners.");
+static const u8 sText_ABtnRegistrationCounter[] = _("A Button: Registration Counter");
+static const u8 sText_ABtnTitleScreen[] = _("A Button: Title Screen");
+
 static struct BlockTransfer sBlockSend;
 ALIGNED(8) static struct BlockTransfer sBlockRecv[MAX_LINK_PLAYERS];
 static u32 sBlockSendDelayCounter;
@@ -1159,8 +1165,8 @@ static void ErrorMsg_MoveCloserToPartner(void)
     LoadPalette(sWirelessLinkDisplayPal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
     FillWindowPixelBuffer(0, PIXEL_FILL(0));
     FillWindowPixelBuffer(2, PIXEL_FILL(0));
-    AddTextPrinterParameterized3(0, FONT_NORMAL_COPY_2, 2, 5, sLinkErrorTextColor, 0, gText_CommErrorEllipsis);
-    AddTextPrinterParameterized3(2, FONT_NORMAL_COPY_2, 2, 2, sLinkErrorTextColor, 0, gText_MoveCloserToLinkPartner);
+    AddTextPrinterParameterized3(0, FONT_NORMAL_COPY_2, 2, 5, sLinkErrorTextColor, 0, sText_CommErrorEllipsis);
+    AddTextPrinterParameterized3(2, FONT_NORMAL_COPY_2, 2, 2, sLinkErrorTextColor, 0, sText_MoveCloserToLinkPartner);
     PutWindowTilemap(0);
     PutWindowTilemap(2);
     CopyWindowToVram(0, COPYWIN_NONE); // Does nothing
@@ -1173,7 +1179,7 @@ static void ErrorMsg_CheckConnections(void)
 {
     FillWindowPixelBuffer(1, PIXEL_FILL(0));
     FillWindowPixelBuffer(2, PIXEL_FILL(0));
-    AddTextPrinterParameterized3(1, FONT_NORMAL_COPY_2, 2, 0, sLinkErrorTextColor, 0, gText_CommErrorCheckConnections);
+    AddTextPrinterParameterized3(1, FONT_NORMAL_COPY_2, 2, 0, sLinkErrorTextColor, 0, sText_CommErrorCheckConnections);
     PutWindowTilemap(1);
     PutWindowTilemap(2);
     CopyWindowToVram(1, COPYWIN_NONE); // Does nothing
@@ -1204,9 +1210,9 @@ static void CB2_PrintErrorMessage(void)
         break;
     case 130:
         if (gWirelessCommType == 2)
-            AddTextPrinterParameterized3(0, FONT_NORMAL_COPY_2, 2, 20, sLinkErrorTextColor, 0, gText_ABtnTitleScreen);
+            AddTextPrinterParameterized3(0, FONT_NORMAL_COPY_2, 2, 20, sLinkErrorTextColor, 0, sText_ABtnTitleScreen);
         else if (gWirelessCommType == 1)
-            AddTextPrinterParameterized3(0, FONT_NORMAL_COPY_2, 2, 20, sLinkErrorTextColor, 0, gText_ABtnRegistrationCounter);
+            AddTextPrinterParameterized3(0, FONT_NORMAL_COPY_2, 2, 20, sLinkErrorTextColor, 0, sText_ABtnRegistrationCounter);
         break;
     }
     if (gMain.state == 160)

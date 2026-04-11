@@ -151,6 +151,11 @@ static void Task_AnimateWirelessSignal(u8 taskId);
 static void Task_OpenCenterWhiteColumn(u8 taskId);
 static void Task_CloseCenterWhiteColumn(u8 taskId);
 
+static const u8 sText_XWillBeSentToY[] = _("{STR_VAR_2} will be\nsent to {STR_VAR_1}.");
+static const u8 sText_ByeByeVar1[] = _("Bye-bye, {STR_VAR_2}!");
+static const u8 sText_XSentOverY[] = _("{STR_VAR_1} sent over {STR_VAR_3}.");
+static const u8 sText_TakeGoodCareOfX[] = _("Take good care of {STR_VAR_3}!");
+
 static const u16 sPokeball_Pal[]                    = INCBIN_U16("graphics/trade/pokeball.gbapal");
 static const u8 sPokeball_Gfx[]                     = INCBIN_U8("graphics/trade/pokeball.4bpp");
 static const u8 sPokeballSymbol_Gfx[]               = INCBIN_U8("graphics/trade/pokeball_symbol.8bpp"); // Unused
@@ -1389,7 +1394,7 @@ static bool8 DoTradeAnim_Cable(void)
         }
         break;
     case STATE_SEND_MSG:
-        StringExpandPlaceholders(gStringVar4, gText_XWillBeSentToY);
+        StringExpandPlaceholders(gStringVar4, sText_XWillBeSentToY);
         DrawTextOnTradeWindow(0, gStringVar4, 0);
 
         if (sTradeAnim->monSpecies[TRADE_PLAYER] != SPECIES_EGG)
@@ -1403,7 +1408,7 @@ static bool8 DoTradeAnim_Cable(void)
         {
             sTradeAnim->releasePokeballSpriteId = CreateTradePokeballSprite(sTradeAnim->monSpriteIds[TRADE_PLAYER], gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]].oam.paletteNum, 120, 32, 2, 1, 0x14, 0xfffff);
             sTradeAnim->state++;
-            StringExpandPlaceholders(gStringVar4, gText_ByeByeVar1);
+            StringExpandPlaceholders(gStringVar4, sText_ByeByeVar1);
             DrawTextOnTradeWindow(0, gStringVar4, 0);
         }
         break;
@@ -1753,7 +1758,7 @@ static bool8 DoTradeAnim_Cable(void)
                                       DISPCNT_BG0_ON |
                                       DISPCNT_BG2_ON |
                                       DISPCNT_OBJ_ON);
-        StringExpandPlaceholders(gStringVar4, gText_XSentOverY);
+        StringExpandPlaceholders(gStringVar4, sText_XSentOverY);
         DrawTextOnTradeWindow(0, gStringVar4, 0);
         sTradeAnim->state = STATE_DELAY_FOR_MON_ANIM;
         sTradeAnim->timer = 0;
@@ -1778,7 +1783,7 @@ static bool8 DoTradeAnim_Cable(void)
         if (sTradeAnim->timer == 250)
         {
             sTradeAnim->state++;
-            StringExpandPlaceholders(gStringVar4, gText_TakeGoodCareOfX);
+            StringExpandPlaceholders(gStringVar4, sText_TakeGoodCareOfX);
             DrawTextOnTradeWindow(0, gStringVar4, 0);
             sTradeAnim->timer = 0;
         }
@@ -1867,7 +1872,7 @@ static bool8 DoTradeAnim_Wireless(void)
         }
         break;
     case STATE_SEND_MSG:
-        StringExpandPlaceholders(gStringVar4, gText_XWillBeSentToY);
+        StringExpandPlaceholders(gStringVar4, sText_XWillBeSentToY);
         DrawTextOnTradeWindow(0, gStringVar4, 0);
 
         if (sTradeAnim->monSpecies[TRADE_PLAYER] != SPECIES_EGG)
@@ -1881,7 +1886,7 @@ static bool8 DoTradeAnim_Wireless(void)
         {
             sTradeAnim->releasePokeballSpriteId = CreateTradePokeballSprite(sTradeAnim->monSpriteIds[TRADE_PLAYER], gSprites[sTradeAnim->monSpriteIds[TRADE_PLAYER]].oam.paletteNum, 120, 32, 2, 1, 0x14, 0xfffff);
             sTradeAnim->state++;
-            StringExpandPlaceholders(gStringVar4, gText_ByeByeVar1);
+            StringExpandPlaceholders(gStringVar4, sText_ByeByeVar1);
             DrawTextOnTradeWindow(0, gStringVar4, 0);
         }
         break;
@@ -2256,7 +2261,7 @@ static bool8 DoTradeAnim_Wireless(void)
                                       DISPCNT_BG0_ON |
                                       DISPCNT_BG2_ON |
                                       DISPCNT_OBJ_ON);
-        StringExpandPlaceholders(gStringVar4, gText_XSentOverY);
+        StringExpandPlaceholders(gStringVar4, sText_XSentOverY);
         DrawTextOnTradeWindow(0, gStringVar4, 0);
         sTradeAnim->state = STATE_DELAY_FOR_MON_ANIM;
         sTradeAnim->timer = 0;
@@ -2281,7 +2286,7 @@ static bool8 DoTradeAnim_Wireless(void)
         if (sTradeAnim->timer == 250)
         {
             sTradeAnim->state++;
-            StringExpandPlaceholders(gStringVar4, gText_TakeGoodCareOfX);
+            StringExpandPlaceholders(gStringVar4, sText_TakeGoodCareOfX);
             DrawTextOnTradeWindow(0, gStringVar4, 0);
             sTradeAnim->timer = 0;
         }
@@ -2612,7 +2617,7 @@ static void CB2_SaveAndEndTrade(void)
     {
     case 0:
         gMain.state++;
-        StringExpandPlaceholders(gStringVar4, gText_CommunicationStandby5);
+        StringExpandPlaceholders(gStringVar4, gText_CommunicationStandby);
         DrawTextOnTradeWindow(0, gStringVar4, 0);
         break;
     case 1:

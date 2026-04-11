@@ -463,7 +463,7 @@ static const u8 *const sMessages[] = {
     [MSG_NO_BERRIES]   = COMPOUND_STRING("You have no BERRIES.\nThe game will be canceled."),
     [MSG_DROPPED]      = COMPOUND_STRING("A member dropped out.\nThe game will be canceled."),
     [MSG_TIMES_UP]     = COMPOUND_STRING("Time's up.\pGood BERRY POWDER could not be\nmade…\p"),
-    [MSG_COMM_STANDBY] = COMPOUND_STRING("Communication standby…"),
+    [MSG_COMM_STANDBY] = gText_CommunicationStandby,
 };
 
 static u32 (*const sBerryCrushCommands[])(struct BerryCrushGame * berryCrushGame, u8 *args) = {

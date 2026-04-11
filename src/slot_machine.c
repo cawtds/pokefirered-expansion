@@ -224,6 +224,10 @@ static void SetReelButtonPressed(u8 reel);
 static void ReleaseReelButtons(void);
 static void PressReelButton(u8 reel, u8 taskId);
 
+static const u8 sText_OutOfCoins[] = _("You've run out of COINS.\nGame over!");
+static const u8 sText_QuitPlaying[] = _("Quit playing?");
+static const u8 sText_SlotMachineControls[] = _("{DPAD_LEFTRIGHT}COMBOS {DPAD_DOWN}WAGER {A_BUTTON}STOP {B_BUTTON}EXIT");
+
 static const u8 sSecondReelBiasCheckIndices[][2] = {
     {0x00, 0x03},
     {0x00, 0x06},
@@ -2063,11 +2067,11 @@ static bool8 SlotsTask_GraphicsInit(u8 * state, struct SlotMachineSetupTaskData 
         FillWindowPixelBuffer(1, 0xFF);
         PutWindowTilemap(1);
 
-        x = DISPLAY_WIDTH - 4 - GetStringWidth(FONT_SMALL, gString_SlotMachineControls, 0);
+        x = DISPLAY_WIDTH - 4 - GetStringWidth(FONT_SMALL, sText_SlotMachineControls, 0);
         textColor[0] = TEXT_DYNAMIC_COLOR_6;
         textColor[1] = TEXT_COLOR_WHITE;
         textColor[2] = TEXT_COLOR_DARK_GRAY;
-        AddTextPrinterParameterized3(1, FONT_SMALL, x, 0, textColor, 0, gString_SlotMachineControls);
+        AddTextPrinterParameterized3(1, FONT_SMALL, x, 0, textColor, 0, sText_SlotMachineControls);
         CopyBgTilemapBufferToVram(0);
 
         SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_MODE_0 | 0x20 | DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON);
@@ -2193,7 +2197,7 @@ static bool8 SlotsTask_MessageOutOfCoins(u8 * state, struct SlotMachineSetupTask
     switch (*state)
     {
     case 0:
-        Slot_PrintOnWindow0(gString_OutOfCoins);
+        Slot_PrintOnWindow0(sText_OutOfCoins);
         CopyWindowToVram(0, COPYWIN_FULL);
         (*state)++;
         break;
@@ -2210,7 +2214,7 @@ static bool8 SlotsTask_AskQuitPlaying(u8 * state, struct SlotMachineSetupTaskDat
     switch (*state)
     {
     case 0:
-        Slot_PrintOnWindow0(gString_QuitPlaying);
+        Slot_PrintOnWindow0(sText_QuitPlaying);
         Slot_CreateYesNoMenu(0);
         CopyWindowToVram(0, COPYWIN_FULL);
         (*state)++;

@@ -30,8 +30,6 @@
 #include "constants/maps.h"
 #include "constants/songs.h"
 
-COMMON_DATA u32 UnusedVarNeededToMatch[8] = {0};
-
 static void Task_LinkupStart(u8 taskId);
 static void Task_LinkupAwaitConnection(u8 taskId);
 static void Task_LinkupConfirmWhenReady(u8 taskId);
@@ -59,6 +57,8 @@ static void Task_ReestablishLinkAwaitConfirmation(u8 taskId);
 #define tTimer      data[4]
 #define tWindowId   data[5]
 
+static const u8 sText_NumPlayerLink[] = _("{STR_VAR_1}P LINK");
+
 static const struct WindowTemplate sWindowTemplate_LinkPlayerCount = {
     .bg = 0,
     .tilemapLeft = 16,
@@ -70,8 +70,8 @@ static const struct WindowTemplate sWindowTemplate_LinkPlayerCount = {
 };
 
 static const u8 *const sTrainerCardColorNames[] = {
-    gText_BronzeCard,
-    gText_CopperCard,
+    COMPOUND_STRING("BRONZE"),
+    COMPOUND_STRING("COPPER"),
     gText_SilverCard,
     gText_GoldCard
 };
@@ -91,7 +91,7 @@ static void PrintNumPlayersInLink(u16 windowId, s32 numPlayers)
 {
     ConvertIntToDecimalStringN(gStringVar1, numPlayers, STR_CONV_MODE_LEFT_ALIGN, 1);
     SetStandardWindowBorderStyle(windowId, FALSE);
-    StringExpandPlaceholders(gStringVar4, gText_NumPlayerLink);
+    StringExpandPlaceholders(gStringVar4, sText_NumPlayerLink);
     AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, 0, 0, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
@@ -422,9 +422,6 @@ static void Task_LinkupAwaitTrainerCardData(u8 taskId)
     HideFieldMessageBox();
     if (gSpecialVar_Result == LINKUP_SUCCESS)
     {
-        // Dumb trick required to match
-        if (gLinkType == LINKTYPE_BERRY_BLENDER_SETUP)
-            *UnusedVarNeededToMatch += 0;
         ClearLinkPlayerCountWindow(gTasks[taskId].tWindowId);
         ScriptContext_Enable();
         DestroyTask(taskId);

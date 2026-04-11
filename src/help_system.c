@@ -31,6 +31,9 @@ enum HelpSystemTopics
     TOPIC_COUNT
 };
 
+static const u8 sText_PickOkEnd[] = _("{DPAD_UPDOWN}PICK {A_BUTTON}OK {B_BUTTON}END");
+static const u8 sText_AorBtoCancel[] = _("{A_BUTTON}{B_BUTTON}CANCEL");
+
 static EWRAM_DATA u16 sHelpSystemContextId = 0;
 static EWRAM_DATA u8 sSeenHelpSystemIntro = 0;
 
@@ -1945,7 +1948,7 @@ static void BuildAndPrintMainTopicsListMenu(struct HelpSystemListMenu * helpList
 {
     ResetHelpSystemListMenu(helpListMenu, listMenuItemsBuffer);
     BuildMainTopicsListAndMoveToH00(helpListMenu, listMenuItemsBuffer);
-    PrintTextOnPanel2Row52RightAlign(gText_HelpSystemControls_PickOkEnd);
+    PrintTextOnPanel2Row52RightAlign(sText_PickOkEnd);
     HelpSystem_InitListMenuController(helpListMenu, 0, gHelpSystemState.scrollMain);
     PrintHelpSystemTopicMouseoverDescription(helpListMenu, listMenuItemsBuffer);
     HS_ShowOrHideMainWindowText(1);
@@ -1978,7 +1981,7 @@ static void BuildAndPrintSubmenuList(struct HelpSystemListMenu * helpListMenu, s
     HS_ShowOrHideHeaderAndFooterLines_Lighter(1);
     ResetHelpSystemListMenu(helpListMenu, listMenuItemsBuffer);
     SetHelpSystemSubmenuItems(helpListMenu, listMenuItemsBuffer);
-    PrintTextOnPanel2Row52RightAlign(gText_HelpSystemControls_PickOkCancel);
+    PrintTextOnPanel2Row52RightAlign(gText_PickOKExit);
     HelpSystem_InitListMenuController(helpListMenu, helpListMenu->itemsAbove, helpListMenu->cursorPos);
     HelpSystem_PrintTextAt(sHelpSystemTopicPtrs[gHelpSystemState.topic], 0, 0);
     HS_ShowOrHideMainWindowText(1);
@@ -2294,7 +2297,7 @@ bool8 RunHelpMenuSubroutine(struct HelpSystemListMenu * helpListMenu, struct Lis
 
 bool8 HelpSystemSubroutine_PrintWelcomeMessage(struct HelpSystemListMenu * helpListMenu, struct ListMenuItem * listMenuItemsBuffer)
 {
-    PrintTextOnPanel2Row52RightAlign(gText_HelpSystemControls_A_Next);
+    PrintTextOnPanel2Row52RightAlign(gText_ABUTTONNext);
     PrintWelcomeMessageOnPanel1();
     HS_ShowOrHideMainWindowText(1);
     HS_ShowOrHideControlsGuideInTopRight(1);
@@ -2399,7 +2402,7 @@ bool8 HelpMenuSubroutine_HelpItemPrint(struct HelpSystemListMenu * helpListMenu,
     gHelpSystemState.level = 2;
     HS_ShowOrHideMainWindowText(0);
     HelpSystem_FillPanel1();
-    PrintTextOnPanel2Row52RightAlign(gText_HelpSystemControls_AorBtoCancel);
+    PrintTextOnPanel2Row52RightAlign(sText_AorBtoCancel);
     HS_SetMainWindowBgBrightness(1);
     HS_ShowOrHideHeaderAndFooterLines_Darker(1);
 

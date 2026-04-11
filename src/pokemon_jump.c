@@ -462,7 +462,6 @@ static const u8 sText_CantHoldMore[] = _("You can't hold any more!");
 static const u8 sText_WantToPlayAgain2[] = _("Want to play again?");
 static const u8 sText_SomeoneDroppedOut2[] = _("Somebody dropped out.\nThe link will be canceled.");
 static const u8 sText_SavingDontTurnOffPower[] = _("SAVING…\nDON'T TURN OFF THE POWER.");
-static const u8 sText_CommunicationStandby4[] = _("Communication standby…");
 
 static const u16 s321Start_Static_Pal[] = INCBIN_U16("graphics/link/321start.gbapal");
 static const u32 s321Start_Static_Gfx[] = INCBIN_U32("graphics/link/321start.4bpp.smol");
@@ -3093,7 +3092,7 @@ static void Msg_CommunicationStandby(void)
     {
     case 0:
         sPokemonJumpGfx->msgWindowId = AddMessageWindow(7, 10, 16, 2);
-        AddTextPrinterParameterized(sPokemonJumpGfx->msgWindowId, FONT_NORMAL, sText_CommunicationStandby4, 0, 2, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(sPokemonJumpGfx->msgWindowId, FONT_NORMAL, gText_CommunicationStandby, 0, 2, TEXT_SKIP_DRAW, NULL);
         CopyWindowToVram(sPokemonJumpGfx->msgWindowId, COPYWIN_GFX);
         sPokemonJumpGfx->mainState++;
         break;

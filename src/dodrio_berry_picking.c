@@ -375,7 +375,6 @@ static const u8 gText_FilledStorageSpace[] = _("It filled its storage space.");
 static const u8 gText_WantToPlayAgain[] = _("Want to play again?");
 static const u8 gText_SomeoneDroppedOut[] = _("Somebody dropped out.\nThe link will be canceled.");
 static const u8 gText_SpacePoints[] = _(" points");
-static const u8 gText_CommunicationStandby3[] = _("Communication standby…");
 
 // Unused duplicate
 static const struct BgTemplate sBgTemplates_Duplicate[] =
@@ -4763,7 +4762,7 @@ static void Msg_CommunicationStandby(void)
         break;
     case 1:
         FillWindowPixelBuffer(sGfx->windowIds[0], PIXEL_FILL(1));
-        AddTextPrinterParameterized(sGfx->windowIds[0], FONT_NORMAL, gText_CommunicationStandby3, 0, 6, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(sGfx->windowIds[0], FONT_NORMAL, gText_CommunicationStandby, 0, 6, TEXT_SKIP_DRAW, NULL);
         CopyWindowToVram(sGfx->windowIds[0], COPYWIN_GFX);
         sGfx->state++;
         break;

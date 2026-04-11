@@ -72,6 +72,8 @@ struct MailViewResources {
     u16 bg2TilemapBuffer[BG_SCREEN_SIZE];
 };
 
+static const u8 sText_From[] = _("From ");
+
 static EWRAM_DATA struct MailViewResources * sMailViewResources = NULL;
 
 static void CB2_InitMailView(void);
@@ -645,7 +647,7 @@ static void BufferMailMessage(void)
     }
     if (sMailViewResources->mailArrangementType == 0)
     {
-        StringCopy(StringCopy(sMailViewResources->authorNameBuffer, sMailViewResources->mail->playerName), gText_From); // ???
+        StringCopy(StringCopy(sMailViewResources->authorNameBuffer, sMailViewResources->mail->playerName), sText_From); // ???
         sMailViewResources->nameX = sMailViewResources->messageLayout->nameX + 0x60 - 8 * StringLength(sMailViewResources->authorNameBuffer);
     }
     else
@@ -675,8 +677,8 @@ static void AddMailMessagePrinters(void)
             y += sMailViewResources->messageLayout->linesLayout[i].lineHeight;
         }
     }
-    width = GetStringWidth(FONT_NORMAL_COPY_1, gText_From, 0);
-    AddTextPrinterParameterized3(1, FONT_NORMAL_COPY_1, sMailViewResources->nameX, sMailViewResources->messageLayout->nameY, sTextColor, 0, gText_From);
+    width = GetStringWidth(FONT_NORMAL_COPY_1, sText_From, 0);
+    AddTextPrinterParameterized3(1, FONT_NORMAL_COPY_1, sMailViewResources->nameX, sMailViewResources->messageLayout->nameY, sTextColor, 0, sText_From);
     AddTextPrinterParameterized3(1, FONT_NORMAL_COPY_1, sMailViewResources->nameX + width, sMailViewResources->messageLayout->nameY, sTextColor, 0, sMailViewResources->authorNameBuffer);
     CopyWindowToVram(0, COPYWIN_FULL);
     CopyWindowToVram(1, COPYWIN_FULL);

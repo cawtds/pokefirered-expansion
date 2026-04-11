@@ -124,7 +124,6 @@ static const u8 sFameCheckerText_PickScreenUI[] = _("{START_BUTTON}PICK {DPAD_UP
 static const u8 sFameCheckerText_FlavorTextUI[] = _("{DPAD_ANY}PICK {A_BUTTON}READ {B_BUTTON}CANCEL");
 static const u8 sFameCheckerOakName[] = _("OAK");
 static const u8 sFameCheckerDaisyName[] = _("DAISY");
-static const u8 sFameCheckerBillName[] = _("BILL");
 static const u8 sFameCheckerMrFujiName[] = _("FUJI");
 static const u8 sFameCheckerText_FameCheckerWillBeClosed[] = _("The FAME CHECKER will be closed.");
 static const u8 sFameCheckerText_ClearTextbox[] = _("\n                              ");
@@ -177,7 +176,7 @@ static const u16 sTrainerIdxs[] = {
 static const u8 *const sNonTrainerNamePointers[] = {
     sFameCheckerOakName,
     sFameCheckerDaisyName,
-    sFameCheckerBillName,
+    gText_Bill,
     sFameCheckerMrFujiName
 };
 

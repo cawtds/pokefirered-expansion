@@ -14,6 +14,8 @@
 
 #define ZERO 0
 
+static const u8 sText_ClearTo8[] = _("{CLEAR_TO 8}");
+
 COMMON_DATA enum HelpSystemStatus gHelpSystemStatus = 0;
 
 struct HelpSystemVideoState
@@ -433,19 +435,19 @@ void HelpSystemRenderText(u8 fontId, u8 * dest, const u8 * src, u8 x, u8 y, u8 w
                 {
                     if (FlagGet(FLAG_SYS_NOT_SOMEONES_PC) == TRUE)
                     {
-                        if (gString_Bill[i] == EOS)
+                        if (gText_Bill[i] == EOS)
                         {
                             break;
                         }
-                        DecompressAndRenderGlyph(fontId, gString_Bill[i], &srcBlit, &destBlit, dest, x, y, width, height);
+                        DecompressAndRenderGlyph(fontId, gText_Bill[i], &srcBlit, &destBlit, dest, x, y, width, height);
                     }
                     else
                     {
-                        if (gString_Someone[i] == EOS)
+                        if (gText_Someone[i] == EOS)
                         {
                             break;
                         }
-                        DecompressAndRenderGlyph(fontId, gString_Someone[i], &srcBlit, &destBlit, dest, x, y, width, height);
+                        DecompressAndRenderGlyph(fontId, gText_Someone[i], &srcBlit, &destBlit, dest, x, y, width, height);
                     }
                     if (fontId == FONT_SMALL)
                     {
@@ -781,7 +783,7 @@ void HS_RemoveSelectionCursorAt(u8 i)
     u8 glyphHeight = GetFontAttribute(FONT_NORMAL, FONTATTR_MAX_LETTER_HEIGHT) + 1;
     u8 x = gHelpSystemListMenu.sub.left;
     u8 y = gHelpSystemListMenu.sub.top + i * glyphHeight;
-    HelpSystem_PrintTextAt(gString_HelpSystem_ClearTo8, x, y);
+    HelpSystem_PrintTextAt(sText_ClearTo8, x, y);
 }
 
 u8 TryMoveCursor1(u8 dirn)

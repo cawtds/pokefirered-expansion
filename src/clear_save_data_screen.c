@@ -17,6 +17,9 @@ struct ClearSaveDataStruct {
     u8 unk2;
 };
 
+static const u8 sText_ClearAllSaveData[] = _("Clear all save data areas?");
+static const u8 sText_ClearingData[] = _("Clearing data‥\nPlease wait.");
+
 static EWRAM_DATA struct ClearSaveDataStruct * sClearSaveDataState = NULL;
 
 static void Task_DrawClearSaveDataScreen(u8 taskId);
@@ -110,7 +113,7 @@ static void Task_DrawClearSaveDataScreen(u8 taskId)
         break;
     case 4:
         DrawStdFrameWithCustomTileAndPalette(1, TRUE, 0x001, 15);
-        AddTextPrinterParameterized4(1, FONT_NORMAL, 0, 3, 1, 1, sTextColor, 0, gText_ClearAllSaveData);
+        AddTextPrinterParameterized4(1, FONT_NORMAL, 0, 3, 1, 1, sTextColor, 0, sText_ClearAllSaveData);
         CopyWindowToVram(1, COPYWIN_GFX);
         break;
     case 5:
@@ -142,7 +145,7 @@ static void Task_HandleYesNoMenu(u8 taskId)
         case 0:
             PlaySE(SE_SELECT);
             FillWindowPixelBuffer(1, PIXEL_FILL(1));
-            AddTextPrinterParameterized4(1, FONT_NORMAL, 0, 3, 1, 1, sTextColor, 0, gText_ClearingData);
+            AddTextPrinterParameterized4(1, FONT_NORMAL, 0, 3, 1, 1, sTextColor, 0, sText_ClearingData);
             CopyWindowToVram(1, COPYWIN_FULL);
             ClearSaveData();
             break;

@@ -66,6 +66,13 @@ struct EggHatchData
     u8 textColor[3];
 };
 
+static const u8 sText_HatchedFromEgg[] = _("{STR_VAR_1} hatched from the EGG!");
+static const u8 sText_NickHatchPrompt[] = _("Would you like to nickname the newly\nhatched {STR_VAR_1}?");
+static const u8 sText_GetAlongVeryWell[] = _("The two seem to get along\nvery well.");
+static const u8 sText_GetAlong[] = _("The two seem to get along.");
+static const u8 sText_DontLikeOther[] = _("The two don't seem to like\neach other much.");
+static const u8 sText_PlayOther[] = _("The two prefer to play with other\nPOKéMON than each other.");
+
 // this file's functions
 static void ClearDaycareMonMail(struct DayCareMail *mail);
 static void SetInitialEggData(struct Pokemon *mon, enum Species species, struct DayCare *daycare);
@@ -159,10 +166,10 @@ static const struct {
 
 static const u8 *const sCompatibilityMessages[] =
 {
-    gDaycareText_GetAlongVeryWell,
-    gDaycareText_GetAlong,
-    gDaycareText_DontLikeOther,
-    gDaycareText_PlayOther
+    sText_GetAlongVeryWell,
+    sText_GetAlong,
+    sText_DontLikeOther,
+    sText_PlayOther
 };
 
 static const u8 sJapaneseEggNickname[] = _("タマゴ"); // "tamago" ("egg" in Japanese)
@@ -2246,7 +2253,7 @@ static void CB2_EggHatch_1(void)
         break;
     case 5:
         GetMonNickname(&gPlayerParty[sEggHatchData->eggPartyID], gStringVar1);
-        StringExpandPlaceholders(gStringVar4, gText_HatchedFromEgg);
+        StringExpandPlaceholders(gStringVar4, sText_HatchedFromEgg);
         EggHatchPrintMessage(sEggHatchData->windowId, gStringVar4, 0, 3, 0xFF);
         PlayFanfare(MUS_EVOLVED);
         sEggHatchData->CB2_state++;
@@ -2263,7 +2270,7 @@ static void CB2_EggHatch_1(void)
         break;
     case 8:
         GetMonNickname(&gPlayerParty[sEggHatchData->eggPartyID], gStringVar1);
-        StringExpandPlaceholders(gStringVar4, gText_NickHatchPrompt);
+        StringExpandPlaceholders(gStringVar4, sText_NickHatchPrompt);
         EggHatchPrintMessage(sEggHatchData->windowId, gStringVar4, 0, 2, 1);
         sEggHatchData->CB2_state++;
         break;

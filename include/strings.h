@@ -70,7 +70,6 @@ extern const u8 gText_ApostropheSBase[];
 extern const u8 gText_NoRegistry[];
 extern const u8 gText_OkayToDeleteFromRegistry[];
 extern const u8 gText_RegisteredDataDeleted[];
-extern const u8 gText_IsThisTheCorrectTime[];
 extern const u8 gText_EggNickname[];
 extern const u8 gText_MenuPokemon[];
 extern const u8 gText_Time[];
@@ -119,16 +118,8 @@ extern const u8 gTeachyTvText_CatchingScript2[];
 extern const u8 gTeachyTvText_TMsScript2[];
 extern const u8 gTeachyTvText_RegisterScript2[];
 
-// help_system_812B1E0
-extern const u8 gText_HelpSystemControls_A_Next[];
-extern const u8 gText_HelpSystemControls_PickOkEnd[];
-extern const u8 gText_HelpSystemControls_AorBtoCancel[];
-extern const u8 gText_HelpSystemControls_PickOkCancel[];
-
-// help_system
-extern const u8 gString_Bill[];
-extern const u8 gString_Someone[];
-extern const u8 gString_HelpSystem_ClearTo8[];
+extern const u8 gText_Bill[];
+extern const u8 gText_Someone[];
 
 extern const u8 gText_Var1IsSelected[];
 extern const u8 gText_MoveVar1Where[];
@@ -153,11 +144,6 @@ extern const u8 *const gStatNamesTable[];
 
 extern const u8 gText_National[];
 extern const u8 gText_Kanto[];
-
-// slot_machine
-extern const u8 gString_OutOfCoins[];
-extern const u8 gString_QuitPlaying[];
-extern const u8 gString_SlotMachineControls[];
 
 // battle_controller_safari
 extern const u8 gText_EmptyString3[];
@@ -226,13 +212,6 @@ extern const u8 gText_ThrewAwayVar2Var1s[];
 extern const u8 gText_ConfirmTossItems[];
 extern const u8 gText_BerryPouch[];
 
-// link
-extern const u8 gText_CommErrorEllipsis[];
-extern const u8 gText_MoveCloserToLinkPartner[];
-extern const u8 gText_CommErrorCheckConnections[];
-extern const u8 gText_ABtnTitleScreen[];
-extern const u8 gText_ABtnRegistrationCounter[];
-
 // main_menu
 extern const u8 gText_Colon[];
 extern const u8 gText_Pokedex[];
@@ -274,9 +253,6 @@ extern const u8 gText_SafariBallStock[];
 extern const u8 gText_BattlePyramidFloor[];
 
 extern const u8 gText_SavingDontTurnOffThePower2[];
-
-// mail
-extern const u8 gText_From[];
 
 // field_specials
 extern const u8 gText_B4F[];
@@ -328,12 +304,7 @@ extern const u8 gText_PokemonJump[];
 extern const u8 gText_Coins[];
 
 // trade
-extern const u8 gText_XWillBeSentToY[];
-extern const u8 gText_ByeByeVar1[];
-extern const u8 gText_XSentOverY[];
-extern const u8 gText_TakeGoodCareOfX[];
-extern const u8 gText_CommunicationStandby5[];
-extern const u8 gText_TradeAction_Trade[];
+extern const u8 gText_CommunicationStandby[];
 extern const u8 gText_PkmnCantBeTradedNow[];
 extern const u8 gText_EggCantBeTradedNow[];
 extern const u8 gText_OtherTrainersPkmnCantBeTraded[];
@@ -361,17 +332,7 @@ extern const u8 gEasyChatGroupName_TrendySaying[];
 extern const u8 gEasyChatGroupName_Pokemon2[];
 extern const u8 gText_ThreeQuestionMarks[];
 
-// learn_move
-extern const u8 gText_TeachWhichMoveToMon[];
-extern const u8 gText_MonLearnedMove[];
-extern const u8 gText_MonIsTryingToLearnMove[];
-extern const u8 gText_StopLearningMove[];
-extern const u8 gText_1_2_and_Poof[];
-extern const u8 gText_MonForgotOldMoveAndMonLearnedNewMove[];
-extern const u8 gText_WhichMoveShouldBeForgotten[];
-extern const u8 gText_TeachMoveQues[];
-extern const u8 gText_GiveUpTryingToTeachNewMove[];
-
+extern const u8 gText_EmptyString[];
 extern const u8 gText_DecimalPoint[];
 extern const u8 gText_Option[];
 extern const u8 gText_On[];
@@ -390,15 +351,7 @@ extern const u8 gText_PkmnStoppedEvolving[];
 // shop
 extern const u8 gText_PokedollarVar1[];
 
-// daycare
 extern const u8 gText_Lv[];
-extern const u8 gDaycareText_GetAlongVeryWell[];
-extern const u8 gDaycareText_GetAlong[];
-extern const u8 gDaycareText_DontLikeOther[];
-extern const u8 gDaycareText_PlayOther[];
-extern const u8 gText_EmptyString[];
-extern const u8 gText_HatchedFromEgg[];
-extern const u8 gText_NickHatchPrompt[];
 
 // bag
 extern const u8 gText_DepositItem[];
@@ -418,11 +371,7 @@ extern const u8 gText_Battle[];
 extern const u8 gText_Lets[];
 
 extern const u8 gText_Exit[];
-
-// cable_club
-extern const u8 gText_NumPlayerLink[];
-extern const u8 gText_BronzeCard[];
-extern const u8 gText_CopperCard[];
+extern const u8 gText_ABUTTONNext[];
 extern const u8 gText_SilverCard[];
 extern const u8 gText_GoldCard[];
 
@@ -539,10 +488,6 @@ extern const u8 gText_QuestLog_PokemonResearchLab[];
 extern const u8 gText_QuestLog_VictoryRoad[];
 extern const u8 gText_QuestLog_PokemonLeague[];
 extern const u8 gText_QuestLog_CeruleanCave[];
-
-// clear_save_data_screen
-extern const u8 gText_ClearAllSaveData[];
-extern const u8 gText_ClearingData[];
 
 extern const u8 gText_YourPartysFull[];
 

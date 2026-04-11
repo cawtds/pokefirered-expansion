@@ -16,6 +16,7 @@
 #include "scanline_effect.h"
 #include "sound.h"
 #include "string_util.h"
+#include "strings.h"
 #include "task.h"
 #include "text_window.h"
 #include "util.h"
@@ -111,7 +112,6 @@ static void PrintNameChoiceOptions(u8, u8);
 static void GetDefaultName(u8, u8);
 
 static const u8 sText_Controls[] = _("CONTROLS");
-static const u8 sText_ABUTTONNext[] = _("{A_BUTTON}NEXT");
 static const u8 sText_ABUTTONNext_BBUTTONBack[] = _("{A_BUTTON}NEXT {B_BUTTON}BACK");
 static const u8 sText_Boy[] = _("BOY");
 static const u8 sText_Girl[] = _("GIRL");
@@ -801,7 +801,7 @@ static void Task_NewGameScene(u8 taskId)
 
 static void ControlsGuide_LoadPage1(void)
 {
-    HofPCTopBar_PrintPair(sText_Controls, sText_ABUTTONNext, FALSE, 0, TRUE);
+    HofPCTopBar_PrintPair(sText_Controls, gText_ABUTTONNext, FALSE, 0, TRUE);
     sOakSpeechResources->windowIds[0] = AddWindow(sControlsGuide_WindowTemplates[sOakSpeechResources->currentPage]);
     PutWindowTilemap(sOakSpeechResources->windowIds[0]);
     FillWindowPixelBuffer(sOakSpeechResources->windowIds[0], PIXEL_FILL(0));
@@ -956,7 +956,7 @@ static void Task_PikachuIntro_LoadPage1(u8 taskId)
     {
         PlayBGM(MUS_NEW_GAME_INTRO);
         HofPCTopBar_Clear();
-        HofPCTopBar_Print(sText_ABUTTONNext, 0, 1);
+        HofPCTopBar_Print(gText_ABUTTONNext, 0, 1);
         sOakSpeechResources->pikachuIntroTilemap = malloc_and_decompress(sPikachuIntro_Background_Tilemap, &size);
         CopyToBgTilemapBufferRect(1, sOakSpeechResources->pikachuIntroTilemap, 0, 2, 30, 19);
         CopyBgTilemapBufferToVram(1);
@@ -1032,7 +1032,7 @@ static void Task_PikachuIntro_HandleInput(u8 taskId)
             if (sOakSpeechResources->currentPage == PIKACHU_INTRO_PAGE_1)
             {
                 HofPCTopBar_Clear();
-                HofPCTopBar_Print(sText_ABUTTONNext, 0, 1);
+                HofPCTopBar_Print(gText_ABUTTONNext, 0, 1);
             }
             else
             {
