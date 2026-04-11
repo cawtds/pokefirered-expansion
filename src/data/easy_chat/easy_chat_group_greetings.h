@@ -9,7 +9,6 @@ static const u8 sEasyChatWord_Oi[] = _("OI");
 static const u8 sEasyChatWord_HowDo[] = _("HOW DO");
 static const u8 sEasyChatWord_Congrats[] = _("CONGRATS");
 static const u8 sEasyChatWord_GiveMe[] = _("GIVE ME");
-static const u8 sEasyChatWord_Sorry[] = _("SORRY");
 static const u8 sEasyChatWord_Apologize[] = _("APOLOGIZE");
 static const u8 sEasyChatWord_Forgive[] = _("FORGIVE");
 static const u8 sEasyChatWord_HeyThere[] = _("HEY, THERE");
@@ -96,7 +95,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Greetings[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_Sorry,
+        .text = gText_Sorry,
         .alphabeticalOrder = 16,
         .enabled = TRUE
     },

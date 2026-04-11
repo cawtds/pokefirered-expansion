@@ -115,6 +115,9 @@ static EWRAM_DATA struct {
     u16 scrollOffset;
 } * sPokedudeBagBackup = NULL;
 
+extern const u8 gPokedudeText_TMTypes[];
+extern const u8 gPokedudeText_ReadTMDescription[];
+
 static const u8 sText_TMCaseWillBePutAway[] = _("The TM CASE will be\nput away.");
 
 static EWRAM_DATA void *sTilemapBuffer = NULL;

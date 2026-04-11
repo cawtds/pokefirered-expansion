@@ -2640,7 +2640,7 @@ static void CB2_SaveAndEndTrade(void)
         break;
     case 2:
         gMain.state = 50;
-        StringExpandPlaceholders(gStringVar4, gText_SavingDontTurnOffThePower2);
+        StringExpandPlaceholders(gStringVar4, gText_SavingDontTurnOffThePower);
         DrawTextOnTradeWindow(0, gStringVar4, 0);
         break;
     case 50:

@@ -799,6 +799,27 @@ static const struct PokedudeTextScriptHeader *const sPokedudeTextScripts[] =
     [TTVSCR_CATCHING] = sPokedudeTextScripts_Catching,
 };
 
+extern const u8 Pokedude_Text_SpeedierBattlerGoesFirst[];
+extern const u8 Pokedude_Text_MyRattataFasterThanPidgey[];
+extern const u8 Pokedude_Text_BattlersTakeTurnsAttacking[];
+extern const u8 Pokedude_Text_MyRattataWonGetsEXP[];
+extern const u8 Pokedude_Text_UhOhRattataPoisoned[];
+extern const u8 Pokedude_Text_HealStatusRightAway[];
+extern const u8 Pokedude_Text_UsingItemTakesTurn[];
+extern const u8 Pokedude_Text_YayWeManagedToWin[];
+extern const u8 Pokedude_Text_WaterNotVeryEffectiveAgainstGrass[];
+extern const u8 Pokedude_Text_GrassEffectiveAgainstWater[];
+extern const u8 Pokedude_Text_LetsTryShiftingMons[];
+extern const u8 Pokedude_Text_ShiftingUsesTurn[];
+extern const u8 Pokedude_Text_ButterfreeDoubleResistsGrass[];
+extern const u8 Pokedude_Text_ButterfreeGoodAgainstOddish[];
+extern const u8 Pokedude_Text_YeahWeWon[];
+extern const u8 Pokedude_Text_WeakenMonBeforeCatching[];
+extern const u8 Pokedude_Text_BestIfTargetStatused[];
+extern const u8 Pokedude_Text_CantDoubleUpOnStatus[];
+extern const u8 Pokedude_Text_LetMeThrowBall[];
+extern const u8 Pokedude_Text_PickBestKindOfBall[];
+
 static const u8 *const sPokedudeTexts_Battle[] =
 {
     Pokedude_Text_SpeedierBattlerGoesFirst,

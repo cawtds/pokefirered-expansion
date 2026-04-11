@@ -90,7 +90,6 @@ static const u8 sText_ThreeIsland[] = _("THREE ISLAND");
 static const u8 sText_SeviiIslands[] = _("SEVII ISLANDS");
 static const u8 sText_NavelRock[] = _("NAVEL ROCK");
 static const u8 sText_BirthIsland[] = _("BIRTH ISLAND");
-static const u8 sText_Other[] = _("OTHER");
 static const u8 sText_NoThanks[] = _("NO THANKS");
 static const u8 sText_Quit[] = _("QUIT");
 static const u8 sText_SomeoneSPc[] = _("SOMEONE'S PC");
@@ -1781,7 +1780,7 @@ void DrawSeagallopDestinationMenu(void)
         if (destinationId == SEAGALLOP_SEVEN_ISLAND + 1)
             destinationId = SEAGALLOP_VERMILION_CITY;
     }
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_Other, cursorWidth, i * 16 + 2, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_Other, cursorWidth, i * 16 + 2, TEXT_SKIP_DRAW, NULL);
     i++;
     AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_Exit, cursorWidth, i * 16 + 2, TEXT_SKIP_DRAW, NULL);
     InitMenuNormal(windowId, FONT_NORMAL, 0, 2, 16, numItems, 0);

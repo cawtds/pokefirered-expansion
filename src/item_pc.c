@@ -107,6 +107,8 @@ static void ItemPc_PrintOnWindow5WithContinueTask(u8 taskId, const u8 * str, Tas
 static const u8 sText_WithdrewQuantItem[] = _("Withdrew {STR_VAR_2}\n{STR_VAR_1}(s).");
 static const u8 sText_WithdrawItem[] = _("WITHDRAW\nITEM");
 static const u8 sText_ReturnToPC[] = _("Return to the PC.");
+static const u8 sText_NoMoreRoomInBag[] = _("There is no more\nroom in the BAG.");
+static const u8 sText_WithdrawHowMany[] = _("Withdraw how many\n{STR_VAR_1}(s)?");
 
 static const struct BgTemplate sBgTemplates[2] = {
     {
@@ -957,7 +959,7 @@ static void ItemPc_DoWithdraw(u8 taskId)
     else
     {
         windowId = ItemPc_GetOrCreateSubwindow(2);
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_NoMoreRoomInBag, 0, 2, 0, NULL);
+        AddTextPrinterParameterized(windowId, FONT_NORMAL, sText_NoMoreRoomInBag, 0, 2, 0, NULL);
         gTasks[taskId].func = Task_ItemPcWaitButtonWithdrawMultipleFailed;
     }
 }
@@ -1004,7 +1006,7 @@ static void ItemPc_WithdrawMultipleInitWindow(u16 slotId)
     enum Item itemId = ItemPc_GetItemIdBySlotId(slotId);
 
     CopyItemName(itemId, gStringVar1);
-    StringExpandPlaceholders(gStringVar4, gText_WithdrawHowMany);
+    StringExpandPlaceholders(gStringVar4, sText_WithdrawHowMany);
     AddTextPrinterParameterized(ItemPc_GetOrCreateSubwindow(1), FONT_NORMAL, gStringVar4, 0, 2, 0, NULL);
     ConvertIntToDecimalStringN(gStringVar1, 1, STR_CONV_MODE_LEADING_ZEROS, MAX_ITEM_DIGITS);
     StringExpandPlaceholders(gStringVar4, gText_xVar1);

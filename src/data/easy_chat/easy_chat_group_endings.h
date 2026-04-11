@@ -12,7 +12,6 @@ static const u8 sEasyChatWord_LikelyTo[] = _("LIKELY TO");
 static const u8 sEasyChatWord_Would[] = _("WOULD");
 static const u8 sEasyChatWord_Is[] = _("IS");
 static const u8 sEasyChatWord_IsntItQues[] = _("ISN'T IT?");
-static const u8 sEasyChatWord_Other[] = _("OTHER");
 static const u8 sEasyChatWord_Are[] = _("ARE");
 static const u8 sEasyChatWord_Was[] = _("WAS");
 static const u8 sEasyChatWord_Were[] = _("WERE");
@@ -140,7 +139,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Endings[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_Other,
+        .text = gText_Other,
         .alphabeticalOrder = 21,
         .enabled = TRUE
     },
