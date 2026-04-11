@@ -239,6 +239,8 @@ static void Swap_ActionMon(u8);
 static void Swap_ActionCancel(u8);
 static void Swap_ActionPkmnForSwap(u8);
 
+static const u8 sText_Others[] = _("OTHERS");
+
 static EWRAM_DATA u8 *sSelectMenuTilesetBuffer = NULL;
 static EWRAM_DATA u8 *sSelectMonPicBgTilesetBuffer = NULL;
 static EWRAM_DATA u8 *sSelectMenuTilemapBuffer = NULL;
@@ -1857,7 +1859,7 @@ static void Select_PrintMenuOptions(void)
     else
         AddTextPrinterParameterized3(SELECT_WIN_OPTIONS, FONT_NORMAL, 7, 17, sMenuOptionTextColors, 0, gText_Rent);
 
-    AddTextPrinterParameterized3(SELECT_WIN_OPTIONS, FONT_NORMAL, 7, 33, sMenuOptionTextColors, 0, gText_Others2);
+    AddTextPrinterParameterized3(SELECT_WIN_OPTIONS, FONT_NORMAL, 7, 33, sMenuOptionTextColors, 0, sText_Others);
     CopyWindowToVram(SELECT_WIN_OPTIONS, COPYWIN_FULL);
 }
 

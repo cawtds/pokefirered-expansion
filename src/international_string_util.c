@@ -86,7 +86,7 @@ void CopyMonCategoryText(enum Species species, u8 *dest)
 {
     u8 *str = StringCopy(dest, GetSpeciesCategory(species));
     *str = CHAR_SPACE;
-    StringCopy(str + 1, gText_Pokemon2);
+    StringCopy(str + 1, gText_Pokemon);
 }
 
 u8 *GetStringClearToWidth(u8 *dest, int fontId, const u8 *str, int totalStringWidth)

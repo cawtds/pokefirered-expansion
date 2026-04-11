@@ -110,6 +110,12 @@ static void PrepareSendBuffer_Drop(u8 *ptr);
 static void PrepareSendBuffer_Disband(u8 *ptr);
 static void Task_ReceiveChatMessage(u8 taskId);
 
+static const u8 sText_F700JoinedChat[] = _("{DYNAMIC 0x00} joined the chat!");
+static const u8 sText_F700LeftChat[] = _("{DYNAMIC 0x00} left the chat.");
+static const u8 sText_Ok[] = _("OK!");
+static const u8 sText_YaySmileEmoji[] = _("YAY{EMOJI_BIGSMILE}");
+static const u8 sText_ByeBye[] = _("BYE-BYE!");
+
 static void (*const sChatEntryRoutines[])(void) = {
     [CHATENTRYROUTINE_JOIN] = ChatEntryRoutine_Join,
     [CHATNETRYROUTINE_HANDLE_INPUT] = ChatEntryRoutine_HandleInput,
@@ -1297,7 +1303,7 @@ static bool32 ProcessReceivedChatMessage(u8 *dest, u8 *recvMessage)
         {
             DynamicPlaceholderTextUtil_Reset();
             DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, name);
-            DynamicPlaceholderTextUtil_ExpandPlaceholders(dest, gText_F700JoinedChat);
+            DynamicPlaceholderTextUtil_ExpandPlaceholders(dest, sText_F700JoinedChat);
             return TRUE;
         }
         break;
@@ -1317,7 +1323,7 @@ static bool32 ProcessReceivedChatMessage(u8 *dest, u8 *recvMessage)
         {
             DynamicPlaceholderTextUtil_Reset();
             DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, name);
-            DynamicPlaceholderTextUtil_ExpandPlaceholders(dest, gText_F700LeftChat);
+            DynamicPlaceholderTextUtil_ExpandPlaceholders(dest, sText_F700LeftChat);
             return TRUE;
         }
         break;
@@ -1433,15 +1439,15 @@ void UnionRoomChat_InitializeRegisteredTexts(void)
 {
 #if FREE_UNION_ROOM_CHAT == FALSE
     StringCopy(gSaveBlock1Ptr->registeredTexts[0], gText_Hello);
-    StringCopy(gSaveBlock1Ptr->registeredTexts[1], gText_Pokemon2);
+    StringCopy(gSaveBlock1Ptr->registeredTexts[1], gText_Pokemon);
     StringCopy(gSaveBlock1Ptr->registeredTexts[2], gText_Trade);
     StringCopy(gSaveBlock1Ptr->registeredTexts[3], gText_Battle);
     StringCopy(gSaveBlock1Ptr->registeredTexts[4], gText_Lets);
-    StringCopy(gSaveBlock1Ptr->registeredTexts[5], gText_Ok);
+    StringCopy(gSaveBlock1Ptr->registeredTexts[5], sText_Ok);
     StringCopy(gSaveBlock1Ptr->registeredTexts[6], gText_Sorry);
-    StringCopy(gSaveBlock1Ptr->registeredTexts[7], gText_YaySmileEmoji);
+    StringCopy(gSaveBlock1Ptr->registeredTexts[7], sText_YaySmileEmoji);
     StringCopy(gSaveBlock1Ptr->registeredTexts[8], gText_ThankYou);
-    StringCopy(gSaveBlock1Ptr->registeredTexts[9], gText_ByeBye);
+    StringCopy(gSaveBlock1Ptr->registeredTexts[9], sText_ByeBye);
 #endif //FREE_UNION_ROOM_CHAT
 }
 

@@ -42,10 +42,10 @@ static bool8 IsWordUnlocked(u16 word);
 
 static const u8 *const sEasyChatGroupNamePointers[] =
 {
-    [EC_GROUP_POKEMON]       = COMPOUND_STRING("POKéMON"),
+    [EC_GROUP_POKEMON]       = gText_Pokemon,
     [EC_GROUP_TRAINER]       = COMPOUND_STRING("TRAINER"),
     [EC_GROUP_STATUS]        = COMPOUND_STRING("STATUS"),
-    [EC_GROUP_BATTLE]        = COMPOUND_STRING("BATTLE"),
+    [EC_GROUP_BATTLE]        = gText_Battle,
     [EC_GROUP_GREETINGS]     = COMPOUND_STRING("GREETINGS"),
     [EC_GROUP_PEOPLE]        = COMPOUND_STRING("PEOPLE"),
     [EC_GROUP_VOICES]        = COMPOUND_STRING("VOICES"),

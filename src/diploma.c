@@ -46,17 +46,9 @@ static const u32 sDiplomaGfx[] = INCBIN_U32("graphics/diploma/diploma.4bpp.smol"
 static const u32 sDiplomaTilemap[] = INCBIN_U32("graphics/diploma/diploma.bin.smolTM");
 static const u16 sDiplomaPal[] = INCBIN_U16("graphics/diploma/diploma.gbapal");
 
-// Leftover text from RSE (some of which is also unused there)
-static const u8 sText_Player[] = _("{HIGHLIGHT TRANSPARENT}プレイヤー");
-static const u8 sText_Sama[] = _("{HIGHLIGHT TRANSPARENT}さま");
-static const u8 sText_Hoenn[] = _("{HIGHLIGHT TRANSPARENT}ホウエン");
-static const u8 sText_National[] = _("{HIGHLIGHT TRANSPARENT}ぜんこく");
-static const u8 sText_CertifiesPokedexComplete[] = _("{HIGHLIGHT TRANSPARENT}　　　　　ポケモンずかんを\n"
-                                                     "みごと　かんせい　させた\n"
-                                                     "いだいなこうせきを　たたえ\n"
-                                                     "ここに　しょうめい　します");
-static const u8 sText_GameFreak[] = _("{COLOR DARK_GRAY}{HIGHLIGHT TRANSPARENT}ゲームフリーク");
-static const u8 sText_Empty[] = _("{COLOR DARK_GRAY}{HIGHLIGHT TRANSPARENT}");
+static const u8 sText_Diploma_Player[] = _("PLAYER: {DYNAMIC 0x00}");
+static const u8 sText_Diploma_ThisDocument[] = _("This document is issued in\nrecognition of your magnificent\nachievement - the completion of\nthe {DYNAMIC 0x01} POKéDEX.");
+static const u8 sText_Diploma_GameFreak[] = _("GAME FREAK");
 
 static const ALIGNED(4) u8 sTextColors[3] = {0, 2, 3};
 
@@ -263,16 +255,16 @@ static void DiplomaPrintText(void)
     DynamicPlaceholderTextUtil_Reset();
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, gSaveBlock2Ptr->playerName);
     if (HasAllMons())
-        DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, gText_Diploma_National);
+        DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, gText_National);
     else
-        DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, gText_Diploma_Kanto);
+        DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, gText_Kanto);
     FillWindowPixelBuffer(WIN_TEXT, PIXEL_FILL(0));
-    DynamicPlaceholderTextUtil_ExpandPlaceholders(str, gText_Diploma_Player);
+    DynamicPlaceholderTextUtil_ExpandPlaceholders(str, sText_Diploma_Player);
     width = GetStringWidth(FONT_NORMAL, str, -1);
     AddTextPrinterParameterized3(WIN_TEXT, FONT_NORMAL, 120 - (width / 2), 4, sTextColors, TEXT_SKIP_DRAW, str);
-    DynamicPlaceholderTextUtil_ExpandPlaceholders(str, gText_Diploma_ThisDocument);
+    DynamicPlaceholderTextUtil_ExpandPlaceholders(str, sText_Diploma_ThisDocument);
     width = GetStringWidth(FONT_NORMAL, str, -1);
     AddTextPrinterParameterized3(WIN_TEXT, FONT_NORMAL, 120 - (width / 2), 30, sTextColors, TEXT_SKIP_DRAW, str);
-    AddTextPrinterParameterized3(WIN_TEXT, FONT_NORMAL, 120, 105, sTextColors, 0, gText_Diploma_GameFreak);
+    AddTextPrinterParameterized3(WIN_TEXT, FONT_NORMAL, 120, 105, sTextColors, 0, sText_Diploma_GameFreak);
     PutWindowTilemap(WIN_TEXT);
 }

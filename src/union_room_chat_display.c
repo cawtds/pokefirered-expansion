@@ -123,6 +123,8 @@ static void InitScanlineEffect(void);
 static void FillScanlineEffectWithValue1col(s16 a0);
 static void FillScanlineEffectWithValue2col(s16 a0);
 
+static const u8 sText_Ellipsis[] = _("…");
+
 static const u16 sUnionRoomChat_TextEntry_Pal[] = INCBIN_U16("graphics/union_room_chat/text_entry.gbapal");
 static const u16 gUnionRoomChat_Unused_Pal[] = INCBIN_U16("graphics/union_room_chat/unused.gbapal"); // Loaded, but nothing uses it
 static const u16 sUnionRoomChat_Messages_Pal[] = INCBIN_U16("graphics/union_room_chat/messages.gbapal");
@@ -226,7 +228,7 @@ static const struct SubtaskInfo sSubtaskInfo[] = {
 static const struct MessageWindowInfo sMessageWindowInfo[] = {
 
     [STDMESSAGE_QUIT_CHATTING] = {
-        .text = gText_QuitChatting,
+        .text = COMPOUND_STRING("Quit chatting?"),
         .boxType = 1,
         .x = 0,
         .y = 0,
@@ -236,7 +238,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .widerBox = FALSE
     },
     [STDMESSAGE_REGISTER_WHERE] = {
-        .text = gText_RegisterTextWhere,
+        .text = COMPOUND_STRING("Register text where?"),
         .boxType = 1,
         .x = 0,
         .y = 0,
@@ -246,7 +248,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .widerBox = FALSE
     },
     [STDMESSAGE_REGISTER_HERE] = {
-        .text = gText_RegisterTextHere,
+        .text = COMPOUND_STRING("Register text here?"),
         .boxType = 1,
         .x = 0,
         .y = 0,
@@ -256,7 +258,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .widerBox = FALSE
     },
     [STDMESSAGE_INPUT_TEXT] = {
-        .text = gText_InputText,
+        .text = COMPOUND_STRING("Input text."),
         .boxType = 1,
         .x = 0,
         .y = 0,
@@ -266,7 +268,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .widerBox = FALSE
     },
     [STDMESSAGE_EXITING_CHAT] = {
-        .text = gText_ExitingTheChat,
+        .text = COMPOUND_STRING("Exiting the chat‥"),
         .boxType = 2,
         .x = 0,
         .y = 0,
@@ -276,7 +278,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .widerBox = FALSE
     },
     [STDMESSAGE_LEADER_LEFT] = {
-        .text = gText_LeaderHasLeftEndingChat,
+        .text = COMPOUND_STRING("The LEADER, {DYNAMIC 0x00}, has\nleft, ending the chat."),
         .boxType = 2,
         .x = 0,
         .y = 0,
@@ -286,7 +288,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .widerBox = FALSE
     },
     [STDMESSAGE_ASK_SAVE] = {
-        .text = gText_RegisteredTextChanged_OKtoSave,
+        .text = COMPOUND_STRING("The registered text has been changed.\nIs it okay to save the game?"),
         .boxType = 2,
         .x = 0,
         .y = 0,
@@ -296,7 +298,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .widerBox = TRUE
     },
     [STDMESSAGE_ASK_OVERWRITE] = {
-        .text = gText_RegisteredTextChanged_AlreadySavedFile,
+        .text = COMPOUND_STRING("There is already a saved file.\nIs it okay to overwrite it?"),
         .boxType = 2,
         .x = 0,
         .y = 0,
@@ -306,7 +308,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .widerBox = TRUE
     },
     [STDMESSAGE_SAVING_NO_OFF] = {
-        .text = gText_RegisteredTextChanged_SavingDontTurnOff,
+        .text = COMPOUND_STRING("SAVING‥\nDON'T TURN OFF THE POWER."),
         .boxType = 2,
         .x = 0,
         .y = 0,
@@ -316,7 +318,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .widerBox = TRUE
     },
     [STDMESSAGE_SAVED_THE_GAME] = {
-        .text = gText_RegisteredTextChanged_SavedTheGame,
+        .text = COMPOUND_STRING("{DYNAMIC 0x00} saved the game."),
         .boxType = 2,
         .x = 0,
         .y = 0,
@@ -326,7 +328,7 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
         .widerBox = TRUE
     },
     [STDMESSAGE_WARN_LEADER_LEAVE] = {
-        .text = gText_IfLeaderLeavesChatWillEnd,
+        .text = COMPOUND_STRING("If the LEADER leaves, the chat\nwill end. Is that okay?"),
         .boxType = 2,
         .x = 0,
         .y = 0,
@@ -337,12 +339,10 @@ static const struct MessageWindowInfo sMessageWindowInfo[] = {
     }
 };
 
-static const u8 gText_Ellipsis[] = _("…");
-
 static const struct MenuAction sKeyboardSwapTexts[] = {
-    {gText_Upper},
-    {gText_Lower},
-    {gText_Symbols},
+    {COMPOUND_STRING("UPPER")},
+    {COMPOUND_STRING("lower")},
+    {COMPOUND_STRING("SYMBOLS")},
     {gText_Register},
     {gText_Exit}
 };
@@ -1151,7 +1151,7 @@ static void PrintCurrentKeyboardPage(void)
                 } while (GetStringWidth(FONT_SMALL, str, 0) > 35);
 
                 AddTextPrinterParameterized3(2, FONT_SMALL, left, top, color, TEXT_SKIP_DRAW, str);
-                AddTextPrinterParameterized3(2, FONT_SMALL, left + 35, top, color, TEXT_SKIP_DRAW, gText_Ellipsis);
+                AddTextPrinterParameterized3(2, FONT_SMALL, left + 35, top, color, TEXT_SKIP_DRAW, sText_Ellipsis);
             }
         }
     }

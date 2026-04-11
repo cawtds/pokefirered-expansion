@@ -39,7 +39,6 @@ static const u8 sEasyChatWord_Genius[] = _("GENIUS");
 static const u8 sEasyChatWord_Legend[] = _("LEGEND");
 static const u8 sEasyChatWord_Escape[] = _("ESCAPE");
 static const u8 sEasyChatWord_Aim[] = _("AIM");
-static const u8 sEasyChatWord_Battle[] = _("BATTLE");
 static const u8 sEasyChatWord_Fight[] = _("FIGHT");
 static const u8 sEasyChatWord_Resuscitate[] = _("RESUSCITATE");
 static const u8 sEasyChatWord_Points[] = _("POINTS");
@@ -265,7 +264,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Battle[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_Battle,
+        .text = gText_Battle,
         .alphabeticalOrder = 55,
         .enabled = TRUE
     },

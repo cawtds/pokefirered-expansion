@@ -16,6 +16,9 @@
 #include "constants/heal_locations.h"
 #include "constants/maps.h"
 
+static const u8 sText_PlayerScurriedToCenter[] = _("{PLAYER} scurried to a POKéMON CENTER,\nprotecting the exhausted and fainted\nPOKéMON from further harm‥\p");
+static const u8 sText_PlayerScurriedBackHome[] = _("{PLAYER} scurried back home, protecting\nthe exhausted and fainted POKéMON from\nfurther harm‥\p");
+
 static const u16 sFlashLevelToRadius[] = { 200, 72, 56, 40, 24 };
 const s32 gMaxFlashLevel = ARRAY_COUNT(sFlashLevelToRadius) - 1;
 
@@ -406,14 +409,14 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
             gTasks[taskId].tState = 1;
         break;
     case 1:
-        if (PrintWhiteOutRecoveryMessage(taskId, gText_PlayerScurriedToCenter, 2, 8))
+        if (PrintWhiteOutRecoveryMessage(taskId, sText_PlayerScurriedToCenter, 2, 8))
         {
             ObjectEventTurn(&gObjectEvents[gPlayerAvatar.objectEventId], DIR_NORTH);
             gTasks[taskId].tState++;
         }
         break;
     case 4:
-        if (PrintWhiteOutRecoveryMessage(taskId, gText_PlayerScurriedBackHome, 2, 8))
+        if (PrintWhiteOutRecoveryMessage(taskId, sText_PlayerScurriedBackHome, 2, 8))
         {
             ObjectEventTurn(&gObjectEvents[gPlayerAvatar.objectEventId], DIR_NORTH);
             gTasks[taskId].tState++;

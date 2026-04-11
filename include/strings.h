@@ -10,6 +10,8 @@
 // Exported ROM declarations
 
 extern const u8 gText_None[];
+extern const u8 gText_Sorry[];
+extern const u8 gText_ThankYou[];
 extern const u8 gText_ChooseAPokemon[];
 extern const u8 gText_FromSpace[];
 extern const u8 gText_Lv50[];
@@ -149,12 +151,8 @@ extern const u8 gText_BadEgg[];
 extern const u8 gText_PkmnsXPreventsSwitching[];
 extern const u8 *const gStatNamesTable[];
 
-// diploma
-extern const u8 gText_Diploma_Player[];
-extern const u8 gText_Diploma_ThisDocument[];
-extern const u8 gText_Diploma_GameFreak[];
-extern const u8 gText_Diploma_National[];
-extern const u8 gText_Diploma_Kanto[];
+extern const u8 gText_National[];
+extern const u8 gText_Kanto[];
 
 // slot_machine
 extern const u8 gString_OutOfCoins[];
@@ -241,9 +239,6 @@ extern const u8 gText_Pokedex[];
 extern const u8 gText_Badges[];
 extern const u8 gText_Player[];
 extern const u8 gText_Register[];
-
-// wallclock
-extern const u8 gText_IsThisTheCorrectTime[];
 
 // mystery_gift_menu
 extern const u8 gText_CommunicationError[];
@@ -405,10 +400,6 @@ extern const u8 gText_EmptyString[];
 extern const u8 gText_HatchedFromEgg[];
 extern const u8 gText_NickHatchPrompt[];
 
-// field_screen_effect
-extern const u8 gText_PlayerScurriedToCenter[];
-extern const u8 gText_PlayerScurriedBackHome[];
-
 // bag
 extern const u8 gText_DepositItem[];
 
@@ -420,34 +411,12 @@ extern const u8 gText_CloseBag[];
 extern const u8 gText_CantWriteMail[];
 
 // union_room_chat
-extern const u8 gText_F700JoinedChat[];
-extern const u8 gText_F700LeftChat[];
 extern const u8 gText_Hello[];
-extern const u8 gText_Pokemon2[];
+extern const u8 gText_Pokemon[];
 extern const u8 gText_Trade[];
 extern const u8 gText_Battle[];
 extern const u8 gText_Lets[];
-extern const u8 gText_Ok[];
-extern const u8 gText_Sorry[];
-extern const u8 gText_YaySmileEmoji[];
-extern const u8 gText_ThankYou[];
-extern const u8 gText_ByeBye[];
 
-// union_room_chat_display
-extern const u8 gText_QuitChatting[];
-extern const u8 gText_RegisterTextWhere[];
-extern const u8 gText_RegisterTextHere[];
-extern const u8 gText_InputText[];
-extern const u8 gText_ExitingTheChat[];
-extern const u8 gText_LeaderHasLeftEndingChat[];
-extern const u8 gText_RegisteredTextChanged_OKtoSave[];
-extern const u8 gText_RegisteredTextChanged_AlreadySavedFile[];
-extern const u8 gText_RegisteredTextChanged_SavingDontTurnOff[];
-extern const u8 gText_RegisteredTextChanged_SavedTheGame[];
-extern const u8 gText_IfLeaderLeavesChatWillEnd[];
-extern const u8 gText_Upper[];
-extern const u8 gText_Lower[];
-extern const u8 gText_Symbols[];
 extern const u8 gText_Exit[];
 
 // cable_club
@@ -576,25 +545,6 @@ extern const u8 gText_ClearAllSaveData[];
 extern const u8 gText_ClearingData[];
 
 extern const u8 gText_YourPartysFull[];
-// pokemon_special_anim
-extern const u8 gText_Counting_1[];
-extern const u8 gText_Counting_2And[];
-extern const u8 gText_Poof[];
-extern const u8 gText_WasUsedOn[];
-extern const u8 gText_LevelRoseTo[];
-extern const u8 gText_MonLearnedTMHM[];
-extern const u8 gText_MonForgotMove[];
-extern const u8 gText_And[];
-extern const u8 gText_MachineSet[];
-extern const u8 gText_Huh[];
-extern const u8 gText_LevelUp_MaxHP[];
-extern const u8 gText_LevelUp_Attack[];
-extern const u8 gText_LevelUp_Defense[];
-extern const u8 gText_LevelUp_SpAtk[];
-extern const u8 gText_LevelUp_SpDef[];
-extern const u8 gText_LevelUp_Speed[];
-extern const u8 gText_LevelUp_Minus[];
-extern const u8 gText_LevelUp_Plus[];
 
 //Pokédex text
 extern const u8 gText_CryOf[];
@@ -818,7 +768,6 @@ extern const u8 gText_Summary[];
 extern const u8 gText_Rechoose[];
 extern const u8 gText_Deselect[];
 extern const u8 gText_Rent[];
-extern const u8 gText_Others2[];
 extern const u8 gText_QuitSwapping[];
 extern const u8 gText_AcceptThisPkmn[];
 extern const u8 gText_SelectPkmnToAccept[];
