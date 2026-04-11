@@ -90,7 +90,6 @@ static const u8 sText_ThreeIsland[] = _("THREE ISLAND");
 static const u8 sText_SeviiIslands[] = _("SEVII ISLANDS");
 static const u8 sText_NavelRock[] = _("NAVEL ROCK");
 static const u8 sText_BirthIsland[] = _("BIRTH ISLAND");
-static const u8 sText_Retire[] = _("RETIRE");
 static const u8 sText_Other[] = _("OTHER");
 static const u8 sText_NoThanks[] = _("NO THANKS");
 static const u8 sText_Quit[] = _("QUIT");
@@ -529,27 +528,27 @@ static const struct MenuAction sMultichoiceList_GoOnRecordRestRetire[] =
     {sText_GoOn},
     {gText_Record},
     {gText_Rest},
-    {sText_Retire},
+    {gText_Retire},
 };
 
 static const struct MenuAction sMultichoiceList_GoOnRestRetire[] =
 {
     {sText_GoOn},
     {gText_Rest},
-    {sText_Retire},
+    {gText_Retire},
 };
 
 static const struct MenuAction sMultichoiceList_GoOnRecordRetire[] =
 {
     {sText_GoOn},
     {gText_Record},
-    {sText_Retire},
+    {gText_Retire},
 };
 
 static const struct MenuAction sMultichoiceList_GoOnRetire[] =
 {
     {sText_GoOn},
-    {sText_Retire},
+    {gText_Retire},
 };
 
 static const struct MenuAction sMultichoiceList_BattleArenaRules[] =
@@ -576,7 +575,7 @@ static const struct MenuAction sMultichoiceList_TourneyWithRecord[] =
     {sText_ReadyToStart},
     {gText_Record},
     {gText_Rest},
-    {sText_Retire},
+    {gText_Retire},
 };
 
 static const struct MenuAction sMultichoiceList_TourneyNoRecord[] =
@@ -585,7 +584,7 @@ static const struct MenuAction sMultichoiceList_TourneyNoRecord[] =
     {sText_Tourney_Tree},
     {sText_ReadyToStart},
     {gText_Rest},
-    {sText_Retire},
+    {gText_Retire},
 };
 
 static const struct MenuAction sMultichoiceList_BattlePalaceRules[] =

@@ -115,6 +115,8 @@ static EWRAM_DATA struct {
     u16 scrollOffset;
 } * sPokedudeBagBackup = NULL;
 
+static const u8 sText_TMCaseWillBePutAway[] = _("The TM CASE will be\nput away.");
+
 static EWRAM_DATA void *sTilemapBuffer = NULL;
 static EWRAM_DATA struct ListMenuItem * sListMenuItemsBuffer = NULL;
 static EWRAM_DATA u8 (* sListMenuStringsBuffer)[29] = NULL;
@@ -747,7 +749,7 @@ static void PrintDescription(s32 itemIndex)
     if (itemIndex != LIST_CANCEL)
         str = GetItemDescription(GetBagItemId(POCKET_TM_HM, itemIndex));
     else
-        str = gText_TMCaseWillBePutAway;
+        str = sText_TMCaseWillBePutAway;
 
     FillWindowPixelBuffer(WIN_DESCRIPTION, 0);
     TMCase_Print(WIN_DESCRIPTION, FONT_NORMAL, str, 2, 3, 1, 0, 0, COLOR_LIGHT);

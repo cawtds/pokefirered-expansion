@@ -86,7 +86,6 @@ extern const u8 gText_NoPokemon[];
 extern const u8 gText_Var1CantBeHeld[];
 extern const u8 gText_TMCase[];
 extern const u8 gText_Close[];
-extern const u8 gText_TMCaseWillBePutAway[];
 extern const u8 gText_FontSmall[];
 extern const u8 gText_FontNormal[];
 extern const u8 gText_OhNoICantBuyThat[];
@@ -128,12 +127,10 @@ extern const u8 gText_HelpSystemControls_PickOkCancel[];
 // help_system
 extern const u8 gString_Bill[];
 extern const u8 gString_Someone[];
-extern const u8 gString_Help[];
 extern const u8 gString_HelpSystem_ClearTo8[];
 
 extern const u8 gText_Var1IsSelected[];
 extern const u8 gText_MoveVar1Where[];
-extern const u8 gOtherText_Powder[];
 extern const u8 gText_NoMoreRoomInBag[];
 extern const u8 gText_WithdrawHowMany[];
 extern const u8 gText_WithdrewQuantItem[];
@@ -142,18 +139,6 @@ extern const u8 gText_Withdraw[];
 extern const u8 gText_ReturnToPC[];
 
 extern const u8 gText_OakForbidsUseOfItemHere[];
-extern const u8 gText_CantDismountBike[];
-extern const u8 gText_CoinCase[];
-extern const u8 gText_PlayerUsedVar2[];
-extern const u8 gText_RepelEffectsLingered[];
-extern const u8 gText_LureEffectsLingered[];
-extern const u8 gText_UsedVar2WildLured[];
-extern const u8 gText_UsedVar2WildRepelled[];
-extern const u8 gText_BoxFull[];
-extern const u8 gText_PowderQty[];
-extern const u8 gText_PlayedPokeFluteCatchy[];
-extern const u8 gText_PlayedPokeFlute[];
-extern const u8 gText_PokeFluteAwakenedMon[];
 extern const u8 gText_WontHaveEffect[];
 extern const u8 gText_Berry[];
 extern const u8 gText_Ghost[];
@@ -297,17 +282,10 @@ extern const u8 gText_CantSwitchWithAlly[];
 extern const u8 gText_EggCantBattle[];
 
 // berry_pouch
-extern const u8 gText_Var1CantBeHeldHere[];
 extern const u8 gText_TossHowManyVar1s[];
 extern const u8 gText_ThrewAwayVar2Var1s[];
 extern const u8 gText_ConfirmTossItems[];
 extern const u8 gText_BerryPouch[];
-extern const u8 gText_TheBerryPouchWillBePutAway[];
-
-// itemfinder
-extern const u8 gText_ItemfinderResponding[];
-extern const u8 gText_ItemfinderShakingWildly[];
-extern const u8 gText_NopeTheresNoResponse[];
 
 // link
 extern const u8 gText_CommErrorEllipsis[];
@@ -347,10 +325,7 @@ extern const u8 gText_MailReturnedToBagMessageErased[];
 extern const u8 gText_Bag[];
 extern const u8 gText_MenuPlayer[];
 extern const u8 gText_MenuSave[];
-extern const u8 gText_MenuOption[];
-extern const u8 gText_MenuRetire[];
-extern const u8 gText_MenuSafariStats[];
-extern const u8 gText_MenuDexNav[];
+extern const u8 gText_Retire[];
 extern const u8 gText_Floor1[];
 extern const u8 gText_Floor2[];
 extern const u8 gText_Floor3[];
@@ -363,12 +338,6 @@ extern const u8 gText_SafariBallStock[];
 extern const u8 gText_BattlePyramidFloor[];
 
 extern const u8 gText_SavingDontTurnOffThePower2[];
-extern const u8 gText_MenuTime[];
-extern const u8 gText_MenuDay[];
-extern const u8 gText_SeasonSpring[];
-extern const u8 gText_SeasonSummer[];
-extern const u8 gText_SeasonAutumn[];
-extern const u8 gText_SeasonWinter[];
 
 // mail
 extern const u8 gText_From[];
@@ -482,33 +451,13 @@ extern const u8 gText_WhichMoveShouldBeForgotten[];
 extern const u8 gText_TeachMoveQues[];
 extern const u8 gText_GiveUpTryingToTeachNewMove[];
 
-// pokemon_size_record
 extern const u8 gText_DecimalPoint[];
-
-// option menu
-extern const u8 gText_TextSpeed[];
-extern const u8 gText_BattleScene[];
-extern const u8 gText_BattleStyle[];
-extern const u8 gText_Sound[];
-extern const u8 gText_ButtonMode[];
-extern const u8 gText_Frame[];
-extern const u8 gText_TextSpeedSlow[];
-extern const u8 gText_TextSpeedMid[];
-extern const u8 gText_TextSpeedFast[];
-extern const u8 gText_BattleSceneOn[];
-extern const u8 gText_BattleSceneOff[];
-extern const u8 gText_BattleStyleShift[];
-extern const u8 gText_BattleStyleSet[];
-extern const u8 gText_SoundMono[];
-extern const u8 gText_SoundStereo[];
-extern const u8 gText_ButtonTypeHelp[];
-extern const u8 gText_ButtonTypeLR[];
-extern const u8 gText_ButtonTypeLEqualsA[];
 extern const u8 gText_Option[];
-extern const u8 gText_FrameType[];
-extern const u8 gText_FrameTypeNumber[];
-extern const u8 gText_ButtonTypeNormal[];
-extern const u8 gText_PickSwitchCancel[];
+extern const u8 gText_On[];
+extern const u8 gText_Off[];
+extern const u8 gText_Fast[];
+extern const u8 gText_Help[];
+extern const u8 gText_Type[];
 
 // evolution_scene
 extern const u8 gText_PkmnIsEvolving[];

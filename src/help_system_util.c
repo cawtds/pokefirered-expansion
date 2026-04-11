@@ -95,7 +95,7 @@ u8 RunHelpSystemCallback(void)
         HS_BufferFillMapWithTile1FF();
         HelpSystem_FillPanel3();
         HelpSystem_FillPanel2();
-        HelpSystem_PrintTextInTopLeftCorner(gString_Help);
+        HelpSystem_PrintTextInTopLeftCorner(gText_Help);
         HS_ShowOrHideWordHELPinTopLeft(1);
         if (HelpSystem_UpdateHasntSeenIntro() == TRUE)
             HelpSystemSubroutine_PrintWelcomeMessage(&gHelpSystemListMenu, gHelpSystemListMenuItems);

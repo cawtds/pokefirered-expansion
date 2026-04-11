@@ -12,6 +12,8 @@
 
 #define MAX_BERRY_POWDER 99999
 
+static const u8 sText_Powder[] = _("POWDER");
+
 static EWRAM_DATA u8 sBerryPowderVendorWindowId = 0;
 
 u32 DecryptBerryPowder(u32 *powder)
@@ -83,7 +85,7 @@ static void PrintBerryPowderAmount(u8 windowId, u32 amount, u8 x, u8 y, u8 speed
 static void DrawPlayerPowderAmount(u8 windowId, u16 baseBlock, u8 palette, u32 amount)
 {
     DrawStdFrameWithCustomTileAndPalette(windowId, FALSE, baseBlock, palette);
-    AddTextPrinterParameterized(windowId, FONT_SMALL, gOtherText_Powder, 0, 0, -1, NULL);
+    AddTextPrinterParameterized(windowId, FONT_SMALL, sText_Powder, 0, 0, -1, NULL);
     PrintBerryPowderAmount(windowId, amount, 39, 12, 0);
 }
 

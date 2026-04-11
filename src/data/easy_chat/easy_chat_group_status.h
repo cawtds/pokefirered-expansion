@@ -49,7 +49,6 @@ static const u8 sEasyChatWord_SandVeil[] = _("SAND VEIL");
 static const u8 sEasyChatWord_KeenEye[] = _("KEEN EYE");
 static const u8 sEasyChatWord_InnerFocus[] = _("INNER FOCUS");
 static const u8 sEasyChatWord_Static[] = _("STATIC");
-static const u8 sEasyChatWord_Type[] = _("TYPE");
 static const u8 sEasyChatWord_Tough[] = _("TOUGH");
 static const u8 sEasyChatWord_Toughness[] = _("TOUGHNESS");
 static const u8 sEasyChatWord_ShedSkin[] = _("SHED SKIN");
@@ -361,7 +360,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Status[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_Type,
+        .text = gText_Type,
         .alphabeticalOrder = 85,
         .enabled = TRUE
     },

@@ -36,6 +36,10 @@ static void SpriteCallback_DestroyStar(struct Sprite *sprite);
 
 #define ARROW_TILE_TAG 2000
 
+static const u8 sText_ItemfinderResponding[] = _("Huh?\nThe ITEMFINDER's responding!\pThere's an item buried around here!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_ItemfinderShakingWildly[] = _("Oh!\nThe ITEMFINDER's shaking wildly!\pThere's an item buried underfoot!\p‥ ‥ ‥ ‥ ‥ ‥{PAUSE_UNTIL_PRESS}");
+static const u8 sText_NopeTheresNoResponse[] = _("‥ ‥ ‥ ‥Nope!\nThere's no response.{PAUSE_UNTIL_PRESS}");
+
 static const u16 sArrowAndStarSpriteTiles[] = INCBIN_U16("graphics/itemfinder/spr_tiles.4bpp");
 
 static const union AnimCmd sArrowAnim0[] = {
@@ -155,7 +159,7 @@ void ItemUseOnFieldCB_Itemfinder(u8 taskId)
         }
         else
         {
-            DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_NopeTheresNoResponse, Task_NoResponse_CleanUp);
+            DisplayItemMessageOnField(taskId, FONT_NORMAL, sText_NopeTheresNoResponse, Task_NoResponse_CleanUp);
         }
     }
 }
@@ -497,7 +501,7 @@ u8 GetPlayerDirectionTowardsHiddenItem(s16 itemX, s16 itemY)
 
 static void Task_ItemfinderResponsePrintMessage(u8 taskId)
 {
-    DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_ItemfinderResponding, Task_ItemfinderResponseCleanUp);
+    DisplayItemMessageOnField(taskId, FONT_NORMAL, sText_ItemfinderResponding, Task_ItemfinderResponseCleanUp);
 }
 
 static void Task_ItemfinderResponseCleanUp(u8 taskId)
@@ -511,7 +515,7 @@ static void Task_ItemfinderResponseCleanUp(u8 taskId)
 
 static void Task_ItemfinderUnderfootPrintMessage(u8 taskId)
 {
-    DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_ItemfinderShakingWildly, Task_ItemfinderUnderfootDigUpItem);
+    DisplayItemMessageOnField(taskId, FONT_NORMAL, sText_ItemfinderShakingWildly, Task_ItemfinderUnderfootDigUpItem);
 }
 
 static void Task_ItemfinderUnderfootDigUpItem(u8 taskId)

@@ -67,6 +67,8 @@ static void DrawOptionMenuBg(void);
 static void LoadOptionMenuItemNames(void);
 static void UpdateSettingSelectionDisplay(u16 selection);
 
+static const u8 sText_PickSwitchCancel[] = _("{DPAD_UPDOWN}PICK {DPAD_LEFTRIGHT}SWITCH {A_BUTTON}{B_BUTTON}CANCEL");
+
 // Data Definitions
 static const struct WindowTemplate sOptionMenuWinTemplates[] =
 {
@@ -136,45 +138,45 @@ static const u16 sOptionMenuItemCounts[MENUITEM_COUNT] = {3, 2, 2, 2, 3, 10, 0};
 
 static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
 {
-    [MENUITEM_TEXTSPEED]   = gText_TextSpeed,
-    [MENUITEM_BATTLESCENE] = gText_BattleScene,
-    [MENUITEM_BATTLESTYLE] = gText_BattleStyle,
-    [MENUITEM_SOUND]       = gText_Sound,
-    [MENUITEM_BUTTONMODE]  = gText_ButtonMode,
-    [MENUITEM_FRAMETYPE]   = gText_Frame,
+    [MENUITEM_TEXTSPEED]   = COMPOUND_STRING("TEXT SPEED"),
+    [MENUITEM_BATTLESCENE] = COMPOUND_STRING("BATTLE SCENE"),
+    [MENUITEM_BATTLESTYLE] = COMPOUND_STRING("BATTLE STYLE"),
+    [MENUITEM_SOUND]       = COMPOUND_STRING("SOUND"),
+    [MENUITEM_BUTTONMODE]  = COMPOUND_STRING("BUTTON MODE"),
+    [MENUITEM_FRAMETYPE]   = COMPOUND_STRING("FRAME"),
     [MENUITEM_CANCEL]      = gText_Cancel,
 };
 
 static const u8 *const sTextSpeedOptions[] =
 {
-    gText_TextSpeedSlow,
-    gText_TextSpeedMid,
-    gText_TextSpeedFast
+    COMPOUND_STRING("SLOW"),
+    COMPOUND_STRING("MID"),
+    gText_Fast,
 };
 
 static const u8 *const sBattleSceneOptions[] =
 {
-    gText_BattleSceneOn,
-    gText_BattleSceneOff
+    gText_On,
+    gText_Off,
 };
 
 static const u8 *const sBattleStyleOptions[] =
 {
-    gText_BattleStyleShift,
-    gText_BattleStyleSet
+    gText_Shift,
+    COMPOUND_STRING("SET"),
 };
 
 static const u8 *const sSoundOptions[] =
 {
-    gText_SoundMono,
-    gText_SoundStereo
+    COMPOUND_STRING("MONO"),
+    COMPOUND_STRING("STEREO"),
 };
 
 static const u8 *const sButtonTypeOptions[] =
 {
-    gText_ButtonTypeHelp,
-	gText_ButtonTypeLR,
-	gText_ButtonTypeLEqualsA
+    gText_Help,
+	COMPOUND_STRING("LR"),
+	COMPOUND_STRING("L=A"),
 };
 
 static const u8 sOptionMenuPickSwitchCancelTextColor[] = {TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY};
@@ -317,9 +319,9 @@ static void InitOptionMenuBg(void)
 static void OptionMenu_PickSwitchCancel(void)
 {
     s32 x;
-    x = 0xE4 - GetStringWidth(FONT_SMALL, gText_PickSwitchCancel, 0);
+    x = 0xE4 - GetStringWidth(FONT_SMALL, sText_PickSwitchCancel, 0);
     FillWindowPixelBuffer(2, PIXEL_FILL(15));
-    AddTextPrinterParameterized3(2, FONT_SMALL, x, 0, sOptionMenuPickSwitchCancelTextColor, 0, gText_PickSwitchCancel);
+    AddTextPrinterParameterized3(2, FONT_SMALL, x, 0, sOptionMenuPickSwitchCancelTextColor, 0, sText_PickSwitchCancel);
     PutWindowTilemap(2);
     CopyWindowToVram(2, COPYWIN_FULL);
 }
@@ -494,7 +496,7 @@ static void BufferOptionMenuString(u8 selection)
         AddTextPrinterParameterized3(1, FONT_NORMAL, x, y, dst, -1, sButtonTypeOptions[sOptionMenuPtr->option[selection]]);
         break;
     case MENUITEM_FRAMETYPE:
-        StringCopy(str, gText_FrameType);
+        StringCopy(str, gText_Type);
         ConvertIntToDecimalStringN(buf, sOptionMenuPtr->option[selection] + 1, 1, 2);
         StringAppendN(str, buf, 3);
         AddTextPrinterParameterized3(1, FONT_NORMAL, x, y, dst, -1, str);

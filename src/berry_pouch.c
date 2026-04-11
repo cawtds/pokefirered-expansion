@@ -134,6 +134,9 @@ static void CreateBerryPouchSprite(void);
 static void StartBerryPouchSpriteWobbleAnim(void);
 static void SpriteCB_BerryPouchWaitWobbleAnim(struct Sprite *sprite);
 
+static const u8 sText_Var1CantBeHeldHere[] = _("The {STR_VAR_1} can't be held\nhere.");
+static const u8 sText_TheBerryPouchWillBePutAway[] = _("The BERRY POUCH will be\nput away.");
+
 static const struct BgTemplate sBgTemplates[] =
 {
     {
@@ -813,7 +816,7 @@ static void PrintSelectedBerryDescription(s32 itemIdx)
     if (itemIdx != sResources->listMenuNumItems)
         str = GetItemDescription(GetBagItemId(POCKET_BERRIES, itemIdx));
     else
-        str = gText_TheBerryPouchWillBePutAway;
+        str = sText_TheBerryPouchWillBePutAway;
     FillWindowPixelBuffer(1, PIXEL_FILL(0));
     BerryPouchPrint(1, FONT_NORMAL, str, 0, 2, 2, 0, 0, 0);
 }
@@ -1339,7 +1342,7 @@ static void Task_ContextMenu_FromPartyGiveMenu(u8 taskId)
     if (!IsHoldingItemAllowed(gSpecialVar_ItemId))
     {
         CopyItemName(gSpecialVar_ItemId, gStringVar1);
-        StringExpandPlaceholders(gStringVar4, gText_Var1CantBeHeldHere);
+        StringExpandPlaceholders(gStringVar4, sText_Var1CantBeHeldHere);
         DisplayItemMessageInBerryPouch(taskId, FONT_NORMAL, gStringVar4, Task_WaitButtonBeforeDialogueWindowDestruction);
     }
     else
