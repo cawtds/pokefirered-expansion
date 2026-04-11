@@ -1,7 +1,6 @@
 
 static const u8 sEasyChatWord_IChooseYou[] = _("I CHOOSE YOU");
 static const u8 sEasyChatWord_Gotcha[] = _("GOTCHA");
-static const u8 sEasyChatWord_Trade[] = _("TRADE");
 static const u8 sEasyChatWord_Sapphire[] = _("SAPPHIRE");
 static const u8 sEasyChatWord_Evolve[] = _("EVOLVE");
 static const u8 sEasyChatWord_Encyclopedia[] = _("ENCYCLOPEDIA");
@@ -36,7 +35,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_Trainer[] = {
         .enabled = TRUE
     },
     {
-        .text = sEasyChatWord_Trade,
+        .text = gText_Trade,
         .alphabeticalOrder = 8,
         .enabled = TRUE
     },

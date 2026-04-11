@@ -1086,8 +1086,8 @@ static struct
     TaskFunc func;
 } const sCursorOptions[] =
 {
-    [CURSOR_OPTION_SUMMARY]         = {gText_Summary5,                     CursorCB_Summary             },
-    [CURSOR_OPTION_SWITCH]          = {gText_Switch2,                      CursorCB_Switch              },
+    [CURSOR_OPTION_SUMMARY]         = {gText_Summary,                      CursorCB_Summary             },
+    [CURSOR_OPTION_SWITCH]          = {gText_Switch,                       CursorCB_Switch              },
     [CURSOR_OPTION_CANCEL1]         = {gText_Cancel,                       CursorCB_Cancel1             },
     [CURSOR_OPTION_ITEM]            = {gText_Item,                         CursorCB_Item                },
     [CURSOR_OPTION_GIVE]            = {gText_Give,                         CursorCB_Give                },
@@ -1097,13 +1097,13 @@ static struct
     [CURSOR_OPTION_READ]            = {gText_Read,                         CursorCB_Read                },
     [CURSOR_OPTION_CANCEL2]         = {gText_Cancel,                       CursorCB_Cancel2             },
     [CURSOR_OPTION_SHIFT]           = {gText_Shift,                        CursorCB_SendMon             },
-    [CURSOR_OPTION_SEND_OUT]        = {gText_SendOut,                      CursorCB_SendMon             },
+    [CURSOR_OPTION_SEND_OUT]        = {COMPOUND_STRING("SEND OUT"),        CursorCB_SendMon             },
     [CURSOR_OPTION_ENTER]           = {gText_Enter,                        CursorCB_Enter               },
     [CURSOR_OPTION_NO_ENTRY]        = {gText_NoEntry,                      CursorCB_NoEntry             },
     [CURSOR_OPTION_STORE]           = {gText_Store,                        CursorCB_Store               },
     [CURSOR_OPTION_REGISTER]        = {gText_Register,                     CursorCB_Register            },
-    [CURSOR_OPTION_TRADE1]          = {gText_Trade4,                       CursorCB_Trade1              },
-    [CURSOR_OPTION_TRADE2]          = {gText_Trade4,                       CursorCB_Trade2              },
+    [CURSOR_OPTION_TRADE1]          = {gText_Trade,                        CursorCB_Trade1              },
+    [CURSOR_OPTION_TRADE2]          = {gText_Trade,                        CursorCB_Trade2              },
     [MENU_TOSS]                     = {gText_Toss,                         CursorCb_Toss                },
     [MENU_LEVEL_UP_MOVES]           = {COMPOUND_STRING("LEVEL MOVES"),     CursorCb_ChangeLevelUpMoves  },
 	[MENU_EGG_MOVES]                = {COMPOUND_STRING("EGG MOVES"),       CursorCb_ChangeEggMoves      },
