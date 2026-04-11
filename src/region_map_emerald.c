@@ -536,21 +536,6 @@ static const u8 sMapHealLocations[][3] =
     [MAPSEC_EMBER_SPA] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
 };
 
-// static const u8 *const sEverGrandeCityNames[] =
-// {
-//     gText_PokemonLeague,
-//     gText_PokemonCenter
-// };
-
-// static const struct MultiNameFlyDest sMultiNameFlyDestinations[] =
-// {
-//     {
-//         .name = sEverGrandeCityNames,
-//         .mapSecId = MAPSEC_EVER_GRANDE_CITY,
-//         .flag = FLAG_LANDMARK_POKEMON_LEAGUE
-//     }
-// };
-
 static const struct BgTemplate sFlyMapBgTemplates[] =
 {
     {

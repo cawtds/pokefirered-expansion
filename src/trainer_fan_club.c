@@ -36,6 +36,9 @@ static void UpdateTrainerFansAfterLinkBattle(struct TrainerFanClub *);
 static bool8 DidPlayerGetFirstFans(struct TrainerFanClub * );
 static void SetPlayerGotFirstFans(struct TrainerFanClub *);
 
+static const u8 sText_LtSurge[] = _("LT. SURGE");
+static const u8 sText_Koga[] = _("KOGA");
+
 void ResetTrainerFanClub(void)
 {
     VarSet(VAR_FANCLUB_FAN_COUNTER, 0);
@@ -291,10 +294,10 @@ static void BufferFanClubTrainerName(struct LinkBattleRecords *linkRecords, u8 w
             StringCopy(gStringVar1, gSaveBlock1Ptr->rivalName);
             break;
         case 1:
-            StringCopy(gStringVar1, gText_LtSurge);
+            StringCopy(gStringVar1, sText_LtSurge);
             break;
         case 2:
-            StringCopy(gStringVar1, gText_Koga);
+            StringCopy(gStringVar1, sText_Koga);
             break;
         default:
             StringCopy(gStringVar1, gSaveBlock1Ptr->rivalName);
@@ -327,10 +330,10 @@ static void BufferFanClubTrainerName(u8 whichLinkTrainer, u8 whichNPCTrainer)
         StringCopy(gStringVar1, gSaveBlock1Ptr->rivalName);
         break;
     case 1:
-        StringCopy(gStringVar1, gText_LtSurge);
+        StringCopy(gStringVar1, sText_LtSurge);
         break;
     case 2:
-        StringCopy(gStringVar1, gText_Koga);
+        StringCopy(gStringVar1, sText_Koga);
         break;
     default:
         StringCopy(gStringVar1, gSaveBlock1Ptr->rivalName);

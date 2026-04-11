@@ -473,10 +473,10 @@ static const struct MenuAction sMultichoiceList_JoinOrLead[] = {
 };
 
 static const struct MenuAction sMultichoiceList_TrainerTowerMode[] = {
-    { gOtherText_Single },
-    { gOtherText_Double },
-    { gOtherText_Knockout },
-    { gOtherText_Mixed },
+    { gText_Single },
+    { gText_Double },
+    { gText_Knockout },
+    { gText_Mixed },
     { gText_Exit }
 };
 
@@ -751,8 +751,8 @@ const u8 *const gStdStrings[] = {
     [STDSTRING_POKEBALLS_POCKET] = COMPOUND_STRING("POKé BALLS POCKET"),
     [STDSTRING_TM_CASE]          = gText_TMCase,
     [STDSTRING_BERRY_POUCH]      = gText_BerryPouch,
-    [STDSTRING_SINGLE]           = gOtherText_Single,
-    [STDSTRING_DOUBLE]           = gOtherText_Double,
+    [STDSTRING_SINGLE]           = gText_Single,
+    [STDSTRING_DOUBLE]           = gText_Double,
     [STDSTRING_MULTI]            = COMPOUND_STRING("MULTI"),
     [STDSTRING_MULTI_LINK]       = sText_MultiLink,
     [STDSTRING_BATTLE_DOME]      = gText_BattleDome,

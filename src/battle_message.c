@@ -1519,10 +1519,10 @@ const u16 gDoubleBattleRecallStrings[1 << (MAX_BATTLERS_COUNT / 2)] =
 
 const u8 *const gTrainerTowerChallengeTypeTexts[NUM_TOWER_CHALLENGE_TYPES] =
 {
-    gOtherText_Single,
-    gOtherText_Double,
-    gOtherText_Knockout,
-    gOtherText_Mixed
+    gText_Single,
+    gText_Double,
+    gText_Knockout,
+    gText_Mixed
 };
 
 const u8 *const gRoundsStringTable[DOME_ROUNDS_COUNT] =

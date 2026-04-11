@@ -104,6 +104,10 @@ static u8 ItemPc_GetOrCreateSubwindow(u8 idx);
 static void ItemPc_DestroySubwindow(u8 idx);
 static void ItemPc_PrintOnWindow5WithContinueTask(u8 taskId, const u8 * str, TaskFunc taskFunc);
 
+static const u8 sText_WithdrewQuantItem[] = _("Withdrew {STR_VAR_2}\n{STR_VAR_1}(s).");
+static const u8 sText_WithdrawItem[] = _("WITHDRAW\nITEM");
+static const u8 sText_ReturnToPC[] = _("Return to the PC.");
+
 static const struct BgTemplate sBgTemplates[2] = {
     {
         .bg = 0,
@@ -570,7 +574,7 @@ static void ItemPc_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *
         else
         {
             AddPcItemIconSprite(ITEMS_COUNT, sStateDataPtr->itemMenuIconSlot);
-            desc = gText_ReturnToPC;
+            desc = sText_ReturnToPC;
         }
         RemovePcItemIconSprite(itemId, sStateDataPtr->itemMenuIconSlot ^ 1);
         sStateDataPtr->itemMenuIconSlot ^= 1;
@@ -618,7 +622,7 @@ static void ItemPc_PrintOrRemoveCursorAt(u8 y, u8 colorIdx)
 
 static void ItemPc_PrintWithdrawItem(void)
 {
-    ItemPc_AddTextPrinterParameterized(2, FONT_SMALL, gText_WithdrawItem, 0, 1, 0, 1, 0, 0);
+    ItemPc_AddTextPrinterParameterized(2, FONT_SMALL, sText_WithdrawItem, 0, 1, 0, 1, 0, 0);
 }
 
 static void ItemPc_PlaceTopMenuScrollIndicatorArrows(void)
@@ -945,7 +949,7 @@ static void ItemPc_DoWithdraw(u8 taskId)
         ItemUse_SetQuestLogEvent(QL_EVENT_WITHDREW_ITEM_PC, NULL, itemId, 0xFFFF);
         CopyItemName(itemId, gStringVar1);
         ConvertIntToDecimalStringN(gStringVar2, tItemCount, STR_CONV_MODE_LEFT_ALIGN, MAX_ITEM_DIGITS);
-        StringExpandPlaceholders(gStringVar4, gText_WithdrewQuantItem);
+        StringExpandPlaceholders(gStringVar4, sText_WithdrewQuantItem);
         windowId = ItemPc_GetOrCreateSubwindow(2);
         AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, 0, 2, 0, NULL);
         gTasks[taskId].func = Task_ItemPcWaitButtonAndFinishWithdrawMultiple;

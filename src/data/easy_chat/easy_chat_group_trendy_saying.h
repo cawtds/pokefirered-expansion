@@ -21,7 +21,6 @@ static const u8 sEasyChatWord_Upbeat[] = _("UPBEAT");
 static const u8 sEasyChatWord_Modern[] = _("MODERN");
 static const u8 sEasyChatWord_SmellYa[] = _("SMELL YA");
 static const u8 sEasyChatWord_Bang[] = _("BANG");
-static const u8 sEasyChatWord_Knockout[] = _("KNOCKOUT");
 static const u8 sEasyChatWord_Hassle[] = _("HASSLE");
 static const u8 sEasyChatWord_Winner[] = _("WINNER");
 static const u8 sEasyChatWord_Fever[] = _("FEVER");
@@ -149,7 +148,7 @@ static const struct EasyChatWordInfo sEasyChatGroup_TrendySaying[] = {
         .enabled = FALSE
     },
     {
-        .text = sEasyChatWord_Knockout,
+        .text = gText_Knockout,
         .alphabeticalOrder = 18,
         .enabled = FALSE
     },

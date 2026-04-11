@@ -1525,7 +1525,7 @@ static void HandleChooseMonCancel(u8 taskId, s8 *slotPtr)
 static void DisplayCancelChooseMonYesNo(u8 taskId)
 {
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
-    StringExpandPlaceholders(gStringVar4, gText_CancelBattle);
+    StringExpandPlaceholders(gStringVar4, sText_CancelBattle);
     DisplayPartyMenuMessage(gStringVar4, TRUE);
     gTasks[taskId].func = Task_CancelChooseMonYesNo;
 }
@@ -2203,7 +2203,7 @@ static void Task_FirstBattleEnterParty_StartPrintMsg2(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
-    PartyMenu_Oak_PrintText(data[0], gText_OakThisIsListOfPokemon);
+    PartyMenu_Oak_PrintText(data[0], sText_OakThisIsListOfPokemon);
     gTasks[taskId].func = Task_FirstBattleEnterParty_RunPrinterMsg2;
 }
 
@@ -2862,7 +2862,7 @@ static bool8 FirstBattleEnterParty_CreateWindowAndMsg1Printer(void)
 
     LoadMessageBoxGfx(windowId, 0x4F, BG_PLTT_ID(14));
     DrawDialogFrameWithCustomTileAndPalette(windowId, 1, 0x4F, 0xE);
-    PartyMenu_Oak_PrintText(windowId, gText_OakImportantToGetToKnowPokemonThroughly);
+    PartyMenu_Oak_PrintText(windowId, sText_OakImportantToGetToKnowPokemonThroughly);
     return windowId;
 }
 
@@ -4345,7 +4345,7 @@ static void CursorCB_FieldMove(u8 taskId)
             case FIELD_MOVE_DIG:
                 mapHeader = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->escapeWarp.mapGroup, gSaveBlock1Ptr->escapeWarp.mapNum);
                 GetMapNameGeneric(gStringVar1, mapHeader->regionMapSectionId);
-                StringExpandPlaceholders(gStringVar4, gText_EscapeFromHereAndReturnTo);
+                StringExpandPlaceholders(gStringVar4, sText_EscapeFromHereAndReturnTo);
                 DisplayFieldMoveExitAreaMessage(taskId);
                 sPartyMenuInternal->data[0] = fieldMove;
                 break;

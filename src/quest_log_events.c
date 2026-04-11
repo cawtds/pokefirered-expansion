@@ -43,6 +43,8 @@ static EWRAM_DATA bool8 sNewlyEnteredMap = FALSE;
 static EWRAM_DATA u8 sLastDepartedLocation = 0;
 static EWRAM_DATA bool8 sPlayedTheSlots = FALSE;
 
+static const u8 sText_PokemonCenter[] = _("POKéMON CENTER");
+
 static bool8 InQuestLogDisabledLocation(void);
 static bool8 ShouldRegisterEvent_HandlePartyActions(u16, const u16 *);
 static bool8 ShouldRegisterEvent_HandleBeatStoryTrainer(u16, const u16 *);
@@ -2071,7 +2073,7 @@ static const u16 *LoadEvent_UsedFieldMove(const u16 *eventData)
         if (r5[1] == MAPSEC_PALLET_TOWN)
             StringCopy(gStringVar3, gText_QuestLog_Home);
         else
-            StringCopy(gStringVar3, gText_PokemonCenter);
+            StringCopy(gStringVar3, sText_PokemonCenter);
     }
 
     StringExpandPlaceholders(gStringVar4, gFieldMovesInfo[r5[0]].questLogText);

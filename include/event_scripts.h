@@ -58,9 +58,6 @@ extern const u8 EventScript_FollowerFaceUp[];
 extern const u8 EventScript_FollowerFaceResult[];
 extern const u8 EnterPokeballMovement[];
 
-extern const u8 gText_LtSurge[];
-extern const u8 gText_Koga[];
-extern const u8 gText_PokemonCenter[];
 // vs_seeker
 extern const u8 VSSeeker_Text_BatteryNotChargedNeedXSteps[];
 extern const u8 VSSeeker_Text_NoTrainersWithinRange[];

@@ -128,6 +128,8 @@ static const u8 sText_BigGuy[] = _("Big guy");
 static const u8 sText_BigGirl[] = _("Big girl");
 static const u8 sText_Son[] = _("son");
 static const u8 sText_Daughter[] = _("daughter");
+static const u8 sText_NowOn[] = _("Now on:");
+static const u8 sText_BP[] = _("BP");
 
 static u8 *const sStringVarPtrs[] = {
     gStringVar1,
@@ -1317,7 +1319,7 @@ void DrawElevatorCurrentFloorWindow(void)
     sTutorMoveAndElevatorWindowId = AddWindow(&sElevatorCurrentFloorWindowTemplate);
     LoadStdWindowGfx(sTutorMoveAndElevatorWindowId, 0x21D, BG_PLTT_ID(13));
     DrawStdFrameWithCustomTileAndPalette(sTutorMoveAndElevatorWindowId, FALSE, 0x21D, 13);
-    AddTextPrinterParameterized(sTutorMoveAndElevatorWindowId, FONT_NORMAL, gText_NowOn, 0, 2, 0xFF, NULL);
+    AddTextPrinterParameterized(sTutorMoveAndElevatorWindowId, FONT_NORMAL, sText_NowOn, 0, 2, 0xFF, NULL);
     floorname = sFloorNamePointers[gSpecialVar_0x8005];
     strwidth = GetStringWidth(FONT_NORMAL, floorname, 0);
     AddTextPrinterParameterized(sTutorMoveAndElevatorWindowId, FONT_NORMAL, floorname, 56 - strwidth, 16, 0xFF, NULL);
@@ -3537,7 +3539,7 @@ void UpdateBattlePointsWindow(void)
 {
     u8 string[32];
     u32 x;
-    StringCopy(ConvertIntToDecimalStringN(string, gSaveBlock2Ptr->frontier.battlePoints, STR_CONV_MODE_RIGHT_ALIGN, 4), gText_BP);
+    StringCopy(ConvertIntToDecimalStringN(string, gSaveBlock2Ptr->frontier.battlePoints, STR_CONV_MODE_RIGHT_ALIGN, 4), sText_BP);
     x = GetStringRightAlignXOffset(FONT_NORMAL, string, 48);
     AddTextPrinterParameterized(sBattlePointsWindowId, FONT_NORMAL, string, x, 1, 0, NULL);
 }

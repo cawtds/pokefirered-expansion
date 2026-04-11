@@ -16,8 +16,6 @@ extern const u8 gText_Lv50[];
 extern const u8 gText_OpenLevel[];
 extern const u8 gText_Mom[];
 extern const u8 gText_Dad[];
-extern const u8 gText_Single[];
-extern const u8 gText_Double[];
 extern const u8 gText_Spicy2[];
 extern const u8 gText_Dry2[];
 extern const u8 gText_Sweet2[];
@@ -134,10 +132,7 @@ extern const u8 gText_Var1IsSelected[];
 extern const u8 gText_MoveVar1Where[];
 extern const u8 gText_NoMoreRoomInBag[];
 extern const u8 gText_WithdrawHowMany[];
-extern const u8 gText_WithdrewQuantItem[];
-extern const u8 gText_WithdrawItem[];
 extern const u8 gText_Withdraw[];
-extern const u8 gText_ReturnToPC[];
 
 extern const u8 gText_OakForbidsUseOfItemHere[];
 extern const u8 gText_WontHaveEffect[];
@@ -209,8 +204,6 @@ extern const u8 gText_Mail[];
 extern const u8 gText_Read[];
 extern const u8 gText_Shift[];
 extern const u8 gText_Store[];
-extern const u8 gText_CancelBattle[];
-extern const u8 gText_OakThisIsListOfPokemon[];
 extern const u8 gText_OK[];
 
 // Battle pyramid menu texts
@@ -220,8 +213,6 @@ extern const u8 gText_BattlePyramidConfirmRetire[];
 extern const u8 gText_MaleSymbol[];
 extern const u8 gText_FemaleSymbol[];
 extern const u8 gText_Slash[];
-extern const u8 gText_OakImportantToGetToKnowPokemonThroughly[];
-extern const u8 gText_EscapeFromHereAndReturnTo[];
 extern const u8 gText_PkmnHPRestoredByVar2[];
 extern const u8 gText_PkmnNeedsToReplaceMove[];
 extern const u8 gText_PkmnCantLearnMove[];
@@ -293,7 +284,6 @@ extern const u8 gText_SavingDontTurnOffThePower2[];
 extern const u8 gText_From[];
 
 // field_specials
-extern const u8 gText_NowOn[];
 extern const u8 gText_B4F[];
 extern const u8 gText_B3F[];
 extern const u8 gText_B2F[];
@@ -322,10 +312,10 @@ extern const u8 gText_EarthBadge[];
 // script_menu
 extern const u8 gText_WhichPCShouldBeAccessed[];
 extern const u8 gText_Other[];
-extern const u8 gOtherText_Double[];
-extern const u8 gOtherText_Knockout[];
-extern const u8 gOtherText_Mixed[];
-extern const u8 gOtherText_Single[];
+extern const u8 gText_Double[];
+extern const u8 gText_Knockout[];
+extern const u8 gText_Mixed[];
+extern const u8 gText_Single[];
 extern const u8 gText_Info[];
 extern const u8 gText_HallOfFame[];
 extern const u8 gText_Yes[];
@@ -418,11 +408,6 @@ extern const u8 gText_NickHatchPrompt[];
 // field_screen_effect
 extern const u8 gText_PlayerScurriedToCenter[];
 extern const u8 gText_PlayerScurriedBackHome[];
-
-// save_failed_screen
-extern const u8 gText_SaveFailedCheckingBackup[];
-extern const u8 gText_BackupMemoryDamaged[];
-extern const u8 gText_SaveCompletePressA[];
 
 // bag
 extern const u8 gText_DepositItem[];
@@ -589,14 +574,6 @@ extern const u8 gText_QuestLog_CeruleanCave[];
 // clear_save_data_screen
 extern const u8 gText_ClearAllSaveData[];
 extern const u8 gText_ClearingData[];
-
-// naming_screen
-extern const u8 gText_MoveOkBack[];
-extern const u8 gText_AlphabetUpperLower[];
-extern const u8 gText_YourName[];
-extern const u8 gText_BoxName[];
-extern const u8 gText_PkmnsNickname[];
-extern const u8 gText_RivalsName[];
 
 extern const u8 gText_YourPartysFull[];
 // pokemon_special_anim
@@ -778,8 +755,6 @@ extern const u8 BattleFrontier_Lounge3_Text_GetToBattleArena[];
 extern const u8 BattleFrontier_Lounge3_Text_GetToBattlePike[];
 extern const u8 BattleFrontier_Lounge3_Text_GetToBattlePyramid[];
 
-extern const u8 gText_BP[];
-
 // Battle Frontier Exchange Corner
 extern const u8 BattleFrontier_ExchangeServiceCorner_Text_KissPosterDesc[];
 extern const u8 BattleFrontier_ExchangeServiceCorner_Text_KissCushionDesc[];
@@ -844,10 +819,6 @@ extern const u8 gText_Rechoose[];
 extern const u8 gText_Deselect[];
 extern const u8 gText_Rent[];
 extern const u8 gText_Others2[];
-extern const u8 gText_Yes2[];
-extern const u8 gText_Yes3[];
-extern const u8 gText_No2[];
-extern const u8 gText_No3[];
 extern const u8 gText_QuitSwapping[];
 extern const u8 gText_AcceptThisPkmn[];
 extern const u8 gText_SelectPkmnToAccept[];

@@ -55,7 +55,11 @@ static const u8 sText_MailTakenFromPkmn[] = _("MAIL was taken from the\nPOKéMON
 static const u8 sText_SwitchedPkmnItem[] = _("The {STR_VAR_2} was taken and\nreplaced with the {STR_VAR_1}.{PAUSE_UNTIL_PRESS}");
 static const u8 sText_MailTransferredFromMailbox[] = _("MAIL was transferred from\nthe MAILBOX.{PAUSE_UNTIL_PRESS}");
 static const u8 sText_BagFullCouldNotRemoveItem[] = _("The {STR_VAR_1} is full. The POKéMON's\nitem could not be removed.{PAUSE_UNTIL_PRESS}");
-static const u8 gText_CantTradeWithTrainer[] = _("You can't trade with that\nTRAINER now.");
+static const u8 sText_CantTradeWithTrainer[] = _("You can't trade with that\nTRAINER now.");
+static const u8 sText_OakImportantToGetToKnowPokemonThroughly[] = _("OAK: It's important to get to know\nyour POKéMON thoroughly.\p");
+static const u8 sText_OakThisIsListOfPokemon[] = _("This is a list of your POKéMON,\n{PLAYER}.\pOpen this to check the skills\nand moves of your POKéMON.\pYou also choose POKéMON here if\nyou want to use an item on one.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_EscapeFromHereAndReturnTo[] = _("Want to escape from here and return\nto {STR_VAR_1}?");
+static const u8 sText_CancelBattle[] = _("Cancel the battle?");
 
 static const struct BgTemplate sPartyMenuBgTemplates[] =
 {
@@ -1222,8 +1226,8 @@ static const u8 *const sUnionRoomTradeMessages[] =
     [UR_TRADE_MSG_PARTNERS_MON_CANT_BE_TRADED - 1] = gText_OtherTrainersPkmnCantBeTraded,
     [UR_TRADE_MSG_EGG_CANT_BE_TRADED -1]           = gText_EggCantBeTradedNow,
     [UR_TRADE_MSG_PARTNER_CANT_ACCEPT_MON - 1]     = COMPOUND_STRING("The other TRAINER can't accept\nthat POKéMON now."),
-    [UR_TRADE_MSG_CANT_TRADE_WITH_PARTNER_1 - 1]   = gText_CantTradeWithTrainer,
-    [UR_TRADE_MSG_CANT_TRADE_WITH_PARTNER_2 - 1]   = gText_CantTradeWithTrainer,
+    [UR_TRADE_MSG_CANT_TRADE_WITH_PARTNER_1 - 1]   = sText_CantTradeWithTrainer,
+    [UR_TRADE_MSG_CANT_TRADE_WITH_PARTNER_2 - 1]   = sText_CantTradeWithTrainer,
 };
 
 #define ROTOM_BASE_MOVE  MOVE_THUNDER_SHOCK

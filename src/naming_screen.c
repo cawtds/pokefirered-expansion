@@ -271,7 +271,6 @@ static void ResetVHBlank(void);
 static void SetVBlank(void);
 static void VBlankCB_NamingScreen(void);
 static void NamingScreen_ShowBgs(void);
-static bool8 IsWideLetter(u8);
 
 static const struct SubspriteTable sSubspriteTable_PageSwapFrame[];
 static const struct SubspriteTable sSubspriteTable_PageSwapText[];
@@ -290,6 +289,8 @@ static const u8 *const sNamingScreenKeyboardText[][KBROW_COUNT];
 static const struct SpriteSheet sSpriteSheets[];
 static const struct SpritePalette sSpritePalettes[];
 static const struct NamingScreenTemplate *const sNamingScreenTemplates[];
+
+static const u8 gText_MoveOkBack[] = _("{DPAD_ANY}MOVE {A_BUTTON}OK {B_BUTTON}BACK");
 
 static const u16 sPCIconOff_Gfx[] = INCBIN_U16("graphics/naming_screen/pc_icon_off.4bpp");
 static const u16 sPCIconOn_Gfx[] = INCBIN_U16("graphics/naming_screen/pc_icon_on.4bpp");
@@ -1908,7 +1909,6 @@ static void DrawTextEntry(void)
 {
     u8 i;
     u8 temp[2];
-    u16 extraWidth;
     u8 maxChars = sNamingScreen->template->maxChars;
     u16 xpos = sNamingScreen->inputCharBaseXPos - 0x40;
 
@@ -1918,9 +1918,8 @@ static void DrawTextEntry(void)
     {
         temp[0] = sNamingScreen->textBuffer[i];
         temp[1] = gText_EmptyString[0];
-        extraWidth = (IsWideLetter(temp[0]) == TRUE) ? 2 : 0;
 
-        AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY], FONT_NORMAL, temp, i * 8 + xpos + extraWidth, 1, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(sNamingScreen->windows[WIN_TEXT_ENTRY], FONT_NORMAL, temp, i * 8 + xpos, 1, TEXT_SKIP_DRAW, NULL);
     }
 
     TryDrawGenderIcon();
@@ -2050,57 +2049,48 @@ static void NamingScreen_ShowBgs(void)
     ShowBg(3);
 }
 
-// Always false (presumably for non-latin languages)
-static bool8 IsWideLetter(u8 character)
-{
-    u8 i;
-
-    for (i = 0; gText_AlphabetUpperLower[i] != EOS; i++)
-    {
-        if (character == gText_AlphabetUpperLower[i])
-            return TRUE;
-    }
-    return FALSE;
-}
-
 //--------------------------------------------------
 // Forward-declared variables
 //--------------------------------------------------
 
-static const struct NamingScreenTemplate sPlayerNamingScreenTemplate = {
+static const struct NamingScreenTemplate sPlayerNamingScreenTemplate =
+{
     .copyExistingString = FALSE,
     .maxChars = PLAYER_NAME_LENGTH,
     .iconFunction = 1,
     .addGenderIcon = 0,
     .initialPage = KBPAGE_LETTERS_UPPER,
-    .title = gText_YourName,
+    .title = COMPOUND_STRING("YOUR NAME?"),
 };
 
-static const struct NamingScreenTemplate sPcBoxNamingScreenTemplate = {
+static const struct NamingScreenTemplate sPcBoxNamingScreenTemplate =
+{
     .copyExistingString = FALSE,
     .maxChars = BOX_NAME_LENGTH,
     .iconFunction = 2,
     .addGenderIcon = 0,
     .initialPage = KBPAGE_LETTERS_UPPER,
-    .title = gText_BoxName,
+    .title = COMPOUND_STRING("BOX NAME?"),
 };
 
-static const struct NamingScreenTemplate sMonNamingScreenTemplate = {
+static const struct NamingScreenTemplate sMonNamingScreenTemplate =
+{
     .copyExistingString = FALSE,
     .maxChars = POKEMON_NAME_LENGTH,
     .iconFunction = 3,
     .addGenderIcon = 1,
     .initialPage = KBPAGE_LETTERS_UPPER,
-    .title = gText_PkmnsNickname,
+    .title = COMPOUND_STRING("'s nickname?"),
 };
 
-static const struct NamingScreenTemplate sRivalNamingScreenTemplate = {
+static const struct NamingScreenTemplate sRivalNamingScreenTemplate =
+{
     .copyExistingString = FALSE,
     .maxChars = PLAYER_NAME_LENGTH,
     .iconFunction = 4,
     .addGenderIcon = 0,
     .initialPage = KBPAGE_LETTERS_UPPER,
-    .title = gText_RivalsName,
+    .title = COMPOUND_STRING("RIVAL's NAME?"),
 };
 
 static const struct NamingScreenTemplate *const sNamingScreenTemplates[] =

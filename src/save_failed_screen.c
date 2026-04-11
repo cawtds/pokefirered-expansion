@@ -22,6 +22,10 @@ static void PrintTextOnSaveFailedScreen(const u8 *a0);
 static bool32 TryWipeDamagedSectors(void);
 static bool32 WipeDamagedSectors(u32 damagedSectors);
 
+static const u8 sText_SaveFailedCheckingBackup[] = _("Save failed.\nChecking the backup memory‥\nPlease wait.\n“Time required:\nabout 1 minute”");
+static const u8 sText_BackupMemoryDamaged[] = _("The backup memory is damaged or\nthe game's battery has run dry.\nThe game can be played, but its\nprogress cannot be saved.\n“Please press the A Button.”");
+static const u8 sText_SaveCompletePressA[] = _("Save completed.\n“Please press the A Button.”");
+
 static const u16 sSaveFailedScreenPals[] = INCBIN_U16("graphics/interface/save_failed_screen.gbapal");
 
 void SetNotInSaveFailedScreen(void)
@@ -61,7 +65,7 @@ bool32 RunSaveFailedScreen(void)
         break;
     case 3:
         ClearMapBuffer();
-        PrintTextOnSaveFailedScreen(gText_SaveFailedCheckingBackup);
+        PrintTextOnSaveFailedScreen(sText_SaveFailedCheckingBackup);
         UpdateMapBufferWithText();
         sSaveFailedScreenState = 4;
         break;
@@ -77,12 +81,12 @@ bool32 RunSaveFailedScreen(void)
         if (TryWipeDamagedSectors() == TRUE)
         {
             gSaveAttemptStatus = SAVE_STATUS_OK;
-            PrintTextOnSaveFailedScreen(gText_SaveCompletePressA);
+            PrintTextOnSaveFailedScreen(sText_SaveCompletePressA);
         }
         else
         {
             gSaveAttemptStatus = SAVE_STATUS_ERROR;
-            PrintTextOnSaveFailedScreen(gText_BackupMemoryDamaged);
+            PrintTextOnSaveFailedScreen(sText_BackupMemoryDamaged);
         }
         sSaveFailedScreenState = 6;
         break;
