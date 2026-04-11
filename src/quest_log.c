@@ -71,7 +71,8 @@ struct FlagOrVarRecord
     u16 value;
 };
 
-#include "data/text/quest_log.h"
+static const u8 sText_PreviouslyOnYourQuest[] = _("Previously on your quest…");
+static const u8 sText_SavedGameAtLocation[] = _("And {PLAYER} saved the game at this\nlocation: {STR_VAR_1}.");
 
 COMMON_DATA u8 gQuestLogPlaybackState = 0;
 COMMON_DATA u16 sMaxActionsInScene = 0;
@@ -531,7 +532,7 @@ void DrawPreviouslyOnQuestHeader(u8 sceneNum)
         FillWindowPixelRect(sWindowIds[i], 15, 0, 0, sWindowTemplates[i].width * 8, sWindowTemplates[i].height * 8);
     }
 
-    StringExpandPlaceholders(gStringVar4, gText_QuestLog_PreviouslyOnYourQuest);
+    StringExpandPlaceholders(gStringVar4, sText_PreviouslyOnYourQuest);
 
     // Scene numbers count from 4 to 0, 0 being where the player saved
     if (sceneNum != 0)
@@ -1165,7 +1166,7 @@ static void Task_QuestLogScene_SavedGame(u8 taskId)
         if (sPlaybackControl.endMode != END_MODE_FINISH)
         {
             GetMapNameGeneric(gStringVar1, gMapHeader.regionMapSectionId);
-            StringExpandPlaceholders(gStringVar4, gText_QuestLog_SavedGameAtLocation);
+            StringExpandPlaceholders(gStringVar4, sText_SavedGameAtLocation);
             DrawSceneDescription();
         }
         task->data[0] = 0;
