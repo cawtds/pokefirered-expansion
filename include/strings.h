@@ -97,27 +97,6 @@ extern const u8 gPokedudeText_ReadTMDescription[];
 extern const u8 gText_Cancel[];
 extern const u8 gText_SelectorArrow[];
 
-// teachy_tv
-extern const u8 gTeachyTvString_TeachBattle[];
-extern const u8 gTeachyTvString_StatusProblems[];
-extern const u8 gTeachyTvString_TypeMatchups[];
-extern const u8 gTeachyTvString_CatchPkmn[];
-extern const u8 gTeachyTvString_AboutTMs[];
-extern const u8 gTeachyTvString_RegisterItem[];
-extern const u8 gTeachyTvText_PokedudeSaysHello[];
-extern const u8 gTeachyTvText_BattleScript1[];
-extern const u8 gTeachyTvText_StatusScript1[];
-extern const u8 gTeachyTvText_MatchupsScript1[];
-extern const u8 gTeachyTvText_CatchingScript1[];
-extern const u8 gTeachyTvText_TMsScript1[];
-extern const u8 gTeachyTvText_RegisterScript1[];
-extern const u8 gTeachyTvText_BattleScript2[];
-extern const u8 gTeachyTvText_StatusScript2[];
-extern const u8 gTeachyTvText_MatchupsScript2[];
-extern const u8 gTeachyTvText_CatchingScript2[];
-extern const u8 gTeachyTvText_TMsScript2[];
-extern const u8 gTeachyTvText_RegisterScript2[];
-
 extern const u8 gText_Bill[];
 extern const u8 gText_Someone[];
 
