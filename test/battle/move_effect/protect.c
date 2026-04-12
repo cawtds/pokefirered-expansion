@@ -64,8 +64,8 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from 
     u32 j;
     static const struct {
         enum Move move;
-        enum Stat stat;
-        u8 lowersBy;
+        enum Stat statId;
+        s8 lowersBy;
     } protectMoves[] =
     {   // Move             Stat      Stages
         {MOVE_KINGS_SHIELD, STAT_ATK,   (B_KINGS_SHIELD_LOWER_ATK >= GEN_8) ? 1 : 2},
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from 
 
     for (j = 0; j < ARRAY_COUNT(protectMoves); j++)
     {
-        PARAMETRIZE { usedMove = MOVE_SCRATCH; protectMove = protectMoves[j].move; statId = protectMoves[j].stat; lowersBy = protectMoves[j].lowersBy; }
+        PARAMETRIZE { usedMove = MOVE_SCRATCH; protectMove = protectMoves[j].move; statId = protectMoves[j].statId; lowersBy = protectMoves[j].lowersBy; }
         PARAMETRIZE { usedMove = MOVE_LEER; protectMove = protectMoves[j].move; statId = 0; lowersBy = 0; }
         PARAMETRIZE { usedMove = MOVE_WATER_GUN; protectMove = protectMoves[j].move; statId = 0; lowersBy = 0; }
     }
