@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle_main.h"
 #include "bg.h"
 #include "data.h"
 #include "decompress.h"
@@ -17,6 +18,7 @@
 #include "pokedex_plus_hgss.h"
 #include "pokedex_screen.h"
 #include "pokedex.h"
+#include "pokemon_summary_screen.h"
 #include "scanline_effect.h"
 #include "sound.h"
 #include "string_util.h"
@@ -27,6 +29,7 @@
 #include "constants/songs.h"
 #include "constants/sound.h"
 
+#define MAX_DEX_ITEMS_SHOWN 9
 #define TAG_AREA_MARKERS 2001
 
 enum TextMode {
@@ -83,6 +86,7 @@ struct PokedexScreenData
     u16 numOwnedKanto;
     u16 numSeenNational;
     u16 numOwnedNational;
+    u8 typeIconSpriteIds[MAX_DEX_ITEMS_SHOWN * 2];
 };
 
 struct PokedexScreenWindowGfx
@@ -97,7 +101,7 @@ struct PokedexCategoryPage
     u8 count;
 };
 
-EWRAM_DATA static struct PokedexScreenData * sPokedexScreenData = NULL;
+EWRAM_DATA static struct PokedexScreenData *sPokedexScreenData = NULL;
 
 static void Task_PokedexScreen(u8 taskId);
 static void DexScreen_InitGfxForTopMenu(void);
@@ -153,6 +157,9 @@ static u8* ConvertMonHeightToMetricString(u32 height);
 static u8* ConvertMonWeightToImperialString(u32 weight);
 static u8* ConvertMonWeightToMetricString(u32 weight);
 static u8* ConvertMeasurementToMetricString(u32 num, u32* index);
+static void InitTypeIcons(void);
+static void DestroyTypeIcons(void);
+static void OrdererdListCursorMoveFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list);
 
 static const u8 sText_PokedexTableOfContents[] = _("POKéDEX   TABLE OF CONTENTS");
 static const u8 sText_PickOK[] = _("{DPAD_UPDOWN}PICK {A_BUTTON}OK");
@@ -567,10 +574,10 @@ static const struct WindowTemplate sWindowTemplate_OrderedListMenu = {
 
 static const struct ListMenuTemplate sListMenuTemplate_OrderedListMenu = {
     .items = sListMenuItems_KantoDexModeSelect,
-    .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
+    .moveCursorFunc = OrdererdListCursorMoveFunc,
     .itemPrintFunc = ItemPrintFunc_OrderedListMenu,
     .totalItems = 0,
-    .maxShowed = 9,
+    .maxShowed = MAX_DEX_ITEMS_SHOWN,
     .windowId = 0,
     .header_X = 0,
     .item_X = 58,
@@ -980,6 +987,7 @@ void DexScreen_LoadResources(void)
     sPokedexScreenData->numOwnedNational = DexScreen_GetDexCount(FLAG_GET_CAUGHT, 1);
     sPokedexScreenData->numSeenKanto = DexScreen_GetDexCount(FLAG_GET_SEEN, 0);
     sPokedexScreenData->numOwnedKanto = DexScreen_GetDexCount(FLAG_GET_CAUGHT, 0);
+    memset(sPokedexScreenData->typeIconSpriteIds, 0xFF, sizeof(sPokedexScreenData->typeIconSpriteIds));
     SetBGMVolume_SuppressHelpSystemReduction(0x80);
     ChangeBgX(0, 0, 0);
     ChangeBgY(0, 0, 0);
@@ -1288,6 +1296,7 @@ static void Task_DexScreen_NumericalOrder(u8 taskId)
         sPokedexScreenData->state = 2;
         break;
     case 1:
+        DestroyTypeIcons();
         DexScreen_DestroyDexOrderListMenu(sPokedexScreenData->dexOrderId);
         HideBg(1);
         DexScreen_RemoveWindow(&sPokedexScreenData->numericalOrderWindowId);
@@ -1295,6 +1304,7 @@ static void Task_DexScreen_NumericalOrder(u8 taskId)
         sPokedexScreenData->state = 0;
         break;
     case 2:
+        InitTypeIcons();
         DexScreen_InitGfxForNumericalOrderList();
         sPokedexScreenData->state = 3;
         break;
@@ -1334,6 +1344,7 @@ static void Task_DexScreen_NumericalOrder(u8 taskId)
         }
         break;
     case 7:
+        DestroyTypeIcons();
         DexScreen_DestroyDexOrderListMenu(sPokedexScreenData->dexOrderId);
         FillBgTilemapBufferRect_Palette0(1, 0x000, 0, 0, 32, 20);
         CopyBgTilemapBufferToVram(1);
@@ -1374,6 +1385,7 @@ static void Task_DexScreen_CharacteristicOrder(u8 taskId)
         sPokedexScreenData->state = 2;
         break;
     case 1:
+        DestroyTypeIcons();
         DexScreen_DestroyDexOrderListMenu(sPokedexScreenData->dexOrderId);
         HideBg(1);
         DexScreen_RemoveWindow(&sPokedexScreenData->numericalOrderWindowId);
@@ -1381,6 +1393,7 @@ static void Task_DexScreen_CharacteristicOrder(u8 taskId)
         sPokedexScreenData->state = 0;
         break;
     case 2:
+        InitTypeIcons();
         DexScreen_CreateCharacteristicListMenu();
         sPokedexScreenData->state = 3;
         break;
@@ -1419,6 +1432,7 @@ static void Task_DexScreen_CharacteristicOrder(u8 taskId)
         }
         break;
     case 7:
+        DestroyTypeIcons();
         DexScreen_DestroyDexOrderListMenu(sPokedexScreenData->dexOrderId);
         FillBgTilemapBufferRect_Palette0(1, 0x000, 0, 0, 32, 20);
         CopyBgTilemapBufferToVram(1);
@@ -1644,15 +1658,18 @@ static void ItemPrintFunc_OrderedListMenu(u8 windowId, u32 itemId, u8 y)
 {
     enum Species species = itemId;
     bool8 caught = (itemId >> 17) & 1;
-    u8 type1;
     DexScreen_PrintMonDexNo(sPokedexScreenData->numericalOrderWindowId, FONT_SMALL, species, 12, y, sPokedexScreenData->dexOrderId != DEX_ORDER_NUMERICAL_KANTO);
     if (caught)
     {
         BlitMenuInfoIcon(sPokedexScreenData->numericalOrderWindowId, MENU_INFO_ICON_CAUGHT, 42, y);
-        type1 = gSpeciesInfo[species].types[0];
-        BlitMenuInfoIcon(sPokedexScreenData->numericalOrderWindowId, type1 + 1, 130, y);
-        if (type1 != gSpeciesInfo[species].types[1])
-            BlitMenuInfoIcon(sPokedexScreenData->numericalOrderWindowId, gSpeciesInfo[species].types[1] + 1, 162, y);
+
+        if (!TYPE_ICONS_USE_SPRITES)
+        {
+            enum Type type1 = gSpeciesInfo[species].types[0];
+            BlitMenuInfoIcon(sPokedexScreenData->numericalOrderWindowId, type1 + 1, 130, y);
+            if (type1 != gSpeciesInfo[species].types[1])
+                BlitMenuInfoIcon(sPokedexScreenData->numericalOrderWindowId, gSpeciesInfo[species].types[1] + 1, 162, y);
+        }
     }
 }
 
@@ -3706,4 +3723,92 @@ void DexScreen_PrintStringWithAlignment(const u8 * str, s32 mode)
     }
 
     DexScreen_AddTextPrinterParameterized(0, FONT_NORMAL, str, x, 2, 4);
+}
+
+static void InitTypeIcons(void)
+{
+    if (!TYPE_ICONS_USE_SPRITES)
+        return;
+
+    LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
+    LoadPalette(gMoveTypes_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
+
+    for (u32 i = 0; i < MAX_DEX_ITEMS_SHOWN; i++)
+    {
+        sPokedexScreenData->typeIconSpriteIds[2 * i] = CreateSprite(&gSpriteTemplate_MoveTypes, 146 + 16, 25 + (14 * i), 2);
+        gSprites[sPokedexScreenData->typeIconSpriteIds[2 * i]].invisible = TRUE;
+        sPokedexScreenData->typeIconSpriteIds[2 * i + 1] = CreateSprite(&gSpriteTemplate_MoveTypes, 178 + 16, 25 + (14 * i), 2);
+        gSprites[sPokedexScreenData->typeIconSpriteIds[2 * i + 1]].invisible = TRUE;
+    }
+}
+
+static void DestroyTypeIcons(void)
+{
+    if (!TYPE_ICONS_USE_SPRITES)
+        return;
+
+    for (u32 i = 0; i < MAX_DEX_ITEMS_SHOWN * 2; i++)
+    {
+        if (sPokedexScreenData->typeIconSpriteIds[i] != 0xFF)
+        {
+            DestroySprite(&gSprites[sPokedexScreenData->typeIconSpriteIds[i]]);
+            sPokedexScreenData->typeIconSpriteIds[i] = 0xFF;
+        }
+    }
+}
+
+static void UpdateTypeIconSprites(s32 id, u32 itemIndex)
+{
+    struct Sprite *icon1, *icon2;
+    enum Type type1, type2;
+    enum Species species;
+    bool32 caught;
+
+    if (!TYPE_ICONS_USE_SPRITES)
+        return;
+
+    icon1 = &gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex]];
+    icon2 = &gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex + 1]];
+    caught = (id >> 17) & 1;
+
+    if (!caught)
+    {
+        icon1->invisible = TRUE;
+        icon2->invisible = TRUE;
+        return;
+    }
+
+    species = (id & 0xFFFF);
+    type1 = gSpeciesInfo[species].types[0];
+    type2 = gSpeciesInfo[species].types[1];
+
+    icon1->invisible = FALSE;
+    icon1->oam.paletteNum = gTypesInfo[type1].palette;
+    StartSpriteAnim(icon1, type1);
+
+    if (type1 == type2)
+    {
+        icon2->invisible = TRUE;
+        return;
+    }
+
+    icon2->invisible = FALSE;
+    icon2->oam.paletteNum = gTypesInfo[type2].palette;
+    StartSpriteAnim(icon2, type2);
+}
+
+static void OrdererdListCursorMoveFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list)
+{
+    u32 startIndex = list->scrollOffset;
+    u32 endIndex = list->template.totalItems;
+    u32 maxShowed = list->template.maxShowed;
+
+    if (!onInit)
+        PlaySE(SE_SELECT);
+
+    if (!TYPE_ICONS_USE_SPRITES)
+        return;
+
+    for (u32 i = 0; i < maxShowed && startIndex + i < endIndex; i++)
+        UpdateTypeIconSprites(list->template.items[startIndex + i].id, i);
 }

@@ -83,4 +83,14 @@
 // Naming Screen
 #define AUTO_LOWERCASE_KEYBOARD      GEN_LATEST  // Starting in GEN_6, after entering the first uppercase character, the keyboard switches to lowercase letters.
 
+// Type Icons
+// If TRUE, type icons will use sprites.
+// Palettes are shared between icons across 3 files
+// Sprite locations:
+//  - icons: graphics/type_icons/{type_name}.png
+//  - palettes: graphics/type_icons/move_types_{1/2/3}.pal
+// If FALSE, type icons will be blitted. (Vanilla)
+// - icons and palettes: graphics/interface/menu_info.png
+#define TYPE_ICONS_USE_SPRITES TRUE
+
 #endif // GUARD_CONFIG_GENERAL_H
