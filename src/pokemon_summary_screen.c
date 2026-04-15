@@ -151,10 +151,12 @@ static void PokeSum_DestroyMonMarkingsSprite(void);
 static void PokeSum_UpdateMonMarkingsAnim(void);
 static s8 SeekToNextMonInSingleParty(s8 direction);
 static s8 SeekToNextMonInMultiParty(s8 direction);
-static void CreateMoveTypeIconSprites(void);
+static void CreateTypeIconSprites(void);
 static void UpdateMoveTypeIconSprites(void);
+static void UpdateMonTypeIconSprites(bool32 isInfoPage);
 static void HideMoveTypeIcons(void);
-static void DestroyMoveTypeIconSprites(void);
+static void HideMonTypeIcons(void);
+static void DestroyTypeIconSprites(void);
 
 struct PokemonSummaryScreenData
 {
@@ -260,7 +262,7 @@ struct PokemonSummaryScreenData
     enum PokemonSummaryScreenSkillPageMode skillsPageMode:2;
     u8 categoryIconSpriteId;
     u8 moveTypeIconSpriteIds[MAX_MON_MOVES + 1];
-    // u8 monTypeIconSpriteIds[3];
+    u8 monTypeIconSpriteIds[3];
 };
 
 struct Struct203B144
@@ -1333,6 +1335,7 @@ void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallbac
     sMonSummaryScreen->flippingPages = FALSE;
     sMonSummaryScreen->categoryIconSpriteId = 0xFF;
     memset(sMonSummaryScreen->moveTypeIconSpriteIds, 0xFF, sizeof(sMonSummaryScreen->moveTypeIconSpriteIds));
+    memset(sMonSummaryScreen->monTypeIconSpriteIds, 0xFF, sizeof(sMonSummaryScreen->monTypeIconSpriteIds));
     sMonSummaryScreen->skillsPageMode = PSS_SKILL_PAGE_STATS;
 
     sMonSummaryScreen->unk3228 = 0;
@@ -1624,17 +1627,32 @@ static void Task_InputHandler_Info(u8 taskId)
         }
         break;
     case PSS_STATE3270_FLIPPAGES:
-        if (sMonSummaryScreen->curPageIndex != PSS_PAGE_MOVES_INFO)
+        switch (sMonSummaryScreen->curPageIndex)
         {
+        case PSS_PAGE_INFO:
             HideMoveTypeIcons();
             CreateTask(Task_PokeSum_FlipPages, 0);
-            sMonSummaryScreen->state3270 = PSS_STATE3270_HANDLEINPUT;
-        }
-        else
-        {
+            break;
+        case PSS_PAGE_SKILLS:
+            HideMoveTypeIcons();
+            HideMonTypeIcons();
+            CreateTask(Task_PokeSum_FlipPages, 0);
+            break;
+        case PSS_PAGE_MOVES:
+            HideMoveTypeIcons();
+            HideMonTypeIcons();
+            CreateTask(Task_PokeSum_FlipPages, 0);
+            break;
+        case PSS_PAGE_MOVES_INFO:
             gTasks[sMonSummaryScreen->inputHandlerTaskId].func = Task_FlipPages_FromInfo;
-            sMonSummaryScreen->state3270 = PSS_STATE3270_HANDLEINPUT;
+            break;
+        case PSS_PAGE_MOVE_DELETER:
+            HideMoveTypeIcons();
+            HideMonTypeIcons();
+            CreateTask(Task_PokeSum_FlipPages, 0);
+            break;
         }
+        sMonSummaryScreen->state3270 = PSS_STATE3270_HANDLEINPUT;
         break;
     case PSS_STATE3270_ATEXIT_FADEOUT:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, 0);
@@ -2934,7 +2952,7 @@ static u8 PokeSum_HandleCreateSprites(void)
         break;
     case 8:
         PokeSum_CreateMonIconSprite();
-        CreateMoveTypeIconSprites();
+        CreateTypeIconSprites();
         break;
     case 9:
         LoadCompressedSpriteSheet(&gSpriteSheet_CategoryIcons);
@@ -4067,6 +4085,11 @@ static void PokeSum_PrintMonTypeIcons(void)
     case PSS_PAGE_INFO:
         if (!sMonSummaryScreen->isEgg)
         {
+            if (TYPE_ICONS_USE_SPRITES)
+            {
+                UpdateMonTypeIconSprites(TRUE);
+                return;
+            }
             BlitMenuInfoIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[0] + 1, 47, 35);
 
             if (sMonSummaryScreen->monTypes[0] != sMonSummaryScreen->monTypes[1])
@@ -4081,6 +4104,11 @@ static void PokeSum_PrintMonTypeIcons(void)
         break;
     case PSS_PAGE_MOVES_INFO:
         FillWindowPixelBuffer(sMonSummaryScreen->windowIds[6], 0);
+        if (TYPE_ICONS_USE_SPRITES)
+        {
+            UpdateMonTypeIconSprites(FALSE);
+            return;
+        }
         BlitMenuInfoIcon(sMonSummaryScreen->windowIds[6], sMonSummaryScreen->monTypes[0] + 1, 0, 3);
 
         if (sMonSummaryScreen->monTypes[0] != sMonSummaryScreen->monTypes[1])
@@ -4354,6 +4382,7 @@ static void Task_HandleInput_SelectMove(u8 taskId)
             }
 
             DestroyCategoryIcon();
+            HideMonTypeIcons();
             ShoworHideMoveSelectionCursor(TRUE);
             sMonSummaryScreen->pageFlipDirection = 0;
             PokeSum_RemoveWindows(sMonSummaryScreen->curPageIndex);
@@ -5531,7 +5560,7 @@ static void PokeSum_DestroySprites(void)
     DestroyMonStatusIconObj();
     DestroyPokerusIconObj();
     DestroyShinyStarObj();
-    DestroyMoveTypeIconSprites();
+    DestroyTypeIconSprites();
     ResetSpriteData();
 }
 
@@ -5900,9 +5929,20 @@ static void CreateMoveTypeIconSprite(u32 i)
     sMonSummaryScreen->moveTypeIconSpriteIds[i] = CreateSprite(&gSpriteTemplate_MoveTypes, 139, 27 + (28 * i), 80);
     sprite = &gSprites[sMonSummaryScreen->moveTypeIconSpriteIds[i]];
     sprite->invisible = TRUE;
+
+
 }
 
-static void CreateMoveTypeIconSprites(void)
+static void CreateMonTypeIconSprite(u32 i)
+{
+    struct Sprite *sprite;
+
+    sMonSummaryScreen->monTypeIconSpriteIds[i] = CreateSprite(&gSpriteTemplate_MoveTypes, 0, 0, 80);
+    sprite = &gSprites[sMonSummaryScreen->monTypeIconSpriteIds[i]];
+    sprite->invisible = TRUE;
+}
+
+static void CreateTypeIconSprites(void)
 {
     if (!TYPE_ICONS_USE_SPRITES)
         return;
@@ -5912,6 +5952,9 @@ static void CreateMoveTypeIconSprites(void)
 
     for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
         CreateMoveTypeIconSprite(i);
+
+    for (u32 i = 0; i < sizeof(sMonSummaryScreen->monTypeIconSpriteIds); i++)
+        CreateMonTypeIconSprite(i);
 }
 
 static void UpdateMoveTypeIconSprites(void)
@@ -5937,18 +5980,75 @@ static void UpdateMoveTypeIconSprites(void)
     }
 }
 
+static void ShowMonTypeIcon(struct Sprite *icon, enum Type type, s32 x, s32 y)
+{
+    icon->invisible = FALSE;
+    icon->oam.paletteNum = gTypesInfo[type].palette;
+    icon->x = x;
+    icon->y = y;
+    StartSpriteAnim(icon, type);
+}
+
+static void HideMonTypeIcon(struct Sprite *icon)
+{
+    icon->invisible = TRUE;
+}
+
+static void UpdateMonTypeIconSprites(bool32 isInfoPage)
+{
+    struct Sprite *icon1, *icon2, *icon3;
+    enum Type type1, type2, teraType;
+    s32 x1, x2, y;
+    bool32 showTera;
+
+    if (!TYPE_ICONS_USE_SPRITES)
+        return;
+
+    icon1 = &gSprites[sMonSummaryScreen->monTypeIconSpriteIds[0]];
+    icon2 = &gSprites[sMonSummaryScreen->monTypeIconSpriteIds[1]];
+    icon3 = &gSprites[sMonSummaryScreen->monTypeIconSpriteIds[2]];
+
+    type1 = sMonSummaryScreen->monTypes[0];
+    type2 = sMonSummaryScreen->monTypes[1];
+    teraType = sMonSummaryScreen->monTypes[2];
+
+    x1 = isInfoPage ? 183 : 64;
+    x2 = isInfoPage ? 219 : 100;
+    y = isInfoPage ? 57 : 41;
+
+    ShowMonTypeIcon(icon1, type1, x1, y);
+
+    if (type2 != type1)
+        ShowMonTypeIcon(icon2, type2, x2, y);
+    else
+        HideMonTypeIcon(icon2);
+
+    showTera = (P_SHOW_TERA_TYPE == GEN_9) && isInfoPage && teraType != TYPE_NONE;
+    if (showTera)
+        ShowMonTypeIcon(icon3, teraType, 219, 27);
+    else
+        HideMonTypeIcon(icon3);
+}
+
 static void HideMoveTypeIcons(void)
 {
     if (!TYPE_ICONS_USE_SPRITES)
         return;
 
     for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
-    {
         gSprites[sMonSummaryScreen->moveTypeIconSpriteIds[i]].invisible = TRUE;
-    }
 }
 
-static void DestroyMoveTypeIconSprites(void)
+static void HideMonTypeIcons(void)
+{
+    if (!TYPE_ICONS_USE_SPRITES)
+        return;
+
+    for (u32 i = 0; i < sizeof(sMonSummaryScreen->monTypeIconSpriteIds); i++)
+        gSprites[sMonSummaryScreen->monTypeIconSpriteIds[i]].invisible = TRUE;
+}
+
+static void DestroyTypeIconSprites(void)
 {
     if (!TYPE_ICONS_USE_SPRITES)
         return;
@@ -5959,6 +6059,15 @@ static void DestroyMoveTypeIconSprites(void)
         {
             DestroySprite(&gSprites[sMonSummaryScreen->moveTypeIconSpriteIds[i]]);
             sMonSummaryScreen->moveTypeIconSpriteIds[i] = 0xFF;
+        }
+    }
+
+    for (u32 i = 0; i < sizeof(sMonSummaryScreen->monTypeIconSpriteIds); i++)
+    {
+        if (sMonSummaryScreen->monTypeIconSpriteIds[i] != 0xFF)
+        {
+            DestroySprite(&gSprites[sMonSummaryScreen->monTypeIconSpriteIds[i]]);
+            sMonSummaryScreen->monTypeIconSpriteIds[i] = 0xFF;
         }
     }
 }
