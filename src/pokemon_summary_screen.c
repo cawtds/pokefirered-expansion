@@ -151,6 +151,10 @@ static void PokeSum_DestroyMonMarkingsSprite(void);
 static void PokeSum_UpdateMonMarkingsAnim(void);
 static s8 SeekToNextMonInSingleParty(s8 direction);
 static s8 SeekToNextMonInMultiParty(s8 direction);
+static void CreateMoveTypeIconSprites(void);
+static void UpdateMoveTypeIconSprites(void);
+static void HideMoveTypeIcons(void);
+static void DestroyMoveTypeIconSprites(void);
 
 struct PokemonSummaryScreenData
 {
@@ -255,6 +259,8 @@ struct PokemonSummaryScreenData
     u8 ALIGNED(4) unk3304; /* 0x3304 */
     enum PokemonSummaryScreenSkillPageMode skillsPageMode:2;
     u8 categoryIconSpriteId;
+    u8 moveTypeIconSpriteIds[MAX_MON_MOVES + 1];
+    // u8 monTypeIconSpriteIds[3];
 };
 
 struct Struct203B144
@@ -1326,6 +1332,7 @@ void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallbac
     sMonSummaryScreen->infoAndMovesPageBgNum = 1;
     sMonSummaryScreen->flippingPages = FALSE;
     sMonSummaryScreen->categoryIconSpriteId = 0xFF;
+    memset(sMonSummaryScreen->moveTypeIconSpriteIds, 0xFF, sizeof(sMonSummaryScreen->moveTypeIconSpriteIds));
     sMonSummaryScreen->skillsPageMode = PSS_SKILL_PAGE_STATS;
 
     sMonSummaryScreen->unk3228 = 0;
@@ -1619,6 +1626,7 @@ static void Task_InputHandler_Info(u8 taskId)
     case PSS_STATE3270_FLIPPAGES:
         if (sMonSummaryScreen->curPageIndex != PSS_PAGE_MOVES_INFO)
         {
+            HideMoveTypeIcons();
             CreateTask(Task_PokeSum_FlipPages, 0);
             sMonSummaryScreen->state3270 = PSS_STATE3270_HANDLEINPUT;
         }
@@ -2926,6 +2934,7 @@ static u8 PokeSum_HandleCreateSprites(void)
         break;
     case 8:
         PokeSum_CreateMonIconSprite();
+        CreateMoveTypeIconSprites();
         break;
     case 9:
         LoadCompressedSpriteSheet(&gSpriteSheet_CategoryIcons);
@@ -3577,6 +3586,12 @@ static void PokeSum_DrawMoveTypeIcons(void)
     u8 i;
 
     FillWindowPixelBuffer(sMonSummaryScreen->windowIds[5], 0);
+
+    if (TYPE_ICONS_USE_SPRITES)
+    {
+        UpdateMoveTypeIconSprites();
+        return;
+    }
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -5516,6 +5531,7 @@ static void PokeSum_DestroySprites(void)
     DestroyMonStatusIconObj();
     DestroyPokerusIconObj();
     DestroyShinyStarObj();
+    DestroyMoveTypeIconSprites();
     ResetSpriteData();
 }
 
@@ -5823,13 +5839,17 @@ static void Task_PokeSum_SwitchDisplayedPokemon(u8 taskId)
 static void PokeSum_UpdateWin1ActiveFlag(u8 curPageIndex)
 {
     ClearGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN1_ON);
+    return;
 
     switch (curPageIndex)
     {
     case PSS_PAGE_INFO:
     case PSS_PAGE_SKILLS:
-    case PSS_PAGE_MOVES:
         SetGpuReg(REG_OFFSET_DISPCNT, GetGpuReg(REG_OFFSET_DISPCNT) | DISPCNT_WIN1_ON);
+        break;
+    case PSS_PAGE_MOVES:
+        if (!TYPE_ICONS_USE_SPRITES)
+            SetGpuReg(REG_OFFSET_DISPCNT, GetGpuReg(REG_OFFSET_DISPCNT) | DISPCNT_WIN1_ON);
         break;
     default:
         break;
@@ -5871,4 +5891,74 @@ static bool32 MapSecIsInKantoOrSevii(u8 mapSec)
     if (mapSec >= KANTO_MAPSEC_START && mapSec <= MAPSEC_SPECIAL_AREA)
         return TRUE;
     return FALSE;
+}
+
+static void CreateMoveTypeIconSprite(u32 i)
+{
+    struct Sprite *sprite;
+
+    sMonSummaryScreen->moveTypeIconSpriteIds[i] = CreateSprite(&gSpriteTemplate_MoveTypes, 139, 27 + (28 * i), 80);
+    sprite = &gSprites[sMonSummaryScreen->moveTypeIconSpriteIds[i]];
+    sprite->invisible = TRUE;
+}
+
+static void CreateMoveTypeIconSprites(void)
+{
+    if (!TYPE_ICONS_USE_SPRITES)
+        return;
+
+    LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
+    LoadPalette(gMoveTypes_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
+
+    for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
+        CreateMoveTypeIconSprite(i);
+}
+
+static void UpdateMoveTypeIconSprites(void)
+{
+    if (!TYPE_ICONS_USE_SPRITES)
+        return;
+
+    for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
+    {
+        struct Sprite *icon = &gSprites[sMonSummaryScreen->moveTypeIconSpriteIds[i]];
+        enum Type type;
+
+        if (sMonSummaryScreen->moveIds[i] == MOVE_NONE)
+        {
+            icon->invisible = TRUE;
+            continue;
+        }
+        type = sMonSummaryScreen->moveTypes[i];
+
+        icon->invisible = FALSE;
+        icon->oam.paletteNum = gTypesInfo[type].palette;
+        StartSpriteAnim(icon, type);
+    }
+}
+
+static void HideMoveTypeIcons(void)
+{
+    if (!TYPE_ICONS_USE_SPRITES)
+        return;
+
+    for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
+    {
+        gSprites[sMonSummaryScreen->moveTypeIconSpriteIds[i]].invisible = TRUE;
+    }
+}
+
+static void DestroyMoveTypeIconSprites(void)
+{
+    if (!TYPE_ICONS_USE_SPRITES)
+        return;
+
+    for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
+    {
+        if (sMonSummaryScreen->moveTypeIconSpriteIds[i] != 0xFF)
+        {
+            DestroySprite(&gSprites[sMonSummaryScreen->moveTypeIconSpriteIds[i]]);
+            sMonSummaryScreen->moveTypeIconSpriteIds[i] = 0xFF;
+        }
+    }
 }
