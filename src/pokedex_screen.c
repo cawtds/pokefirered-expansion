@@ -157,7 +157,8 @@ static u8* ConvertMonHeightToMetricString(u32 height);
 static u8* ConvertMonWeightToImperialString(u32 weight);
 static u8* ConvertMonWeightToMetricString(u32 weight);
 static u8* ConvertMeasurementToMetricString(u32 num, u32* index);
-static void InitTypeIcons(void);
+static void CreateTypeIcons(void);
+static void UpdateTypeIconSprites(enum Species species, u32 itemIndex, s32 x, s32 y);
 static void DestroyTypeIcons(void);
 static void OrdererdListCursorMoveFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list);
 
@@ -1304,7 +1305,7 @@ static void Task_DexScreen_NumericalOrder(u8 taskId)
         sPokedexScreenData->state = 0;
         break;
     case 2:
-        InitTypeIcons();
+        CreateTypeIcons();
         DexScreen_InitGfxForNumericalOrderList();
         sPokedexScreenData->state = 3;
         break;
@@ -1393,7 +1394,7 @@ static void Task_DexScreen_CharacteristicOrder(u8 taskId)
         sPokedexScreenData->state = 0;
         break;
     case 2:
-        InitTypeIcons();
+        CreateTypeIcons();
         DexScreen_CreateCharacteristicListMenu();
         sPokedexScreenData->state = 3;
         break;
@@ -2089,6 +2090,7 @@ static void Task_DexScreen_ShowMonPage(u8 taskId)
         sPokedexScreenData->state = 2;
         break;
     case 7:
+        CreateTypeIcons();
         DexScreen_DrawMonAreaPage();
         sPokedexScreenData->state = 8;
         break;
@@ -3317,9 +3319,16 @@ u8 DexScreen_DrawMonAreaPage(void)
 
     if (monIsCaught)
     {
-        BlitMenuTypeIcon(sPokedexScreenData->windowIds[12], gSpeciesInfo[species].types[0], 0, 1);
-        if (gSpeciesInfo[species].types[0] != gSpeciesInfo[species].types[1])
-            BlitMenuTypeIcon(sPokedexScreenData->windowIds[12], gSpeciesInfo[species].types[1], 32, 1);
+        if (TYPE_ICONS_USE_SPRITES)
+        {
+            UpdateTypeIconSprites(species, 0, 56, 47);
+        }
+        else
+        {
+            BlitMenuTypeIcon(sPokedexScreenData->windowIds[12], gSpeciesInfo[species].types[0], 0, 1);
+            if (gSpeciesInfo[species].types[0] != gSpeciesInfo[species].types[1])
+                BlitMenuTypeIcon(sPokedexScreenData->windowIds[12], gSpeciesInfo[species].types[1], 32, 1);
+        }
     }
     PutWindowTilemap(sPokedexScreenData->windowIds[12]);
     CopyWindowToVram(sPokedexScreenData->windowIds[12], COPYWIN_GFX);
@@ -3380,6 +3389,7 @@ u8 DexScreen_DestroyAreaScreenResources(void)
     int i;
 
     DestroyPokedexAreaMarkers(sPokedexScreenData->areaMarkersTaskId);
+    DestroyTypeIcons();
 
     for (i = 0; i < 13; i++)
         DexScreen_RemoveWindow(&sPokedexScreenData->windowIds[i]);
@@ -3725,7 +3735,7 @@ void DexScreen_PrintStringWithAlignment(const u8 * str, s32 mode)
     DexScreen_AddTextPrinterParameterized(0, FONT_NORMAL, str, x, 2, 4);
 }
 
-static void InitTypeIcons(void)
+static void CreateTypeIcons(void)
 {
     if (!TYPE_ICONS_USE_SPRITES)
         return;
@@ -3735,9 +3745,9 @@ static void InitTypeIcons(void)
 
     for (u32 i = 0; i < MAX_DEX_ITEMS_SHOWN; i++)
     {
-        sPokedexScreenData->typeIconSpriteIds[2 * i] = CreateSprite(&gSpriteTemplate_MoveTypes, 146 + 16, 25 + (14 * i), 2);
+        sPokedexScreenData->typeIconSpriteIds[2 * i] = CreateSprite(&gSpriteTemplate_MoveTypes, 162, 25 + (14 * i), 2);
         gSprites[sPokedexScreenData->typeIconSpriteIds[2 * i]].invisible = TRUE;
-        sPokedexScreenData->typeIconSpriteIds[2 * i + 1] = CreateSprite(&gSpriteTemplate_MoveTypes, 178 + 16, 25 + (14 * i), 2);
+        sPokedexScreenData->typeIconSpriteIds[2 * i + 1] = CreateSprite(&gSpriteTemplate_MoveTypes, 194, 25 + (14 * i), 2);
         gSprites[sPokedexScreenData->typeIconSpriteIds[2 * i + 1]].invisible = TRUE;
     }
 }
@@ -3757,44 +3767,46 @@ static void DestroyTypeIcons(void)
     }
 }
 
-static void UpdateTypeIconSprites(s32 id, u32 itemIndex)
+static void ShowMonTypeIcon(struct Sprite *icon, enum Type type, s32 x, s32 y)
+{
+    icon->invisible = FALSE;
+    icon->oam.paletteNum = gTypesInfo[type].palette;
+    icon->x = x;
+    icon->y = y;
+    StartSpriteAnim(icon, type);
+}
+
+static void HideMonTypeIcon(struct Sprite *icon)
+{
+    icon->invisible = TRUE;
+}
+
+static void HideMonTypeIcons(u32 itemIndex)
+{
+    HideMonTypeIcon(&gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex]]);
+    HideMonTypeIcon(&gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex + 1]]);
+}
+
+static void UpdateTypeIconSprites(enum Species species, u32 itemIndex, s32 x, s32 y)
 {
     struct Sprite *icon1, *icon2;
     enum Type type1, type2;
-    enum Species species;
-    bool32 caught;
 
     if (!TYPE_ICONS_USE_SPRITES)
         return;
 
     icon1 = &gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex]];
     icon2 = &gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex + 1]];
-    caught = (id >> 17) & 1;
 
-    if (!caught)
-    {
-        icon1->invisible = TRUE;
-        icon2->invisible = TRUE;
-        return;
-    }
-
-    species = (id & 0xFFFF);
     type1 = gSpeciesInfo[species].types[0];
     type2 = gSpeciesInfo[species].types[1];
 
-    icon1->invisible = FALSE;
-    icon1->oam.paletteNum = gTypesInfo[type1].palette;
-    StartSpriteAnim(icon1, type1);
+    ShowMonTypeIcon(icon1, type1, x, y);
+    if (type1 != type2)
+        ShowMonTypeIcon(icon2, type2, x + 32, y);
+    else
+        HideMonTypeIcon(icon2);
 
-    if (type1 == type2)
-    {
-        icon2->invisible = TRUE;
-        return;
-    }
-
-    icon2->invisible = FALSE;
-    icon2->oam.paletteNum = gTypesInfo[type2].palette;
-    StartSpriteAnim(icon2, type2);
 }
 
 static void OrdererdListCursorMoveFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list)
@@ -3810,5 +3822,14 @@ static void OrdererdListCursorMoveFunc(s32 itemIndex, bool8 onInit, struct ListM
         return;
 
     for (u32 i = 0; i < maxShowed && startIndex + i < endIndex; i++)
-        UpdateTypeIconSprites(list->template.items[startIndex + i].id, i);
+    {
+        s32 id = list->template.items[startIndex + i].id;
+        enum Species species = (id & 0xFFFF);
+        bool32 caught = (id >> 17) & 1;
+
+        if (caught)
+            UpdateTypeIconSprites(species, i, 162, 24 + (14 * i));
+        else
+            HideMonTypeIcons(i);
+    }
 }
