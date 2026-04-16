@@ -1664,7 +1664,7 @@ static void ItemPrintFunc_OrderedListMenu(u8 windowId, u32 itemId, u8 y)
     {
         BlitMenuInfoIcon(sPokedexScreenData->numericalOrderWindowId, MENU_INFO_ICON_CAUGHT, 42, y);
 
-        if (!TYPE_ICONS_USE_SPRITES)
+        if (!P_USE_TYPE_ICON_SPRITES)
         {
             enum Type type1 = gSpeciesInfo[species].types[0];
             BlitMenuTypeIcon(sPokedexScreenData->numericalOrderWindowId, type1, 130, y);
@@ -3319,7 +3319,7 @@ u8 DexScreen_DrawMonAreaPage(void)
 
     if (monIsCaught)
     {
-        if (TYPE_ICONS_USE_SPRITES)
+        if (P_USE_TYPE_ICON_SPRITES)
         {
             UpdateTypeIconSprites(species, 0, 56, 47);
         }
@@ -3737,7 +3737,7 @@ void DexScreen_PrintStringWithAlignment(const u8 * str, s32 mode)
 
 static void CreateTypeIcons(void)
 {
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
@@ -3754,7 +3754,7 @@ static void CreateTypeIcons(void)
 
 static void DestroyTypeIcons(void)
 {
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     for (u32 i = 0; i < MAX_DEX_ITEMS_SHOWN * 2; i++)
@@ -3792,7 +3792,7 @@ static void UpdateTypeIconSprites(enum Species species, u32 itemIndex, s32 x, s3
     struct Sprite *icon1, *icon2;
     enum Type type1, type2;
 
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     icon1 = &gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex]];
@@ -3818,7 +3818,7 @@ static void OrdererdListCursorMoveFunc(s32 itemIndex, bool8 onInit, struct ListM
     if (!onInit)
         PlaySE(SE_SELECT);
 
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     for (u32 i = 0; i < maxShowed && startIndex + i < endIndex; i++)

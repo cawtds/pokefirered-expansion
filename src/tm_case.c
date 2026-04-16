@@ -1582,7 +1582,7 @@ static void PrintMoveInfo(enum Item itemId)
         enum Type type = gMovesInfo[move].type;
 
         // Draw type icon
-        if (TYPE_ICONS_USE_SPRITES)
+        if (P_USE_TYPE_ICON_SPRITES)
             UpdateTypeIconSprite(type);
         else
             BlitMenuTypeIcon(WIN_MOVE_INFO, type, 0, 0);
@@ -1762,7 +1762,7 @@ static void CreateTypeIconSprite(void)
 {
     struct Sprite *sprite;
 
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
@@ -1786,7 +1786,7 @@ static void ShowMonTypeIcon(enum Type type, s32 x, s32 y)
 
 static void UpdateTypeIconSprite(enum Type type)
 {
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     ShowMonTypeIcon(type, 72, 110);
@@ -1799,7 +1799,7 @@ static void HideTypeIcon(void)
 
 static void DestroyTypeIconSprites(void)
 {
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     if (sTMCaseDynamicResources->typeIconSpriteId != 0xFF)

@@ -409,7 +409,7 @@ static void InitMoveRelearnerWindows(void)
 
 void CB2_InitLearnMove(void)
 {
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         SetGpuReg(REG_OFFSET_DISPCNT, 0);
 
     ResetSpriteData();
@@ -466,7 +466,7 @@ void CB2_InitLearnMove(void)
 
 static void CB2_InitLearnMoveReturnFromSelectMove(void)
 {
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         SetGpuReg(REG_OFFSET_DISPCNT, 0);
 
     ResetSpriteData();
@@ -898,7 +898,7 @@ static void PrintMoveInfo(enum Move move)
     u16 accuracy = GetMoveAccuracy(move);
     enum Type moveType = GetMoveType(move);
 
-    if (TYPE_ICONS_USE_SPRITES)
+    if (P_USE_TYPE_ICON_SPRITES)
         UpdateTypeIconSprite(moveType);
     else
         BlitMenuTypeIcon(RELEARNER_WIN_MOVE_TYPE, moveType, 1, 4);
@@ -1288,7 +1288,7 @@ static void CreateTypeIconSprite(void)
 {
     struct Sprite *sprite;
 
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
 
@@ -1313,7 +1313,7 @@ static void ShowMonTypeIcon(enum Type type, s32 x, s32 y)
 
 static void UpdateTypeIconSprite(enum Type type)
 {
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     ShowMonTypeIcon(type, 57, 10);
@@ -1326,7 +1326,7 @@ static void HideTypeIcon(void)
 
 static void DestroyTypeIconSprites(void)
 {
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     if (sMoveRelearnerStruct->typeIconSpriteId != 0xFF)

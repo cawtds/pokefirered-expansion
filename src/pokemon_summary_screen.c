@@ -3602,7 +3602,7 @@ static void PokeSum_DrawMoveTypeIcons(void)
 
     FillWindowPixelBuffer(sMonSummaryScreen->windowIds[5], 0);
 
-    if (TYPE_ICONS_USE_SPRITES)
+    if (P_USE_TYPE_ICON_SPRITES)
     {
         UpdateMoveTypeIconSprites();
         return;
@@ -4082,7 +4082,7 @@ static void PokeSum_PrintMonTypeIcons(void)
     case PSS_PAGE_INFO:
         if (!sMonSummaryScreen->isEgg)
         {
-            if (TYPE_ICONS_USE_SPRITES)
+            if (P_USE_TYPE_ICON_SPRITES)
             {
                 UpdateMonTypeIconSprites(TRUE);
                 return;
@@ -4101,7 +4101,7 @@ static void PokeSum_PrintMonTypeIcons(void)
         break;
     case PSS_PAGE_MOVES_INFO:
         FillWindowPixelBuffer(sMonSummaryScreen->windowIds[6], 0);
-        if (TYPE_ICONS_USE_SPRITES)
+        if (P_USE_TYPE_ICON_SPRITES)
         {
             UpdateMonTypeIconSprites(FALSE);
             return;
@@ -5874,7 +5874,7 @@ static void PokeSum_UpdateWin1ActiveFlag(u8 curPageIndex)
         SetGpuReg(REG_OFFSET_DISPCNT, GetGpuReg(REG_OFFSET_DISPCNT) | DISPCNT_WIN1_ON);
         break;
     case PSS_PAGE_MOVES:
-        if (!TYPE_ICONS_USE_SPRITES)
+        if (!P_USE_TYPE_ICON_SPRITES)
             SetGpuReg(REG_OFFSET_DISPCNT, GetGpuReg(REG_OFFSET_DISPCNT) | DISPCNT_WIN1_ON);
         break;
     default:
@@ -5939,7 +5939,7 @@ static void CreateMonTypeIconSprite(u32 i)
 
 static void CreateTypeIconSprites(void)
 {
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
@@ -5954,7 +5954,7 @@ static void CreateTypeIconSprites(void)
 
 static void UpdateMoveTypeIconSprites(void)
 {
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
@@ -5996,7 +5996,7 @@ static void UpdateMonTypeIconSprites(bool32 isInfoPage)
     s32 x1, x2, y;
     bool32 showTera;
 
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     icon1 = &gSprites[sMonSummaryScreen->monTypeIconSpriteIds[0]];
@@ -6027,7 +6027,7 @@ static void UpdateMonTypeIconSprites(bool32 isInfoPage)
 
 static void HideMoveTypeIcons(void)
 {
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
@@ -6036,7 +6036,7 @@ static void HideMoveTypeIcons(void)
 
 static void HideMonTypeIcons(void)
 {
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     for (u32 i = 0; i < sizeof(sMonSummaryScreen->monTypeIconSpriteIds); i++)
@@ -6045,7 +6045,7 @@ static void HideMonTypeIcons(void)
 
 static void DestroyTypeIconSprites(void)
 {
-    if (!TYPE_ICONS_USE_SPRITES)
+    if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
     for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
