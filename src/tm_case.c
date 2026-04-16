@@ -1571,7 +1571,7 @@ static void PrintMoveInfo(enum Item itemId)
         const u8 *str;
         enum Move move = ItemIdToBattleMoveId(itemId);
         // Draw type icon
-        BlitMenuInfoIcon(WIN_MOVE_INFO, gMovesInfo[move].type + 1, 0, 0);
+        BlitMenuTypeIcon(WIN_MOVE_INFO, gMovesInfo[move].type, 0, 0);
 
         // Print power
         if (gMovesInfo[move].power < 2)

@@ -881,7 +881,7 @@ static void PrintMoveInfo(enum Move move)
     u16 power = GetMovePower(move);
     u16 accuracy = GetMoveAccuracy(move);
 
-    BlitMenuInfoIcon(RELEARNER_WIN_MOVE_TYPE, GetMoveType(move) + 1, 1, 4);
+    BlitMenuTypeIcon(RELEARNER_WIN_MOVE_TYPE, GetMoveType(move) + 1, 1, 4);
 
     FillWindowPixelBuffer(RELEARNER_WIN_MOVE_PP, PIXEL_FILL(colors[0]));
     FillWindowPixelBuffer(RELEARNER_WIN_MOVE_POW_ACC, PIXEL_FILL(colors[0]));

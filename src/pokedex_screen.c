@@ -1666,9 +1666,9 @@ static void ItemPrintFunc_OrderedListMenu(u8 windowId, u32 itemId, u8 y)
         if (!TYPE_ICONS_USE_SPRITES)
         {
             enum Type type1 = gSpeciesInfo[species].types[0];
-            BlitMenuInfoIcon(sPokedexScreenData->numericalOrderWindowId, type1 + 1, 130, y);
+            BlitMenuTypeIcon(sPokedexScreenData->numericalOrderWindowId, type1, 130, y);
             if (type1 != gSpeciesInfo[species].types[1])
-                BlitMenuInfoIcon(sPokedexScreenData->numericalOrderWindowId, gSpeciesInfo[species].types[1] + 1, 162, y);
+                BlitMenuTypeIcon(sPokedexScreenData->numericalOrderWindowId, gSpeciesInfo[species].types[1], 162, y);
         }
     }
 }
@@ -3317,9 +3317,9 @@ u8 DexScreen_DrawMonAreaPage(void)
 
     if (monIsCaught)
     {
-        BlitMenuInfoIcon(sPokedexScreenData->windowIds[12], 1 + gSpeciesInfo[species].types[0], 0, 1);
+        BlitMenuTypeIcon(sPokedexScreenData->windowIds[12], gSpeciesInfo[species].types[0], 0, 1);
         if (gSpeciesInfo[species].types[0] != gSpeciesInfo[species].types[1])
-            BlitMenuInfoIcon(sPokedexScreenData->windowIds[12], 1 + gSpeciesInfo[species].types[1], 32, 1);
+            BlitMenuTypeIcon(sPokedexScreenData->windowIds[12], gSpeciesInfo[species].types[1], 32, 1);
     }
     PutWindowTilemap(sPokedexScreenData->windowIds[12]);
     CopyWindowToVram(sPokedexScreenData->windowIds[12], COPYWIN_GFX);

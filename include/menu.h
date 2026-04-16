@@ -15,12 +15,18 @@
 #define MENU_CURSOR_DELTA_LEFT  -1
 #define MENU_CURSOR_DELTA_RIGHT  1
 
-#define MENU_INFO_ICON_CAUGHT    0
-#define MENU_INFO_ICON_TYPE      (NUMBER_OF_MON_TYPES + 1)
-#define MENU_INFO_ICON_POWER     (NUMBER_OF_MON_TYPES + 2)
-#define MENU_INFO_ICON_ACCURACY  (NUMBER_OF_MON_TYPES + 3)
-#define MENU_INFO_ICON_PP        (NUMBER_OF_MON_TYPES + 4)
-#define MENU_INFO_ICON_EFFECT    (NUMBER_OF_MON_TYPES + 5)
+#define MENU_INFO_TYPE_ICON_WIDTH  32
+#define MENU_INFO_TYPE_ICON_HEIGHT 12
+
+enum MenuInfoIcon
+{
+    MENU_INFO_ICON_CAUGHT,
+    MENU_INFO_ICON_TYPE,
+    MENU_INFO_ICON_POWER,
+    MENU_INFO_ICON_ACCURACY,
+    MENU_INFO_ICON_PP,
+    MENU_INFO_ICON_EFFECT
+};
 
 enum SaveStat
 {
@@ -56,7 +62,8 @@ s8 Menu2_GetStarSpritePosAttribute(enum Species species, u32 personality, u8 att
 void LoadMonIconPalAtOffset(u8 palOffset, enum Species speciesId);
 void DrawMonIconAtPos(u8 windowId, enum Species speciesId, u32 personality, u16 x, u16 y);
 void ListMenuLoadStdPalAt(u8 palOffset, u8 palId);
-void BlitMenuInfoIcon(u8 windowId, u8 iconId, u16 x, u16 y);
+void BlitMenuInfoIcon(u8 windowId, enum MenuInfoIcon iconId, u16 x, u16 y);
+void BlitMenuTypeIcon(u8 windowId, enum Type type, u16 x, u16 y);
 
 // menu
 s8 Menu_ProcessGridInput(void);
