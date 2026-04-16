@@ -1257,9 +1257,6 @@ const struct SpriteTemplate gSpriteTemplate_MoveTypes =
     .paletteTag = TAG_MOVE_TYPES,
     .oam = &sOamData_MoveTypes,
     .anims = sSpriteAnimTable_MoveTypes,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallback savedCallback, u8 mode)
