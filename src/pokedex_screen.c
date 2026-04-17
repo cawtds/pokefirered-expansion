@@ -33,6 +33,7 @@
 #define MAX_DEX_ITEMS_SHOWN 9
 #define TAG_AREA_MARKERS 2001
 #define TAG_SILHOUETTE 30000
+#define TAG_CATEGORY_SELECTION_CURSOR 30001
 
 enum TextMode {
     TEXT_LEFT,
@@ -1158,6 +1159,7 @@ static void Task_PokedexScreen(u8 taskId)
             case DEX_ORDER_NUMERICAL_NATIONAL:
                 RemoveScrollIndicatorArrowPair(sPokedexScreenData->scrollArrowsTaskId);
                 sPokedexScreenData->dexOrderId = sPokedexScreenData->modeSelectInput;
+                CreateTypeIcons();
                 BeginNormalPaletteFade(~0x8000, 0, 0, 16, RGB_WHITEALPHA);
                 sPokedexScreenData->state = 9;
                 break;
@@ -1168,6 +1170,7 @@ static void Task_PokedexScreen(u8 taskId)
                 RemoveScrollIndicatorArrowPair(sPokedexScreenData->scrollArrowsTaskId);
                 sPokedexScreenData->dexOrderId = sPokedexScreenData->modeSelectInput;
                 sPokedexScreenData->characteristicOrderMenuItemsAbove = sPokedexScreenData->characteristicOrderMenuCursorPos = 0;
+                CreateTypeIcons();
                 BeginNormalPaletteFade(~0x8000, 0, 0, 16, RGB_WHITEALPHA);
                 sPokedexScreenData->state = 8;
                 break;
@@ -1307,7 +1310,6 @@ static void Task_DexScreen_NumericalOrder(u8 taskId)
         sPokedexScreenData->state = 0;
         break;
     case 2:
-        CreateTypeIcons();
         DexScreen_InitGfxForNumericalOrderList();
         sPokedexScreenData->state = 3;
         break;
@@ -1396,7 +1398,6 @@ static void Task_DexScreen_CharacteristicOrder(u8 taskId)
         sPokedexScreenData->state = 0;
         break;
     case 2:
-        CreateTypeIcons();
         DexScreen_CreateCharacteristicListMenu();
         sPokedexScreenData->state = 3;
         break;
@@ -1802,6 +1803,7 @@ static void Task_DexScreen_CategorySubmenu(u8 taskId)
     case 7:
         RemoveScrollIndicatorArrowPair(sPokedexScreenData->scrollArrowsTaskId);
         ListMenuRemoveCursorObject(sPokedexScreenData->categoryPageCursorTaskId, 0);
+        CreateTypeIcons();
         BeginNormalPaletteFade(~0x8000, 0, 0, 16, RGB_WHITEALPHA);
         sPokedexScreenData->state = 1;
         break;
@@ -1926,6 +1928,7 @@ static void Task_DexScreen_CategorySubmenu(u8 taskId)
         }
         break;
     case 21:
+        CreateTypeIcons();
         DexScreen_DrawMonAreaPage();
         sPokedexScreenData->state = 22;
         break;
@@ -2065,6 +2068,7 @@ static void Task_DexScreen_ShowMonPage(u8 taskId)
         else if (JOY_NEW(B_BUTTON))
         {
             RemoveDexPageWindows();
+            CreateTypeIcons();
             BeginNormalPaletteFade(~0x8000, 0, 0, 16, RGB_WHITEALPHA);
             sPokedexScreenData->state = 1;
         }
@@ -3339,7 +3343,7 @@ u8 DexScreen_DrawMonAreaPage(void)
     // Show size comparison
     ResetAllPicSprites();
     palSlot = IndexOfSpritePaletteTag(TAG_SILHOUETTE);
-    if (palSlot)
+    if (palSlot == 0xFF)
         palSlot = AllocSpritePalette(TAG_SILHOUETTE);
 
     LoadPalette(sPalette_Silhouette, OBJ_PLTT_ID(palSlot), PLTT_SIZE_4BPP);
@@ -3769,6 +3773,10 @@ static void DestroyTypeIcons(void)
             sPokedexScreenData->typeIconSpriteIds[i] = 0xFF;
         }
     }
+
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_1);
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_2);
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_3);
 }
 
 static void HideMonTypeIcons(u32 itemIndex)

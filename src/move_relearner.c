@@ -1320,4 +1320,8 @@ static void DestroyTypeIconSprites(void)
         DestroySprite(&gSprites[sMoveRelearnerStruct->typeIconSpriteId]);
         sMoveRelearnerStruct->typeIconSpriteId = 0xFF;
     }
+
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_1);
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_2);
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_3);
 }

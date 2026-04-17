@@ -1761,8 +1761,6 @@ static void SpriteCB_SwapDisc(struct Sprite *sprite)
 
 static void TMCase_CreateTypeIconSprite(void)
 {
-    struct Sprite *sprite;
-
     if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
@@ -1804,4 +1802,8 @@ static void DestroyTypeIconSprites(void)
         DestroySprite(&gSprites[sTMCaseDynamicResources->typeIconSpriteId]);
         sTMCaseDynamicResources->typeIconSpriteId = 0xFF;
     }
+
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_1);
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_2);
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_3);
 }

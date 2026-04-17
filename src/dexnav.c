@@ -2053,16 +2053,11 @@ static void SetSpriteInvisibility(u8 spriteArrayId, bool8 invisible)
     gSprites[sDexNavUiDataPtr->typeIconSpriteIds[spriteArrayId]].invisible = invisible;
 }
 
-static void SetTypeIconPosAndPal(u8 typeId, u8 x, u8 y, u8 spriteArrayId)
+static void SetTypeIconPosAndPal(enum Type type, u8 x, u8 y, u8 spriteArrayId)
 {
-    struct Sprite *sprite;
+    struct Sprite *sprite = &gSprites[sDexNavUiDataPtr->typeIconSpriteIds[spriteArrayId]];
 
-    sprite = &gSprites[sDexNavUiDataPtr->typeIconSpriteIds[spriteArrayId]];
-    StartSpriteAnim(sprite, typeId);
-    sprite->oam.paletteNum = IndexOfSpritePaletteTag(gTypesInfo[typeId].paletteTag);
-    sprite->x = x + 16;
-    sprite->y = y + 8;
-    SetSpriteInvisibility(spriteArrayId, FALSE);
+    ShowTypeIcon(sprite, type, x + 16, y + 8);
 }
 
 static void PrintCurrentSpeciesInfo(void)
