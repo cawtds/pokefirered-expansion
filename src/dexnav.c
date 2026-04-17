@@ -2052,39 +2052,13 @@ static void SetSpriteInvisibility(u8 spriteArrayId, bool8 invisible)
     gSprites[sDexNavUiDataPtr->typeIconSpriteIds[spriteArrayId]].invisible = invisible;
 }
 
-// different from pokemon_summary_screen
-#define TYPE_ICON_PAL_NUM_0     13
-#define TYPE_ICON_PAL_NUM_1     14
-#define TYPE_ICON_PAL_NUM_2     15
-static const u8 sMoveTypeToOamPaletteNum[NUMBER_OF_MON_TYPES] =
-{
-    [TYPE_NORMAL] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_FIGHTING] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_FLYING] = TYPE_ICON_PAL_NUM_1,
-    [TYPE_POISON] = TYPE_ICON_PAL_NUM_1,
-    [TYPE_GROUND] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_ROCK] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_BUG] = TYPE_ICON_PAL_NUM_2,
-    [TYPE_GHOST] = TYPE_ICON_PAL_NUM_1,
-    [TYPE_STEEL] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_MYSTERY] = TYPE_ICON_PAL_NUM_2,
-    [TYPE_FIRE] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_WATER] = TYPE_ICON_PAL_NUM_1,
-    [TYPE_GRASS] = TYPE_ICON_PAL_NUM_2,
-    [TYPE_ELECTRIC] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_PSYCHIC] = TYPE_ICON_PAL_NUM_1,
-    [TYPE_ICE] = TYPE_ICON_PAL_NUM_1,
-    [TYPE_DRAGON] = TYPE_ICON_PAL_NUM_2,
-    [TYPE_DARK] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_FAIRY] = TYPE_ICON_PAL_NUM_1,
-};
 static void SetTypeIconPosAndPal(u8 typeId, u8 x, u8 y, u8 spriteArrayId)
 {
     struct Sprite *sprite;
 
     sprite = &gSprites[sDexNavUiDataPtr->typeIconSpriteIds[spriteArrayId]];
     StartSpriteAnim(sprite, typeId);
-    sprite->oam.paletteNum = sMoveTypeToOamPaletteNum[typeId];
+    sprite->oam.paletteNum = IndexOfSpritePaletteTag(gTypesInfo[typeId].paletteTag);
     sprite->x = x + 16;
     sprite->y = y + 8;
     SetSpriteInvisibility(spriteArrayId, FALSE);
@@ -2192,8 +2166,10 @@ static void CreateTypeIconSprites(void)
 {
     u8 i;
 
+    LoadSpritePalette(&gSpritePalette_MoveTypes1);
+    LoadSpritePalette(&gSpritePalette_MoveTypes2);
+    LoadSpritePalette(&gSpritePalette_MoveTypes3);
     LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
-    LoadPalette(gMoveTypes_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
     for (i = 0; i < 2; i++)
     {
         if (sDexNavUiDataPtr->typeIconSpriteIds[i] == 0xFF)

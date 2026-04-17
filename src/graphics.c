@@ -1513,7 +1513,9 @@ const u16 gCategoryIcons_Pal[] = INCBIN_U16("graphics/interface/category_icons.g
 const u32 gCategoryIcons_Gfx[] = INCBIN_U32("graphics/interface/category_icons.4bpp.smol");
 
 const u32 gMoveTypes_Gfx[] = INCBIN_U32("graphics/types/move_types.4bpp.smol");
-const u16 gMoveTypes_Pal[] = INCBIN_U16("graphics/types/move_types.gbapal");
+const u16 gMoveTypes_Pal1[] = INCBIN_U16("graphics/types/move_types_1.gbapal");
+const u16 gMoveTypes_Pal2[] = INCBIN_U16("graphics/types/move_types_2.gbapal");
+const u16 gMoveTypes_Pal3[] = INCBIN_U16("graphics/types/move_types_3.gbapal");
 
 // New Battle anims Particles
 const u32 gBattleAnimSpriteGfx_WhiteStreak[] = INCBIN_U32("graphics/battle_anims/sprites/white_streak.4bpp.smol");

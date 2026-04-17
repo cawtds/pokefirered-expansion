@@ -147,7 +147,7 @@ struct TypeInfo
 {
     u8 name[TYPE_NAME_LENGTH + 1];
     u8 generic[17];
-    u8 palette;
+    u16 paletteTag;
     u16 zMove;
     u16 maxMove;
     u16 teraTypeRGBValue;    // Most values pulled from the Tera type icon palette.

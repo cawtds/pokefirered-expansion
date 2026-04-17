@@ -1766,7 +1766,9 @@ static void CreateTypeIconSprite(void)
         return;
 
     LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
-    LoadPalette(gMoveTypes_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
+    LoadSpritePalette(&gSpritePalette_MoveTypes1);
+    LoadSpritePalette(&gSpritePalette_MoveTypes2);
+    LoadSpritePalette(&gSpritePalette_MoveTypes3);
 
     sTMCaseDynamicResources->typeIconSpriteId = CreateSprite(&gSpriteTemplate_MoveTypes, 0, 0, 80);
     sprite = &gSprites[sTMCaseDynamicResources->typeIconSpriteId];
@@ -1778,7 +1780,7 @@ static void ShowMonTypeIcon(enum Type type, s32 x, s32 y)
     struct Sprite *icon = &gSprites[sTMCaseDynamicResources->typeIconSpriteId];
 
     icon->invisible = FALSE;
-    icon->oam.paletteNum = gTypesInfo[type].palette;
+    icon->oam.paletteNum = IndexOfSpritePaletteTag(gTypesInfo[type].paletteTag);
     icon->x = x;
     icon->y = y;
     StartSpriteAnim(icon, type);

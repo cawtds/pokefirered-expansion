@@ -65,6 +65,9 @@ enum
 #define TAG_OMEGA_INDICATOR_TILE        0xD77A
 #define TAG_DYNAMAX_INDICATOR_TILE      0xD77B
 
+#define TAG_MOVE_TYPES_1                43210
+#define TAG_MOVE_TYPES_2                43211
+#define TAG_MOVE_TYPES_3                43212
 #define TAG_NORMAL_INDICATOR_TILE       0xD77C
 #define TAG_FIGHTING_INDICATOR_TILE     0xD77D
 #define TAG_FLYING_INDICATOR_TILE       0xD77E

@@ -31,6 +31,7 @@
 
 #define MAX_DEX_ITEMS_SHOWN 9
 #define TAG_AREA_MARKERS 2001
+#define TAG_SILHOUETTE 30000
 
 enum TextMode {
     TEXT_LEFT,
@@ -3217,6 +3218,7 @@ u8 DexScreen_DrawMonAreaPage(void)
     s16 left, top;
     u16 species;
     u16 kantoMapVoff;
+    u32 palSlot;
 
     species = sPokedexScreenData->dexSpecies;
     monIsCaught = DexScreen_GetSetPokedexFlag(species, FLAG_GET_CAUGHT, TRUE);
@@ -3335,19 +3337,23 @@ u8 DexScreen_DrawMonAreaPage(void)
 
     // Show size comparison
     ResetAllPicSprites();
-    LoadPalette(sPalette_Silhouette, OBJ_PLTT_ID(2), PLTT_SIZE_4BPP);
+    palSlot = IndexOfSpritePaletteTag(TAG_SILHOUETTE);
+    if (palSlot)
+        palSlot = AllocSpritePalette(TAG_SILHOUETTE);
+
+    LoadPalette(sPalette_Silhouette, OBJ_PLTT_ID(palSlot), PLTT_SIZE_4BPP);
 
     if (monIsCaught)
     {
         sPokedexScreenData->windowIds[14] = CreateMonFrontPicSprite(species, FALSE, DexScreen_GetDefaultPersonality(species), 40, 104, 0, TAG_NONE);
-        gSprites[sPokedexScreenData->windowIds[14]].oam.paletteNum = 2;
+        gSprites[sPokedexScreenData->windowIds[14]].oam.paletteNum = palSlot;
         gSprites[sPokedexScreenData->windowIds[14]].oam.affineMode = ST_OAM_AFFINE_NORMAL;
         gSprites[sPokedexScreenData->windowIds[14]].oam.matrixNum = 2;
         gSprites[sPokedexScreenData->windowIds[14]].oam.priority = 1;
         gSprites[sPokedexScreenData->windowIds[14]].y2 = gSpeciesInfo[species].pokemonOffset;
         SetOamMatrix(2, gSpeciesInfo[species].pokemonScale, 0, 0, gSpeciesInfo[species].pokemonScale);
         sPokedexScreenData->windowIds[15] = CreateTrainerFrontPicSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender), 80, 104, 0);
-        gSprites[sPokedexScreenData->windowIds[15]].oam.paletteNum = 2;
+        gSprites[sPokedexScreenData->windowIds[15]].oam.paletteNum = palSlot;
         gSprites[sPokedexScreenData->windowIds[15]].oam.affineMode = ST_OAM_AFFINE_NORMAL;
         gSprites[sPokedexScreenData->windowIds[15]].oam.matrixNum = 1;
         gSprites[sPokedexScreenData->windowIds[15]].oam.priority = 1;
@@ -3741,7 +3747,9 @@ static void CreateTypeIcons(void)
         return;
 
     LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
-    LoadPalette(gMoveTypes_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
+    LoadSpritePalette(&gSpritePalette_MoveTypes1);
+    LoadSpritePalette(&gSpritePalette_MoveTypes2);
+    LoadSpritePalette(&gSpritePalette_MoveTypes3);
 
     for (u32 i = 0; i < MAX_DEX_ITEMS_SHOWN; i++)
     {
@@ -3770,7 +3778,7 @@ static void DestroyTypeIcons(void)
 static void ShowMonTypeIcon(struct Sprite *icon, enum Type type, s32 x, s32 y)
 {
     icon->invisible = FALSE;
-    icon->oam.paletteNum = gTypesInfo[type].palette;
+    icon->oam.paletteNum = IndexOfSpritePaletteTag(gTypesInfo[type].paletteTag);
     icon->x = x;
     icon->y = y;
     StartSpriteAnim(icon, type);

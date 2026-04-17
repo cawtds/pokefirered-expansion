@@ -69,7 +69,7 @@
 //  - palettes: graphics/type_icons/move_types_{1/2/3}.pal
 // If FALSE, type icons will be blitted. (Vanilla)
 // - icons and palettes: graphics/interface/menu_info.png
-#define P_USE_TYPE_ICON_SPRITES          FALSE
+#define P_USE_TYPE_ICON_SPRITES          TRUE
 
 // Learnset helper toggles
 #define P_LEARNSET_HELPER_TEACHABLE      TRUE   // If FALSE, make sure to remove teachable_learnset.h from your .gitignore file. If TRUE, teachable_learnsets.h will be populated by tools/learnset_helpers/make_teachables.py using the included JSON files based on available TMs and tutors.

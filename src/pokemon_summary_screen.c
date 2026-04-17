@@ -46,6 +46,7 @@
 
 #define TAG_MOVE_TYPES 30002
 #define TAG_CATEGORY_ICONS 30004
+#define TAG_MON_SPRITE 30005
 
 // needs conflicting header to match (curIndex is s8 in the function, but has to be defined as u8 here)
 extern s16 SeekToNextMonInBox(struct BoxPokemon * boxMons, u8 curIndex, u8 maxIndex, u8 flags);
@@ -1245,16 +1246,35 @@ static const union AnimCmd *const sSpriteAnimTable_MoveTypes[NUMBER_OF_MON_TYPES
     [NUMBER_OF_MON_TYPES + CONTEST_CATEGORY_TOUGH] = sSpriteAnim_CategoryTough,
 };
 
+const struct SpritePalette gSpritePalette_MoveTypes1 =
+{
+    .data = gMoveTypes_Pal1,
+    .tag = TAG_MOVE_TYPES_1,
+};
+
+const struct SpritePalette gSpritePalette_MoveTypes2 =
+{
+    .data = gMoveTypes_Pal2,
+    .tag = TAG_MOVE_TYPES_2,
+};
+
+const struct SpritePalette gSpritePalette_MoveTypes3 =
+{
+    .data = gMoveTypes_Pal3,
+    .tag = TAG_MOVE_TYPES_3,
+};
+
 const struct CompressedSpriteSheet gSpriteSheet_MoveTypes =
 {
     .data = gMoveTypes_Gfx,
     .size = (NUMBER_OF_MON_TYPES + CONTEST_CATEGORIES_COUNT) * 0x100,
-    .tag = TAG_MOVE_TYPES
+    .tag = TAG_MOVE_TYPES,
 };
+
 const struct SpriteTemplate gSpriteTemplate_MoveTypes =
 {
     .tileTag = TAG_MOVE_TYPES,
-    .paletteTag = TAG_MOVE_TYPES,
+    .paletteTag = TAG_NONE,
     .oam = &sOamData_MoveTypes,
     .anims = sSpriteAnimTable_MoveTypes,
 };
@@ -4746,6 +4766,10 @@ static void PokeSum_CreateMonPicSprite(void)
     enum Species species;
     u32 personality;
     bool32 isShiny;
+    u16 palSlot = IndexOfSpritePaletteTag(TAG_MON_SPRITE);
+
+    if (palSlot == 0xFF)
+        palSlot = AllocSpritePalette(TAG_MON_SPRITE);
 
     sMonPicBounceState = AllocZeroed(sizeof(struct MonPicBounceState));
 
@@ -4753,7 +4777,7 @@ static void PokeSum_CreateMonPicSprite(void)
     personality = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_PERSONALITY);
     isShiny = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_IS_SHINY, NULL);
 
-    spriteId = CreateMonFrontPicSprite(species, isShiny, personality, 60, 65, 12, TAG_NONE);
+    spriteId = CreateMonFrontPicSprite(species, isShiny, personality, 60, 65, palSlot, TAG_NONE);
     FreeSpriteOamMatrix(&gSprites[spriteId]);
 
     if (!IsMonSpriteNotFlipped(species))
@@ -5942,8 +5966,10 @@ static void CreateTypeIconSprites(void)
     if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
+    LoadSpritePalette(&gSpritePalette_MoveTypes1);
+    LoadSpritePalette(&gSpritePalette_MoveTypes2);
+    LoadSpritePalette(&gSpritePalette_MoveTypes3);
     LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
-    LoadPalette(gMoveTypes_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
 
     for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
         CreateMoveTypeIconSprite(i);
@@ -5970,7 +5996,7 @@ static void UpdateMoveTypeIconSprites(void)
         type = sMonSummaryScreen->moveTypes[i];
 
         icon->invisible = FALSE;
-        icon->oam.paletteNum = gTypesInfo[type].palette;
+        icon->oam.paletteNum = IndexOfSpritePaletteTag(gTypesInfo[type].paletteTag);
         StartSpriteAnim(icon, type);
     }
 }
@@ -5978,7 +6004,7 @@ static void UpdateMoveTypeIconSprites(void)
 static void ShowMonTypeIcon(struct Sprite *icon, enum Type type, s32 x, s32 y)
 {
     icon->invisible = FALSE;
-    icon->oam.paletteNum = gTypesInfo[type].palette;
+    icon->oam.paletteNum = IndexOfSpritePaletteTag(gTypesInfo[type].paletteTag);
     icon->x = x;
     icon->y = y;
     StartSpriteAnim(icon, type);

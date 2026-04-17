@@ -4349,9 +4349,10 @@ static void SetTypeIconPosAndPal(u8 typeId, u8 x, u8 y, u8 spriteArrayId)
     sprite = &gSprites[sPokedexView->typeIconSpriteIds[spriteArrayId]];
     StartSpriteAnim(sprite, typeId);
     if (typeId < NUMBER_OF_MON_TYPES)
-        sprite->oam.paletteNum = gTypesInfo[typeId].palette;
+        sprite->oam.paletteNum = IndexOfSpritePaletteTag(gTypesInfo[typeId].paletteTag);
     else
-        sprite->oam.paletteNum = gTypesInfo[0].palette; // gContestCategoryInfo[typeId - NUMBER_OF_MON_TYPES].palette;
+        sprite->oam.paletteNum = IndexOfSpritePaletteTag(gTypesInfo[TYPE_NONE].paletteTag);
+
     sprite->x = x + 16;
     sprite->y = y + 8;
     SetSpriteInvisibility(spriteArrayId, FALSE);
@@ -4391,8 +4392,10 @@ static void CreateTypeIconSprites(void)
 {
     u8 i;
 
+    LoadSpritePalette(&gSpritePalette_MoveTypes1);
+    LoadSpritePalette(&gSpritePalette_MoveTypes2);
+    LoadSpritePalette(&gSpritePalette_MoveTypes3);
     LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
-    LoadPalette(gMoveTypes_Pal, 0x1D0, 0x60);
     for (i = 0; i < 2; i++)
     {
         if (sPokedexView->typeIconSpriteIds[i] == 0xFF)
@@ -4860,7 +4863,6 @@ static void Task_LoadStatsScreen(u8 taskId)
         sPokedexView->typeIconSpriteIds[1] = 0xFF;
         CreateTypeIconSprites();
         sPokedexView->categoryIconSpriteId = 0xFF;
-        LoadPalette(gMoveTypes_Pal, 0x1D0, 0x60);
         LoadCompressedSpriteSheet(&gSpriteSheet_CategoryIcons);
         LoadSpritePalette(&gSpritePal_CategoryIcons);
         gMain.state++;
