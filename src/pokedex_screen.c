@@ -89,7 +89,11 @@ struct PokedexScreenData
     u16 numOwnedKanto;
     u16 numSeenNational;
     u16 numOwnedNational;
-    u8 typeIconSpriteIds[MAX_DEX_ITEMS_SHOWN * 2];
+    struct
+    {
+        u8 icon1Id;
+        u8 icon2Id;
+    } typeIconSpriteIds[MAX_DEX_ITEMS_SHOWN];
 };
 
 struct PokedexScreenWindowGfx
@@ -162,7 +166,7 @@ static u8* ConvertMonWeightToMetricString(u32 weight);
 static u8* ConvertMeasurementToMetricString(u32 num, u32* index);
 static void CreateTypeIcons(void);
 static void UpdateTypeIconSprites(enum Species species, u32 itemIndex, s32 x, s32 y);
-static void DestroyTypeIcons(void);
+static void DestroyAllTypeIcons(void);
 static void OrdererdListCursorMoveFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list);
 
 static const u8 sText_PokedexTableOfContents[] = _("POKéDEX   TABLE OF CONTENTS");
@@ -991,7 +995,11 @@ void DexScreen_LoadResources(void)
     sPokedexScreenData->numOwnedNational = DexScreen_GetDexCount(FLAG_GET_CAUGHT, 1);
     sPokedexScreenData->numSeenKanto = DexScreen_GetDexCount(FLAG_GET_SEEN, 0);
     sPokedexScreenData->numOwnedKanto = DexScreen_GetDexCount(FLAG_GET_CAUGHT, 0);
-    memset(sPokedexScreenData->typeIconSpriteIds, 0xFF, sizeof(sPokedexScreenData->typeIconSpriteIds));
+    for (u32 i = 0; i < MAX_DEX_ITEMS_SHOWN; i++)
+    {
+        sPokedexScreenData->typeIconSpriteIds[i].icon1Id = 0xFF;
+        sPokedexScreenData->typeIconSpriteIds[i].icon2Id = 0xFF;
+    }
     SetBGMVolume_SuppressHelpSystemReduction(0x80);
     ChangeBgX(0, 0, 0);
     ChangeBgY(0, 0, 0);
@@ -1302,7 +1310,7 @@ static void Task_DexScreen_NumericalOrder(u8 taskId)
         sPokedexScreenData->state = 2;
         break;
     case 1:
-        DestroyTypeIcons();
+        DestroyAllTypeIcons();
         DexScreen_DestroyDexOrderListMenu(sPokedexScreenData->dexOrderId);
         HideBg(1);
         DexScreen_RemoveWindow(&sPokedexScreenData->numericalOrderWindowId);
@@ -1349,7 +1357,7 @@ static void Task_DexScreen_NumericalOrder(u8 taskId)
         }
         break;
     case 7:
-        DestroyTypeIcons();
+        DestroyAllTypeIcons();
         DexScreen_DestroyDexOrderListMenu(sPokedexScreenData->dexOrderId);
         FillBgTilemapBufferRect_Palette0(1, 0x000, 0, 0, 32, 20);
         CopyBgTilemapBufferToVram(1);
@@ -1390,7 +1398,7 @@ static void Task_DexScreen_CharacteristicOrder(u8 taskId)
         sPokedexScreenData->state = 2;
         break;
     case 1:
-        DestroyTypeIcons();
+        DestroyAllTypeIcons();
         DexScreen_DestroyDexOrderListMenu(sPokedexScreenData->dexOrderId);
         HideBg(1);
         DexScreen_RemoveWindow(&sPokedexScreenData->numericalOrderWindowId);
@@ -1436,7 +1444,7 @@ static void Task_DexScreen_CharacteristicOrder(u8 taskId)
         }
         break;
     case 7:
-        DestroyTypeIcons();
+        DestroyAllTypeIcons();
         DexScreen_DestroyDexOrderListMenu(sPokedexScreenData->dexOrderId);
         FillBgTilemapBufferRect_Palette0(1, 0x000, 0, 0, 32, 20);
         CopyBgTilemapBufferToVram(1);
@@ -3400,7 +3408,7 @@ u8 DexScreen_DestroyAreaScreenResources(void)
     int i;
 
     DestroyPokedexAreaMarkers(sPokedexScreenData->areaMarkersTaskId);
-    DestroyTypeIcons();
+    DestroyAllTypeIcons();
 
     for (i = 0; i < 13; i++)
         DexScreen_RemoveWindow(&sPokedexScreenData->windowIds[i]);
@@ -3755,23 +3763,29 @@ static void CreateTypeIcons(void)
 
     for (u32 i = 0; i < MAX_DEX_ITEMS_SHOWN; i++)
     {
-        sPokedexScreenData->typeIconSpriteIds[2 * i] = CreateTypeIconSprite();
-        sPokedexScreenData->typeIconSpriteIds[2 * i + 1] = CreateTypeIconSprite();
+        sPokedexScreenData->typeIconSpriteIds[i].icon1Id = CreateTypeIconSprite();
+        sPokedexScreenData->typeIconSpriteIds[i].icon2Id = CreateTypeIconSprite();
     }
 }
 
-static void DestroyTypeIcons(void)
+static void DestroyTypeIcon(u8 *spriteId)
+{
+    if (*spriteId == 0xFF)
+        return;
+
+    DestroySprite(&gSprites[*spriteId]);
+    *spriteId = 0xFF;
+}
+
+static void DestroyAllTypeIcons(void)
 {
     if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
-    for (u32 i = 0; i < MAX_DEX_ITEMS_SHOWN * 2; i++)
+    for (u32 i = 0; i < MAX_DEX_ITEMS_SHOWN; i++)
     {
-        if (sPokedexScreenData->typeIconSpriteIds[i] != 0xFF)
-        {
-            DestroySprite(&gSprites[sPokedexScreenData->typeIconSpriteIds[i]]);
-            sPokedexScreenData->typeIconSpriteIds[i] = 0xFF;
-        }
+        DestroyTypeIcon(&sPokedexScreenData->typeIconSpriteIds[i].icon1Id);
+        DestroyTypeIcon(&sPokedexScreenData->typeIconSpriteIds[i].icon2Id);
     }
 
     FreeSpritePaletteByTag(TAG_MOVE_TYPES_1);
@@ -3781,8 +3795,8 @@ static void DestroyTypeIcons(void)
 
 static void HideMonTypeIcons(u32 itemIndex)
 {
-    gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex]].invisible = TRUE;
-    gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex + 1]].invisible = TRUE;
+    gSprites[sPokedexScreenData->typeIconSpriteIds[itemIndex].icon1Id].invisible = TRUE;
+    gSprites[sPokedexScreenData->typeIconSpriteIds[itemIndex].icon2Id].invisible = TRUE;
 }
 
 static void UpdateTypeIconSprites(enum Species species, u32 itemIndex, s32 x, s32 y)
@@ -3793,8 +3807,8 @@ static void UpdateTypeIconSprites(enum Species species, u32 itemIndex, s32 x, s3
     if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
-    icon1 = &gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex]];
-    icon2 = &gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex + 1]];
+    icon1 = &gSprites[sPokedexScreenData->typeIconSpriteIds[itemIndex].icon1Id];
+    icon2 = &gSprites[sPokedexScreenData->typeIconSpriteIds[itemIndex].icon2Id];
 
     type1 = gSpeciesInfo[species].types[0];
     type2 = gSpeciesInfo[species].types[1];
