@@ -1095,7 +1095,7 @@ static void PokedudeAction_PrintVoiceoverMessage(enum BattlerId battler)
         ++gPokedudeBattlerStates[battler]->timer;
         break;
     case 3:
-        if (!IsTextPrinterActiveOnWindow(24) && JOY_NEW(A_BUTTON))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_OAK_OLD_MAN) && JOY_NEW(A_BUTTON))
         {
             PlaySE(SE_SELECT);
             BeginNormalPaletteFade(0xFFFFFF7F, 4, 8, 0, RGB_BLACK);
@@ -1156,7 +1156,7 @@ static void PokedudeAction_PrintMessageWithHealthboxPals(enum BattlerId battler)
         ++gPokedudeBattlerStates[battler]->timer;
         break;
     case 4:
-        if (!IsTextPrinterActiveOnWindow(24) && JOY_NEW(A_BUTTON))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_OAK_OLD_MAN) && JOY_NEW(A_BUTTON))
         {
             u32 mask;
 

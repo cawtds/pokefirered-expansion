@@ -147,7 +147,7 @@ struct TypeInfo
 {
     u8 name[TYPE_NAME_LENGTH + 1];
     u8 generic[17];
-    u8 palette;
+    u16 paletteTag;
     u16 zMove;
     u16 maxMove;
     u16 teraTypeRGBValue;    // Most values pulled from the Tera type icon palette.
@@ -157,6 +157,7 @@ struct TypeInfo
     u16 isHiddenPowerType:1; // Changing this for any type will change the distribution of all Hidden Power types from vanilla.
     u16 padding:11;
     const u16 *const paletteTMHM;
+    u16 menuIconOffset;
     //u16 enhanceItem;
     //u16 berry;
     //u16 gem;

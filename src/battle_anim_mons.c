@@ -2056,9 +2056,6 @@ u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, bool8 isBackpic, u8 id, s16
     else
         spriteId = CreateSprite(&sSpriteTemplates_MoveEffectMons[id], x, y + gSpeciesInfo[species].backPicYOffset, subpriority);
 
-    if (IsContest())
-    {
-    }
     return spriteId;
 }
 

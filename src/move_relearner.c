@@ -1,6 +1,8 @@
 #include "global.h"
+#include "battle_main.h"
 #include "bg.h"
 #include "data.h"
+#include "decompress.h"
 #include "event_data.h"
 #include "field_fadetransition.h"
 #include "gpu_regs.h"
@@ -23,6 +25,7 @@
 #include "task.h"
 #include "text_window.h"
 #include "trig.h"
+#include "type_icon_sprite.h"
 #include "constants/move_relearner.h"
 #include "constants/moves.h"
 #include "constants/songs.h"
@@ -156,6 +159,10 @@ static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves);
 static u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves);
 static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves);
 static u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves);
+static void Relearner_CreateTypeIconSprite(void);
+static void UpdateTypeIconSprite(enum Type type);
+static void HideTypeIcon(void);
+static void DestroyTypeIconSprites(void);
 
 struct RelearnType
 {
@@ -187,6 +194,7 @@ static EWRAM_DATA struct
     u8 numToShowAtOnce;
     u8 moveSlot;
     u8 partyMon;
+    u8 typeIconSpriteId;
 } *sMoveRelearnerStruct = NULL;
 
 static const u8 sTextColors[][3] =
@@ -402,7 +410,8 @@ static void InitMoveRelearnerWindows(void)
 
 void CB2_InitLearnMove(void)
 {
-    SetGpuReg(REG_OFFSET_DISPCNT, 0);
+    if (!P_USE_TYPE_ICON_SPRITES)
+        SetGpuReg(REG_OFFSET_DISPCNT, 0);
 
     ResetSpriteData();
     FreeAllSpritePalettes();
@@ -410,6 +419,7 @@ void CB2_InitLearnMove(void)
     sMoveRelearnerStruct = AllocZeroed(sizeof(*sMoveRelearnerStruct));
     sMoveRelearnerStruct->state = MENU_STATE_FADE_TO_BLACK;
     sMoveRelearnerStruct->partyMon = gSpecialVar_0x8004;
+    sMoveRelearnerStruct->typeIconSpriteId = 0xFF;
     SetVBlankCallback(VBlankCB_MoveRelearner);
 
     InitMoveRelearnerBackgroundLayers();
@@ -445,6 +455,7 @@ void CB2_InitLearnMove(void)
         }
     }
 
+    Relearner_CreateTypeIconSprite();
     CreateLearnableMovesList();
 
     RunTasks();
@@ -456,10 +467,14 @@ void CB2_InitLearnMove(void)
 
 static void CB2_InitLearnMoveReturnFromSelectMove(void)
 {
-    SetGpuReg(REG_OFFSET_DISPCNT, 0);
+    if (!P_USE_TYPE_ICON_SPRITES)
+        SetGpuReg(REG_OFFSET_DISPCNT, 0);
+
     ResetSpriteData();
     FreeAllSpritePalettes();
     ResetTasks();
+
+    Relearner_CreateTypeIconSprite();
     CreateLearnableMovesList();
     sMoveRelearnerStruct->partyMon = gSpecialVar_0x8004;
     sMoveRelearnerStruct->moveSlot = gSpecialVar_0x8005;
@@ -681,6 +696,7 @@ static void DoMoveRelearnerMain(void)
             {
                 SetMainCallback2(CB2_ReturnToField);
             }
+            DestroyTypeIconSprites();
             FreeAllWindowBuffers();
             Free(sMoveRelearnerStruct);
             gRelearnMode = RELEARN_MODE_NONE;
@@ -689,6 +705,7 @@ static void DoMoveRelearnerMain(void)
     case MENU_STATE_RETURN_TO_PARTY_MENU:
         if (!gPaletteFade.active)
         {
+            DestroyTypeIconSprites();
             FreeAllWindowBuffers();
             Free(sMoveRelearnerStruct);
             SetMainCallback2(CB2_ReturnToPartyMenuFromSummaryScreen);
@@ -880,8 +897,12 @@ static void PrintMoveInfo(enum Move move)
     u8 buffer[50];
     u16 power = GetMovePower(move);
     u16 accuracy = GetMoveAccuracy(move);
+    enum Type moveType = GetMoveType(move);
 
-    BlitMenuInfoIcon(RELEARNER_WIN_MOVE_TYPE, GetMoveType(move) + 1, 1, 4);
+    if (P_USE_TYPE_ICON_SPRITES)
+        UpdateTypeIconSprite(moveType);
+    else
+        BlitMenuTypeIcon(RELEARNER_WIN_MOVE_TYPE, moveType, 1, 4);
 
     FillWindowPixelBuffer(RELEARNER_WIN_MOVE_PP, PIXEL_FILL(colors[0]));
     FillWindowPixelBuffer(RELEARNER_WIN_MOVE_POW_ACC, PIXEL_FILL(colors[0]));
@@ -928,6 +949,7 @@ static void PrintMoveInfoHandleCancel_CopyToVram(void)
         FillWindowPixelBuffer(RELEARNER_WIN_MOVE_POW_ACC, PIXEL_FILL(0));
         FillWindowPixelBuffer(RELEARNER_WIN_MOVE_PP, PIXEL_FILL(0));
         FillWindowPixelBuffer(RELEARNER_WIN_MOVE_DESC, PIXEL_FILL(0));
+        HideTypeIcon();
     }
 
     CopyWindowToVram(RELEARNER_WIN_MOVE_TYPE, COPYWIN_GFX);
@@ -1261,4 +1283,45 @@ static bool32 HasRelearnerTutorMoves(struct BoxPokemon *boxMon)
     }
 
     return FALSE;
+}
+
+static void Relearner_CreateTypeIconSprite(void)
+{
+    if (!P_USE_TYPE_ICON_SPRITES)
+        return;
+
+    InitTypeIconGfx();
+    sMoveRelearnerStruct->typeIconSpriteId = CreateTypeIconSprite();
+}
+
+static void UpdateTypeIconSprite(enum Type type)
+{
+    if (!P_USE_TYPE_ICON_SPRITES)
+        return;
+
+    ShowTypeIcon(&gSprites[sMoveRelearnerStruct->typeIconSpriteId], type, 57, 10);
+}
+
+static void HideTypeIcon(void)
+{
+    if (!P_USE_TYPE_ICON_SPRITES)
+        return;
+
+    gSprites[sMoveRelearnerStruct->typeIconSpriteId].invisible = TRUE;
+}
+
+static void DestroyTypeIconSprites(void)
+{
+    if (!P_USE_TYPE_ICON_SPRITES)
+        return;
+
+    if (sMoveRelearnerStruct->typeIconSpriteId != 0xFF)
+    {
+        DestroySprite(&gSprites[sMoveRelearnerStruct->typeIconSpriteId]);
+        sMoveRelearnerStruct->typeIconSpriteId = 0xFF;
+    }
+
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_1);
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_2);
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_3);
 }

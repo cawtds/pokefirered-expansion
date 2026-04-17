@@ -1597,7 +1597,7 @@ static void Task_CreateLevelUpVerticalStripes(u8 taskId)
     switch (data[15])
     {
     case 0:
-        if (!IsTextPrinterActiveOnWindow(0))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_MSG))
         {
             if (!isOnBg2)
             {

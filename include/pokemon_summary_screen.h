@@ -5,8 +5,6 @@
 
 extern u8 gLastViewedMonIndex;
 extern const u8 gNotDoneYetDescription[];
-extern const struct SpriteTemplate gSpriteTemplate_MoveTypes;
-extern const struct CompressedSpriteSheet gSpriteSheet_MoveTypes;
 extern const struct CompressedSpriteSheet gSpriteSheet_CategoryIcons;
 extern const struct SpritePalette gSpritePal_CategoryIcons;
 extern const struct SpriteTemplate gSpriteTemplate_CategoryIcons;

@@ -34,6 +34,7 @@
 #include "task.h"
 #include "trade.h"
 #include "trainer_pokemon_sprites.h"
+#include "type_icon_sprite.h"
 #include "constants/battle_move_effects.h"
 #include "constants/battle.h"
 #include "constants/items.h"
@@ -43,8 +44,8 @@
 #include "constants/songs.h"
 #include "constants/sound.h"
 
-#define TAG_MOVE_TYPES 30002
 #define TAG_CATEGORY_ICONS 30004
+#define TAG_MON_SPRITE 30005
 
 // needs conflicting header to match (curIndex is s8 in the function, but has to be defined as u8 here)
 extern s16 SeekToNextMonInBox(struct BoxPokemon * boxMons, u8 curIndex, u8 maxIndex, u8 flags);
@@ -149,6 +150,12 @@ static void PokeSum_DestroyMonMarkingsSprite(void);
 static void PokeSum_UpdateMonMarkingsAnim(void);
 static s8 SeekToNextMonInSingleParty(s8 direction);
 static s8 SeekToNextMonInMultiParty(s8 direction);
+static void CreateTypeIconSprites(void);
+static void UpdateMoveTypeIconSprites(void);
+static void UpdateMonTypeIconSprites(bool32 isInfoPage);
+static void HideMoveTypeIcons(void);
+static void HideMonTypeIcons(void);
+static void DestroyTypeIconSprites(void);
 
 struct PokemonSummaryScreenData
 {
@@ -253,6 +260,8 @@ struct PokemonSummaryScreenData
     u8 ALIGNED(4) unk3304; /* 0x3304 */
     enum PokemonSummaryScreenSkillPageMode skillsPageMode:2;
     u8 categoryIconSpriteId;
+    u8 moveTypeIconSpriteIds[MAX_MON_MOVES + 1];
+    u8 monTypeIconSpriteIds[3];
 };
 
 struct Struct203B144
@@ -1086,172 +1095,6 @@ const struct SpriteTemplate gSpriteTemplate_CategoryIcons =
     .callback = SpriteCallbackDummy
 };
 
-static const struct OamData sOamData_MoveTypes =
-{
-    .y = 0,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(32x16),
-    .x = 0,
-    .matrixNum = 0,
-    .size = SPRITE_SIZE(32x16),
-    .tileNum = 0,
-    .priority = 1,
-    .paletteNum = 0,
-    .affineParam = 0,
-};
-static const union AnimCmd sSpriteAnim_TypeNone[] = {
-    ANIMCMD_FRAME(TYPE_NONE * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeNormal[] = {
-    ANIMCMD_FRAME(TYPE_NORMAL * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeFighting[] = {
-    ANIMCMD_FRAME(TYPE_FIGHTING * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeFlying[] = {
-    ANIMCMD_FRAME(TYPE_FLYING * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypePoison[] = {
-    ANIMCMD_FRAME(TYPE_POISON * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeGround[] = {
-    ANIMCMD_FRAME(TYPE_GROUND * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeRock[] = {
-    ANIMCMD_FRAME(TYPE_ROCK * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeBug[] = {
-    ANIMCMD_FRAME(TYPE_BUG * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeGhost[] = {
-    ANIMCMD_FRAME(TYPE_GHOST * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeSteel[] = {
-    ANIMCMD_FRAME(TYPE_STEEL * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeMystery[] = {
-    ANIMCMD_FRAME(TYPE_MYSTERY * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeFire[] = {
-    ANIMCMD_FRAME(TYPE_FIRE * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeWater[] = {
-    ANIMCMD_FRAME(TYPE_WATER * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeGrass[] = {
-    ANIMCMD_FRAME(TYPE_GRASS * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeElectric[] = {
-    ANIMCMD_FRAME(TYPE_ELECTRIC * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypePsychic[] = {
-    ANIMCMD_FRAME(TYPE_PSYCHIC * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeIce[] = {
-    ANIMCMD_FRAME(TYPE_ICE * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeDragon[] = {
-    ANIMCMD_FRAME(TYPE_DRAGON * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeDark[] = {
-    ANIMCMD_FRAME(TYPE_DARK * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeFairy[] = {
-    ANIMCMD_FRAME(TYPE_FAIRY * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_TypeStellar[] = {
-    ANIMCMD_FRAME(TYPE_STELLAR * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_CategoryCool[] = {
-    ANIMCMD_FRAME((CONTEST_CATEGORY_COOL + NUMBER_OF_MON_TYPES) * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_CategoryBeauty[] = {
-    ANIMCMD_FRAME((CONTEST_CATEGORY_BEAUTY + NUMBER_OF_MON_TYPES) * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_CategoryCute[] = {
-    ANIMCMD_FRAME((CONTEST_CATEGORY_CUTE + NUMBER_OF_MON_TYPES) * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_CategorySmart[] = {
-    ANIMCMD_FRAME((CONTEST_CATEGORY_SMART + NUMBER_OF_MON_TYPES) * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd sSpriteAnim_CategoryTough[] = {
-    ANIMCMD_FRAME((CONTEST_CATEGORY_TOUGH + NUMBER_OF_MON_TYPES) * 8, 0, FALSE, FALSE),
-    ANIMCMD_END
-};
-static const union AnimCmd *const sSpriteAnimTable_MoveTypes[NUMBER_OF_MON_TYPES + CONTEST_CATEGORIES_COUNT] = {
-    [TYPE_NONE] = sSpriteAnim_TypeNone,
-    [TYPE_NORMAL] = sSpriteAnim_TypeNormal,
-    [TYPE_FIGHTING] = sSpriteAnim_TypeFighting,
-    [TYPE_FLYING] = sSpriteAnim_TypeFlying,
-    [TYPE_POISON] = sSpriteAnim_TypePoison,
-    [TYPE_GROUND] = sSpriteAnim_TypeGround,
-    [TYPE_ROCK] = sSpriteAnim_TypeRock,
-    [TYPE_BUG] = sSpriteAnim_TypeBug,
-    [TYPE_GHOST] = sSpriteAnim_TypeGhost,
-    [TYPE_STEEL] = sSpriteAnim_TypeSteel,
-    [TYPE_MYSTERY] = sSpriteAnim_TypeMystery,
-    [TYPE_FIRE] = sSpriteAnim_TypeFire,
-    [TYPE_WATER] = sSpriteAnim_TypeWater,
-    [TYPE_GRASS] = sSpriteAnim_TypeGrass,
-    [TYPE_ELECTRIC] = sSpriteAnim_TypeElectric,
-    [TYPE_PSYCHIC] = sSpriteAnim_TypePsychic,
-    [TYPE_ICE] = sSpriteAnim_TypeIce,
-    [TYPE_DRAGON] = sSpriteAnim_TypeDragon,
-    [TYPE_DARK] = sSpriteAnim_TypeDark,
-    [TYPE_FAIRY] = sSpriteAnim_TypeFairy,
-    [TYPE_STELLAR] = sSpriteAnim_TypeStellar,
-    [NUMBER_OF_MON_TYPES + CONTEST_CATEGORY_COOL] = sSpriteAnim_CategoryCool,
-    [NUMBER_OF_MON_TYPES + CONTEST_CATEGORY_BEAUTY] = sSpriteAnim_CategoryBeauty,
-    [NUMBER_OF_MON_TYPES + CONTEST_CATEGORY_CUTE] = sSpriteAnim_CategoryCute,
-    [NUMBER_OF_MON_TYPES + CONTEST_CATEGORY_SMART] = sSpriteAnim_CategorySmart,
-    [NUMBER_OF_MON_TYPES + CONTEST_CATEGORY_TOUGH] = sSpriteAnim_CategoryTough,
-};
-
-const struct CompressedSpriteSheet gSpriteSheet_MoveTypes =
-{
-    .data = gMoveTypes_Gfx,
-    .size = (NUMBER_OF_MON_TYPES + CONTEST_CATEGORIES_COUNT) * 0x100,
-    .tag = TAG_MOVE_TYPES
-};
-const struct SpriteTemplate gSpriteTemplate_MoveTypes =
-{
-    .tileTag = TAG_MOVE_TYPES,
-    .paletteTag = TAG_MOVE_TYPES,
-    .oam = &sOamData_MoveTypes,
-    .anims = sSpriteAnimTable_MoveTypes,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
-};
-
 void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallback savedCallback, u8 mode)
 {
     sMonSummaryScreen = AllocZeroed(sizeof(struct PokemonSummaryScreenData));
@@ -1321,6 +1164,8 @@ void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallbac
     sMonSummaryScreen->infoAndMovesPageBgNum = 1;
     sMonSummaryScreen->flippingPages = FALSE;
     sMonSummaryScreen->categoryIconSpriteId = 0xFF;
+    memset(sMonSummaryScreen->moveTypeIconSpriteIds, 0xFF, sizeof(sMonSummaryScreen->moveTypeIconSpriteIds));
+    memset(sMonSummaryScreen->monTypeIconSpriteIds, 0xFF, sizeof(sMonSummaryScreen->monTypeIconSpriteIds));
     sMonSummaryScreen->skillsPageMode = PSS_SKILL_PAGE_STATS;
 
     sMonSummaryScreen->unk3228 = 0;
@@ -1612,16 +1457,32 @@ static void Task_InputHandler_Info(u8 taskId)
         }
         break;
     case PSS_STATE3270_FLIPPAGES:
-        if (sMonSummaryScreen->curPageIndex != PSS_PAGE_MOVES_INFO)
+        switch (sMonSummaryScreen->curPageIndex)
         {
+        case PSS_PAGE_INFO:
+            HideMoveTypeIcons();
             CreateTask(Task_PokeSum_FlipPages, 0);
-            sMonSummaryScreen->state3270 = PSS_STATE3270_HANDLEINPUT;
-        }
-        else
-        {
+            break;
+        case PSS_PAGE_SKILLS:
+            HideMoveTypeIcons();
+            HideMonTypeIcons();
+            CreateTask(Task_PokeSum_FlipPages, 0);
+            break;
+        case PSS_PAGE_MOVES:
+            HideMoveTypeIcons();
+            HideMonTypeIcons();
+            CreateTask(Task_PokeSum_FlipPages, 0);
+            break;
+        case PSS_PAGE_MOVES_INFO:
             gTasks[sMonSummaryScreen->inputHandlerTaskId].func = Task_FlipPages_FromInfo;
-            sMonSummaryScreen->state3270 = PSS_STATE3270_HANDLEINPUT;
+            break;
+        case PSS_PAGE_MOVE_DELETER:
+            HideMoveTypeIcons();
+            HideMonTypeIcons();
+            CreateTask(Task_PokeSum_FlipPages, 0);
+            break;
         }
+        sMonSummaryScreen->state3270 = PSS_STATE3270_HANDLEINPUT;
         break;
     case PSS_STATE3270_ATEXIT_FADEOUT:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, 0);
@@ -2917,6 +2778,7 @@ static u8 PokeSum_HandleCreateSprites(void)
         break;
     case 8:
         PokeSum_CreateMonIconSprite();
+        CreateTypeIconSprites();
         break;
     case 9:
         LoadCompressedSpriteSheet(&gSpriteSheet_CategoryIcons);
@@ -3569,16 +3431,22 @@ static void PokeSum_DrawMoveTypeIcons(void)
 
     FillWindowPixelBuffer(sMonSummaryScreen->windowIds[5], 0);
 
+    if (P_USE_TYPE_ICON_SPRITES)
+    {
+        UpdateMoveTypeIconSprites();
+        return;
+    }
+
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (sMonSummaryScreen->moveIds[i] == MOVE_NONE)
             continue;
 
-        BlitMenuInfoIcon(sMonSummaryScreen->windowIds[5], sMonSummaryScreen->moveTypes[i] + 1, 3, GetMoveNamePrinterYpos(i));
+        BlitMenuTypeIcon(sMonSummaryScreen->windowIds[5], sMonSummaryScreen->moveTypes[i], 3, GetMoveNamePrinterYpos(i));
     }
 
     if (sMonSummaryScreen->mode == PSS_MODE_SELECT_MOVE)
-        BlitMenuInfoIcon(sMonSummaryScreen->windowIds[5], sMonSummaryScreen->moveTypes[MAX_MON_MOVES] + 1, 3, GetMoveNamePrinterYpos(MAX_MON_MOVES));
+        BlitMenuTypeIcon(sMonSummaryScreen->windowIds[5], sMonSummaryScreen->moveTypes[MAX_MON_MOVES], 3, GetMoveNamePrinterYpos(MAX_MON_MOVES));
 }
 
 static const u8 *sText_PageRename = COMPOUND_STRING("{DPAD_RIGHT}PAGE {A_BUTTON}RENAME");
@@ -4026,12 +3894,17 @@ static void PokeSum_PrintMonTypeIcons(void)
     case PSS_PAGE_INFO:
         if (!sMonSummaryScreen->isEgg)
         {
-            BlitMenuInfoIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[0] + 1, 47, 35);
+            if (P_USE_TYPE_ICON_SPRITES)
+            {
+                UpdateMonTypeIconSprites(TRUE);
+                return;
+            }
+            BlitMenuTypeIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[0], 47, 35);
 
             if (sMonSummaryScreen->monTypes[0] != sMonSummaryScreen->monTypes[1])
-                BlitMenuInfoIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[1] + 1, 83, 35);
+                BlitMenuTypeIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[1], 83, 35);
             if (P_SHOW_TERA_TYPE == GEN_9 && sMonSummaryScreen->monTypes[2] != TYPE_NONE)
-                BlitMenuInfoIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[2] + 1, 83, 5);
+                BlitMenuTypeIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[2], 83, 5);
         }
         break;
     case PSS_PAGE_SKILLS:
@@ -4040,10 +3913,15 @@ static void PokeSum_PrintMonTypeIcons(void)
         break;
     case PSS_PAGE_MOVES_INFO:
         FillWindowPixelBuffer(sMonSummaryScreen->windowIds[6], 0);
-        BlitMenuInfoIcon(sMonSummaryScreen->windowIds[6], sMonSummaryScreen->monTypes[0] + 1, 0, 3);
+        if (P_USE_TYPE_ICON_SPRITES)
+        {
+            UpdateMonTypeIconSprites(FALSE);
+            return;
+        }
+        BlitMenuTypeIcon(sMonSummaryScreen->windowIds[6], sMonSummaryScreen->monTypes[0], 0, 3);
 
         if (sMonSummaryScreen->monTypes[0] != sMonSummaryScreen->monTypes[1])
-            BlitMenuInfoIcon(sMonSummaryScreen->windowIds[6], sMonSummaryScreen->monTypes[1] + 1, 36, 3);
+            BlitMenuTypeIcon(sMonSummaryScreen->windowIds[6], sMonSummaryScreen->monTypes[1], 36, 3);
 
         PutWindowTilemap(sMonSummaryScreen->windowIds[6]);
         break;
@@ -4313,6 +4191,7 @@ static void Task_HandleInput_SelectMove(u8 taskId)
             }
 
             DestroyCategoryIcon();
+            HideMonTypeIcons();
             ShoworHideMoveSelectionCursor(TRUE);
             sMonSummaryScreen->pageFlipDirection = 0;
             PokeSum_RemoveWindows(sMonSummaryScreen->curPageIndex);
@@ -4679,6 +4558,10 @@ static void PokeSum_CreateMonPicSprite(void)
     enum Species species;
     u32 personality;
     bool32 isShiny;
+    u16 palSlot = IndexOfSpritePaletteTag(TAG_MON_SPRITE);
+
+    if (palSlot == 0xFF)
+        palSlot = AllocSpritePalette(TAG_MON_SPRITE);
 
     sMonPicBounceState = AllocZeroed(sizeof(struct MonPicBounceState));
 
@@ -4686,7 +4569,7 @@ static void PokeSum_CreateMonPicSprite(void)
     personality = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_PERSONALITY);
     isShiny = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_IS_SHINY, NULL);
 
-    spriteId = CreateMonFrontPicSprite(species, isShiny, personality, 60, 65, 12, TAG_NONE);
+    spriteId = CreateMonFrontPicSprite(species, isShiny, personality, 60, 65, palSlot, TAG_NONE);
     FreeSpriteOamMatrix(&gSprites[spriteId]);
 
     if (!IsMonSpriteNotFlipped(species))
@@ -5490,6 +5373,7 @@ static void PokeSum_DestroySprites(void)
     DestroyMonStatusIconObj();
     DestroyPokerusIconObj();
     DestroyShinyStarObj();
+    DestroyTypeIconSprites();
     ResetSpriteData();
 }
 
@@ -5797,13 +5681,17 @@ static void Task_PokeSum_SwitchDisplayedPokemon(u8 taskId)
 static void PokeSum_UpdateWin1ActiveFlag(u8 curPageIndex)
 {
     ClearGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN1_ON);
+    return;
 
     switch (curPageIndex)
     {
     case PSS_PAGE_INFO:
     case PSS_PAGE_SKILLS:
-    case PSS_PAGE_MOVES:
         SetGpuReg(REG_OFFSET_DISPCNT, GetGpuReg(REG_OFFSET_DISPCNT) | DISPCNT_WIN1_ON);
+        break;
+    case PSS_PAGE_MOVES:
+        if (!P_USE_TYPE_ICON_SPRITES)
+            SetGpuReg(REG_OFFSET_DISPCNT, GetGpuReg(REG_OFFSET_DISPCNT) | DISPCNT_WIN1_ON);
         break;
     default:
         break;
@@ -5845,4 +5733,112 @@ static bool32 MapSecIsInKantoOrSevii(u8 mapSec)
     if (mapSec >= KANTO_MAPSEC_START && mapSec <= MAPSEC_SPECIAL_AREA)
         return TRUE;
     return FALSE;
+}
+
+static void CreateTypeIconSprites(void)
+{
+    if (!P_USE_TYPE_ICON_SPRITES)
+        return;
+
+    InitTypeIconGfx();
+
+    for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
+        sMonSummaryScreen->moveTypeIconSpriteIds[i] = CreateTypeIconSprite();
+
+    for (u32 i = 0; i < sizeof(sMonSummaryScreen->monTypeIconSpriteIds); i++)
+        sMonSummaryScreen->monTypeIconSpriteIds[i] = CreateTypeIconSprite();
+}
+static void UpdateMoveTypeIconSprites(void)
+{
+    if (!P_USE_TYPE_ICON_SPRITES)
+        return;
+
+    for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
+    {
+        struct Sprite *icon = &gSprites[sMonSummaryScreen->moveTypeIconSpriteIds[i]];
+        enum Type type = sMonSummaryScreen->moveTypes[i];
+
+        if (sMonSummaryScreen->moveIds[i] == MOVE_NONE)
+            icon->invisible = TRUE;
+        else
+            ShowTypeIcon(icon, type, 139, 27 + (28 * i));
+    }
+}
+
+static void UpdateMonTypeIconSprites(bool32 isInfoPage)
+{
+    struct Sprite *icon1, *icon2, *icon3;
+    enum Type type1, type2, teraType;
+    s32 x1, x2, y;
+    bool32 showTera;
+
+    if (!P_USE_TYPE_ICON_SPRITES)
+        return;
+
+    icon1 = &gSprites[sMonSummaryScreen->monTypeIconSpriteIds[0]];
+    icon2 = &gSprites[sMonSummaryScreen->monTypeIconSpriteIds[1]];
+    icon3 = &gSprites[sMonSummaryScreen->monTypeIconSpriteIds[2]];
+
+    type1 = sMonSummaryScreen->monTypes[0];
+    type2 = sMonSummaryScreen->monTypes[1];
+    teraType = sMonSummaryScreen->monTypes[2];
+
+    x1 = isInfoPage ? 183 : 64;
+    x2 = isInfoPage ? 219 : 100;
+    y = isInfoPage ? 57 : 41;
+
+    ShowTypeIcon(icon1, type1, x1, y);
+
+    if (type2 != type1)
+        ShowTypeIcon(icon2, type2, x2, y);
+    else
+        icon2->invisible = TRUE;
+
+    showTera = (P_SHOW_TERA_TYPE == GEN_9) && isInfoPage && teraType != TYPE_NONE;
+    if (showTera)
+        ShowTypeIcon(icon3, teraType, 219, 27);
+    else
+        icon3->invisible = TRUE;
+}
+
+static void HideMoveTypeIcons(void)
+{
+    if (!P_USE_TYPE_ICON_SPRITES)
+        return;
+
+    for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
+        gSprites[sMonSummaryScreen->moveTypeIconSpriteIds[i]].invisible = TRUE;
+}
+
+static void HideMonTypeIcons(void)
+{
+    if (!P_USE_TYPE_ICON_SPRITES)
+        return;
+
+    for (u32 i = 0; i < sizeof(sMonSummaryScreen->monTypeIconSpriteIds); i++)
+        gSprites[sMonSummaryScreen->monTypeIconSpriteIds[i]].invisible = TRUE;
+}
+
+static void DestroyTypeIconSprites(void)
+{
+    if (!P_USE_TYPE_ICON_SPRITES)
+        return;
+
+    for (u32 i = 0; i < MAX_MON_MOVES + 1; i++)
+    {
+        if (sMonSummaryScreen->moveTypeIconSpriteIds[i] != 0xFF)
+        {
+            DestroySprite(&gSprites[sMonSummaryScreen->moveTypeIconSpriteIds[i]]);
+            sMonSummaryScreen->moveTypeIconSpriteIds[i] = 0xFF;
+        }
+    }
+
+    for (u32 i = 0; i < sizeof(sMonSummaryScreen->monTypeIconSpriteIds); i++)
+    {
+        if (sMonSummaryScreen->monTypeIconSpriteIds[i] != 0xFF)
+        {
+            DestroySprite(&gSprites[sMonSummaryScreen->monTypeIconSpriteIds[i]]);
+            sMonSummaryScreen->monTypeIconSpriteIds[i] = 0xFF;
+        }
+    }
 }

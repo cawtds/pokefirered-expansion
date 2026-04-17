@@ -48,6 +48,7 @@
 #include "task.h"
 #include "text.h"
 #include "text_window.h"
+#include "type_icon_sprite.h"
 #include "wild_encounter.h"
 #include "window.h"
 #include "constants/species.h"
@@ -2052,42 +2053,11 @@ static void SetSpriteInvisibility(u8 spriteArrayId, bool8 invisible)
     gSprites[sDexNavUiDataPtr->typeIconSpriteIds[spriteArrayId]].invisible = invisible;
 }
 
-// different from pokemon_summary_screen
-#define TYPE_ICON_PAL_NUM_0     13
-#define TYPE_ICON_PAL_NUM_1     14
-#define TYPE_ICON_PAL_NUM_2     15
-static const u8 sMoveTypeToOamPaletteNum[NUMBER_OF_MON_TYPES] =
+static void SetTypeIconPosAndPal(enum Type type, u8 x, u8 y, u8 spriteArrayId)
 {
-    [TYPE_NORMAL] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_FIGHTING] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_FLYING] = TYPE_ICON_PAL_NUM_1,
-    [TYPE_POISON] = TYPE_ICON_PAL_NUM_1,
-    [TYPE_GROUND] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_ROCK] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_BUG] = TYPE_ICON_PAL_NUM_2,
-    [TYPE_GHOST] = TYPE_ICON_PAL_NUM_1,
-    [TYPE_STEEL] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_MYSTERY] = TYPE_ICON_PAL_NUM_2,
-    [TYPE_FIRE] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_WATER] = TYPE_ICON_PAL_NUM_1,
-    [TYPE_GRASS] = TYPE_ICON_PAL_NUM_2,
-    [TYPE_ELECTRIC] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_PSYCHIC] = TYPE_ICON_PAL_NUM_1,
-    [TYPE_ICE] = TYPE_ICON_PAL_NUM_1,
-    [TYPE_DRAGON] = TYPE_ICON_PAL_NUM_2,
-    [TYPE_DARK] = TYPE_ICON_PAL_NUM_0,
-    [TYPE_FAIRY] = TYPE_ICON_PAL_NUM_1,
-};
-static void SetTypeIconPosAndPal(u8 typeId, u8 x, u8 y, u8 spriteArrayId)
-{
-    struct Sprite *sprite;
+    struct Sprite *sprite = &gSprites[sDexNavUiDataPtr->typeIconSpriteIds[spriteArrayId]];
 
-    sprite = &gSprites[sDexNavUiDataPtr->typeIconSpriteIds[spriteArrayId]];
-    StartSpriteAnim(sprite, typeId);
-    sprite->oam.paletteNum = sMoveTypeToOamPaletteNum[typeId];
-    sprite->x = x + 16;
-    sprite->y = y + 8;
-    SetSpriteInvisibility(spriteArrayId, FALSE);
+    ShowTypeIcon(sprite, type, x + 16, y + 8);
 }
 
 static void PrintCurrentSpeciesInfo(void)
@@ -2192,12 +2162,19 @@ static void CreateTypeIconSprites(void)
 {
     u8 i;
 
-    LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
-    LoadPalette(gMoveTypes_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
+    InitTypeIconGfx();
+
     for (i = 0; i < 2; i++)
     {
         if (sDexNavUiDataPtr->typeIconSpriteIds[i] == 0xFF)
-            sDexNavUiDataPtr->typeIconSpriteIds[i] = CreateSprite(&gSpriteTemplate_MoveTypes, 10, 10, 2);
+        {
+            struct Sprite *sprite;
+
+            sDexNavUiDataPtr->typeIconSpriteIds[i] = CreateTypeIconSprite();
+            sprite = &gSprites[sDexNavUiDataPtr->typeIconSpriteIds[i]];
+            sprite->x = 10;
+            sprite->y = 10;
+        }
 
         SetSpriteInvisibility(i, TRUE);
     }

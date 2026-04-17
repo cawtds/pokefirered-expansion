@@ -61,6 +61,15 @@
 #define P_ONLY_OBTAINABLE_SHINIES        FALSE       // If TRUE, Pokémon encountered in the Battle Pyramid or while catching is disabled won't be Shiny.
 #define P_NO_SHINIES_WITHOUT_POKEBALLS   FALSE       // If TRUE, Pokémon encountered when the player is out of Poké Balls won't be Shiny.
 #define P_SHOW_DYNAMIC_TYPES             FALSE       // If TRUE, all moves with dynamic type changes will be reflected as their current type in battle/summary screens instead of just select ones like in vanilla.
+// Type Icons
+// If TRUE, type icons will use sprites.
+// Palettes are shared between icons across 3 files
+// Sprite locations:
+//  - icons: graphics/type_icons/{type_name}.png
+//  - palettes: graphics/type_icons/move_types_{1/2/3}.pal
+// If FALSE, type icons will be blitted. (Vanilla)
+// - icons and palettes: graphics/interface/menu_info.png
+#define P_USE_TYPE_ICON_SPRITES          TRUE
 
 // Learnset helper toggles
 #define P_LEARNSET_HELPER_TEACHABLE      TRUE   // If FALSE, make sure to remove teachable_learnset.h from your .gitignore file. If TRUE, teachable_learnsets.h will be populated by tools/learnset_helpers/make_teachables.py using the included JSON files based on available TMs and tutors.

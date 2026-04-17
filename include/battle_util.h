@@ -425,5 +425,7 @@ bool32 CanUseMoveConsecutively(enum BattlerId battler);
 void TryResetConsecutiveUseCounter(enum BattlerId battler);
 void SetOrClearRageVolatile(void);
 enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battlerDef);
+u32 GetWeather(void);
+u32 GetAttackerWeather(enum HoldEffect holdEffect, enum Ability ability, u32 weather);
 
 #endif // GUARD_BATTLE_UTIL_H

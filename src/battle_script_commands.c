@@ -1012,8 +1012,8 @@ static bool32 ShouldSkipToMoveEnd(void)
 static void Cmd_attackcanceler(void)
 {
     CMD_ARGS();
-    assertf(gBattlerAttacker < gBattlersCount, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
-    assertf(gBattlerTarget < gBattlersCount, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
+    assertf(gBattlerAttacker < MAX_BATTLERS_COUNT, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
+    assertf(gBattlerTarget < MAX_BATTLERS_COUNT, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
 
     if (gBattleStruct->battlerState[gBattlerAttacker].usedEjectItem)
     {
@@ -1287,12 +1287,23 @@ static inline void CalculateAndSetMoveDamage(struct BattleContext *ctx)
     }
 }
 
-static u32 GetWeather(void)
+u32 GetWeather(void)
 {
     if (gBattleWeather == B_WEATHER_NONE || !HasWeatherEffect())
         return B_WEATHER_NONE;
     else
         return gBattleWeather;
+}
+
+u32 GetAttackerWeather(enum HoldEffect holdEffect, enum Ability ability, u32 weather)
+{
+    if (ability == ABILITY_MEGA_SOL)
+        return B_WEATHER_SUN;
+
+    if (holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA)
+        return weather & ~(B_WEATHER_SUN | B_WEATHER_RAIN); // This was assumed not to block mega sol, like cloud nine doesn't.
+
+    return weather;
 }
 
 static void Cmd_damagecalc(void)
@@ -1657,7 +1668,10 @@ static void DoublesHPBarReduction(void)
     for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (IsBattlerUnaffectedByMove(battlerDef)
-         || gBattleStruct->moveDamage[battlerDef] == 0)
+         || gBattleStruct->moveDamage[battlerDef] == 0
+         || DoesSubstituteBlockMove(gBattlerAttacker, battlerDef, gCurrentMove)
+         || DoesDisguiseBlockMove(battlerDef, gCurrentMove)
+         || DoesIceFaceBlockMove(battlerDef, gCurrentMove))
             continue;
 
         s32 dmgUpdate = min(gBattleStruct->moveDamage[battlerDef], 10000);
@@ -1695,8 +1709,9 @@ static void Cmd_healthbarupdate(void)
         {
             PrepareStringBattle(STRINGID_SUBSTITUTEDAMAGED, battler);
         }
-        else if (!IsBattlerUnaffectedByMove(gBattlerTarget)
-              && !DoesDisguiseBlockMove(battler, gCurrentMove))
+        else if (!IsBattlerUnaffectedByMove(battler)
+              && !DoesDisguiseBlockMove(battler, gCurrentMove)
+              && !DoesIceFaceBlockMove(battler, gCurrentMove))
         {
             s32 damage = min(gBattleStruct->moveDamage[battler], 10000);
             BtlController_EmitHealthBarUpdate(battler, B_COMM_TO_CONTROLLER, damage);
@@ -5144,8 +5159,8 @@ static inline bool32 IsProtectivePadsProtected(enum BattlerId battler, enum Hold
 static void Cmd_moveend(void)
 {
     CMD_ARGS(u8 endMode, u8 endState);
-    assertf(gBattlerAttacker < gBattlersCount, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
-    assertf(gBattlerTarget < gBattlersCount, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
+    assertf(gBattlerAttacker < MAX_BATTLERS_COUNT, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
+    assertf(gBattlerTarget < MAX_BATTLERS_COUNT, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
 
     enum MoveEndResult result = DoMoveEnd(cmd->endMode, cmd->endState);
 
@@ -7976,7 +7991,7 @@ static u32 ChangeStatBuffs(enum BattlerId battler, s8 statValue, enum Stat statI
     if (gBattleMons[battler].statStages[statId] > MAX_STAT_STAGE)
         gBattleMons[battler].statStages[statId] = MAX_STAT_STAGE;
 
-    if (ShouldDefiantCompetitiveActivate(battler, battlerAbility))
+    if (statValue <= -1 && ShouldDefiantCompetitiveActivate(battler, battlerAbility))
         stats = 0; // use single stat animations when Defiant/Competitive activate
     else
         stats &= ~(1u << statId);
@@ -9440,19 +9455,20 @@ static void Cmd_recoverbasedonsunlight(void)
     if (gBattleMons[gBattlerAttacker].hp != gBattleMons[gBattlerAttacker].maxHP)
     {
         s32 recoverAmount = 0;
+        u32 weather = GetAttackerWeather(GetBattlerHoldEffect(gBattlerAttacker), GetBattlerAbility(gBattlerAttacker), GetWeather());
         if (GetMoveEffect(gCurrentMove) == EFFECT_SHORE_UP)
         {
-            if (HasWeatherEffect() && gBattleWeather & B_WEATHER_SANDSTORM)
+            if (weather & B_WEATHER_SANDSTORM)
                 recoverAmount = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
             else
                 recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
         }
         else if (GetConfig(B_TIME_OF_DAY_HEALING_MOVES) != GEN_2)
         {
-            if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
-                recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
-            else if (gBattleWeather & B_WEATHER_SUN)
+            if (weather & B_WEATHER_SUN)
                 recoverAmount = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
+            else if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
+                recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
             else // not sunny weather
                 recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
         }
@@ -9481,10 +9497,10 @@ static void Cmd_recoverbasedonsunlight(void)
                 break;
             }
 
-            if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
-                recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
-            else if (gBattleWeather & B_WEATHER_SUN)
+            if (weather & B_WEATHER_SUN)
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
+            else if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
+                recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
             else // not sunny weather
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
 
@@ -9701,8 +9717,7 @@ static void Cmd_trysethelpinghand(void)
 
     gBattlerTarget = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(gBattlerAttacker)));
 
-    if (!(gAbsentBattlerFlags & (1u << gBattlerTarget))
-     && !HasBattlerActedThisTurn(gBattlerTarget))
+    if (IsBattlerAlive(gBattlerTarget) && !HasBattlerActedThisTurn(gBattlerTarget))
     {
         gProtectStructs[gBattlerTarget].helpingHand++;
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -10416,6 +10431,7 @@ static void Cmd_tryrecycleitem(void)
         gLastUsedItem = *usedHeldItem;
         *usedHeldItem = ITEM_NONE;
         gBattleMons[gBattlerAttacker].item = gLastUsedItem;
+        gBattleMons[gBattlerAttacker].volatiles.unburdenActive = FALSE;
 
         BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].item), &gBattleMons[gBattlerAttacker].item);
         MarkBattlerForControllerExec(gBattlerAttacker);
@@ -11404,27 +11420,9 @@ static void Cmd_trainerslideout(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static const u16 sTelekinesisBanList[] =
-{
-    SPECIES_DIGLETT,
-    SPECIES_DUGTRIO,
-    SPECIES_DIGLETT_ALOLA,
-    SPECIES_DUGTRIO_ALOLA,
-    SPECIES_SANDYGAST,
-    SPECIES_PALOSSAND,
-    SPECIES_GENGAR_MEGA,
-};
-
 bool32 IsTelekinesisBannedSpecies(u16 species)
 {
-    u32 i;
-
-    for (i = 0; i < ARRAY_COUNT(sTelekinesisBanList); i++)
-    {
-        if (species == sTelekinesisBanList[i])
-            return TRUE;
-    }
-    return FALSE;
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isTelekinesisBanned;
 }
 
 static void Cmd_settelekinesis(void)
@@ -13185,6 +13183,7 @@ void BS_TryRecycleBerry(void)
         gLastUsedItem = *usedHeldItem;
         *usedHeldItem = ITEM_NONE;
         gBattleMons[gBattlerTarget].item = gLastUsedItem;
+        gBattleMons[gBattlerTarget].volatiles.unburdenActive = FALSE;
 
         BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[gBattlerTarget].item);
         MarkBattlerForControllerExec(gBattlerTarget);
@@ -13358,6 +13357,13 @@ void BS_JumpIfAbilityCantBeReactivated(void)
     NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     u32 ability = gBattleMons[battler].ability;
+
+    // TODO: Already fixed on upcoming. Remove once merged
+    if (!IsBattlerAlive(battler))
+    {
+        gBattlescriptCurrInstr = cmd->jumpInstr;
+        return;
+    }
 
     if (GetBattlerHoldEffectIgnoreAbility(battler) == HOLD_EFFECT_ABILITY_SHIELD)
     {
@@ -14785,7 +14791,7 @@ void BS_JumpIfWeatherAffected(void)
 {
     NATIVE_ARGS(u16 flags, const u8 *jumpInstr);
     u32 weather = cmd->flags;
-    if (IsBattlerWeatherAffected(gBattlerAttacker, weather))
+    if (GetAttackerWeather(GetBattlerHoldEffect(gBattlerAttacker), GetBattlerAbility(gBattlerAttacker), GetWeather()) & weather)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;

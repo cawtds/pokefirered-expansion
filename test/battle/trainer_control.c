@@ -191,7 +191,7 @@ TEST("Difficulty changes which party is used for partner if defined for the diff
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
     u32 currTrainer = TRAINER_PARTNER(2);
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER);
-    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_SPECIES), SPECIES_METAPOD);
+    EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_METAPOD);
     EXPECT(GetMonData(&testParty[0], MON_DATA_LEVEL) == 1);
     Free(testParty);
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);

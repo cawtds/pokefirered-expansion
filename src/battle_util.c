@@ -441,9 +441,6 @@ void HandleAction_UseMove(void)
     gMultiHitCounter = 0;
     gBattleCommunication[MISS_TYPE] = 0;
     gBattlerTarget = gBattleStruct->moveTarget[gBattlerAttacker];
-    // Avoid assert errors before failure script is played (for ally targeting moves)
-    if (!IsDoubleBattle() && gBattlerTarget >= gBattlersCount)
-        gBattlerTarget = BATTLE_PARTNER(gBattlerTarget);
 
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE && gProtectStructs[gBattlerAttacker].palaceUnableToUseMove)
     {
@@ -4183,7 +4180,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_SEED_SOWER:
             if (!gBattleStruct->unableToUseMove
              && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
-             && IsBattlerAlive(gBattlerTarget)
              && TryChangeBattleTerrain(gBattlerTarget, STATUS_FIELD_GRASSY_TERRAIN))
             {
                 BattleScriptCall(BattleScript_SeedSowerActivates);
@@ -4226,6 +4222,20 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 gBattlerAttacker = gBattlerTarget;
                 gBattlerTarget = BATTLE_OPPOSITE(gBattlerAttacker);
                 BattleScriptCall(BattleScript_ToxicDebrisActivates);
+                effect++;
+            }
+            break;
+        case ABILITY_SPICY_SPRAY:
+            if (IsBattlerAlive(gBattlerAttacker)
+             && !gBattleStruct->unableToUseMove
+             && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
+             && CanBeBurned(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)))
+            {
+                gEffectBattler = gBattlerAttacker;
+                gBattleScripting.battler = gBattlerTarget;
+                gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
+                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                BattleScriptCall(BattleScript_AbilityStatusEffect);
                 effect++;
             }
             break;
@@ -5786,7 +5796,7 @@ bool32 IsBattlerProtected(struct BattleContext *ctx)
     {
         if (IsZMove(ctx->move) || IsMaxMove(ctx->move))
             return FALSE; // Z-Moves and Max Moves bypass protection (except Max Guard).
-        if (ctx->abilityAtk == ABILITY_UNSEEN_FIST
+        if ((ctx->abilityAtk == ABILITY_UNSEEN_FIST || ctx->abilityAtk == ABILITY_PIERCING_DRILL)
          && IsMoveMakingContact(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, ctx->holdEffectAtk, ctx->move))
             return FALSE;
     }
@@ -5913,14 +5923,7 @@ u32 GetBattlerWeight(enum BattlerId battler)
     enum Ability ability = GetBattlerAbility(battler);
     enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
 
-    if (ability == ABILITY_HEAVY_METAL)
-        weight *= 2;
-    else if (ability == ABILITY_LIGHT_METAL)
-        weight /= 2;
-
-    if (holdEffect == HOLD_EFFECT_FLOAT_STONE)
-        weight /= 2;
-
+    // Autotomize's weight reduction is applied before other weight modifiers (e.g. Heavy Metal / Light Metal / Float Stone).
     for (i = 0; i < gBattleMons[battler].volatiles.autotomizeCount; i++)
     {
         if (weight > 1000)
@@ -5933,6 +5936,14 @@ u32 GetBattlerWeight(enum BattlerId battler)
             break;
         }
     }
+
+    if (ability == ABILITY_HEAVY_METAL)
+        weight *= 2;
+    else if (ability == ABILITY_LIGHT_METAL)
+        weight /= 2;
+
+    if (holdEffect == HOLD_EFFECT_FLOAT_STONE)
+        weight /= 2;
 
     if (weight == 0)
         weight = 1;
@@ -6240,7 +6251,7 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
             basePower *= 2;
         break;
     case EFFECT_WEATHER_BALL:
-        if (ctx->weather & B_WEATHER_ANY)
+        if (GetAttackerWeather(ctx->holdEffectAtk, ctx->abilityAtk, ctx->weather) & B_WEATHER_ANY)
             basePower *= 2;
         break;
     case EFFECT_PURSUIT:
@@ -6458,8 +6469,9 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
         break;
     }
     case EFFECT_SOLAR_BEAM:
-        if ((GetConfig(B_SANDSTORM_SOLAR_BEAM) >= GEN_3 && IsBattlerWeatherAffected(battlerAtk, B_WEATHER_LOW_LIGHT))
-            || IsBattlerWeatherAffected(battlerAtk, (B_WEATHER_RAIN | B_WEATHER_ICY_ANY | B_WEATHER_FOG))) // Excludes Sandstorm
+        u32 weather = GetAttackerWeather(ctx->holdEffectAtk, ctx->abilityAtk, ctx->weather);
+        if ((GetConfig(B_SANDSTORM_SOLAR_BEAM) >= GEN_3 && weather & B_WEATHER_LOW_LIGHT)
+            || weather & (B_WEATHER_RAIN | B_WEATHER_ICY_ANY | B_WEATHER_FOG)) // Excludes Sandstorm
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
         break;
     case EFFECT_STOMPING_TANTRUM:
@@ -6580,6 +6592,10 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
         break;
     case ABILITY_AERILATE:
         if (moveType == TYPE_FLYING && gBattleStruct->battlerState[battlerAtk].ateBoost)
+            modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
+        break;
+    case ABILITY_DRAGONIZE:
+        if (moveType == TYPE_DRAGON && gBattleStruct->battlerState[battlerAtk].ateBoost)
             modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
         break;
     case ABILITY_NORMALIZE:
@@ -6847,7 +6863,7 @@ static inline u32 CalcAttackStat(struct BattleContext *ctx)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
         break;
     case ABILITY_SLOW_START:
-        if (gBattleMons[battlerAtk].volatiles.slowStartTimer > 0)
+        if (gBattleMons[battlerAtk].volatiles.slowStartTimer > 0 && IsBattleMovePhysical(move))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
         break;
     case ABILITY_SOLAR_POWER:
@@ -7238,10 +7254,15 @@ static inline u32 CalcDefenseStat(struct BattleContext *ctx)
     }
 
     // sandstorm sp.def boost for rock types
-    if (GetConfig(B_SANDSTORM_SPDEF_BOOST) >= GEN_4 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ROCK) && IsBattlerWeatherAffected(battlerDef, B_WEATHER_SANDSTORM) && !usesDefStat)
+    if (GetConfig(B_SANDSTORM_SPDEF_BOOST) >= GEN_4
+	 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ROCK)
+	 && GetAttackerWeather(ctx->holdEffectAtk, ctx->abilityAtk, ctx->weather) & B_WEATHER_SANDSTORM
+	 && !usesDefStat)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
     // snow def boost for ice types
-    if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE) && IsBattlerWeatherAffected(battlerDef, B_WEATHER_SNOW) && usesDefStat)
+    if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE)
+	 && GetAttackerWeather(ctx->holdEffectAtk, ctx->abilityAtk, ctx->weather) & B_WEATHER_SNOW
+	 && usesDefStat)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
 
     modifier = ApplyDefensiveBadgeBoost(modifier, battlerDef, move);
@@ -7288,25 +7309,28 @@ static inline uq4_12_t GetSameTypeAttackBonusModifier(struct BattleContext *ctx)
 // Utility Umbrella holders take normal damage from what would be rain- and sun-weakened attacks.
 static uq4_12_t GetWeatherDamageModifier(struct BattleContext *ctx)
 {
-    if (ctx->weather == B_WEATHER_NONE)
+    u32 attackerWeather = GetAttackerWeather(ctx->holdEffectAtk, ctx->abilityAtk, ctx->weather);
+    if ((attackerWeather | ctx->weather) == B_WEATHER_NONE)
         return UQ_4_12(1.0);
-    if (GetMoveEffect(ctx->move) == EFFECT_HYDRO_STEAM && (ctx->weather & B_WEATHER_SUN) && ctx->holdEffectAtk != HOLD_EFFECT_UTILITY_UMBRELLA)
+    if (GetMoveEffect(ctx->move) == EFFECT_HYDRO_STEAM && (attackerWeather & B_WEATHER_SUN))
         return UQ_4_12(1.5);
     if (ctx->holdEffectDef == HOLD_EFFECT_UTILITY_UMBRELLA)
         return UQ_4_12(1.0);
 
-    if (ctx->weather & B_WEATHER_RAIN)
-    {
-        if (ctx->moveType != TYPE_FIRE && ctx->moveType != TYPE_WATER)
-            return UQ_4_12(1.0);
-        return (ctx->moveType == TYPE_FIRE) ? UQ_4_12(0.5) : UQ_4_12(1.5);
-    }
-    if (ctx->weather & B_WEATHER_SUN)
+    if (ctx->weather & B_WEATHER_SUN || attackerWeather & B_WEATHER_SUN) // called because utility umbrella is only active on the defender for this calc.
     {
         if (ctx->moveType != TYPE_FIRE && ctx->moveType != TYPE_WATER)
             return UQ_4_12(1.0);
         return (ctx->moveType == TYPE_WATER) ? UQ_4_12(0.5) : UQ_4_12(1.5);
     }
+
+    if (ctx->weather & B_WEATHER_RAIN || attackerWeather & B_WEATHER_RAIN)
+    {
+        if (ctx->moveType != TYPE_FIRE && ctx->moveType != TYPE_WATER)
+            return UQ_4_12(1.0);
+        return (ctx->moveType == TYPE_FIRE) ? UQ_4_12(0.5) : UQ_4_12(1.5);
+    }
+
     return UQ_4_12(1.0);
 }
 
@@ -10346,11 +10370,11 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     switch (defAbility)
     {
     case ABILITY_SAND_VEIL:
-        if (gBattleWeather & B_WEATHER_SANDSTORM && HasWeatherEffect())
+        if (GetAttackerWeather(atkHoldEffect, atkAbility, GetWeather()) & B_WEATHER_SANDSTORM)
             calc = (calc * 80) / 100; // 1.2 sand veil loss
         break;
     case ABILITY_SNOW_CLOAK:
-        if ((gBattleWeather & B_WEATHER_ICY_ANY) && HasWeatherEffect())
+        if (GetAttackerWeather(atkHoldEffect, atkAbility, GetWeather()) & B_WEATHER_ICY_ANY)
             calc = (calc * 80) / 100; // 1.2 snow cloak loss
         break;
     case ABILITY_TANGLED_FEET:
@@ -10436,6 +10460,12 @@ bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv)
         return TRUE;
     }
 
+    if (gBattleMons[cv->battlerDef].level > gBattleMons[cv->battlerAtk].level)
+    {
+        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_ONE_HIT_KO_NO_AFFECT;
+        return TRUE;
+    }
+
     if (cv->abilities[cv->battlerDef] == ABILITY_STURDY)
     {
         gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_ONE_HIT_KO_STURDY;
@@ -10444,11 +10474,7 @@ bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv)
 
     enum OHKOResult lands = NO_HIT;
 
-    if (gBattleMons[cv->battlerDef].level > gBattleMons[cv->battlerAtk].level)
-    {
-        lands = NO_HIT;
-    }
-    else if (gBattleMons[cv->battlerAtk].volatiles.battlerWithSureHit == cv->battlerDef + 1
+    if (gBattleMons[cv->battlerAtk].volatiles.battlerWithSureHit == cv->battlerDef + 1
           || IsAbilityAndRecord(cv->battlerAtk, cv->abilities[cv->battlerAtk], ABILITY_NO_GUARD)
           || IsAbilityAndRecord(cv->battlerDef, cv->abilities[cv->battlerDef], ABILITY_NO_GUARD))
     {
@@ -10473,9 +10499,6 @@ bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv)
         gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_ONE_HIT_KO_NO_AFFECT;
         return FALSE;
     }
-
-    if (gBattleMons[cv->battlerAtk].level < gBattleMons[cv->battlerDef].level)
-        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_ONE_HIT_KO_NO_AFFECT;
 
     return TRUE;
 }
@@ -10605,8 +10628,12 @@ void RemoveAbilityFlags(enum BattlerId battler)
 
 void CheckSetUnburden(enum BattlerId battler)
 {
-    if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_UNBURDEN))
+    if (!(gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
+        && !gBattleMons[battler].volatiles.embargo
+        && IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_UNBURDEN))
+    {
         gBattleMons[battler].volatiles.unburdenActive = TRUE;
+    }
 }
 
 bool32 IsAnyTargetTurnDamaged(enum BattlerId battlerAtk)

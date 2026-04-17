@@ -267,7 +267,7 @@ static void SimulateInputChooseAction(enum BattlerId battler)
 
 static void CompleteOnInactiveTextPrinter(enum BattlerId battler)
 {
-    if (!IsTextPrinterActiveOnWindow(0))
+    if (!IsTextPrinterActiveOnWindow(B_WIN_MSG))
         OakOldManBufferExecCompleted(battler);
 }
 
@@ -523,7 +523,7 @@ static void PrintOakTextWithMainBgDarkened(enum BattlerId battler, const u8 *tex
     switch (gBattleStruct->simulatedInputState[0])
     {
     case 0:
-        if (!IsTextPrinterActiveOnWindow(0))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_MSG))
         {
             gBattleStruct->simulatedInputState[3] = delay;
             ++gBattleStruct->simulatedInputState[0];
