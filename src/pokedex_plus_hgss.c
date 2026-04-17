@@ -43,6 +43,7 @@
 #include "text_window.h"
 #include "trainer_pokemon_sprites.h"
 #include "trig.h"
+#include "type_icon_sprite.h"
 #include "window.h"
 #include "constants/abilities.h"
 #include "constants/form_change_types.h"
@@ -4392,14 +4393,19 @@ static void CreateTypeIconSprites(void)
 {
     u8 i;
 
-    LoadSpritePalette(&gSpritePalette_MoveTypes1);
-    LoadSpritePalette(&gSpritePalette_MoveTypes2);
-    LoadSpritePalette(&gSpritePalette_MoveTypes3);
-    LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
+    InitTypeIconGfx();
+
     for (i = 0; i < 2; i++)
     {
         if (sPokedexView->typeIconSpriteIds[i] == 0xFF)
-            sPokedexView->typeIconSpriteIds[i] = CreateSprite(&gSpriteTemplate_MoveTypes, 10, 10, 2);
+        {
+            struct Sprite *sprite;
+
+            sPokedexView->typeIconSpriteIds[i] = CreateTypeIconSprite();
+            sprite = &gSprites[sPokedexView->typeIconSpriteIds[i]];
+            sprite->x = 10;
+            sprite->y = 10;
+        }
 
         SetSpriteInvisibility(i, TRUE);
     }

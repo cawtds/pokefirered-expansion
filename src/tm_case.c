@@ -27,6 +27,7 @@
 #include "teachy_tv.h"
 #include "text_window.h"
 #include "tm_case.h"
+#include "type_icon_sprite.h"
 #include "constants/items.h"
 #include "constants/quest_log.h"
 #include "constants/songs.h"
@@ -186,7 +187,7 @@ static void TintDiscpriteByType(enum Type type);
 static void SetDiscSpritePosition(struct Sprite *sprite, u8 tmIdx);
 static void SwapDisc(u8 spriteId, enum Item itemId);
 static void SpriteCB_SwapDisc(struct Sprite *sprite);
-static void CreateTypeIconSprite(void);
+static void TMCase_CreateTypeIconSprite(void);
 static void UpdateTypeIconSprite(enum Type type);
 static void HideTypeIcon(void);
 static void DestroyTypeIconSprites(void);
@@ -622,7 +623,7 @@ static bool8 HandleLoadTMCaseGraphicsAndPalettes(void)
         break;
     case 2:
         DecompressDataWithHeaderWram(gTMCase_Tilemap, GetBgTilemapBuffer(1));
-        CreateTypeIconSprite();
+        TMCase_CreateTypeIconSprite();
         sTMCaseDynamicResources->seqId++;
         break;
     case 3:
@@ -1758,21 +1759,15 @@ static void SpriteCB_SwapDisc(struct Sprite *sprite)
     }
 }
 
-static void CreateTypeIconSprite(void)
+static void TMCase_CreateTypeIconSprite(void)
 {
     struct Sprite *sprite;
 
     if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
-    LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
-    LoadSpritePalette(&gSpritePalette_MoveTypes1);
-    LoadSpritePalette(&gSpritePalette_MoveTypes2);
-    LoadSpritePalette(&gSpritePalette_MoveTypes3);
-
-    sTMCaseDynamicResources->typeIconSpriteId = CreateSprite(&gSpriteTemplate_MoveTypes, 0, 0, 80);
-    sprite = &gSprites[sTMCaseDynamicResources->typeIconSpriteId];
-    sprite->invisible = TRUE;
+    InitTypeIconGfx();
+    sTMCaseDynamicResources->typeIconSpriteId = CreateTypeIconSprite();
 }
 
 static void ShowMonTypeIcon(enum Type type, s32 x, s32 y)

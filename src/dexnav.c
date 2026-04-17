@@ -48,6 +48,7 @@
 #include "task.h"
 #include "text.h"
 #include "text_window.h"
+#include "type_icon_sprite.h"
 #include "wild_encounter.h"
 #include "window.h"
 #include "constants/species.h"
@@ -2166,14 +2167,19 @@ static void CreateTypeIconSprites(void)
 {
     u8 i;
 
-    LoadSpritePalette(&gSpritePalette_MoveTypes1);
-    LoadSpritePalette(&gSpritePalette_MoveTypes2);
-    LoadSpritePalette(&gSpritePalette_MoveTypes3);
-    LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
+    InitTypeIconGfx();
+
     for (i = 0; i < 2; i++)
     {
         if (sDexNavUiDataPtr->typeIconSpriteIds[i] == 0xFF)
-            sDexNavUiDataPtr->typeIconSpriteIds[i] = CreateSprite(&gSpriteTemplate_MoveTypes, 10, 10, 2);
+        {
+            struct Sprite *sprite;
+
+            sDexNavUiDataPtr->typeIconSpriteIds[i] = CreateTypeIconSprite();
+            sprite = &gSprites[sDexNavUiDataPtr->typeIconSpriteIds[i]];
+            sprite->x = 10;
+            sprite->y = 10;
+        }
 
         SetSpriteInvisibility(i, TRUE);
     }

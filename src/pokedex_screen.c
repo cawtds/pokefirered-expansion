@@ -25,6 +25,7 @@
 #include "strings.h"
 #include "task.h"
 #include "trainer_pokemon_sprites.h"
+#include "type_icon_sprite.h"
 #include "config/pokedex_plus_hgss.h"
 #include "constants/songs.h"
 #include "constants/sound.h"
@@ -3746,17 +3747,12 @@ static void CreateTypeIcons(void)
     if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
-    LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
-    LoadSpritePalette(&gSpritePalette_MoveTypes1);
-    LoadSpritePalette(&gSpritePalette_MoveTypes2);
-    LoadSpritePalette(&gSpritePalette_MoveTypes3);
+    InitTypeIconGfx();
 
     for (u32 i = 0; i < MAX_DEX_ITEMS_SHOWN; i++)
     {
-        sPokedexScreenData->typeIconSpriteIds[2 * i] = CreateSprite(&gSpriteTemplate_MoveTypes, 162, 25 + (14 * i), 2);
-        gSprites[sPokedexScreenData->typeIconSpriteIds[2 * i]].invisible = TRUE;
-        sPokedexScreenData->typeIconSpriteIds[2 * i + 1] = CreateSprite(&gSpriteTemplate_MoveTypes, 194, 25 + (14 * i), 2);
-        gSprites[sPokedexScreenData->typeIconSpriteIds[2 * i + 1]].invisible = TRUE;
+        sPokedexScreenData->typeIconSpriteIds[2 * i] = CreateTypeIconSprite();
+        sPokedexScreenData->typeIconSpriteIds[2 * i + 1] = CreateTypeIconSprite();
     }
 }
 
@@ -3775,24 +3771,10 @@ static void DestroyTypeIcons(void)
     }
 }
 
-static void ShowMonTypeIcon(struct Sprite *icon, enum Type type, s32 x, s32 y)
-{
-    icon->invisible = FALSE;
-    icon->oam.paletteNum = IndexOfSpritePaletteTag(gTypesInfo[type].paletteTag);
-    icon->x = x;
-    icon->y = y;
-    StartSpriteAnim(icon, type);
-}
-
-static void HideMonTypeIcon(struct Sprite *icon)
-{
-    icon->invisible = TRUE;
-}
-
 static void HideMonTypeIcons(u32 itemIndex)
 {
-    HideMonTypeIcon(&gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex]]);
-    HideMonTypeIcon(&gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex + 1]]);
+    gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex]].invisible = TRUE;
+    gSprites[sPokedexScreenData->typeIconSpriteIds[2 * itemIndex + 1]].invisible = TRUE;
 }
 
 static void UpdateTypeIconSprites(enum Species species, u32 itemIndex, s32 x, s32 y)
@@ -3809,11 +3791,11 @@ static void UpdateTypeIconSprites(enum Species species, u32 itemIndex, s32 x, s3
     type1 = gSpeciesInfo[species].types[0];
     type2 = gSpeciesInfo[species].types[1];
 
-    ShowMonTypeIcon(icon1, type1, x, y);
+    ShowTypeIcon(icon1, type1, x, y);
     if (type1 != type2)
-        ShowMonTypeIcon(icon2, type2, x + 32, y);
+        ShowTypeIcon(icon2, type2, x + 32, y);
     else
-        HideMonTypeIcon(icon2);
+        icon2->invisible = TRUE;
 
 }
 

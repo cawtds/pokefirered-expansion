@@ -62,6 +62,7 @@
 #include "text.h"
 #include "trainer_pools.h"
 #include "trig.h"
+#include "type_icon_sprite.h"
 #include "util.h"
 #include "vs_seeker.h"
 #include "wild_encounter.h"

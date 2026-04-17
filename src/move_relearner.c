@@ -25,6 +25,7 @@
 #include "task.h"
 #include "text_window.h"
 #include "trig.h"
+#include "type_icon_sprite.h"
 #include "constants/move_relearner.h"
 #include "constants/moves.h"
 #include "constants/songs.h"
@@ -158,7 +159,7 @@ static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves);
 static u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves);
 static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves);
 static u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves);
-static void CreateTypeIconSprite(void);
+static void Relearner_CreateTypeIconSprite(void);
 static void UpdateTypeIconSprite(enum Type type);
 static void HideTypeIcon(void);
 static void DestroyTypeIconSprites(void);
@@ -454,7 +455,7 @@ void CB2_InitLearnMove(void)
         }
     }
 
-    CreateTypeIconSprite();
+    Relearner_CreateTypeIconSprite();
     CreateLearnableMovesList();
 
     RunTasks();
@@ -473,7 +474,7 @@ static void CB2_InitLearnMoveReturnFromSelectMove(void)
     FreeAllSpritePalettes();
     ResetTasks();
 
-    CreateTypeIconSprite();
+    Relearner_CreateTypeIconSprite();
     CreateLearnableMovesList();
     sMoveRelearnerStruct->partyMon = gSpecialVar_0x8004;
     sMoveRelearnerStruct->moveSlot = gSpecialVar_0x8005;
@@ -1284,33 +1285,13 @@ static bool32 HasRelearnerTutorMoves(struct BoxPokemon *boxMon)
     return FALSE;
 }
 
-static void CreateTypeIconSprite(void)
+static void Relearner_CreateTypeIconSprite(void)
 {
-    struct Sprite *sprite;
-
     if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
-
-    LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
-    LoadSpritePalette(&gSpritePalette_MoveTypes1);
-    LoadSpritePalette(&gSpritePalette_MoveTypes2);
-    LoadSpritePalette(&gSpritePalette_MoveTypes3);
-
-    sMoveRelearnerStruct->typeIconSpriteId = CreateSprite(&gSpriteTemplate_MoveTypes, 0, 0, 0);
-    sprite = &gSprites[sMoveRelearnerStruct->typeIconSpriteId];
-    sprite->invisible = TRUE;
-}
-
-static void ShowMonTypeIcon(enum Type type, s32 x, s32 y)
-{
-    struct Sprite *icon = &gSprites[sMoveRelearnerStruct->typeIconSpriteId];
-
-    icon->invisible = FALSE;
-    icon->oam.paletteNum = IndexOfSpritePaletteTag(gTypesInfo[type].paletteTag);
-    icon->x = x;
-    icon->y = y;
-    StartSpriteAnim(icon, type);
+    InitTypeIconGfx();
+    sMoveRelearnerStruct->typeIconSpriteId = CreateTypeIconSprite();
 }
 
 static void UpdateTypeIconSprite(enum Type type)
@@ -1318,11 +1299,14 @@ static void UpdateTypeIconSprite(enum Type type)
     if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
-    ShowMonTypeIcon(type, 57, 10);
+    ShowTypeIcon(&gSprites[sMoveRelearnerStruct->typeIconSpriteId], type, 57, 10);
 }
 
 static void HideTypeIcon(void)
 {
+    if (!P_USE_TYPE_ICON_SPRITES)
+        return;
+
     gSprites[sMoveRelearnerStruct->typeIconSpriteId].invisible = TRUE;
 }
 
