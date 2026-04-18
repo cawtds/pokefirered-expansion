@@ -130,7 +130,6 @@ static void PokeSum_PrintTrainerMemo_Mon(void);
 static void PokeSum_PrintTrainerMemo_Egg(void);
 static bool32 MapSecIsInKantoOrSevii(u8 mapSec);
 static bool32 IsMultiBattlePartner(void);
-static bool32 PokeSum_IsMonBoldOrGentle(enum Nature nature);
 static void PokeSum_PrintTrainerMemo_Mon_NotHeldByOT(void);
 static bool32 CurrentMonIsFromGBA(void);
 static u8 PokeSum_BufferOtName_IsEqualToCurrentOwner(struct Pokemon * mon);
@@ -371,21 +370,12 @@ static const u32 sMoveSelectionCursorTiles_Left[] = INCBIN_U32("graphics/summary
 static const u32 sMoveSelectionCursorTiles_Right[] = INCBIN_U32("graphics/summary_screen/move_selection_cursor_right.4bpp.smol");
 
 static const u8 sText_PokeSum_MetInATrade[] = _("{DYNAMIC 0x00} nature.\nMet in a trade.");
-static const u8 sText_PokeSum_MetInATrade_BoldGentleGrammar[] = _("{DYNAMIC 0x00} nature.\nMet in a trade.");
 static const u8 sText_PokeSum_FatefulEncounterMet[] = _("{DYNAMIC 0x00} nature.\nMet in a fateful encounter when\nat {LV_2} {DYNAMIC 0x01}.");
-static const u8 sText_PokeSum_FatefulEncounterMet_BoldGentleGrammar[] = _("{DYNAMIC 0x00} nature.\nMet in a fateful encounter when\nat {LV_2} {DYNAMIC 0x01}.");
 static const u8 sText_PokeSum_Met[] = _("{DYNAMIC 0x00} nature.\nMet in {DYNAMIC 0x02} at {LV_2} {DYNAMIC 0x01}.");
-static const u8 sText_PokeSum_Met_BoldGentleGrammar[] = _("{DYNAMIC 0x00} nature.\nMet in {DYNAMIC 0x02} at {LV_2} {DYNAMIC 0x01}.");
 static const u8 sText_PokeSum_ApparentlyMet[] = _("{DYNAMIC 0x00} nature.\nApparently met in {DYNAMIC 0x02}\nat {LV_2} {DYNAMIC 0x01}.");
-static const u8 sText_PokeSum_ApparentlyMet_BoldGentleGrammar[] = _("{DYNAMIC 0x00} nature.\nApparently met in {DYNAMIC 0x02}\nat {LV_2} {DYNAMIC 0x01}.");
 static const u8 sText_PokeSum_Hatched[] = _("{DYNAMIC 0x00} nature.\nHatched: {DYNAMIC 0x02}\nat {LV_2} {DYNAMIC 0x01}.");
-static const u8 sText_PokeSum_Hatched_BoldGentleGrammar[] = _("{DYNAMIC 0x00} nature.\nHatched: {DYNAMIC 0x02}\nat {LV_2} {DYNAMIC 0x01}.");
-static const u8 sText_PokeSum_JP_ApparentlyHatched[] = _("{DYNAMIC 0x00}なせいかく {LV_2}{DYNAMIC 0x01}のとき\n{DYNAMIC 0x02}で かえった ようだ");
-static const u8 sText_PokeSum_JP_ApparentlyHatched_BoldGentleGrammar[] = _("{DYNAMIC 0x00}せいかく {LV_2}{DYNAMIC 0x01}のとき\n{DYNAMIC 0x02}で かえった ようだ");
 static const u8 sText_PokeSum_FatefulEncounterHatched[] = _("{DYNAMIC 0x00} nature. Met in a fateful\nencounter (hatched: {DYNAMIC 0x02}\nat {LV_2} {DYNAMIC 0x01}).");
-static const u8 sText_PokeSum_FatefulEncounterHatched_BoldGentleGrammar[] = _("{DYNAMIC 0x00} nature. Met in a fateful\nencounter (hatched: {DYNAMIC 0x02}\nat {LV_2} {DYNAMIC 0x01}).");
 static const u8 sText_PokeSum_ApparentlyFatefulEncounterHatched[] = _("{DYNAMIC 0x00} nature. Apparently met in\na fateful encounter (hatched:\n{DYNAMIC 0x02} at {LV_2} {DYNAMIC 0x01}).");
-static const u8 sText_PokeSum_ApparentlyFatefulEncounterHatched_BoldGentleGrammar[] = _("{DYNAMIC 0x00} nature. Apparently met in\na fateful encounter (hatched:\n{DYNAMIC 0x02} at {LV_2} {DYNAMIC 0x01}).");
 static const u8 sText_PokeSum_ATrade[] = _("a trade");
 static const u8 gText_Somewhere[] = _("Somewhere");
 static const u8 sText_PokeSum_PageName_PokemonInfo[] = _("POKéMON INFO");
@@ -3146,36 +3136,16 @@ static void PokeSum_PrintTrainerMemo_Mon_HeldByOT(void)
     if (GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_MET_LEVEL) == 0) // Hatched
     {
         if (GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_MODERN_FATEFUL_ENCOUNTER) == TRUE)
-        {
-            if (PokeSum_IsMonBoldOrGentle(nature))
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_FatefulEncounterHatched_BoldGentleGrammar);
-            else
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_FatefulEncounterHatched);
-        }
+            DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_FatefulEncounterHatched);
         else
-        {
-            if (PokeSum_IsMonBoldOrGentle(nature))
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_Hatched_BoldGentleGrammar);
-            else
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_Hatched);
-        }
+            DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_Hatched);
     }
     else
     {
         if (metLocation == METLOC_FATEFUL_ENCOUNTER)
-        {
-            if (PokeSum_IsMonBoldOrGentle(nature))
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_FatefulEncounterMet_BoldGentleGrammar);
-            else
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_FatefulEncounterMet);
-        }
+            DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_FatefulEncounterMet);
         else
-        {
-            if (PokeSum_IsMonBoldOrGentle(nature))
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_Met_BoldGentleGrammar);
-            else
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_Met);
-        }
+            DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_Met);
     }
 
     AddTextPrinterParameterized4(sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO], FONT_NORMAL, 0, 3, 0, 0, sLevelNickTextColors[0], TEXT_SKIP_DRAW, natureMetOrHatchedAtLevelStr);
@@ -3213,19 +3183,9 @@ static void PokeSum_PrintTrainerMemo_Mon_NotHeldByOT(void)
         }
 
         if (metLocation == METLOC_FATEFUL_ENCOUNTER)
-        {
-            if (PokeSum_IsMonBoldOrGentle(nature))
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_FatefulEncounterMet_BoldGentleGrammar);
-            else
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_FatefulEncounterMet);
-        }
+            DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_FatefulEncounterMet);
         else
-        {
-            if (PokeSum_IsMonBoldOrGentle(nature))
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_MetInATrade_BoldGentleGrammar);
-            else
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_MetInATrade);
-        }
+            DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_MetInATrade);
 
         AddTextPrinterParameterized4(sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO], FONT_NORMAL, 0, 3, 0, 0, sLevelNickTextColors[0], TEXT_SKIP_DRAW, natureMetOrHatchedAtLevelStr);
         return;
@@ -3238,41 +3198,19 @@ static void PokeSum_PrintTrainerMemo_Mon_NotHeldByOT(void)
 
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(2, mapNameStr);
 
-    // These pairs of strings are bytewise identical to each other in English,
-    // but Japanese uses different grammar for Bold and Gentle natures.
     if (GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_MET_LEVEL) == 0) // hatched from an EGG
     {
         if (GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_MODERN_FATEFUL_ENCOUNTER) == TRUE)
-        {
-            if (PokeSum_IsMonBoldOrGentle(nature))
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_ApparentlyFatefulEncounterHatched_BoldGentleGrammar);
-            else
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_ApparentlyFatefulEncounterHatched);
-        }
+            DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_ApparentlyFatefulEncounterHatched);
         else
-        {
-            if (PokeSum_IsMonBoldOrGentle(nature))
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_ApparentlyMet_BoldGentleGrammar);
-            else
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_ApparentlyMet);
-        }
+            DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_ApparentlyMet);
     }
     else
     {
         if (metLocation == METLOC_FATEFUL_ENCOUNTER)
-        {
-            if (PokeSum_IsMonBoldOrGentle(nature))
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_FatefulEncounterMet_BoldGentleGrammar);
-            else
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_FatefulEncounterMet);
-        }
+            DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_FatefulEncounterMet);
         else
-        {
-            if (PokeSum_IsMonBoldOrGentle(nature))
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_ApparentlyMet_BoldGentleGrammar);
-            else
-                DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_ApparentlyMet);
-        }
+            DynamicPlaceholderTextUtil_ExpandPlaceholders(natureMetOrHatchedAtLevelStr, sText_PokeSum_ApparentlyMet);
     }
 
     AddTextPrinterParameterized4(sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO], FONT_NORMAL, 0, 3, 0, 0, sLevelNickTextColors[0], TEXT_SKIP_DRAW, natureMetOrHatchedAtLevelStr);
@@ -5731,11 +5669,6 @@ static void PokeSum_TryPlayMonCry(void)
         else
             PlayCry_ByMode(GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES_OR_EGG), 0, CRY_MODE_WEAK);
     }
-}
-
-static bool32 PokeSum_IsMonBoldOrGentle(enum Nature nature)
-{
-    return nature == NATURE_BOLD || nature == NATURE_GENTLE;
 }
 
 static bool32 CurrentMonIsFromGBA(void)
