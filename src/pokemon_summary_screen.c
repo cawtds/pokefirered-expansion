@@ -409,6 +409,59 @@ static const u8 sText_PokeSum_PP[] = _("{PP}");
 static const u8 sText_PokeSum_OneHyphen[] = _("-");
 static const u8 sText_PokeSum_TwoHyphens[] = _("--");
 static const u8 sText_PokeSum_DexNoUnknown[] = _("???");
+static const u8 sText_ColorBlue[] = _("{COLOR 7}");
+static const u8 sText_ColorRed[] = _("{COLOR 1}");
+
+static const struct StatData sStatData[] = {
+    [STAT_HP] =
+    {
+        .monDataStat            = MON_DATA_HP,
+        .monDataEv              = MON_DATA_HP_EV,
+        .monDataIv              = MON_DATA_HP_IV,
+        .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_HP,
+        .pssStat                = PSS_STAT_HP,
+    },
+    [STAT_ATK] =
+    {
+        .monDataStat            = MON_DATA_ATK,
+        .monDataEv              = MON_DATA_ATK_EV,
+        .monDataIv              = MON_DATA_ATK_IV,
+        .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_ATK,
+        .pssStat                = PSS_STAT_ATK,
+    },
+    [STAT_DEF] =
+    {
+        .monDataStat            = MON_DATA_DEF,
+        .monDataEv              = MON_DATA_DEF_EV,
+        .monDataIv              = MON_DATA_DEF_IV,
+        .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_DEF,
+        .pssStat                = PSS_STAT_DEF,
+    },
+    [STAT_SPATK] =
+    {
+        .monDataStat            = MON_DATA_SPATK,
+        .monDataEv              = MON_DATA_SPATK_EV,
+        .monDataIv              = MON_DATA_SPATK_IV,
+        .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_SPATK,
+        .pssStat                = PSS_STAT_SPA,
+    },
+    [STAT_SPDEF] =
+    {
+        .monDataStat            = MON_DATA_SPDEF,
+        .monDataEv              = MON_DATA_SPDEF_EV,
+        .monDataIv              = MON_DATA_SPDEF_IV,
+        .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_SPDEF,
+        .pssStat                = PSS_STAT_SPD,
+    },
+    [STAT_SPEED] =
+    {
+        .monDataStat            = MON_DATA_SPEED,
+        .monDataEv              = MON_DATA_SPEED_EV,
+        .monDataIv              = MON_DATA_SPEED_IV,
+        .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_SPEED,
+        .pssStat                = PSS_STAT_SPE,
+    },
+};
 
 static const struct OamData sMoveSelectionCursorOamData =
 {
@@ -2421,60 +2474,8 @@ static void BufferMonInfo(void)
         CopyItemName(heldItem, sMonSummaryScreen->summary.itemNameStrBuf);
 }
 
-
 #define GetNumberRightAlign63(x) (63 - StringLength((x)) * 6)
 #define GetNumberRightAlign27(x) (27 - StringLength((x)) * 6)
-
-static const struct StatData sStatData[] = {
-    [STAT_HP] =
-    {
-        .monDataStat            = MON_DATA_HP,
-        .monDataEv              = MON_DATA_HP_EV,
-        .monDataIv              = MON_DATA_HP_IV,
-        .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_HP,
-        .pssStat                = PSS_STAT_HP,
-    },
-    [STAT_ATK] =
-    {
-        .monDataStat            = MON_DATA_ATK,
-        .monDataEv              = MON_DATA_ATK_EV,
-        .monDataIv              = MON_DATA_ATK_IV,
-        .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_ATK,
-        .pssStat                = PSS_STAT_ATK,
-    },
-    [STAT_DEF] =
-    {
-        .monDataStat            = MON_DATA_DEF,
-        .monDataEv              = MON_DATA_DEF_EV,
-        .monDataIv              = MON_DATA_DEF_IV,
-        .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_DEF,
-        .pssStat                = PSS_STAT_DEF,
-    },
-    [STAT_SPATK] =
-    {
-        .monDataStat            = MON_DATA_SPATK,
-        .monDataEv              = MON_DATA_SPATK_EV,
-        .monDataIv              = MON_DATA_SPATK_IV,
-        .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_SPATK,
-        .pssStat                = PSS_STAT_SPA,
-    },
-    [STAT_SPDEF] =
-    {
-        .monDataStat            = MON_DATA_SPDEF,
-        .monDataEv              = MON_DATA_SPDEF_EV,
-        .monDataIv              = MON_DATA_SPDEF_IV,
-        .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_SPDEF,
-        .pssStat                = PSS_STAT_SPD,
-    },
-    [STAT_SPEED] =
-    {
-        .monDataStat            = MON_DATA_SPEED,
-        .monDataEv              = MON_DATA_SPEED_EV,
-        .monDataIv              = MON_DATA_SPEED_IV,
-        .monDataHyperTrained    = MON_DATA_HYPER_TRAINED_SPEED,
-        .pssStat                = PSS_STAT_SPE,
-    },
-};
 
 static void SetStatXPos(u8 stat, u16 xpos)
 {
@@ -2503,22 +2504,19 @@ static void SetStatXPos(u8 stat, u16 xpos)
 
 static void ApplyNatureColor(u8 *str, enum Stat stat)
 {
-    const u8 blue[] = _("{COLOR 7}");
-    const u8 red[] = _("{COLOR 1}");
-    const u8 none[] = _("");
     enum Nature nature = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_HIDDEN_NATURE);
     u8 tmp[20];
 
     StringCopy(tmp, str);
 
     if (!P_SUMMARY_SCREEN_NATURE_COLORS || gNaturesInfo[nature].statUp == gNaturesInfo[nature].statDown)
-        StringCopy(str, none);
+        StringCopy(str, gText_EmptyString);
     else if (gNaturesInfo[nature].statUp == stat)
-        StringCopy(str, red);
+        StringCopy(str, sText_ColorRed);
     else if (gNaturesInfo[nature].statDown == stat)
-        StringCopy(str, blue);
+        StringCopy(str, sText_ColorBlue);
     else
-        StringCopy(str, none);
+        StringCopy(str, gText_EmptyString);
     StringAppend(str, tmp);
 }
 
