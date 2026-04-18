@@ -48,26 +48,25 @@
 #define TAG_CATEGORY_ICONS 30004
 #define TAG_MON_SPRITE 30005
 
-#define POKESUM_WIN_PAGE_NAME        0
-#define POKESUM_WIN_CONTROLS         1
-#define POKESUM_WIN_LVL_NICK         2
-#define POKESUM_WIN_RIGHT_PANE       3
-#define POKESUM_WIN_TRAINER_MEMO     4
+enum SummaryWindow
+{
+    PSS_WIN_PAGE_NAME,
+    PSS_WIN_CONTROLS,
+    PSS_WIN_LVL_NICK,
+    SUMMARY_PRIMARY_WIN_COUNT,
 
-#define POKESUM_WIN_INFO_3           3
-#define POKESUM_WIN_INFO_4           4
-#define POKESUM_WIN_INFO_5           5
-#define POKESUM_WIN_INFO_6           6
+    PSS_SECONDARY_WIN_1 = SUMMARY_PRIMARY_WIN_COUNT,
+    PSS_SECONDARY_WIN_2,
+    PSS_SECONDARY_WIN_3,
+    PSS_SECONDARY_WIN_4,
 
-#define POKESUM_WIN_SKILLS_3         3
-#define POKESUM_WIN_SKILLS_4         4
-#define POKESUM_WIN_SKILLS_5         5
-#define POKESUM_WIN_SKILLS_6         6
+    SUMMARY_WINDOW_COUNT,
+};
 
-#define POKESUM_WIN_MOVES_3          3
-#define POKESUM_WIN_MOVES_4          4
-#define POKESUM_WIN_MOVES_5          5
-#define POKESUM_WIN_MOVES_6          6
+#define POKESUM_WIN_RIGHT_PANE   PSS_SECONDARY_WIN_1
+#define POKESUM_WIN_TRAINER_MEMO PSS_SECONDARY_WIN_2
+#define SUMMARY_SECONDARY_WIN_COUNT (SUMMARY_WINDOW_COUNT - SUMMARY_PRIMARY_WIN_COUNT)
+
 
 enum EggHatchTime
 {
@@ -201,7 +200,7 @@ struct PokemonSummaryScreenData
     u16 bg1TilemapBuffer[0x800];
     u16 bg2TilemapBuffer[0x800];
     u16 bg3TilemapBuffer[0x800];
-    u8 ALIGNED(4) windowIds[7];
+    u8 ALIGNED(4) windowIds[SUMMARY_WINDOW_COUNT];
 
     u8 ALIGNED(4) ballIconSpriteId;
     u8 ALIGNED(4) monPicSpriteId;
@@ -865,9 +864,9 @@ static void Task_PokeSum_FlipPages(u8 taskId)
         PokeSum_PrintPageHeaderText(sMonSummaryScreen->curPageIndex);
         break;
     case 3:
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_PAGE_NAME], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_CONTROLS], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_LVL_NICK], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_PAGE_NAME], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_CONTROLS], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK], 2);
         break;
     case 4:
         if (!IsDma3ManagerBusyWithBgCopy())
@@ -965,8 +964,8 @@ static void Task_FlipPages_FromInfo(u8 taskId)
         PrintControlsString();
         break;
     case 4:
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_PAGE_NAME], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_CONTROLS], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_PAGE_NAME], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_CONTROLS], 2);
         break;
     case 5:
         if (IsDma3ManagerBusyWithBgCopy())
@@ -1004,7 +1003,7 @@ static void Task_FlipPages_FromInfo(u8 taskId)
     case 10:
         PokeSum_ShowSpritesBeforePageFlip();
         CopyWindowToVram(sMonSummaryScreen->windowIds[6], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_LVL_NICK], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK], 2);
         break;
     case 11:
         if (IsDma3ManagerBusyWithBgCopy())
@@ -1066,8 +1065,8 @@ static void Task_BackOutOfSelectMove(u8 taskId)
         PrintControlsString();
         break;
     case 5:
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_PAGE_NAME], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_CONTROLS], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_PAGE_NAME], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_CONTROLS], 2);
         CopyBgTilemapBufferToVram(2);
         CopyBgTilemapBufferToVram(1);
         break;
@@ -1088,7 +1087,7 @@ static void Task_BackOutOfSelectMove(u8 taskId)
         break;
     case 9:
         CopyWindowToVram(sMonSummaryScreen->windowIds[6], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_LVL_NICK], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK], 2);
         CopyBgTilemapBufferToVram(0);
         CopyBgTilemapBufferToVram(2);
         CopyBgTilemapBufferToVram(1);
@@ -1541,9 +1540,9 @@ static void CB2_SetUpPSS(void)
         break;
     case 13:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, 0);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_PAGE_NAME], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_CONTROLS], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_LVL_NICK], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_PAGE_NAME], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_CONTROLS], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK], 2);
         CopyWindowToVram(sMonSummaryScreen->windowIds[6], 2);
         CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2);
         CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO], 2);
@@ -2113,9 +2112,9 @@ static void PokeSum_FinishSetup(void)
 
 static void PokeSum_PrintPageName(const u8 * str)
 {
-    FillWindowPixelBuffer(sMonSummaryScreen->windowIds[POKESUM_WIN_PAGE_NAME], 0);
-    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_PAGE_NAME], FONT_NORMAL, 4, 1, sLevelNickTextColors[1], 0, str);
-    PutWindowTilemap(sMonSummaryScreen->windowIds[POKESUM_WIN_PAGE_NAME]);
+    FillWindowPixelBuffer(sMonSummaryScreen->windowIds[PSS_WIN_PAGE_NAME], 0);
+    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[PSS_WIN_PAGE_NAME], FONT_NORMAL, 4, 1, sLevelNickTextColors[1], 0, str);
+    PutWindowTilemap(sMonSummaryScreen->windowIds[PSS_WIN_PAGE_NAME]);
 }
 
 static void PokeSum_PrintControlsString(const u8 *str)
@@ -2123,34 +2122,34 @@ static void PokeSum_PrintControlsString(const u8 *str)
     s32 width;
     u8 windowId;
 
-    FillWindowPixelBuffer(sMonSummaryScreen->windowIds[POKESUM_WIN_CONTROLS], 0);
+    FillWindowPixelBuffer(sMonSummaryScreen->windowIds[PSS_WIN_CONTROLS], 0);
     width = GetStringWidth(FONT_SMALL, str, 0);
-    windowId = sMonSummaryScreen->windowIds[POKESUM_WIN_CONTROLS];
+    windowId = sMonSummaryScreen->windowIds[PSS_WIN_CONTROLS];
     AddTextPrinterParameterized3(windowId, FONT_SMALL, 84 - width, 0, sLevelNickTextColors[1], 0, str);
-    PutWindowTilemap(sMonSummaryScreen->windowIds[POKESUM_WIN_CONTROLS]);
+    PutWindowTilemap(sMonSummaryScreen->windowIds[PSS_WIN_CONTROLS]);
 }
 
 static void PrintMonLevelNickOnWindow2(const u8 * str)
 {
-    FillWindowPixelBuffer(sMonSummaryScreen->windowIds[POKESUM_WIN_LVL_NICK], 0);
+    FillWindowPixelBuffer(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK], 0);
 
     if (!sMonSummaryScreen->isEgg)
     {
         u16 nicknameFont;
 
         if (sMonSummaryScreen->curPageIndex != PSS_PAGE_MOVES_INFO)
-            AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_LVL_NICK], 2, 4, 2, sLevelNickTextColors[1], TEXT_SKIP_DRAW, sMonSummaryScreen->levelStrBuf);
+            AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK], 2, 4, 2, sLevelNickTextColors[1], TEXT_SKIP_DRAW, sMonSummaryScreen->levelStrBuf);
 
         nicknameFont = GetFontIdToFit(sMonSummaryScreen->nicknameStrBuf, FONT_NORMAL, 0, 60);
-        AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_LVL_NICK], nicknameFont, 40, 2, sLevelNickTextColors[1], TEXT_SKIP_DRAW, sMonSummaryScreen->nicknameStrBuf);
+        AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK], nicknameFont, 40, 2, sLevelNickTextColors[1], TEXT_SKIP_DRAW, sMonSummaryScreen->nicknameStrBuf);
 
         if (GetMonGender(&sMonSummaryScreen->currentMon) == MON_FEMALE)
-            AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_LVL_NICK], FONT_NORMAL, 105, 2, sLevelNickTextColors[3], 0, sMonSummaryScreen->genderSymbolStrBuf);
+            AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK], FONT_NORMAL, 105, 2, sLevelNickTextColors[3], 0, sMonSummaryScreen->genderSymbolStrBuf);
         else
-            AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_LVL_NICK], FONT_NORMAL, 105, 2, sLevelNickTextColors[2], 0, sMonSummaryScreen->genderSymbolStrBuf);
+            AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK], FONT_NORMAL, 105, 2, sLevelNickTextColors[2], 0, sMonSummaryScreen->genderSymbolStrBuf);
     }
 
-    PutWindowTilemap(sMonSummaryScreen->windowIds[POKESUM_WIN_LVL_NICK]);
+    PutWindowTilemap(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK]);
 }
 
 static void PokeSum_PrintRightPaneText(void)
@@ -2728,9 +2727,9 @@ static void PokeSum_PrintPageHeaderText(u8 curPageIndex)
 
 static void CommitStaticWindowTilemaps(void)
 {
-    PutWindowTilemap(sMonSummaryScreen->windowIds[POKESUM_WIN_PAGE_NAME]);
-    PutWindowTilemap(sMonSummaryScreen->windowIds[POKESUM_WIN_CONTROLS]);
-    PutWindowTilemap(sMonSummaryScreen->windowIds[POKESUM_WIN_LVL_NICK]);
+    PutWindowTilemap(sMonSummaryScreen->windowIds[PSS_WIN_PAGE_NAME]);
+    PutWindowTilemap(sMonSummaryScreen->windowIds[PSS_WIN_CONTROLS]);
+    PutWindowTilemap(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK]);
 }
 
 static void Task_DestroyResourcesOnExit(u8 taskId)
@@ -2969,16 +2968,16 @@ static void PokeSum_AddWindows(enum PokemonSummaryScreenPage curPageIndex)
     const struct WindowTemplate *permanentTemplate;
     const struct WindowTemplate *pageTemplate;
 
-    for (u32 i = 0; i < 7; i++)
+    for (u32 i = 0; i < SUMMARY_WINDOW_COUNT; i++)
         sMonSummaryScreen->windowIds[i] = WINDOW_NONE;
 
     permanentTemplate = GetPermanentWindowTemplate();
     pageTemplate = GetPageWindowTemplate(curPageIndex);
 
-    for (u32 i = 0; i < 3; i++)
+    for (u32 i = 0; i < SUMMARY_PRIMARY_WIN_COUNT; i++)
         sMonSummaryScreen->windowIds[i] = AddWindow(&permanentTemplate[i]);
 
-    for (u32 i = 0; i < 4; i++)
+    for (u32 i = 0; i < SUMMARY_SECONDARY_WIN_COUNT; i++)
         sMonSummaryScreen->windowIds[i + 3] = AddWindow(&pageTemplate[i]);
 }
 
@@ -4890,9 +4889,9 @@ static void Task_PokeSum_SwitchDisplayedPokemon(u8 taskId)
         sMonSummaryScreen->switchMonTaskState++;
         break;
     case 10:
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_PAGE_NAME], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_CONTROLS], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_LVL_NICK], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_PAGE_NAME], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_CONTROLS], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK], 2);
         CopyWindowToVram(sMonSummaryScreen->windowIds[6], 2);
         CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2);
         CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO], 2);
