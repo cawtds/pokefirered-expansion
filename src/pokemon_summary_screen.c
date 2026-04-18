@@ -203,7 +203,6 @@ struct PokemonSummaryScreenData
     u16 bg3TilemapBuffer[0x800];
     u8 ALIGNED(4) windowIds[7];
 
-    u8 ALIGNED(4) unk3008;
     u8 ALIGNED(4) ballIconSpriteId;
     u8 ALIGNED(4) monPicSpriteId;
     u8 ALIGNED(4) monIconSpriteId;
@@ -213,7 +212,7 @@ struct PokemonSummaryScreenData
 
     u8 ALIGNED(4) numMonPicBounces;
 
-    bool32 isEnemyParty; /* 0x3024 */
+    bool32 isEnemyParty;
 
     struct PokeSummary
     {
@@ -223,7 +222,7 @@ struct PokemonSummaryScreenData
         u8 ALIGNED(4) otNameStrBufs[2][12];
 
         u8 ALIGNED(4) dexNumStrBuf[5];
-        u8 ALIGNED(4) unk306C[7];
+        u8 ALIGNED(4) otIdStrBuf[7];
         u8 ALIGNED(4) itemNameStrBuf[ITEM_NAME_LENGTH + 1];
 
         u8 ALIGNED(4) genderSymbolStrBuf[3];
@@ -243,48 +242,42 @@ struct PokemonSummaryScreenData
         u8 ALIGNED(4) abilityDescStrBuf[52];
     } summary;
 
-    u8 ALIGNED(4) isEgg; /* 0x3200 */
-    u8 ALIGNED(4) isBadEgg; /* 0x3204 */
+    u8 ALIGNED(4) isEgg;
+    u8 ALIGNED(4) isBadEgg;
 
-    u8 ALIGNED(4) mode; /* 0x3208 */
-    u8 ALIGNED(4) unk320C; /* 0x320C */
-    u8 ALIGNED(4) lastIndex; /* 0x3210 */
-    u8 ALIGNED(4) curPageIndex; /* 0x3214 */
-    u8 ALIGNED(4) unk3218; /* 0x3218 */
-    u8 ALIGNED(4) isBoxMon; /* 0x321C */
-    u8 ALIGNED(4) monTypes[3]; /* 0x3220 */
+    u8 ALIGNED(4) mode;
+    u8 ALIGNED(4) lastIndex;
+    u8 ALIGNED(4) curPageIndex;
+    u8 ALIGNED(4) isBoxMon;
+    u8 ALIGNED(4) monTypes[3];
 
-    u8 ALIGNED(4) pageFlipDirection; /* 0x3224 */
-    u8 ALIGNED(4) unk3228; /* 0x3228 */
-    u8 ALIGNED(4) unk322C; /* 0x322C */
-    u8 ALIGNED(4) unk3230; /* 0x3230 */
+    u8 ALIGNED(4) pageFlipDirection;
 
-    u8 ALIGNED(4) lockMovesFlag; /* 0x3234 */
+    u8 ALIGNED(4) lockMovesFlag;
 
-    u8 ALIGNED(4) whichBgLayerToTranslate; /* 0x3238 */
-    u8 ALIGNED(4) skillsPageBgNum; /* 0x323C */
-    u8 ALIGNED(4) infoAndMovesPageBgNum; /* 0x3240 */
-    u8 ALIGNED(4) flippingPages; /* 0x3244 */
-    u8 ALIGNED(4) unk3248; /* 0x3248 */
-    s16 ALIGNED(4) flipPagesBgHofs; /* 0x324C */
+    u8 ALIGNED(4) whichBgLayerToTranslate;
+    u8 ALIGNED(4) skillsPageBgNum;
+    u8 ALIGNED(4) infoAndMovesPageBgNum;
+    u8 ALIGNED(4) flippingPages;
+    s16 ALIGNED(4) flipPagesBgHofs;
 
-    enum Type moveTypes[MAX_MON_MOVES + 1]; /* 0x3250 */
-    enum Move moveIds[MAX_MON_MOVES + 1]; /* 0x325A */
-    u8 ALIGNED(4) numMoves; /* 0x3264 */
-    u8 ALIGNED(4) isSwappingMoves; /* 0x3268 */
+    enum Type moveTypes[MAX_MON_MOVES + 1];
+    enum Move moveIds[MAX_MON_MOVES + 1];
+    u8 ALIGNED(4) numMoves;
+    u8 ALIGNED(4) isSwappingMoves;
 
-    u8 ALIGNED(4) curMonStatusAilment; /* 0x326C */
+    u8 ALIGNED(4) curMonStatusAilment;
 
-    u8 ALIGNED(4) state3270; /* 0x3270 */
-    u8 ALIGNED(4) summarySetupStep; /* 0x3274 */
-    u8 ALIGNED(4) loadBgGfxStep; /* 0x3278 */
-    u8 ALIGNED(4) spriteCreationStep; /* 0x327C */
-    u8 ALIGNED(4) bufferStringsStep; /* 0x3280 */
-    u8 ALIGNED(4) state3284; /* 0x3284 */
-    u8 ALIGNED(4) selectMoveInputHandlerState; /* 0x3288 */
-    u8 ALIGNED(4) switchMonTaskState; /* 0x328C */
+    u8 ALIGNED(4) state3270;
+    u8 ALIGNED(4) summarySetupStep;
+    u8 ALIGNED(4) loadBgGfxStep;
+    u8 ALIGNED(4) spriteCreationStep;
+    u8 ALIGNED(4) bufferStringsStep;
+    u8 ALIGNED(4) state3284;
+    u8 ALIGNED(4) selectMoveInputHandlerState;
+    u8 ALIGNED(4) switchMonTaskState;
 
-    struct Pokemon currentMon; /* 0x3290 */
+    struct Pokemon currentMon;
 
     union
     {
@@ -295,17 +288,15 @@ struct PokemonSummaryScreenData
     MainCallback savedCallback;
     struct Sprite *markingSprite;
 
-    u8 ALIGNED(4) lastPageFlipDirection; /* 0x3300 */
-    u8 ALIGNED(4) unk3304; /* 0x3304 */
+    u8 ALIGNED(4) lastPageFlipDirection;
     enum PokemonSummaryScreenSkillPageMode skillsPageMode:2;
     u8 categoryIconSpriteId;
     u8 moveTypeIconSpriteIds[MAX_MON_MOVES + 1];
     u8 monTypeIconSpriteIds[3];
 };
 
-struct Struct203B144
+struct PokemonSummaryXpos
 {
-    u16 unk00;
     u16 curHpStr;
     u16 atkStr;
     u16 defStr;
@@ -323,58 +314,58 @@ struct Struct203B144
 
 struct ExpBarObjs
 {
-    struct Sprite *sprites[11]; /* 0x00 */
-    u16 xpos[11]; /* 0x2c */
-    u16 tileTag; /* 0x42 */
-    u16 palTag; /* 0x44 */
+    struct Sprite *sprites[11];
+    u16 xpos[11];
+    u16 tileTag;
+    u16 palTag;
 };
 
 struct HpBarObjs
 {
-    struct Sprite *sprites[10]; /* 0x00 */
-    u16 xpos[10]; /* 0x28 */
-    u16 tileTag; /* 0x3c */
-    u16 palTag; /* 0x3e */
+    struct Sprite *sprites[10];
+    u16 xpos[10];
+    u16 tileTag;
+    u16 palTag;
 };
 
 struct MonPicBounceState
 {
-    u8 ALIGNED(4) animFrame; /* 0x00 */
-    u8 ALIGNED(4) initDelay; /* 0x04 */
-    u8 ALIGNED(4) vigor; /* 0x08 */
+    u8 ALIGNED(4) animFrame;
+    u8 ALIGNED(4) initDelay;
+    u8 ALIGNED(4) vigor;
 };
 
 struct MoveSelectionCursor
 {
-    struct Sprite *sprite; /* 0x00 */
-    u16 whichSprite; /* 0x04 */
-    u16 tileTag; /* 0x06 */
-    u16 palTag; /* 0x08 */
+    struct Sprite *sprite;
+    u16 whichSprite;
+    u16 tileTag;
+    u16 palTag;
 };
 
 struct MonStatusIconObj
 {
-    struct Sprite *sprite; /* 0x00 */
-    u16 tileTag; /* 0x04 */
-    u16 palTag; /* 0x06 */
+    struct Sprite *sprite;
+    u16 tileTag;
+    u16 palTag;
 };
 
 struct PokerusIconObj
 {
-    struct Sprite *sprite; /* 0x00 */
-    u16 tileTag; /* 0x04 */
-    u16 palTag; /* 0x06 */
+    struct Sprite *sprite;
+    u16 tileTag;
+    u16 palTag;
 };
 
 struct ShinyStarObjData
 {
-    struct Sprite *sprite; /* 0x00 */
-    u16 tileTag; /* 0x04 */
-    u16 palTag; /* 0x06 */
+    struct Sprite *sprite;
+    u16 tileTag;
+    u16 palTag;
 };
 
 static EWRAM_DATA struct PokemonSummaryScreenData *sMonSummaryScreen = NULL;
-static EWRAM_DATA struct Struct203B144 *sMonSkillsPrinterXpos = NULL;
+static EWRAM_DATA struct PokemonSummaryXpos *sMonSkillsPrinterXpos = NULL;
 static EWRAM_DATA struct MoveSelectionCursor *sMoveSelectionCursorObjs[4] = {};
 static EWRAM_DATA struct MonStatusIconObj *sStatusIcon = NULL;
 static EWRAM_DATA struct HpBarObjs *sHpBarObjs = NULL;
@@ -443,7 +434,7 @@ static const struct StatData sStatData[] = {
 void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallback savedCallback, u8 mode)
 {
     sMonSummaryScreen = AllocZeroed(sizeof(struct PokemonSummaryScreenData));
-    sMonSkillsPrinterXpos = AllocZeroed(sizeof(struct Struct203B144));
+    sMonSkillsPrinterXpos = AllocZeroed(sizeof(struct PokemonSummaryXpos));
 
     if (sMonSummaryScreen == NULL)
     {
@@ -515,9 +506,6 @@ void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallbac
     memset(sMonSummaryScreen->moveTypeIconSpriteIds, 0xFF, sizeof(sMonSummaryScreen->moveTypeIconSpriteIds));
     memset(sMonSummaryScreen->monTypeIconSpriteIds, 0xFF, sizeof(sMonSummaryScreen->monTypeIconSpriteIds));
     sMonSummaryScreen->skillsPageMode = PSS_SKILL_PAGE_STATS;
-
-    sMonSummaryScreen->unk3228 = 0;
-    sMonSummaryScreen->unk322C = 1;
 
     BufferSelectedMonData(&sMonSummaryScreen->currentMon);
     sMonSummaryScreen->isEgg = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_IS_EGG);
@@ -1709,8 +1697,6 @@ static void BufferMonInfo(void)
     else
         ConvertIntToDecimalStringN(sMonSummaryScreen->summary.dexNumStrBuf, dexNum, STR_CONV_MODE_LEADING_ZEROS, IsNationalPokedexEnabled() ? 4 : 3);
 
-    sMonSkillsPrinterXpos->unk00 = 0;
-
     if (!sMonSummaryScreen->isEgg)
     {
         dexNum = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES);
@@ -1750,7 +1736,7 @@ static void BufferMonInfo(void)
     ConvertInternationalString(sMonSummaryScreen->summary.otNameStrBuf, GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_LANGUAGE));
 
     otId = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_OT_ID) & 0xffff;
-    ConvertIntToDecimalStringN(sMonSummaryScreen->summary.unk306C, otId, STR_CONV_MODE_LEADING_ZEROS, 5);
+    ConvertIntToDecimalStringN(sMonSummaryScreen->summary.otIdStrBuf, otId, STR_CONV_MODE_LEADING_ZEROS, 5);
 
     ConvertIntToDecimalStringN(tempStr, GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_LEVEL), STR_CONV_MODE_LEFT_ALIGN, 3);
     StringCopy(sMonSummaryScreen->summary.levelStrBuf, gText_Lv);
@@ -2253,12 +2239,12 @@ static void PrintInfoPage(void)
     {
         u32 fontId;
 
-        fontId = GetInfoPageFontIdForString(sMonSummaryScreen->summary.dexNumStrBuf, 47 + sMonSkillsPrinterXpos->unk00);
-        AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], fontId, 47 + sMonSkillsPrinterXpos->unk00, 5, colors, TEXT_SKIP_DRAW, sMonSummaryScreen->summary.dexNumStrBuf);
+        fontId = GetInfoPageFontIdForString(sMonSummaryScreen->summary.dexNumStrBuf, 47);
+        AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], fontId, 47, 5, colors, TEXT_SKIP_DRAW, sMonSummaryScreen->summary.dexNumStrBuf);
         fontId = GetInfoPageFontIdForString(sMonSummaryScreen->summary.otNameStrBuf, 47);
         AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], fontId, 47, 49, colors, TEXT_SKIP_DRAW, sMonSummaryScreen->summary.otNameStrBuf);
-        fontId = GetInfoPageFontIdForString(sMonSummaryScreen->summary.unk306C, 47);
-        AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], fontId, 47, 64, colors, TEXT_SKIP_DRAW, sMonSummaryScreen->summary.unk306C);
+        fontId = GetInfoPageFontIdForString(sMonSummaryScreen->summary.otIdStrBuf, 47);
+        AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], fontId, 47, 64, colors, TEXT_SKIP_DRAW, sMonSummaryScreen->summary.otIdStrBuf);
         fontId = GetInfoPageFontIdForString(sMonSummaryScreen->summary.itemNameStrBuf, 47);
         AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], fontId, 47, 79, colors, TEXT_SKIP_DRAW, sMonSummaryScreen->summary.itemNameStrBuf);
     }
