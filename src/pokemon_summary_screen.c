@@ -2290,9 +2290,44 @@ static void PrintMovesPage(void)
     }
 }
 
+static enum MoveTextColor GetMoveTextColor(u32 i, u8 curPP, u8 maxPP)
+{
+    if (sMonSummaryScreen->moveIds[i] == 0 || (curPP == maxPP))
+        return MOVE_TEXT_COLOR_0;
+
+    if (curPP == 0)
+        return MOVE_TEXT_COLOR_3;
+
+    if (maxPP == 3)
+    {
+        if (curPP == 2)
+            return MOVE_TEXT_COLOR_2;
+        else if (curPP == 1)
+            return MOVE_TEXT_COLOR_1;
+
+        return MOVE_TEXT_COLOR_0;
+    }
+
+    if (maxPP == 2)
+    {
+        if (curPP == 1)
+            return MOVE_TEXT_COLOR_1;
+
+        return MOVE_TEXT_COLOR_0;
+    }
+
+    if (curPP <= (maxPP / 4))
+        return MOVE_TEXT_COLOR_2;
+    else if (curPP <= (maxPP / 2))
+        return MOVE_TEXT_COLOR_1;
+
+    return MOVE_TEXT_COLOR_0;
+}
+
 static void PokeSum_PrintMoveName(u8 i)
 {
-    u8 colorIdx = 0;
+    const u8 *color;
+    enum MoveTextColor colorIdx;
     u8 curPP = GetMonPpByMoveSlot(&sMonSummaryScreen->currentMon, i);
     enum Move move = sMonSummaryScreen->moveIds[i];
     u8 ppBonuses = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_PP_BONUSES);
@@ -2304,37 +2339,16 @@ static void PokeSum_PrintMoveName(u8 i)
 
     AddTextPrinterParameterized3(windowId, FONT_NORMAL, 0, GetMoveNamePrinterYpos(i), sPrintMoveTextColors[MOVE_TEXT_COLOR_0], TEXT_SKIP_DRAW, sMonSummaryScreen->moveNameStrBufs[i]);
 
-    if (sMonSummaryScreen->moveIds[i] == 0 || (curPP == maxPP))
-      colorIdx = 0;
-    else if (curPP == 0)
-      colorIdx = 3;
-    else if (maxPP == 3)
-    {
-        if (curPP == 2)
-          colorIdx = 2;
-        else if (curPP == 1)
-          colorIdx = 1;
-    }
-    else if (maxPP == 2)
-    {
-        if (curPP == 1)
-          colorIdx = 1;
-    }
-    else
-    {
-        if (curPP <= (maxPP / 4))
-          colorIdx = 2;
-        else if (curPP <= (maxPP / 2))
-          colorIdx = 1;
-    }
+    colorIdx = GetMoveTextColor(i, curPP, maxPP);
+    color = sPrintMoveTextColors[colorIdx];
 
-    AddTextPrinterParameterized3(windowId, FONT_NORMAL, 36, GetMovePpPrinterYpos(i), sPrintMoveTextColors[colorIdx], TEXT_SKIP_DRAW, sText_PokeSum_PP);
-    AddTextPrinterParameterized3(windowId, FONT_NORMAL, 46 + sMonSummaryScreen->curPpXpos[i], GetMovePpPrinterYpos(i), sPrintMoveTextColors[colorIdx], TEXT_SKIP_DRAW, sMonSummaryScreen->moveCurPpStrBufs[i]);
+    AddTextPrinterParameterized3(windowId, FONT_NORMAL, 36, GetMovePpPrinterYpos(i), color, TEXT_SKIP_DRAW, sText_PokeSum_PP);
+    AddTextPrinterParameterized3(windowId, FONT_NORMAL, 46 + sMonSummaryScreen->curPpXpos[i], GetMovePpPrinterYpos(i), color, TEXT_SKIP_DRAW, sMonSummaryScreen->moveCurPpStrBufs[i]);
 
     if (sMonSummaryScreen->moveIds[i] != MOVE_NONE)
     {
-        AddTextPrinterParameterized3(windowId, FONT_NORMAL, 58, GetMovePpPrinterYpos(i), sPrintMoveTextColors[colorIdx], TEXT_SKIP_DRAW, gText_Slash);
-        AddTextPrinterParameterized3(windowId, FONT_NORMAL, 64 + sMonSummaryScreen->maxPpXpos[i], GetMovePpPrinterYpos(i), sPrintMoveTextColors[colorIdx], TEXT_SKIP_DRAW, sMonSummaryScreen->moveMaxPpStrBufs[i]);
+        AddTextPrinterParameterized3(windowId, FONT_NORMAL, 58, GetMovePpPrinterYpos(i), color, TEXT_SKIP_DRAW, gText_Slash);
+        AddTextPrinterParameterized3(windowId, FONT_NORMAL, 64 + sMonSummaryScreen->maxPpXpos[i], GetMovePpPrinterYpos(i), color, TEXT_SKIP_DRAW, sMonSummaryScreen->moveMaxPpStrBufs[i]);
     }
 }
 
