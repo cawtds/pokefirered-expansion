@@ -346,11 +346,12 @@ static const u8 *const sEggOriginTexts[] =
     [EGG_ORIGIN_SPA]           = COMPOUND_STRING("An odd POKéMON EGG obtained from\nan old woman at the SPA."),
 };
 
-static const u8 sPrintMoveTextColors[][3] = {
-    {0, 7, 8},
-    {0, 1, 2},
-    {0, 3, 4},
-    {0, 5, 6}
+static const u8 sPrintMoveTextColors[][3] =
+{
+    [MOVE_TEXT_COLOR_0] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_LIGHT_GREEN, TEXT_COLOR_BLUE},
+    [MOVE_TEXT_COLOR_1] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE,       TEXT_COLOR_DARK_GRAY},
+    [MOVE_TEXT_COLOR_2] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_LIGHT_GRAY,  TEXT_COLOR_RED},
+    [MOVE_TEXT_COLOR_3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_LIGHT_RED,   TEXT_COLOR_GREEN}
 };
 
 static const struct BgTemplate sBgTempaltes[] =

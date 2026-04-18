@@ -85,6 +85,14 @@ enum EggOrigin
     EGG_ORIGIN_SPA,
 };
 
+enum MoveTextColor
+{
+    MOVE_TEXT_COLOR_0,
+    MOVE_TEXT_COLOR_1,
+    MOVE_TEXT_COLOR_2,
+    MOVE_TEXT_COLOR_3,
+};
+
 // needs conflicting header to match (curIndex is s8 in the function, but has to be defined as u8 here)
 extern s16 SeekToNextMonInBox(struct BoxPokemon * boxMons, u8 curIndex, u8 maxIndex, u8 flags);
 
@@ -2278,7 +2286,7 @@ static void PrintMovesPage(void)
         else
             AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], FONT_NORMAL,
                                          3, GetMoveNamePrinterYpos(4),
-                                         sPrintMoveTextColors[0], TEXT_SKIP_DRAW, gText_Cancel);
+                                         sPrintMoveTextColors[MOVE_TEXT_COLOR_0], TEXT_SKIP_DRAW, gText_Cancel);
     }
 }
 
@@ -2289,11 +2297,12 @@ static void PokeSum_PrintMoveName(u8 i)
     enum Move move = sMonSummaryScreen->moveIds[i];
     u8 ppBonuses = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_PP_BONUSES);
     u8 maxPP = CalculatePPWithBonus(move, ppBonuses, i);
+    u8 windowId = sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE];
 
     if (i == MAX_MON_MOVES)
         curPP = maxPP;
 
-    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], FONT_NORMAL, 0, GetMoveNamePrinterYpos(i), sPrintMoveTextColors[0], TEXT_SKIP_DRAW, sMonSummaryScreen->moveNameStrBufs[i]);
+    AddTextPrinterParameterized3(windowId, FONT_NORMAL, 0, GetMoveNamePrinterYpos(i), sPrintMoveTextColors[MOVE_TEXT_COLOR_0], TEXT_SKIP_DRAW, sMonSummaryScreen->moveNameStrBufs[i]);
 
     if (sMonSummaryScreen->moveIds[i] == 0 || (curPP == maxPP))
       colorIdx = 0;
@@ -2319,14 +2328,13 @@ static void PokeSum_PrintMoveName(u8 i)
           colorIdx = 1;
     }
 
-    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], FONT_NORMAL, 36, GetMovePpPrinterYpos(i), sPrintMoveTextColors[colorIdx], TEXT_SKIP_DRAW,
-        sText_PokeSum_PP);
-    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], FONT_NORMAL, 46 + sMonSummaryScreen->curPpXpos[i], GetMovePpPrinterYpos(i), sPrintMoveTextColors[colorIdx], TEXT_SKIP_DRAW, sMonSummaryScreen->moveCurPpStrBufs[i]);
+    AddTextPrinterParameterized3(windowId, FONT_NORMAL, 36, GetMovePpPrinterYpos(i), sPrintMoveTextColors[colorIdx], TEXT_SKIP_DRAW, sText_PokeSum_PP);
+    AddTextPrinterParameterized3(windowId, FONT_NORMAL, 46 + sMonSummaryScreen->curPpXpos[i], GetMovePpPrinterYpos(i), sPrintMoveTextColors[colorIdx], TEXT_SKIP_DRAW, sMonSummaryScreen->moveCurPpStrBufs[i]);
 
     if (sMonSummaryScreen->moveIds[i] != MOVE_NONE)
     {
-        AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], FONT_NORMAL, 58, GetMovePpPrinterYpos(i), sPrintMoveTextColors[colorIdx], TEXT_SKIP_DRAW, gText_Slash);
-        AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], FONT_NORMAL, 64 + sMonSummaryScreen->maxPpXpos[i], GetMovePpPrinterYpos(i), sPrintMoveTextColors[colorIdx], TEXT_SKIP_DRAW, sMonSummaryScreen->moveMaxPpStrBufs[i]);
+        AddTextPrinterParameterized3(windowId, FONT_NORMAL, 58, GetMovePpPrinterYpos(i), sPrintMoveTextColors[colorIdx], TEXT_SKIP_DRAW, gText_Slash);
+        AddTextPrinterParameterized3(windowId, FONT_NORMAL, 64 + sMonSummaryScreen->maxPpXpos[i], GetMovePpPrinterYpos(i), sPrintMoveTextColors[colorIdx], TEXT_SKIP_DRAW, sMonSummaryScreen->moveMaxPpStrBufs[i]);
     }
 }
 
@@ -3000,21 +3008,21 @@ static void PokeSum_SetHelpContext(void)
 static u8 PokeSum_BufferOtName_IsEqualToCurrentOwner(struct Pokemon *mon)
 {
     u8 multiplayerId;
-    u32 trainerId = 0;
+    u32 otId = 0;
 
     if (sMonSummaryScreen->monList.mons == gEnemyParty)
     {
         multiplayerId = GetMultiplayerId() ^ 1;
-        trainerId = gLinkPlayers[multiplayerId].trainerId & 0xffff;
+        otId = gLinkPlayers[multiplayerId].trainerId & 0xFFFF;
         StringCopy(sMonSummaryScreen->otNameStrBufs[0], gLinkPlayers[multiplayerId].name);
     }
     else
     {
-        trainerId = GetPlayerTrainerId() & 0xffff;
+        otId = GetPlayerTrainerId() & 0xFFFF;
         StringCopy(sMonSummaryScreen->otNameStrBufs[0], gSaveBlock2Ptr->playerName);
     }
 
-    if (trainerId != (GetMonData(mon, MON_DATA_OT_ID) & 0xffff))
+    if (otId != (GetMonData(mon, MON_DATA_OT_ID) & 0xFFFF))
         return FALSE;
 
     GetMonData(mon, MON_DATA_OT_NAME, sMonSummaryScreen->otNameStrBufs[1]);
