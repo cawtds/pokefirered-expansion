@@ -2567,40 +2567,33 @@ static void DestroyCategoryIcon(void)
 
 static void PokeSum_PrintSelectedMoveStats(void)
 {
-    if (sMoveSelectionCursorPos < 5)
+    const u8 *description;
+    enum Move moveId;
+    u8 windowId;
+
+    if (sMoveSelectionCursorPos > MAX_MON_MOVES)
+        return;
+
+    if (sMonSummaryScreen->mode != PSS_MODE_SELECT_MOVE && sMoveSelectionCursorPos == MAX_MON_MOVES)
     {
-        if (sMonSummaryScreen->mode != PSS_MODE_SELECT_MOVE && sMoveSelectionCursorPos == 4)
-        {
-            HideCategoryIcon();
-            return;
-        }
-
-        AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO], FONT_NORMAL,
-                                     57, 1,
-                                     sLevelNickTextColors[0], TEXT_SKIP_DRAW,
-                                     sMonSummaryScreen->movePowerStrBufs[sMoveSelectionCursorPos]);
-
-        AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO], FONT_NORMAL,
-                                     57, 15,
-                                     sLevelNickTextColors[0], TEXT_SKIP_DRAW,
-                                     sMonSummaryScreen->moveAccuracyStrBufs[sMoveSelectionCursorPos]);
-
-        if (gMovesInfo[sMonSummaryScreen->moveIds[sMoveSelectionCursorPos]].effect != EFFECT_PLACEHOLDER)
-            AddTextPrinterParameterized4(sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO], FONT_NORMAL,
-                                        7, 42,
-                                        0, 0,
-                                        sLevelNickTextColors[0], TEXT_SKIP_DRAW,
-                                        gMovesInfo[sMonSummaryScreen->moveIds[sMoveSelectionCursorPos]].description);
-        else
-            AddTextPrinterParameterized4(sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO], FONT_NORMAL,
-                                        7, 42,
-                                        0, 0,
-                                        sLevelNickTextColors[0], TEXT_SKIP_DRAW,
-                                        gNotDoneYetDescription);
-
-        if (B_SHOW_CATEGORY_ICON == TRUE)
-            ShowCategoryIcon(GetBattleMoveCategory(sMonSummaryScreen->moveIds[sMoveSelectionCursorPos]));
+        HideCategoryIcon();
+        return;
     }
+
+    windowId = sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO];
+    AddTextPrinterParameterized3(windowId, FONT_NORMAL, 57, 1, sLevelNickTextColors[0], TEXT_SKIP_DRAW, sMonSummaryScreen->movePowerStrBufs[sMoveSelectionCursorPos]);
+    AddTextPrinterParameterized3(windowId, FONT_NORMAL, 57, 15, sLevelNickTextColors[0], TEXT_SKIP_DRAW, sMonSummaryScreen->moveAccuracyStrBufs[sMoveSelectionCursorPos]);
+
+    moveId = sMonSummaryScreen->moveIds[sMoveSelectionCursorPos];
+    if (gMovesInfo[moveId].effect == EFFECT_PLACEHOLDER)
+        description = gNotDoneYetDescription;
+    else
+        description = gMovesInfo[moveId].description;
+
+    AddTextPrinterParameterized4(windowId, FONT_NORMAL, 7, 42, 0, 0, sLevelNickTextColors[0], TEXT_SKIP_DRAW, description);
+
+    if (B_SHOW_CATEGORY_ICON == TRUE)
+        ShowCategoryIcon(GetBattleMoveCategory(sMonSummaryScreen->moveIds[sMoveSelectionCursorPos]));
 }
 
 static void PokeSum_PrintAbilityDataOrMoveTypes(void)
