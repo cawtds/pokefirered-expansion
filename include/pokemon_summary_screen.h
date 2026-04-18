@@ -38,7 +38,6 @@ enum PokemonSummaryScreenPage
     PSS_PAGE_SKILLS,
     PSS_PAGE_MOVES,
     PSS_PAGE_MOVES_INFO,
-    PSS_PAGE_UNK4,
     PSS_PAGE_MOVE_DELETER,
 };
 

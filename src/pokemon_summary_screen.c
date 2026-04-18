@@ -101,7 +101,7 @@ static void Task_DestroyResourcesOnExit(u8 taskId);
 static void PokeSum_HideSpritesBeforePageFlip(void);
 static void PokeSum_ShowSpritesBeforePageFlip(void);
 static void PokeSum_UpdateWin1ActiveFlag(u8 curPageIndex);
-static void PokeSum_AddWindows(u8 curPageIndex);
+static void PokeSum_AddWindows(enum PokemonSummaryScreenPage curPageIndex);
 static void PokeSum_PrintPageHeaderText(u8 curPageIndex);
 static void PokeSum_InitBgCoordsBeforePageFlips(void);
 static u8 PokeSum_IsPageFlipFinished(u8);
@@ -256,7 +256,7 @@ struct PokemonSummaryScreenData
 
     u8 ALIGNED(4) mode;
     u8 ALIGNED(4) lastIndex;
-    u8 ALIGNED(4) curPageIndex;
+    enum PokemonSummaryScreenPage curPageIndex;
     u8 ALIGNED(4) isBoxMon;
     u8 ALIGNED(4) monTypes[3];
 
@@ -2169,6 +2169,8 @@ static void PokeSum_PrintRightPaneText(void)
     case PSS_PAGE_MOVES_INFO:
         PrintMovesPage();
         break;
+    case PSS_PAGE_MOVE_DELETER:
+        break;
     }
 
     PutWindowTilemap(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE]);
@@ -2345,6 +2347,7 @@ static void PokeSum_PrintBottomPaneText(void)
         PokeSum_PrintSelectedMoveStats();
         break;
     case PSS_PAGE_MOVES:
+    case PSS_PAGE_MOVE_DELETER:
         break;
     }
 
@@ -2606,6 +2609,7 @@ static void PokeSum_PrintAbilityDataOrMoveTypes(void)
     switch (sMonSummaryScreen->curPageIndex)
     {
     case PSS_PAGE_INFO:
+    case PSS_PAGE_MOVE_DELETER:
         break;
     case PSS_PAGE_SKILLS:
         PokeSum_PrintAbilityNameAndDesc();
@@ -2924,50 +2928,58 @@ static void PokeSum_CreateWindows(void)
         }
 }
 
-static void PokeSum_AddWindows(u8 curPageIndex)
+static const struct WindowTemplate *GetPermanentWindowTemplate(void)
 {
-    u8 i;
     u32 bgPriority1 = GetGpuReg(REG_OFFSET_BG1CNT) & 3;
     u32 bgPriority2 = GetGpuReg(REG_OFFSET_BG2CNT) & 3;
-
-    for (i = 0; i < 7; i++)
-        sMonSummaryScreen->windowIds[i] = 0xff;
-
     if ((sMonSummaryScreen->pageFlipDirection == 1 && sMonSummaryScreen->curPageIndex != PSS_PAGE_MOVES_INFO)
         || (sMonSummaryScreen->pageFlipDirection == 0 && sMonSummaryScreen->curPageIndex == PSS_PAGE_MOVES))
     {
         if (bgPriority2 > bgPriority1)
-            for (i = 0; i < 3; i++)
-                sMonSummaryScreen->windowIds[i] = AddWindow(&sWindowTemplates_Permanent_Bg2[i]);
+            return sWindowTemplates_Permanent_Bg2;
         else
-            for (i = 0; i < 3; i++)
-                sMonSummaryScreen->windowIds[i] = AddWindow(&sWindowTemplates_Permanent_Bg1[i]);
+            return sWindowTemplates_Permanent_Bg1;
     }
     else
     {
         if (bgPriority2 > bgPriority1)
-            for (i = 0; i < 3; i++)
-                sMonSummaryScreen->windowIds[i] = AddWindow(&sWindowTemplates_Permanent_Bg1[i]);
+            return sWindowTemplates_Permanent_Bg1;
         else
-            for (i = 0; i < 3; i++)
-                sMonSummaryScreen->windowIds[i] = AddWindow(&sWindowTemplates_Permanent_Bg2[i]);
+            return sWindowTemplates_Permanent_Bg2;
     }
+}
 
-    for (i = 0; i < 4; i++)
-        switch (curPageIndex)
-        {
-        case PSS_PAGE_INFO:
-            sMonSummaryScreen->windowIds[i + 3] = AddWindow(&sWindowTemplates_Info[i]);
-            break;
-        case PSS_PAGE_SKILLS:
-        default:
-            sMonSummaryScreen->windowIds[i + 3] = AddWindow(&sWindowTemplates_Skills[i]);
-            break;
-        case PSS_PAGE_MOVES:
-        case PSS_PAGE_MOVES_INFO:
-            sMonSummaryScreen->windowIds[i + 3] = AddWindow(&sWindowTemplates_Moves[i]);
-            break;
-        }
+static const struct WindowTemplate *GetPageWindowTemplate(enum PokemonSummaryScreenPage pageIndex)
+{
+    switch (pageIndex)
+    {
+    case PSS_PAGE_INFO:
+        return sWindowTemplates_Info;
+    case PSS_PAGE_SKILLS:
+    default:
+        return sWindowTemplates_Skills;
+    case PSS_PAGE_MOVES:
+    case PSS_PAGE_MOVES_INFO:
+        return sWindowTemplates_Moves;
+    }
+}
+
+static void PokeSum_AddWindows(enum PokemonSummaryScreenPage curPageIndex)
+{
+    const struct WindowTemplate *permanentTemplate;
+    const struct WindowTemplate *pageTemplate;
+
+    for (u32 i = 0; i < 7; i++)
+        sMonSummaryScreen->windowIds[i] = WINDOW_NONE;
+
+    permanentTemplate = GetPermanentWindowTemplate();
+    pageTemplate = GetPageWindowTemplate(curPageIndex);
+
+    for (u32 i = 0; i < 3; i++)
+        sMonSummaryScreen->windowIds[i] = AddWindow(&permanentTemplate[i]);
+
+    for (u32 i = 0; i < 4; i++)
+        sMonSummaryScreen->windowIds[i + 3] = AddWindow(&pageTemplate[i]);
 }
 
 static void PokeSum_RemoveWindows(u8 curPageIndex)
@@ -2992,6 +3004,8 @@ static void PokeSum_SetHelpContext(void)
     case PSS_PAGE_MOVES:
     case PSS_PAGE_MOVES_INFO:
         SetHelpContext(HELPCONTEXT_POKEMON_MOVES);
+        break;
+    case PSS_PAGE_MOVE_DELETER:
         break;
     }
 }
@@ -3107,6 +3121,8 @@ static void PokeSum_DrawPageProgressTiles(void)
         FillBgTilemapBufferRect(3, 48 + PAGE_PROGRESS_BASE_TILE_NUM, 18, 0, 1, 1, 0);
         FillBgTilemapBufferRect(3, 64 + PAGE_PROGRESS_BASE_TILE_NUM, 18, 1, 1, 1, 0);
         break;
+    case PSS_PAGE_MOVE_DELETER:
+        break;
     }
 }
 
@@ -3131,8 +3147,8 @@ static void PokeSum_PrintMonTypeIcons(void)
         }
         break;
     case PSS_PAGE_SKILLS:
-        break;
     case PSS_PAGE_MOVES:
+    case PSS_PAGE_MOVE_DELETER:
         break;
     case PSS_PAGE_MOVES_INFO:
         FillWindowPixelBuffer(sMonSummaryScreen->windowIds[6], 0);
