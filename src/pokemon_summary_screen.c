@@ -291,16 +291,12 @@ struct ExpBarObjs
 {
     struct Sprite *sprites[11];
     u16 xpos[11];
-    u16 tileTag;
-    u16 palTag;
 };
 
 struct HpBarObjs
 {
     struct Sprite *sprites[10];
     u16 xpos[10];
-    u16 tileTag;
-    u16 palTag;
 };
 
 struct MonPicBounceState
@@ -4130,8 +4126,6 @@ static void CreateHpBarObjs(u16 tileTag, u16 palTag)
         sHpBarObjs->sprites[i] = &gSprites[spriteId];
         sHpBarObjs->sprites[i]->invisible = FALSE;
         sHpBarObjs->sprites[i]->oam.priority = 2;
-        sHpBarObjs->tileTag = tileTag;
-        sHpBarObjs->palTag = palTag;
         StartSpriteAnim(sHpBarObjs->sprites[i], 8);
     }
 
@@ -4273,8 +4267,6 @@ static void CreateExpBarObjs(u16 tileTag, u16 palTag)
         spriteId = CreateSprite(&template, sExpBarObjs->xpos[i], 132, 0);
         sExpBarObjs->sprites[i] = &gSprites[spriteId];
         sExpBarObjs->sprites[i]->oam.priority = 2;
-        sExpBarObjs->tileTag = tileTag;
-        sExpBarObjs->palTag = palTag;
     }
 
     UpdateExpBarObjs();
