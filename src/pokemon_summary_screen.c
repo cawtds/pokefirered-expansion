@@ -277,7 +277,6 @@ struct PokemonSummaryScreenData
     u8 speciesNameStrBuf[POKEMON_NAME_LENGTH + 1];
     u8 spriteCreationStep;
     u8 statValueStrBufs[NUM_STATS][30];
-    u8 summarySetupStep;
     u8 switchMonTaskState;
     u8 taskState;
     u8 whichBgLayerToTranslate;
@@ -431,7 +430,6 @@ void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 maxMonIndex, MainCal
     }
 
     sMonSummaryScreen->screenState = PSS_STATE_FADEIN;
-    sMonSummaryScreen->summarySetupStep = 0;
     sMonSummaryScreen->loadBgGfxStep = 0;
     sMonSummaryScreen->spriteCreationStep = 0;
 
@@ -1407,7 +1405,7 @@ static void PokeSum_CopyNewBgTilemapBeforePageFlip(void)
 
 static void CB2_InitSummaryScreen(void)
 {
-    switch (sMonSummaryScreen->summarySetupStep)
+    switch (gMain.state)
     {
     case 0:
         SetVBlankHBlankCallbacksToNull();
@@ -1476,13 +1474,13 @@ static void CB2_InitSummaryScreen(void)
         break;
     case 13:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, 0);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_PAGE_NAME], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_CONTROLS], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[6], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO], 2);
-        CopyWindowToVram(sMonSummaryScreen->windowIds[5], 2);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_PAGE_NAME], COPYWIN_GFX);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_CONTROLS], COPYWIN_GFX);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK], COPYWIN_GFX);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_SECONDARY_WIN_4], COPYWIN_GFX);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_SECONDARY_WIN_1], COPYWIN_GFX);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_SECONDARY_WIN_2], COPYWIN_GFX);
+        CopyWindowToVram(sMonSummaryScreen->windowIds[PSS_SECONDARY_WIN_3], COPYWIN_GFX);
         break;
     case 14:
         CopyBgTilemapBufferToVram(0);
@@ -1515,7 +1513,7 @@ static void CB2_InitSummaryScreen(void)
         return;
     }
 
-    sMonSummaryScreen->summarySetupStep++;
+    gMain.state++;
 }
 
 static u8 PokeSum_HandleLoadBgGfx(void)
