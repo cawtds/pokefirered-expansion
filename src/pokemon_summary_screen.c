@@ -157,7 +157,7 @@ static void PokeSum_PrintTrainerMemo_Mon_NotHeldByOT(void);
 static void PokeSum_PrintTrainerMemo_Mon(void);
 static void PokeSum_PrintTrainerMemo(void);
 static void PokeSum_RemoveWindows(u8 curPageIndex);
-static void PokeSum_SeekToNextMon(u8 taskId, s8 direction);
+static void ChangeSummaryPokemon(u8 taskId, s8 direction);
 static void PokeSum_SetHelpContext(void);
 static void PokeSum_SetMonPicSpriteCallback(u16 spriteId);
 static void PokeSum_Setup_InitGpu(void);
@@ -167,7 +167,7 @@ static void PokeSum_ShowOrHideMonIconSprite(u8 invisible);
 static void PokeSum_ShowOrHideMonMarkingsSprite(u8 invisible);
 static void PokeSum_ShowOrHideMonPicSprite(u8 invisible);
 static void PokeSum_ShowSpritesBeforePageFlip(void);
-static void PokeSum_TryPlayMonCry(void);
+static void PlayMonCry(void);
 static void PokeSum_UpdateBgPriorityForPageFlip(u8 setBg0Priority, u8 keepBg1Bg2PriorityOrder);
 static void PokeSum_UpdateMonMarkingsAnim(void);
 static void PokeSum_UpdateWin1ActiveFlag(u8 curPageIndex);
@@ -204,8 +204,8 @@ struct PokemonSummaryScreenData
 {
     union
     {
-        struct Pokemon * mons;
-        struct BoxPokemon * boxMons;
+        struct Pokemon *mons;
+        struct BoxPokemon *boxMons;
     } monList;
     bool32 isEnemyParty;
     enum PokemonSummaryScreenPage curPageIndex;
@@ -596,7 +596,7 @@ static void Task_InputHandler_Info(u8 taskId)
     case PSS_STATE_PLAYCRY:
         if (!gPaletteFade.active)
         {
-            PokeSum_TryPlayMonCry();
+            PlayMonCry();
             sMonSummaryScreen->screenState = PSS_STATE_HANDLEINPUT;
             return;
         }
@@ -655,12 +655,12 @@ static void Task_InputHandler_Info(u8 taskId)
         {
             if (JOY_NEW(DPAD_UP))
             {
-                PokeSum_SeekToNextMon(taskId, -1);
+                ChangeSummaryPokemon(taskId, -1);
                 return;
             }
             else if (JOY_NEW(DPAD_DOWN))
             {
-                PokeSum_SeekToNextMon(taskId, 1);
+                ChangeSummaryPokemon(taskId, 1);
                 return;
             }
             else if (JOY_NEW(A_BUTTON))
@@ -1934,25 +1934,25 @@ static u8 PokeSum_HandleCreateSprites(void)
     switch (sMonSummaryScreen->spriteCreationStep)
     {
     case 0:
-        CreateShinyIconSprite(TAG_PSS_UNK_A0, TAG_PSS_UNK_A0);
+        CreateShinyIconSprite(TAG_PSS_SHINY_ICON, TAG_PSS_SHINY_ICON);
         break;
     case 1:
-        CreatePokerusIconSprite(TAG_PSS_UNK_96, TAG_PSS_UNK_96);
+        CreatePokerusIconSprite(TAG_PSS_POKERUS_ICON, TAG_PSS_POKERUS_ICON);
         break;
     case 2:
         PokeSum_CreateMonMarkingsSprite();
         break;
     case 3:
-        CreateMoveSelectionCursorSprites(TAG_PSS_UNK_64, TAG_PSS_UNK_64);
+        CreateMoveSelectionCursorSprites(TAG_PSS_MOVE_SELECTION_CURSOR_0, TAG_PSS_MOVE_SELECTION_CURSOR_0);
         break;
     case 4:
-        CreateStatusIconSprite(TAG_PSS_UNK_6E, TAG_PSS_UNK_6E);
+        CreateStatusIconSprite(TAG_PSS_STATUS_ICON, TAG_PSS_STATUS_ICON);
         break;
     case 5:
-        CreateHpBarObjs(TAG_PSS_UNK_78, TAG_PSS_UNK_78);
+        CreateHpBarObjs(TAG_PSS_HP_BAR_0, TAG_PSS_HP_BAR_0);
         break;
     case 6:
-        CreateExpBarObjs(TAG_PSS_UNK_82, TAG_PSS_UNK_82);
+        CreateExpBarObjs(TAG_PSS_EXP_BAR_0, TAG_PSS_EXP_BAR_0);
         break;
     case 7:
         CreateBallIconObj();
@@ -3492,7 +3492,7 @@ static void Task_InputHandler_SelectOrForgetMove(u8 taskId)
     case 1:
         if (!gPaletteFade.active)
         {
-            PokeSum_TryPlayMonCry();
+            PlayMonCry();
             sMonSummaryScreen->selectMoveInputHandlerState++;
         }
         break;
@@ -4150,7 +4150,7 @@ static void UpdateHpBarObjs(void)
     }
 
     for (i = 0; i < 9; i++)
-        sHpBarObjs->sprites[i]->oam.paletteNum = IndexOfSpritePaletteTag(TAG_PSS_UNK_78) + hpBarPalOffset;
+        sHpBarObjs->sprites[i]->oam.paletteNum = IndexOfSpritePaletteTag(TAG_PSS_HP_BAR_0) + hpBarPalOffset;
 
     if (curHp == maxHp)
         for (i = two; i < 8; i++)
@@ -4462,7 +4462,7 @@ static void PokeSum_CreateMonMarkingsSprite(void)
     u32 markings = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_MARKINGS);
 
     DestroySpriteAndFreeResources(sMonSummaryScreen->markingSprite);
-    sMonSummaryScreen->markingSprite = CreateMonMarkingAllCombosSprite(TAG_PSS_UNK_8C, TAG_PSS_UNK_8C, sMonMarkingSpritePalette);
+    sMonSummaryScreen->markingSprite = CreateMonMarkingAllCombosSprite(TAG_PSS_MON_MARKINGS, TAG_PSS_MON_MARKINGS, sMonMarkingSpritePalette);
 
     if (sMonSummaryScreen->markingSprite != NULL)
     {
@@ -4497,7 +4497,7 @@ static void PokeSum_UpdateMonMarkingsAnim(void)
     PokeSum_ShowOrHideMonMarkingsSprite(FALSE);
 }
 
-static void PokeSum_SeekToNextMon(u8 taskId, s8 direction)
+static void ChangeSummaryPokemon(u8 taskId, s8 direction)
 {
     s8 scrollResult = -1;
 
@@ -4706,7 +4706,7 @@ static void Task_PokeSum_SwitchDisplayedPokemon(u8 taskId)
         if (!Overworld_LinkRecvQueueLengthMoreThan2() && !IsLinkRecvQueueAtOverworldMax())
         {
             PokeSum_CreateSprites();
-            PokeSum_TryPlayMonCry();
+            PlayMonCry();
             sMonSummaryScreen->switchMonTaskState++;
         }
         break;
@@ -4737,7 +4737,7 @@ static void PokeSum_UpdateWin1ActiveFlag(u8 curPageIndex)
     }
 }
 
-static void PokeSum_TryPlayMonCry(void)
+static void PlayMonCry(void)
 {
     if (!GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_IS_EGG))
     {
@@ -4752,21 +4752,22 @@ static bool32 CurrentMonIsFromGBA(void)
 {
     enum GameVersion version = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_MET_GAME);
 
-    if (version == VERSION_LEAF_GREEN
-        || version == VERSION_FIRE_RED
-        || version == VERSION_RUBY
-        || version == VERSION_SAPPHIRE
-        || version == VERSION_EMERALD)
-        return TRUE;
-
-    return FALSE;
+    switch (version)
+    {
+        case VERSION_LEAF_GREEN:
+        case VERSION_FIRE_RED:
+        case VERSION_RUBY:
+        case VERSION_SAPPHIRE:
+        case VERSION_EMERALD:
+            return TRUE;
+        default:
+            return FALSE;
+    }
 }
 
 static bool32 MapSecIsInKantoOrSevii(u8 mapSec)
 {
-    if (mapSec >= KANTO_MAPSEC_START && mapSec <= MAPSEC_SPECIAL_AREA)
-        return TRUE;
-    return FALSE;
+    return mapSec >= KANTO_MAPSEC_START && mapSec <= MAPSEC_SPECIAL_AREA;
 }
 
 static void CreateTypeIconSprites(void)
