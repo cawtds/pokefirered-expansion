@@ -3289,6 +3289,7 @@ static void Task_HandleInput_SelectMove(u8 taskId)
                 sMoveSelectionCursorPos = 0;
                 sMoveSwapCursorPos = 0;
                 sMonSummaryScreen->isSwappingMoves = FALSE;
+                HideMonTypeIcons();
                 ShoworHideMoveSelectionCursor(TRUE);
                 sMonSummaryScreen->pageFlipDirection = 0;
                 PokeSum_RemoveWindows();
