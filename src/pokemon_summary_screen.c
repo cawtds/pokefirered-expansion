@@ -98,7 +98,7 @@ static bool32 IsMultiBattlePartner(void);
 static bool32 MapSecIsInKantoOrSevii(u8 mapSec);
 static enum Move GetMonMoveBySlotId(struct Pokemon *mon, u8 moveSlot);
 static s8 AdvanceMultiBattleMonIndex(s8 direction);
-static s8 SeekToNextMonInSingleParty(s8 direction);
+static s8 AdvanceMonIndex(s8 direction);
 static u16 GetMonPpByMoveSlot(struct Pokemon *mon, u8 moveSlot);
 static u8 PokeSum_BufferOtName_IsEqualToCurrentOwner(struct Pokemon * mon);
 static u8 PokeSum_HandleCreateSprites(void);
@@ -249,7 +249,7 @@ struct PokemonSummaryScreenData
     u8 isEgg;
     u8 isSwappingMoves;
     u8 itemNameStrBuf[ITEM_NAME_LENGTH + 1];
-    u8 lastIndex;
+    u8 maxMonIndex;
     u8 lastPageFlipDirection;
     u8 levelStrBuf[7];
     u8 loadBgGfxStep;
@@ -369,7 +369,7 @@ static const struct StatData sStatData[] = {
     },
 };
 
-void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallback savedCallback, u8 mode)
+void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 maxMonIndex, MainCallback savedCallback, u8 mode)
 {
     sMonSummaryScreen = AllocZeroed(sizeof(struct PokemonSummaryScreenData));
 
@@ -395,13 +395,13 @@ void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallbac
     {
         sMonSummaryScreen->monList.boxMons = GetBoxedMonPtr(gSpecialVar_MonBoxId, 0);
         gLastViewedMonIndex = gSpecialVar_MonBoxPos;
-        sMonSummaryScreen->lastIndex = IN_BOX_COUNT - 1;
+        sMonSummaryScreen->maxMonIndex = IN_BOX_COUNT - 1;
     }
     else
     {
         sMonSummaryScreen->monList.mons = party;
         gLastViewedMonIndex = cursorPos;
-        sMonSummaryScreen->lastIndex = lastIdx;
+        sMonSummaryScreen->maxMonIndex = maxMonIndex;
     }
 
     if (mode == PSS_MODE_BOX || cursorPos == PC_MON_CHOSEN)
@@ -4519,7 +4519,7 @@ static void PokeSum_SeekToNextMon(u8 taskId, s8 direction)
                 direction = 3;
         }
 
-        scrollResult = AdvanceStorageMonIndex(sMonSummaryScreen->monList.boxMons, GetLastViewedMonIndex(), sMonSummaryScreen->lastIndex, (u8)direction);
+        scrollResult = AdvanceStorageMonIndex(sMonSummaryScreen->monList.boxMons, GetLastViewedMonIndex(), sMonSummaryScreen->maxMonIndex, (u8)direction);
     }
     else if (IsMultiBattle() == TRUE)
     {
@@ -4527,7 +4527,7 @@ static void PokeSum_SeekToNextMon(u8 taskId, s8 direction)
     }
     else
     {
-        scrollResult = SeekToNextMonInSingleParty(direction);
+        scrollResult = AdvanceMonIndex(direction);
     }
 
     if (scrollResult == -1)
@@ -4538,29 +4538,30 @@ static void PokeSum_SeekToNextMon(u8 taskId, s8 direction)
     sMonSummaryScreen->switchMonTaskState = 0;
 }
 
-static s8 SeekToNextMonInSingleParty(s8 direction)
+static s8 AdvanceMonIndex(s8 delta)
 {
-    struct Pokemon * partyMons = sMonSummaryScreen->monList.mons;
-    s8 seekDelta = 0;
+    u8 index = gLastViewedMonIndex;
+    struct Pokemon *partyMons = sMonSummaryScreen->monList.mons;
 
-    if (sMonSummaryScreen->curPageIndex == 0)
+    if (sMonSummaryScreen->curPageIndex == PSS_PAGE_INFO)
     {
-        if (direction == -1 && gLastViewedMonIndex == 0)
+        if (delta == -1 && index == 0)
             return -1;
-        else if (direction == 1 && gLastViewedMonIndex >= sMonSummaryScreen->lastIndex)
+        if (delta == 1 && index >= sMonSummaryScreen->maxMonIndex)
             return -1;
-        else
-            return gLastViewedMonIndex + direction;
+
+        return index + delta;
     }
 
     while (TRUE)
     {
-        seekDelta += direction;
-        if (0 > gLastViewedMonIndex + seekDelta || gLastViewedMonIndex + seekDelta > sMonSummaryScreen->lastIndex)
+        index += delta;
+
+        if (0 > index || index > sMonSummaryScreen->maxMonIndex)
             return -1;
 
-        if (GetMonData(&partyMons[gLastViewedMonIndex + seekDelta], MON_DATA_IS_EGG) == 0)
-            return gLastViewedMonIndex + seekDelta;
+        if (GetMonData(&partyMons[index], MON_DATA_IS_EGG) == 0)
+            return index;
     }
 
     return -1;
