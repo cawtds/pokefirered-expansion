@@ -1143,18 +1143,22 @@ static void PokeSum_InitBgCoordsBeforePageFlips(void)
         PokeSum_SetHpExpBarCoordsFullLeft();
 }
 
+static enum PokemonSummaryScreenPage GetNewPageIndex(void)
+{
+    if (sMonSummaryScreen->pageFlipDirection == 1)
+        return sMonSummaryScreen->curPageIndex - 1;
+    else
+        return sMonSummaryScreen->curPageIndex + 1;
+}
+
 static void PokeSum_HideSpritesBeforePageFlip(void)
 {
-    u8 newPage;
-
-    if (sMonSummaryScreen->pageFlipDirection == 1)
-        newPage = sMonSummaryScreen->curPageIndex - 1;
-    else
-        newPage = sMonSummaryScreen->curPageIndex + 1;
+    enum PokemonSummaryScreenPage newPage = GetNewPageIndex();
 
     switch (newPage)
     {
     case PSS_PAGE_INFO:
+    case PSS_PAGE_MOVE_DELETER:
         break;
     case PSS_PAGE_SKILLS:
         ShowOrHideHpBarObjs(TRUE);
@@ -1183,12 +1187,7 @@ static void PokeSum_HideSpritesBeforePageFlip(void)
 
 static void PokeSum_ShowSpritesBeforePageFlip(void)
 {
-    u8 newPage;
-
-    if (sMonSummaryScreen->pageFlipDirection == 1)
-        newPage = sMonSummaryScreen->curPageIndex - 1;
-    else
-        newPage = sMonSummaryScreen->curPageIndex + 1;
+    enum PokemonSummaryScreenPage newPage = GetNewPageIndex();
 
     switch (newPage)
     {
@@ -1197,6 +1196,7 @@ static void PokeSum_ShowSpritesBeforePageFlip(void)
         ShowOrHideExpBarObjs(FALSE);
         break;
     case PSS_PAGE_SKILLS:
+    case PSS_PAGE_MOVE_DELETER:
         break;
     case PSS_PAGE_MOVES:
         if (sMonSummaryScreen->pageFlipDirection == 0)
@@ -1356,46 +1356,43 @@ static void PokeSum_UpdateBgPriorityForPageFlip(u8 setBg0Priority, u8 keepBg1Bg2
 
 static void PokeSum_CopyNewBgTilemapBeforePageFlip_2(void)
 {
-    u8 newPage;
-
-    if (sMonSummaryScreen->pageFlipDirection == 1)
-        newPage = sMonSummaryScreen->curPageIndex - 1;
-    else
-        newPage = sMonSummaryScreen->curPageIndex + 1;
+    const u32 *tilemap;
+    u32 bg;
+    enum PokemonSummaryScreenPage newPage = GetNewPageIndex();
 
     switch (newPage)
     {
     case PSS_PAGE_INFO:
-        CopyToBgTilemapBuffer(sMonSummaryScreen->infoAndMovesPageBgNum, gSummaryScreen_PageSkills_Tilemap, 0, 0);
+        bg = sMonSummaryScreen->infoAndMovesPageBgNum;
+        tilemap = gSummaryScreen_PageSkills_Tilemap;
         break;
     case PSS_PAGE_SKILLS:
+        bg = sMonSummaryScreen->skillsPageBgNum;
         if (sMonSummaryScreen->pageFlipDirection == 1)
-            CopyToBgTilemapBuffer(sMonSummaryScreen->skillsPageBgNum, gSummaryScreen_PageMoves_Tilemap, 0, 0);
+            tilemap = gSummaryScreen_PageMoves_Tilemap;
         else
-            CopyToBgTilemapBuffer(sMonSummaryScreen->skillsPageBgNum, gSummaryScreen_PageInfo_Tilemap, 0, 0);
-
+            tilemap = gSummaryScreen_PageInfo_Tilemap;
         break;
     case PSS_PAGE_MOVES:
+        bg = sMonSummaryScreen->infoAndMovesPageBgNum;
         if (sMonSummaryScreen->pageFlipDirection == 1)
-            CopyToBgTilemapBuffer(sMonSummaryScreen->infoAndMovesPageBgNum, gSummaryScreen_PageMovesInfo_Tilemap, 0, 0);
+            tilemap = gSummaryScreen_PageMovesInfo_Tilemap;
         else
-            CopyToBgTilemapBuffer(sMonSummaryScreen->infoAndMovesPageBgNum, gSummaryScreen_PageSkills_Tilemap, 0, 0);
-
+            tilemap = gSummaryScreen_PageSkills_Tilemap;
         break;
     case PSS_PAGE_MOVES_INFO:
-        CopyToBgTilemapBuffer(sMonSummaryScreen->skillsPageBgNum, gSummaryScreen_PageMoves_Tilemap, 0, 0);
+        bg = sMonSummaryScreen->skillsPageBgNum;
+        tilemap = gSummaryScreen_PageMoves_Tilemap;
         break;
+    default:
+        return;
     }
+    CopyToBgTilemapBuffer(bg, tilemap, 0, 0);
 }
 
 static void PokeSum_CopyNewBgTilemapBeforePageFlip(void)
 {
-    u8 newPage;
-
-    if (sMonSummaryScreen->pageFlipDirection == 1)
-        newPage = sMonSummaryScreen->curPageIndex - 1;
-    else
-        newPage = sMonSummaryScreen->curPageIndex + 1;
+    enum PokemonSummaryScreenPage newPage = GetNewPageIndex();
 
     switch (newPage)
     {
@@ -1403,6 +1400,7 @@ static void PokeSum_CopyNewBgTilemapBeforePageFlip(void)
         CopyToBgTilemapBuffer(sMonSummaryScreen->infoAndMovesPageBgNum, gSummaryScreen_PageSkills_Tilemap, 0, 0);
         break;
     case PSS_PAGE_SKILLS:
+    case PSS_PAGE_MOVE_DELETER:
         break;
     case PSS_PAGE_MOVES:
         if (sMonSummaryScreen->pageFlipDirection == 1)
@@ -3926,8 +3924,6 @@ static void CreateMoveSelectionCursorSprites(u16 tileTag, u16 palTag)
             .paletteTag = palTag,
             .oam = &sMoveSelectionCursorOamData,
             .anims = sMoveSelectionCursorOamAnimTable,
-            .images = NULL,
-            .affineAnims = gDummySpriteAffineAnimTable,
             .callback = SpriteCB_MoveSelectionCursor,
         };
 
