@@ -617,7 +617,7 @@ static void Task_TrainerCard(u8 taskId)
         }
         break;
     case STATE_WAIT_FLIP_TO_BACK:
-        if (IsCardFlipTaskActive() && Overworld_LinkRecvQueueLengthMoreThan2() != TRUE)
+        if (IsCardFlipTaskActive() && Overworld_IsRecvQueueAtMax() != TRUE)
         {
             PlaySE(SE_CARD_OPEN);
             sTrainerCardDataPtr->mainState = STATE_HANDLE_INPUT_BACK;
@@ -675,7 +675,7 @@ static void Task_TrainerCard(u8 taskId)
             CloseTrainerCard(taskId);
         break;
     case STATE_WAIT_FLIP_TO_FRONT:
-        if (IsCardFlipTaskActive() && Overworld_LinkRecvQueueLengthMoreThan2() != TRUE)
+        if (IsCardFlipTaskActive() && Overworld_IsRecvQueueAtMax() != TRUE)
         {
             sTrainerCardDataPtr->mainState = STATE_HANDLE_INPUT_FRONT;
             PlaySE(SE_CARD_OPEN);
@@ -1785,7 +1785,7 @@ static bool8 Task_AnimateCardFlipDown(struct Task* task)
 static bool8 Task_DrawFlippedCardSide(struct Task* task)
 {
     sTrainerCardDataPtr->allowDMACopy = FALSE;
-    if (Overworld_LinkRecvQueueLengthMoreThan2() == TRUE)
+    if (Overworld_IsRecvQueueAtMax() == TRUE)
         return FALSE;
 
     do

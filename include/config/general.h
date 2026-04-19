@@ -8,7 +8,7 @@
 // Ruby's actual debug build does not use the AGBPrint features.
 //
 // Use `make release` to automatically enable NDEBUG.
-#ifdef RELEASE
+#if defined(RELEASE) || defined(COMPARE)
 #define NDEBUG
 #endif
 

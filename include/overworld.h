@@ -150,7 +150,7 @@ bool8 BGMusicStopped(void);
 bool8 IsMapTypeIndoors(u8 mapType);
 bool32 Overworld_IsBikingAllowed(void);
 void Overworld_ResetStateAfterDigEscRope(void);
-bool32 Overworld_LinkRecvQueueLengthMoreThan2(void);
+bool32 Overworld_IsRecvQueueAtMax(void);
 u8 GetCurrentMapType(void);
 
 u8 GetLastUsedWarpMapType(void);

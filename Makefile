@@ -156,6 +156,9 @@ ifeq ($(RELEASE),1)
 		LTO := 1
 	endif
 endif
+ifeq ($(COMPARE), 1)
+	override CPPFLAGS += -DCOMPARE
+endif
 ARMCC := $(PREFIX)gcc
 PATH_ARMCC := PATH="$(PATH)" $(ARMCC)
 CC1 := $(shell $(PATH_ARMCC) --print-prog-name=cc1) -quiet

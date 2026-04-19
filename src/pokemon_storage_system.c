@@ -9221,21 +9221,18 @@ static void SetBoxWallpaper(u8 boxId, u8 wallpaperId)
         gPokemonStoragePtr->boxWallpapers[boxId] = wallpaperId;
 }
 
-s16 SeekToNextMonInBox(struct BoxPokemon * boxMons, s8 curIndex, u8 maxIndex, u8 flags)
+// For moving to the next Pokémon while viewing the summary screen
+s16 AdvanceStorageMonIndex(struct BoxPokemon *boxMons, u8 currIndex, u8 maxIndex, u8 mode)
 {
-    // flags:
-    // bit 0: Allow eggs
-    // bit 1: Search backwards
     s16 i;
-    s16 adder;
-    if (flags == 0 || flags == 1)
-        adder = 1;
-    else
-        adder = -1;
+    s16 direction = -1;
 
-    if (flags == 1 || flags == 3)
+    if (mode == 0 || mode == 1)
+        direction = 1;
+
+    if (mode == 1 || mode == 3)
     {
-        for (i = curIndex + adder; i >= 0 && i <= maxIndex; i += adder)
+        for (i = (s8)currIndex + direction; i >= 0 && i <= maxIndex; i += direction)
         {
             if (GetBoxMonData(&boxMons[i], MON_DATA_SPECIES) != SPECIES_NONE)
                 return i;
@@ -9243,7 +9240,7 @@ s16 SeekToNextMonInBox(struct BoxPokemon * boxMons, s8 curIndex, u8 maxIndex, u8
     }
     else
     {
-        for (i = curIndex + adder; i >= 0 && i <= maxIndex; i += adder)
+        for (i = (s8)currIndex + direction; i >= 0 && i <= maxIndex; i += direction)
         {
             if (GetBoxMonData(&boxMons[i], MON_DATA_SPECIES) != SPECIES_NONE
                 && !GetBoxMonData(&boxMons[i], MON_DATA_IS_EGG))
