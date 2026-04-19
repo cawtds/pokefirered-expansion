@@ -97,7 +97,7 @@ static bool32 CurrentMonIsFromGBA(void);
 static bool32 IsMultiBattlePartner(void);
 static bool32 MapSecIsInKantoOrSevii(u8 mapSec);
 static enum Move GetMonMoveBySlotId(struct Pokemon *mon, u8 moveSlot);
-static s8 SeekToNextMonInMultiParty(s8 direction);
+static s8 AdvanceMultiBattleMonIndex(s8 direction);
 static s8 SeekToNextMonInSingleParty(s8 direction);
 static u16 GetMonPpByMoveSlot(struct Pokemon *mon, u8 moveSlot);
 static u8 PokeSum_BufferOtName_IsEqualToCurrentOwner(struct Pokemon * mon);
@@ -111,7 +111,7 @@ static void BufferMonMoveI(u8);
 static void BufferMonMoves(void);
 static void BufferMonSkills(void);
 static void BufferSelectedMonData(struct Pokemon * mon);
-static void CB2_RunPokemonSummaryScreen(void);
+static void MainCB2(void);
 static void CB2_InitSummaryScreen(void);
 static void CommitStaticWindowTilemaps(void);
 static void CreateBallIconObj(void);
@@ -161,7 +161,6 @@ static void PokeSum_SeekToNextMon(u8 taskId, s8 direction);
 static void PokeSum_SetHelpContext(void);
 static void PokeSum_SetMonPicSpriteCallback(u16 spriteId);
 static void PokeSum_Setup_InitGpu(void);
-static void SetVBlankHBlankCallbacksToNull(void);
 static void PokeSum_Setup_SetVBlankCallback(void);
 static void PokeSum_Setup_SpritesReset(void);
 static void PokeSum_ShowOrHideMonIconSprite(u8 invisible);
@@ -193,12 +192,13 @@ static void Task_HandleInput_SelectMove(u8 id);
 static void Task_InputHandler_SelectOrForgetMove(u8 taskId);
 static void Task_PokeSum_FlipPages(u8 taskId);
 static void Task_PokeSum_SwitchDisplayedPokemon(u8 taskId);
-static void UpdateCurrentMonBufferFromPartyOrBox(struct Pokemon * mon);
+static void UpdateCurrentMonBufferFromPartyOrBox(struct Pokemon *mon);
 static void UpdateExpBarObjs(void);
 static void UpdateHpBarObjs(void);
 static void UpdateMonStatusIconObj(void);
 static void UpdateMonTypeIconSprites(bool32 isInfoPage);
 static void UpdateMoveTypeIconSprites(void);
+static void CB2_PssChangePokemonNickname(void);
 
 struct PokemonSummaryScreenData
 {
@@ -463,18 +463,6 @@ void ShowSelectMovePokemonSummaryScreen(struct Pokemon *party, u8 cursorPos, Mai
     ShowPokemonSummaryScreen(party, cursorPos, gPlayerPartyCount - 1, savedCallback, PSS_MODE_SELECT_MOVE);
     sMonSummaryScreen->moveIds[MAX_MON_MOVES] = move;
 }
-
-static void CB2_ReturnToSummaryScreenFromNamingScreen(void)
-{
-    SetBoxMonData(GetSelectedBoxMonFromPcOrParty(), MON_DATA_NICKNAME, gStringVar2);
-    ShowPokemonSummaryScreen(gPlayerParty, gSpecialVar_0x8004, gPlayerPartyCount - 1, gInitialSummaryScreenCallback, PSS_MODE_NORMAL);
-}
-
-static void CB2_PssChangePokemonNickname(void)
-{
-    ChangePokemonNicknameWithCallback(CB2_ReturnToSummaryScreenFromNamingScreen);
-}
-
 
 static u8 PageFlipInputIsDisabled(u8 direction)
 {
@@ -2042,7 +2030,7 @@ static void PokeSum_FinishSetup(void)
     else
         sMonSummaryScreen->inputHandlerTaskId = CreateTask(Task_InputHandler_Info, 0);
 
-    SetMainCallback2(CB2_RunPokemonSummaryScreen);
+    SetMainCallback2(MainCB2);
 }
 
 static void PokeSum_PrintPageName(const u8 * str)
@@ -2689,7 +2677,7 @@ static void Task_DestroyResourcesOnExit(u8 taskId)
     TRY_FREE_AND_SET_NULL(sMonSummaryScreen);
 }
 
-static void CB2_RunPokemonSummaryScreen(void)
+static void MainCB2(void)
 {
     RunTasks();
     AnimateSprites();
@@ -2824,12 +2812,6 @@ static void VBlankCB_PokemonSummaryScreen(void)
 
     PokeSum_FlipPages_HandleBgHofs();
     PokeSum_FlipPages_HandleHpExpBarSprites();
-}
-
-static void SetVBlankHBlankCallbacksToNull(void)
-{
-    SetVBlankCallback(NULL);
-    SetHBlankCallback(NULL);
 }
 
 static void PokeSum_Setup_SetVBlankCallback(void)
@@ -4537,16 +4519,15 @@ static void PokeSum_SeekToNextMon(u8 taskId, s8 direction)
                 direction = 3;
         }
 
-        scrollResult = SeekToNextMonInBox(sMonSummaryScreen->monList.boxMons, GetLastViewedMonIndex(), sMonSummaryScreen->lastIndex, (u8)direction);
+        scrollResult = AdvanceStorageMonIndex(sMonSummaryScreen->monList.boxMons, GetLastViewedMonIndex(), sMonSummaryScreen->lastIndex, (u8)direction);
+    }
+    else if (IsMultiBattle() == TRUE)
+    {
+        scrollResult = AdvanceMultiBattleMonIndex(direction);
     }
     else
     {
-        if (IsOverworldLinkActive() == FALSE
-            && gReceivedRemoteLinkPlayers == 1
-            && IsMultiBattle() == TRUE)
-            scrollResult = SeekToNextMonInMultiParty(direction);
-        else
-            scrollResult = SeekToNextMonInSingleParty(direction);
+        scrollResult = SeekToNextMonInSingleParty(direction);
     }
 
     if (scrollResult == -1)
@@ -4585,65 +4566,39 @@ static s8 SeekToNextMonInSingleParty(s8 direction)
     return -1;
 }
 
-static u8 PokeSum_CanSeekToMon(struct Pokemon * partyMons)
+static u8 IsValidToViewInMulti(struct Pokemon * partyMons)
 {
-    if (GetMonData(partyMons, MON_DATA_SPECIES) != SPECIES_NONE && (sMonSummaryScreen->curPageIndex != PSS_PAGE_INFO || !GetMonData(partyMons, MON_DATA_IS_EGG)))
-        return TRUE;
+    if (GetMonData(partyMons, MON_DATA_SPECIES) == SPECIES_NONE)
+        return FALSE;
+    if (sMonSummaryScreen->curPageIndex == PSS_PAGE_INFO && GetMonData(partyMons, MON_DATA_IS_EGG))
+        return FALSE;
 
-    return FALSE;
+    return TRUE;
 }
 
-static s8 SeekToMonInMultiParty_SeekForward(u8 startingIdx)
+static s8 AdvanceMultiBattleMonIndex(s8 direction)
 {
-    while (TRUE)
-    {
-        startingIdx++;
-
-        if (startingIdx == 6)
-            return -1;
-        if (PokeSum_CanSeekToMon(&gPlayerParty[sMultiBattlePartyOrder[startingIdx]]) == TRUE)
-            break;
-    }
-
-    return (s8)sMultiBattlePartyOrder[startingIdx];
-}
-
-static s8 SeekToMonInMultiParty_SeekBack(u8 startingIdx)
-{
-    while (1)
-    {
-        if (startingIdx == 0)
-            return -1;
-
-        startingIdx--;
-
-        if (PokeSum_CanSeekToMon(&gPlayerParty[sMultiBattlePartyOrder[startingIdx]]) == TRUE)
-            break;
-    }
-
-    return (s8)(sMultiBattlePartyOrder[startingIdx]);
-}
-
-static s8 SeekToNextMonInMultiParty(s8 direction)
-{
-    u8 foundPartyIdx = 0;
+    s8 index, arrID = 0;
     u8 i;
 
     for (i = 0; i < PARTY_SIZE; i++)
-        if (sMultiBattlePartyOrder[i] == GetLastViewedMonIndex())
+        if (sMultiBattleOrder[i] == GetLastViewedMonIndex())
         {
-            foundPartyIdx = i;
+            arrID = i;
             break;
         }
 
-    if ((direction == -1 && foundPartyIdx == 0)
-        || (direction == 1 && foundPartyIdx == 5))
-        return -1;
+    while (TRUE)
+    {
+        arrID += direction;
 
-    if (direction == 1)
-        return SeekToMonInMultiParty_SeekForward(foundPartyIdx);
-    else
-        return SeekToMonInMultiParty_SeekBack(foundPartyIdx);
+        if (arrID < 0 || arrID >= PARTY_SIZE)
+            return -1;
+
+        index = sMultiBattleOrder[arrID];
+        if (IsValidToViewInMulti(&gPlayerParty[index]) == TRUE)
+            return index;
+    }
 }
 
 static void Task_PokeSum_SwitchDisplayedPokemon(u8 taskId)
@@ -4919,4 +4874,15 @@ static void DestroyTypeIconSprites(void)
             sMonSummaryScreen->monTypeIconSpriteIds[i] = 0xFF;
         }
     }
+}
+
+static void CB2_ReturnToSummaryScreenFromNamingScreen(void)
+{
+    SetBoxMonData(GetSelectedBoxMonFromPcOrParty(), MON_DATA_NICKNAME, gStringVar2);
+    ShowPokemonSummaryScreen(gPlayerParty, gSpecialVar_0x8004, gPlayerPartyCount - 1, gInitialSummaryScreenCallback, PSS_MODE_NORMAL);
+}
+
+static void CB2_PssChangePokemonNickname(void)
+{
+    ChangePokemonNicknameWithCallback(CB2_ReturnToSummaryScreenFromNamingScreen);
 }

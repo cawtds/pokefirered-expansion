@@ -631,10 +631,7 @@ static const u8 sLevelNickTextColors[][3] =
     {0, 11, 10},
 };
 
-static const u8 ALIGNED(4) sMultiBattlePartyOrder[] =
-{
-    0, 2, 3, 1, 4, 5
-};
+static const u8 sMultiBattleOrder[] = { 0, 2, 3, 1, 4, 5 };
 
 static const s8 sMonPicBounceYDelta_Under60[] =
 {

@@ -33,7 +33,6 @@ bool8 CheckFreePokemonStorageSpace(void);
 s16 AdvanceStorageMonIndex(struct BoxPokemon *boxMons, u8 currIndex, u8 maxIndex, u8 mode);
 s16 CompactPartySlots(void);
 s16 GetFirstFreeBoxSpot(u8 boxId);
-s16 SeekToNextMonInBox(struct BoxPokemon *boxMons, s8 curIndex, u8 maxIndex, u8 flags);
 struct BoxPokemon *GetBoxedMonPtr(u8 boxId, u8 boxPosition);
 u16 CountPartyAliveNonEggMons_IgnoreVar0x8004Slot(void);
 u32 CountAllStorageMons(void);
