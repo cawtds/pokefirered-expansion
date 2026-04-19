@@ -112,7 +112,7 @@ static void BufferMonMoves(void);
 static void BufferMonSkills(void);
 static void BufferSelectedMonData(struct Pokemon * mon);
 static void CB2_RunPokemonSummaryScreen(void);
-static void CB2_SetUpPSS(void);
+static void CB2_InitSummaryScreen(void);
 static void CommitStaticWindowTilemaps(void);
 static void CreateBallIconObj(void);
 static void CreateExpBarObjs(u16, u16);
@@ -161,7 +161,7 @@ static void PokeSum_SeekToNextMon(u8 taskId, s8 direction);
 static void PokeSum_SetHelpContext(void);
 static void PokeSum_SetMonPicSpriteCallback(u16 spriteId);
 static void PokeSum_Setup_InitGpu(void);
-static void PokeSum_Setup_ResetCallbacks(void);
+static void SetVBlankHBlankCallbacksToNull(void);
 static void PokeSum_Setup_SetVBlankCallback(void);
 static void PokeSum_Setup_SpritesReset(void);
 static void PokeSum_ShowOrHideMonIconSprite(u8 invisible);
@@ -440,19 +440,22 @@ void ShowPokemonSummaryScreen(void *party, u8 cursorPos, u8 lastIdx, MainCallbac
     sMonSummaryScreen->infoAndMovesPageBgNum = 1;
     sMonSummaryScreen->flippingPages = FALSE;
     sMonSummaryScreen->categoryIconSpriteId = 0xFF;
-    memset(sMonSummaryScreen->moveTypeIconSpriteIds, 0xFF, sizeof(sMonSummaryScreen->moveTypeIconSpriteIds));
-    memset(sMonSummaryScreen->monTypeIconSpriteIds, 0xFF, sizeof(sMonSummaryScreen->monTypeIconSpriteIds));
+    for (u32 i = 0; i < sizeof(sMonSummaryScreen->moveTypeIconSpriteIds); i++)
+        sMonSummaryScreen->moveTypeIconSpriteIds[i] = 0xFF;
+    for (u32 i = 0; i < sizeof(sMonSummaryScreen->monTypeIconSpriteIds); i++)
+        sMonSummaryScreen->monTypeIconSpriteIds[i] = 0xFF;
     sMonSummaryScreen->skillsPageMode = PSS_SKILL_PAGE_STATS;
 
     BufferSelectedMonData(&sMonSummaryScreen->currentMon);
-    sMonSummaryScreen->isEgg = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_IS_EGG);
     sMonSummaryScreen->isBadEgg = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SANITY_IS_BAD_EGG);
 
     if (sMonSummaryScreen->isBadEgg == TRUE)
         sMonSummaryScreen->isEgg = TRUE;
+    else
+        sMonSummaryScreen->isEgg = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_IS_EGG);
 
-    sMonSummaryScreen->lastPageFlipDirection = 0xff;
-    SetMainCallback2(CB2_SetUpPSS);
+    sMonSummaryScreen->lastPageFlipDirection = 0xFF;
+    SetMainCallback2(CB2_InitSummaryScreen);
 }
 
 void ShowSelectMovePokemonSummaryScreen(struct Pokemon *party, u8 cursorPos, MainCallback savedCallback, enum Move move)
@@ -1415,12 +1418,12 @@ static void PokeSum_CopyNewBgTilemapBeforePageFlip(void)
     }
 }
 
-static void CB2_SetUpPSS(void)
+static void CB2_InitSummaryScreen(void)
 {
     switch (sMonSummaryScreen->summarySetupStep)
     {
     case 0:
-        PokeSum_Setup_ResetCallbacks();
+        SetVBlankHBlankCallbacksToNull();
         break;
     case 1:
         PokeSum_Setup_InitGpu();
@@ -2823,7 +2826,7 @@ static void VBlankCB_PokemonSummaryScreen(void)
     PokeSum_FlipPages_HandleHpExpBarSprites();
 }
 
-static void PokeSum_Setup_ResetCallbacks(void)
+static void SetVBlankHBlankCallbacksToNull(void)
 {
     SetVBlankCallback(NULL);
     SetHBlankCallback(NULL);
