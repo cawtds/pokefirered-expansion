@@ -139,7 +139,7 @@ void QL_TryStopSurfing(void)
         if (!MetatileBehavior_IsSurfable(MapGridGetMetatileBehaviorAt(x, y)) && TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
         {
             struct ObjectEvent * objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-            SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+            SetPlayerAvatarTransitionState(PLAYER_STATE_NORMAL);
             DestroySprite(&gSprites[objectEvent->fieldEffectSpriteId]);
         }
     }

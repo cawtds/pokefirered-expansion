@@ -323,18 +323,17 @@ bool8 IsPlayerNotUsingAcroBikeOnBumpySlope(void)
     return TRUE;
 }
 
-void GetOnOffBike(u8 flags)
+void GetOnOffBike(bool32 dowsing)
 {
-    if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
+    if (!dowsing)
     {
-        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+        SetPlayerAvatarTransitionState(PLAYER_STATE_NORMAL);
         Overworld_ClearSavedMusic();
         Overworld_PlaySpecialMapMusic();
     }
     else
     {
         EndORASDowsing();
-        SetPlayerAvatarTransitionFlags(flags);
         if (Overworld_MusicCanOverrideMapMusic(MUS_CYCLING))
         {
             Overworld_SetSavedMusic(MUS_CYCLING);

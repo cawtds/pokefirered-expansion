@@ -304,7 +304,7 @@ static void ItemUseOnFieldCB_Bicycle(u8 taskId)
 {
     if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
         PlaySE(SE_BIKE_BELL);
-    GetOnOffBike(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE);
+    GetOnOffBike(FALSE);
 
     FollowerNPC_HandleBike();
     ScriptUnfreezeObjectEvents();

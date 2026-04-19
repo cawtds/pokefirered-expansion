@@ -174,6 +174,7 @@ static void npc_clear_strange_bits(struct ObjectEvent *objEvent)
     objEvent->disableAnim = FALSE;
     objEvent->facingDirectionLocked = FALSE;
     gPlayerAvatar.flags &= ~PLAYER_AVATAR_FLAG_DASH;
+    gPlayerAvatar.dash = FALSE;
 }
 
 static void MovePlayerAvatarUsingKeypadInput(u8 direction, u16 newKeys, u16 heldKeys)
@@ -722,9 +723,9 @@ static void CheckAcroBikeCollision(s16 x, s16 y, u8 metatileBehavior, u8 *collis
     }
 }
 
-void SetPlayerAvatarTransitionFlags(u16 flags)
+void SetPlayerAvatarTransitionState(enum PlayerState transitionState)
 {
-    gPlayerAvatar.transitionFlags |= flags;
+    gPlayerAvatar.transitionState = transitionState;
     DoPlayerAvatarTransition();
 }
 
@@ -743,20 +744,37 @@ static void (*const sPlayerAvatarTransitionFuncs[])(struct ObjectEvent *) = {
     [PLAYER_AVATAR_STATE_VSSEEKER]     = PlayerAvatarTransition_Dummy,
 };
 
+static void (*const sPlayerAvatarStateTransitionFuncs[])(struct ObjectEvent *) =
+{
+    [PLAYER_STATE_NORMAL]       = PlayerAvatarTransition_Normal,
+    [PLAYER_STATE_MACH_BIKE]    = PlayerAvatarTransition_Bike,
+    [PLAYER_STATE_ACRO_BIKE]    = PlayerAvatarTransition_Bike,
+    [PLAYER_STATE_SURFING]      = PlayerAvatarTransition_Surfing,
+    [PLAYER_STATE_UNDERWATER]   = PlayerAvatarTransition_Underwater,
+    [PLAYER_STATE_FIELD_MOVE]   = PlayerAvatarTransition_Dummy,
+    [PLAYER_STATE_WATERING]     = PlayerAvatarTransition_Dummy,
+    [PLAYER_STATE_FISHING]      = PlayerAvatarTransition_Dummy,
+    [PLAYER_STATE_VSSEEKER]     = PlayerAvatarTransition_Dummy,
+};
+
+static void ResetTransitionStates(void)
+{
+    gPlayerAvatar.transitionState = PLAYER_STATE_COUNT;
+    gPlayerAvatar.controllableTransition = FALSE;
+    gPlayerAvatar.dashTransition = FALSE;
+    gPlayerAvatar.forcedTransition = FALSE;
+}
+
 static void DoPlayerAvatarTransition(void)
 {
-    u8 i;
-    u8 flags = gPlayerAvatar.transitionFlags;
+    enum PlayerState transitionState = gPlayerAvatar.transitionState;
+    if (transitionState != PLAYER_STATE_COUNT)
+        sPlayerAvatarStateTransitionFuncs[transitionState](&gObjectEvents[gPlayerAvatar.objectEventId]);
 
-    if (flags != 0)
-    {
-        for (i = 0; i < ARRAY_COUNT(sPlayerAvatarTransitionFuncs); i++, flags >>= 1)
-        {
-            if (flags & 1)
-                sPlayerAvatarTransitionFuncs[i](&gObjectEvents[gPlayerAvatar.objectEventId]);
-        }
-        gPlayerAvatar.transitionFlags = 0;
-    }
+    if (gPlayerAvatar.controllableTransition)
+        gPlayerAvatar.controllable = TRUE;
+
+    ResetTransitionStates();
 }
 
 static void PlayerAvatarTransition_Dummy(struct ObjectEvent * playerObjEvent)
@@ -1096,6 +1114,11 @@ void MovePlayerToMapCoords(s16 x, s16 y)
     MoveObjectEventToMapCoords(&gObjectEvents[gPlayerAvatar.objectEventId], x, y);
 }
 
+bool32 TestPlayerAvatarState(enum PlayerState state)
+{
+    return gPlayerAvatar.playerState == state;
+}
+
 u8 TestPlayerAvatarFlags(u8 bm)
 {
     return gPlayerAvatar.flags & bm;
@@ -1104,6 +1127,11 @@ u8 TestPlayerAvatarFlags(u8 bm)
 u8 GetPlayerAvatarFlags(void)
 {
     return gPlayerAvatar.flags;
+}
+
+enum PlayerState GetPlayerAvatarState(void)
+{
+    return gPlayerAvatar.playerState;
 }
 
 u8 GetPlayerAvatarObjectId(void)
@@ -1219,7 +1247,20 @@ void SetPlayerAvatarStateMask(u8 flags)
     gPlayerAvatar.flags |= flags;
 }
 
-static const u8 sPlayerAvatarGfxToStateFlag[][3][GENDER_COUNT] = {
+
+static const enum ObjectEventGfx sUpdatedPlayerAvatarGfxIds[PLAYER_STATE_COUNT][GENDER_COUNT] =
+{
+    [PLAYER_STATE_NORMAL]     = {OBJ_EVENT_GFX_RED_NORMAL,     OBJ_EVENT_GFX_GREEN_NORMAL},
+    [PLAYER_STATE_MACH_BIKE]  = {OBJ_EVENT_GFX_RED_BIKE,       OBJ_EVENT_GFX_GREEN_BIKE},
+    [PLAYER_STATE_ACRO_BIKE]  = {OBJ_EVENT_GFX_RED_BIKE,       OBJ_EVENT_GFX_GREEN_BIKE},
+    [PLAYER_STATE_SURFING]    = {OBJ_EVENT_GFX_RED_SURF,       OBJ_EVENT_GFX_GREEN_SURF},
+    [PLAYER_STATE_FIELD_MOVE] = {OBJ_EVENT_GFX_RED_FIELD_MOVE, OBJ_EVENT_GFX_GREEN_FIELD_MOVE},
+    [PLAYER_STATE_FISHING]    = {OBJ_EVENT_GFX_RED_FISH,       OBJ_EVENT_GFX_GREEN_FISH},
+    [PLAYER_STATE_VSSEEKER]   = {OBJ_EVENT_GFX_RED_VS_SEEKER,  OBJ_EVENT_GFX_GREEN_VS_SEEKER},
+    [PLAYER_STATE_WATERING]   = {OBJ_EVENT_GFX_RED_WATERING,   OBJ_EVENT_GFX_GREEN_WATERING},
+};
+
+static const u8 sPlayerAvatarGfxToStateFlag[GENDER_COUNT][3][2] = {
     [MALE] = {
         {OBJ_EVENT_GFX_RED_NORMAL, PLAYER_AVATAR_FLAG_ON_FOOT},
         {OBJ_EVENT_GFX_RED_BIKE,   PLAYER_AVATAR_FLAG_MACH_BIKE},
@@ -1232,36 +1273,28 @@ static const u8 sPlayerAvatarGfxToStateFlag[][3][GENDER_COUNT] = {
     }
 };
 
-u8 GetPlayerAvatarStateTransitionByGraphicsId(u16 graphicsId, u8 gender)
+enum PlayerState GetPlayerAvatarStateTransitionByGraphicsId(enum ObjectEventGfx graphicsId, enum Gender gender)
 {
-    u8 i;
-
-    for (i = 0; i < ARRAY_COUNT(*sPlayerAvatarGfxToStateFlag); i++)
+    for (enum PlayerState playerState = PLAYER_STATE_NORMAL; playerState < PLAYER_STATE_COUNT; playerState++)
     {
-        if (sPlayerAvatarGfxToStateFlag[gender][i][0] == graphicsId)
-            return sPlayerAvatarGfxToStateFlag[gender][i][1];
+        if (sUpdatedPlayerAvatarGfxIds[playerState][gender] == graphicsId)
+            return playerState;
     }
-    return PLAYER_AVATAR_FLAG_ON_FOOT;
+
+    return PLAYER_STATE_NORMAL;
 }
 
-u16 GetPlayerAvatarGraphicsIdByCurrentState(void)
+enum ObjectEventGfx GetPlayerAvatarGraphicsIdByCurrentState(void)
 {
-    u8 i;
-    u8 flags = gPlayerAvatar.flags;
-
-    for (i = 0; i < ARRAY_COUNT(*sPlayerAvatarGfxToStateFlag); i++)
-    {
-        if (sPlayerAvatarGfxToStateFlag[gPlayerAvatar.gender][i][1] & flags)
-            return sPlayerAvatarGfxToStateFlag[gPlayerAvatar.gender][i][0];
-    }
-    return 0;
+    return sUpdatedPlayerAvatarGfxIds[gPlayerAvatar.playerState][gPlayerAvatar.gender];
 }
 
-void SetPlayerAvatarExtraStateTransition(u16 graphicsId, u8 extras)
+void SetPlayerAvatarExtraStateTransition(enum ObjectEventGfx graphicsId)
 {
-    u8 unk = GetPlayerAvatarStateTransitionByGraphicsId(graphicsId, gPlayerAvatar.gender);
+    enum PlayerState playerState = GetPlayerAvatarStateTransitionByGraphicsId(graphicsId, gPlayerAvatar.gender);
 
-    gPlayerAvatar.transitionFlags |= unk | extras;
+    gPlayerAvatar.transitionState = playerState;
+    gPlayerAvatar.controllableTransition = TRUE;
     DoPlayerAvatarTransition();
 }
 
@@ -1473,7 +1506,7 @@ static bool8 PlayerAvatar_DoSecretBaseMatJump(struct Task *task, struct ObjectEv
         if (task->data[1] > 1)
         {
             gPlayerAvatar.preventStep = FALSE;
-            gPlayerAvatar.transitionFlags |= PLAYER_AVATAR_FLAG_CONTROLLABLE;
+            gPlayerAvatar.controllableTransition = TRUE;
             DestroyTask(FindTaskIdByFunc(DoPlayerAvatarSecretBaseMatJump));
         }
     }

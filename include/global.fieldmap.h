@@ -309,6 +309,21 @@ struct ObjectEventGraphicsInfo
     /*0x20*/ const union AffineAnimCmd *const *affineAnims;
 };
 
+enum PlayerState
+{
+    PLAYER_STATE_NORMAL,
+    PLAYER_STATE_MACH_BIKE,
+    PLAYER_STATE_ACRO_BIKE,
+    PLAYER_STATE_SURFING,
+    PLAYER_STATE_UNDERWATER,
+    PLAYER_STATE_FIELD_MOVE,
+    PLAYER_STATE_WATERING,
+    PLAYER_STATE_FISHING,
+    PLAYER_STATE_VSSEEKER,
+
+    PLAYER_STATE_COUNT,
+};
+
 enum {
     // gPlayerAvatar.flags (u8) + gfx
     PLAYER_AVATAR_STATE_NORMAL,
@@ -390,8 +405,16 @@ enum
 
 struct PlayerAvatar
 {
+    enum PlayerState playerState;
+    enum PlayerState transitionState;
+    bool8 forced:1;
+    bool8 forcedTransition:1;
+    bool8 dash:1;
+    bool8 dashTransition:1;
+    bool8 controllable:1;
+    bool8 controllableTransition:1;
+    u8 unused:2;
     /*0x00*/ u8 flags;
-    /*0x01*/ u8 transitionFlags; // used to be bike, but it's not that in Emerald and probably isn't here either. maybe transition flags?
     /*0x02*/ u8 runningState:7; // this is a static running state. 00 is not moving, 01 is turn direction, 02 is moving.
              u8 creeping:1;
     /*0x03*/ u8 tileTransitionState; // this is a transition running state: 00 is not moving, 01 is transition between tiles, 02 means you are on the frame in which you have centered on a tile but are about to keep moving, even if changing directions. 2 is also used for a ledge hop, since you are transitioning.

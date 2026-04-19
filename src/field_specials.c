@@ -292,7 +292,7 @@ void Special_ViewWallClock(void)
 void ForcePlayerOntoBike(void)
 {
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
-        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_MACH_BIKE);
+        SetPlayerAvatarTransitionState(PLAYER_STATE_MACH_BIKE);
     Overworld_SetSavedMusic(MUS_CYCLING);
     Overworld_ChangeMusicTo(MUS_CYCLING);
 }
@@ -1725,7 +1725,7 @@ static void Task_ListMenuRemoveScrollIndicatorArrowPair(u8 taskId)
 void ForcePlayerToStartSurfing(void)
 {
     SetHelpContext(HELPCONTEXT_SURFING);
-    SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_SURFING);
+    SetPlayerAvatarTransitionState(PLAYER_STATE_SURFING);
 }
 
 static const enum Species sStarterSpecies[] = {

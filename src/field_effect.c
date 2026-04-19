@@ -1509,7 +1509,7 @@ static bool32 FallWarpEffect_End(struct Task *task)
     if (MetatileBehavior_IsSurfableInSeafoamIslands(MapGridGetMetatileBehaviorAt(x, y)) == TRUE)
     {
         VarSet(VAR_TEMP_1, 1);
-        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_SURFING);
+        SetPlayerAvatarTransitionState(PLAYER_STATE_SURFING);
         SetHelpContext(HELPCONTEXT_SURFING);
     }
     DestroyTask(FindTaskIdByFunc(Task_FallWarpFieldEffect));
@@ -3874,7 +3874,7 @@ static void FlyOutFieldEffect_WaitBirdLeave(struct Task *task)
 
     task->tState = FLY_OUT_BIRD_SWOOP_DOWN;
     task->tTimer = 16;
-    SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+    SetPlayerAvatarTransitionState(PLAYER_STATE_NORMAL);
     ObjectEventSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], MOVEMENT_ACTION_FACE_LEFT);
 }
 

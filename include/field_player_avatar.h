@@ -2,11 +2,13 @@
 #define GUARD_FIELD_PLAYER_AVATAR_H
 
 #include "global.h"
+#include "constants/event_objects.h"
 
 void ClearPlayerAvatarInfo(void);
-void SetPlayerAvatarExtraStateTransition(u16 graphicsId, u8 extras);
+void SetPlayerAvatarExtraStateTransition(enum ObjectEventGfx graphicsId);
 u8 GetPlayerAvatarGenderByGraphicsId(u16 graphicsId);
 bool8 TestPlayerAvatarFlags(u8);
+bool32 TestPlayerAvatarState(enum PlayerState state);
 void PlayerGetDestCoords(s16 *, s16 *);
 u8 GetPlayerFacingDirection(void);
 u8 GetPlayerMovementDirection(void);
@@ -23,11 +25,12 @@ void SetPlayerAvatarStateMask(u8 mask);
 void CreateStopSurfingTask_NoMusicChange(u8 direction);
 void SavePlayerFacingDirectionForTeleport(u8 direction);
 void SetPlayerAvatarTransitionFlags(u16 flags);
+void SetPlayerAvatarTransitionState(enum PlayerState transitionState);
 bool8 IsPlayerFacingSurfableFishableWater(void);
 void StartFishing(u8 secondaryId);
 u8 GetPlayerAvatarObjectId(void);
 u8 PlayerGetElevation(void);
-u16 GetPlayerAvatarGraphicsIdByCurrentState(void);
+enum ObjectEventGfx GetPlayerAvatarGraphicsIdByCurrentState(void);
 void StartPlayerAvatarSummonMonForFieldMoveAnim(void);
 void SetPlayerInvisibility(bool8);
 void StartTeleportInPlayerAnim(void);
@@ -60,6 +63,7 @@ void player_step(u8 direction, u16 newKeys, u16 heldKeys);
 bool32 ObjectMovingOnRockStairs(struct ObjectEvent *objectEvent, u8 direction);
 void SetPlayerAvatarWatering(u8 direction);
 u8 GetPlayerAvatarFlags(void);
+enum PlayerState GetPlayerAvatarState(void);
 void UpdatePlayerAvatarTransitionState(void);
 void InitPlayerAvatar(s16 x, s16 y, u8 direction, u8 gender);
 void PlayerUseAcroBikeOnBumpySlope(u8 direction);
