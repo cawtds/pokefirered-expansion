@@ -311,49 +311,20 @@ struct ObjectEventGraphicsInfo
 
 enum PlayerState
 {
-    PLAYER_STATE_NORMAL,
-    PLAYER_STATE_MACH_BIKE,
-    PLAYER_STATE_ACRO_BIKE,
-    PLAYER_STATE_SURFING,
-    PLAYER_STATE_UNDERWATER,
-    PLAYER_STATE_FIELD_MOVE,
-    PLAYER_STATE_WATERING,
-    PLAYER_STATE_FISHING,
-    PLAYER_STATE_VSSEEKER,
-
-    PLAYER_STATE_COUNT,
-};
-
-enum {
-    // gPlayerAvatar.flags (u8) + gfx
     PLAYER_AVATAR_STATE_NORMAL,
     PLAYER_AVATAR_STATE_MACH_BIKE,
     PLAYER_AVATAR_STATE_ACRO_BIKE,
     PLAYER_AVATAR_STATE_SURFING,
     PLAYER_AVATAR_STATE_UNDERWATER,
-    PLAYER_AVATAR_STATE_CONTROLLABLE,
-    PLAYER_AVATAR_STATE_FORCED,
-    PLAYER_AVATAR_STATE_DASH,
-    // gfx
     PLAYER_AVATAR_STATE_FIELD_MOVE,
     PLAYER_AVATAR_STATE_WATERING,
     PLAYER_AVATAR_STATE_FISHING,
     PLAYER_AVATAR_STATE_VSSEEKER,
+
+    PLAYER_AVATAR_STATE_COUNT,
 };
 
-#define PLAYER_AVATAR_FLAG_ON_FOOT      (1 << PLAYER_AVATAR_STATE_NORMAL)
-#define PLAYER_AVATAR_FLAG_MACH_BIKE    (1 << PLAYER_AVATAR_STATE_MACH_BIKE)
-#define PLAYER_AVATAR_FLAG_ACRO_BIKE    (1 << PLAYER_AVATAR_STATE_ACRO_BIKE)
 #define PLAYER_AVATAR_FLAG_SURFING      (1 << PLAYER_AVATAR_STATE_SURFING)
-#define PLAYER_AVATAR_FLAG_UNDERWATER   (1 << PLAYER_AVATAR_STATE_UNDERWATER)
-#define PLAYER_AVATAR_FLAG_CONTROLLABLE (1 << PLAYER_AVATAR_STATE_CONTROLLABLE)
-#define PLAYER_AVATAR_FLAG_FORCED       (1 << PLAYER_AVATAR_STATE_FORCED)
-#define PLAYER_AVATAR_FLAG_DASH         (1 << PLAYER_AVATAR_STATE_DASH)
-
-#define PLAYER_AVATAR_FLAG_BIKE        (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE)
-// Player avatar flags for which follower Pokémon are hidden
-#define FOLLOWER_INVISIBLE_FLAGS       (PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER | \
-                                        PLAYER_AVATAR_FLAG_BIKE | PLAYER_AVATAR_FLAG_FORCED)
 
 enum
 {
@@ -409,12 +380,11 @@ struct PlayerAvatar
     enum PlayerState transitionState;
     bool8 forced:1;
     bool8 forcedTransition:1;
-    bool8 dash:1;
+    bool8 dashing:1;
     bool8 dashTransition:1;
     bool8 controllable:1;
     bool8 controllableTransition:1;
     u8 unused:2;
-    /*0x00*/ u8 flags;
     /*0x02*/ u8 runningState:7; // this is a static running state. 00 is not moving, 01 is turn direction, 02 is moving.
              u8 creeping:1;
     /*0x03*/ u8 tileTransitionState; // this is a transition running state: 00 is not moving, 01 is transition between tiles, 02 means you are on the frame in which you have centered on a tile but are about to keep moving, even if changing directions. 2 is also used for a ledge hop, since you are transitioning.

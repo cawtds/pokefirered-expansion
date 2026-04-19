@@ -1670,7 +1670,7 @@ static void OpenContextMenu(u8 taskId)
                     gBagMenu->contextMenuItemsBuffer[1] = ACTION_REGISTER;
                 if (gSpecialVar_ItemId == ITEM_TM_CASE || gSpecialVar_ItemId == ITEM_BERRY_POUCH)
                     gBagMenu->contextMenuItemsBuffer[0] = ACTION_OPEN;
-                else if (gSpecialVar_ItemId == ITEM_BICYCLE && TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE | PLAYER_AVATAR_FLAG_MACH_BIKE))
+                else if (gSpecialVar_ItemId == ITEM_BICYCLE && (TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE) || TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE)))
                     gBagMenu->contextMenuItemsBuffer[0] = ACTION_WALK;
                 else
                     gBagMenu->contextMenuItemsBuffer[0] = ACTION_USE;

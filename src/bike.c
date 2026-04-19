@@ -303,7 +303,7 @@ bool8 IsBikingDisallowedByPlayer(void)
     s16 x, y;
     u8 metatileBehavior;
 
-    if (!(gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_UNDERWATER | PLAYER_AVATAR_FLAG_SURFING)))
+    if (gPlayerAvatar.playerState != PLAYER_AVATAR_STATE_SURFING && gPlayerAvatar.playerState != PLAYER_AVATAR_STATE_UNDERWATER)
     {
         PlayerGetDestCoords(&x, &y);
         metatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
@@ -315,7 +315,7 @@ bool8 IsBikingDisallowedByPlayer(void)
 
 bool8 IsPlayerNotUsingAcroBikeOnBumpySlope(void)
 {
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE))
+    if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE))
     {
         if (MetatileBehavior_IsBumpySlope(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior))
             return FALSE;
@@ -325,15 +325,16 @@ bool8 IsPlayerNotUsingAcroBikeOnBumpySlope(void)
 
 void GetOnOffBike(bool32 dowsing)
 {
-    if (!dowsing)
+    if (IsPlayerBiking())
     {
-        SetPlayerAvatarTransitionState(PLAYER_STATE_NORMAL);
+        SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_NORMAL);
         Overworld_ClearSavedMusic();
         Overworld_PlaySpecialMapMusic();
     }
     else
     {
         EndORASDowsing();
+        SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_ACRO_BIKE);
         if (Overworld_MusicCanOverrideMapMusic(MUS_CYCLING))
         {
             Overworld_SetSavedMusic(MUS_CYCLING);
@@ -373,11 +374,11 @@ s16 GetPlayerSpeed(void)
 {
     s16 machBikeSpeeds[] = { PLAYER_SPEED_NORMAL, PLAYER_SPEED_FAST, PLAYER_SPEED_FASTEST };
 
-    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE)
+    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_MACH_BIKE)
         return machBikeSpeeds[gPlayerAvatar.bikeFrameCounter];
-    else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ACRO_BIKE)
+    else if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_ACRO_BIKE)
         return PLAYER_SPEED_FASTER;
-    else if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_DASH))
+    else if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_SURFING || gPlayerAvatar.dashing)
         return PLAYER_SPEED_FAST;
     else
         return PLAYER_SPEED_NORMAL;
@@ -388,7 +389,7 @@ void Bike_HandleBumpySlopeJump(void)
     s16 x, y;
     u8 tileBehavior;
 
-    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ACRO_BIKE)
+    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_ACRO_BIKE)
     {
         PlayerGetDestCoords(&x, &y);
         tileBehavior = MapGridGetMetatileBehaviorAt(x, y);

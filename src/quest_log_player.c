@@ -61,7 +61,7 @@ static void QL_GfxTransition_Normal(void)
     struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
     QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL));
     ObjectEventTurn(objectEvent, objectEvent->movementDirection);
-    SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_ON_FOOT);
+    SetPlayerAvatarState(PLAYER_AVATAR_STATE_NORMAL);
 }
 
 static void QL_GfxTransition_Bike(void)
@@ -69,7 +69,7 @@ static void QL_GfxTransition_Bike(void)
     struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
     QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_MACH_BIKE));
     ObjectEventTurn(objectEvent, objectEvent->movementDirection);
-    SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_MACH_BIKE);
+    SetPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE);
     BikeClearState(0, 0);
 }
 
@@ -123,7 +123,7 @@ static void Task_QLFishMovement(u8 taskId)
             AlignFishingAnimationFrames();
             if (sprite->animEnded)
             {
-                if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING))
+                if (gPlayerAvatar.playerState != PLAYER_AVATAR_STATE_SURFING)
                     QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL));
                 else
                     QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
@@ -142,11 +142,11 @@ static void QL_GfxTransition_StartSurf(void)
     struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
     u8 fieldEffectId;
 
-    if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING))
+    if (gPlayerAvatar.playerState != PLAYER_AVATAR_STATE_SURFING)
     {
         QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
         ObjectEventTurn(objectEvent, objectEvent->movementDirection);
-        SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_SURFING);
+        SetPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING);
         gFieldEffectArguments[0] = objectEvent->currentCoords.x;
         gFieldEffectArguments[1] = objectEvent->currentCoords.y;
         gFieldEffectArguments[2] = gPlayerAvatar.objectEventId;

@@ -2412,10 +2412,19 @@ void RemoveFollowingPokemon(void)
     RemoveObjectEvent(objectEvent);
 }
 
+bool32 IsStatePreventingFollower(void)
+{
+    return TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING)
+        || TestPlayerAvatarState(PLAYER_AVATAR_STATE_UNDERWATER)
+        || TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE)
+        || TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE)
+        || gPlayerAvatar.forced;
+}
+
 // Determine whether follower *should* be visible
 bool32 IsFollowerVisible(void)
 {
-    return !(TestPlayerAvatarFlags(FOLLOWER_INVISIBLE_FLAGS)
+    return !(IsStatePreventingFollower()
             || MetatileBehavior_IsSurfableAndNotWaterfall(gObjectEvents[gPlayerAvatar.objectEventId].previousMetatileBehavior)
             || MetatileBehavior_IsForcedMovementTile(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior));
 }
@@ -3805,7 +3814,7 @@ bool8 ObjectEventIsTrainerAndCloseToPlayer(struct ObjectEvent *objectEvent)
     s16 minY;
     s16 maxY;
 
-    if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH))
+    if (!gPlayerAvatar.dashing)
         return FALSE;
     if (objectEvent->trainerType != TRAINER_TYPE_NORMAL && objectEvent->trainerType != TRAINER_TYPE_BURIED)
         return FALSE;
@@ -5820,7 +5829,7 @@ bool8 FollowablePlayerMovement_Step(struct ObjectEvent *objectEvent, struct Spri
     }
     /* else if (playerAction >= MOVEMENT_ACTION_WALK_STAIRS_DOWN && playerAction <= MOVEMENT_ACTION_WALK_SLOW_STAIRS_RIGHT)
     {
-        if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH)) // on sideways stairs
+        if (gPlayerAvatar.dashing) // on sideways stairs
             objectEvent->movementActionId = GetWalkNormalMovementAction(direction);
         else
             ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkSlowStairsMovementAction(direction));
@@ -7537,7 +7546,7 @@ void InitJumpRegular(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 
       && distance == JUMP_DISTANCE_FAR
       // In some areas (i.e Meteor Falls), the player can jump as the follower jumps, so preserve type in this case
       && PlayerGetCopyableMovement() != COPY_MOVE_JUMP2)
-        type = TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH) ? JUMP_TYPE_FASTER : JUMP_TYPE_FAST;
+        type = gPlayerAvatar.dashing ? JUMP_TYPE_FASTER : JUMP_TYPE_FAST;
     InitJump(objectEvent, sprite, direction, distance, type);
     SetStepAnimHandleAlternation(objectEvent, sprite, GetMoveDirectionAnimNum(objectEvent->facingDirection));
     DoShadowFieldEffect(objectEvent);
@@ -8015,7 +8024,7 @@ static bool8 MovementAction_ExitPokeball_Step0(struct ObjectEvent *objectEvent, 
 
     SetObjectEventCoords(objectEvent, gObjectEvents[gPlayerAvatar.objectEventId].previousCoords.x, gObjectEvents[gPlayerAvatar.objectEventId].previousCoords.y);
     objectEvent->invisible = FALSE;
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH))
+    if (gPlayerAvatar.dashing)
     {
         // If player is dashing, the pokemon must come out faster
         StartSpriteAnimInDirection(objectEvent, sprite, direction, GetJumpSpecialDirectionAnimNum(direction));

@@ -909,14 +909,14 @@ static void QL_LoadMapNormal(void)
 void ResetInitialPlayerAvatarState(void)
 {
     sInitialPlayerAvatarState.direction = DIR_SOUTH;
-    sInitialPlayerAvatarState.transitionState = PLAYER_STATE_NORMAL;
+    sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_NORMAL;
     sInitialPlayerAvatarState.hasDirectionSet = FALSE;
 }
 
 static void SetInitialPlayerAvatarStateWithDirection(u8 dirn)
 {
     sInitialPlayerAvatarState.direction = dirn;
-    sInitialPlayerAvatarState.transitionState = PLAYER_STATE_NORMAL;
+    sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_NORMAL;
     sInitialPlayerAvatarState.hasDirectionSet = TRUE;
 }
 
@@ -924,16 +924,16 @@ void StoreInitialPlayerAvatarState(void)
 {
     sInitialPlayerAvatarState.direction = GetPlayerFacingDirection();
 
-    if (TestPlayerAvatarState(PLAYER_STATE_MACH_BIKE))
-        sInitialPlayerAvatarState.transitionState = PLAYER_STATE_MACH_BIKE;
-    else if (TestPlayerAvatarState(PLAYER_STATE_ACRO_BIKE))
-        sInitialPlayerAvatarState.transitionState = PLAYER_STATE_ACRO_BIKE;
-    else if (TestPlayerAvatarState(PLAYER_STATE_SURFING))
-        sInitialPlayerAvatarState.transitionState = PLAYER_STATE_SURFING;
-    else if (TestPlayerAvatarState(PLAYER_STATE_UNDERWATER))
-        sInitialPlayerAvatarState.transitionState = PLAYER_STATE_UNDERWATER;
+    if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE))
+        sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_MACH_BIKE;
+    else if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE))
+        sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_ACRO_BIKE;
+    else if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING))
+        sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_SURFING;
+    else if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_UNDERWATER))
+        sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_UNDERWATER;
     else
-        sInitialPlayerAvatarState.transitionState = PLAYER_STATE_NORMAL;
+        sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_NORMAL;
 
     sInitialPlayerAvatarState.hasDirectionSet = FALSE;
 }
@@ -955,21 +955,21 @@ struct InitialPlayerAvatarState *GetInitialPlayerAvatarState(void)
 static enum PlayerState GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, u16 metatileBehavior, u8 mapType)
 {
     if (mapType != MAP_TYPE_INDOOR && FlagGet(FLAG_SYS_CRUISE_MODE))
-        return PLAYER_STATE_NORMAL;
+        return PLAYER_AVATAR_STATE_NORMAL;
     else if (mapType == MAP_TYPE_UNDERWATER)
-        return PLAYER_STATE_UNDERWATER;
+        return PLAYER_AVATAR_STATE_UNDERWATER;
     else if (MetatileBehavior_IsSurfableInSeafoamIslands(metatileBehavior) == TRUE)
-        return PLAYER_STATE_NORMAL;
+        return PLAYER_AVATAR_STATE_NORMAL;
     else if (MetatileBehavior_IsSurfable(metatileBehavior) == TRUE)
-        return PLAYER_STATE_SURFING;
+        return PLAYER_AVATAR_STATE_SURFING;
     else if (Overworld_IsBikingAllowed() != TRUE)
-        return PLAYER_STATE_NORMAL;
-    else if (playerStruct->transitionState == PLAYER_STATE_MACH_BIKE)
-        return PLAYER_STATE_MACH_BIKE;
-    else if (playerStruct->transitionState != PLAYER_STATE_MACH_BIKE)
-        return PLAYER_STATE_NORMAL;
+        return PLAYER_AVATAR_STATE_NORMAL;
+    else if (playerStruct->transitionState == PLAYER_AVATAR_STATE_MACH_BIKE)
+        return PLAYER_AVATAR_STATE_MACH_BIKE;
+    else if (playerStruct->transitionState != PLAYER_AVATAR_STATE_MACH_BIKE)
+        return PLAYER_AVATAR_STATE_NORMAL;
     else
-        return PLAYER_STATE_ACRO_BIKE;
+        return PLAYER_AVATAR_STATE_ACRO_BIKE;
 }
 
 bool8 MetatileBehavior_IsSurfableInSeafoamIslands(u16 metatileBehavior)
@@ -1004,8 +1004,8 @@ static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStr
         return DIR_WEST;
     else if (MetatileBehavior_IsDirectionalUpLeftStairWarp(metatileBehavior) == TRUE || MetatileBehavior_IsDirectionalDownLeftStairWarp(metatileBehavior) == TRUE)
         return DIR_EAST;
-    else if ((playerStruct->transitionState == PLAYER_STATE_UNDERWATER  && transitionState == PLAYER_STATE_SURFING)
-             || (playerStruct->transitionState == PLAYER_STATE_SURFING && transitionState == PLAYER_STATE_UNDERWATER ))
+    else if ((playerStruct->transitionState == PLAYER_AVATAR_STATE_UNDERWATER  && transitionState == PLAYER_AVATAR_STATE_SURFING)
+             || (playerStruct->transitionState == PLAYER_AVATAR_STATE_SURFING && transitionState == PLAYER_AVATAR_STATE_UNDERWATER ))
         return playerStruct->direction;
     else if (MetatileBehavior_IsLadder(metatileBehavior) == TRUE)
         return playerStruct->direction;
@@ -1117,7 +1117,7 @@ void Overworld_PlaySpecialMapMusic(void)
 
     if (gSaveBlock1Ptr->savedMusic)
         music = gSaveBlock1Ptr->savedMusic;
-    else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && Overworld_MusicCanOverrideMapMusic(MUS_SURF))
+    else if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING) && Overworld_MusicCanOverrideMapMusic(MUS_SURF))
         music = MUS_SURF;
 
     if (music != GetCurrentMapMusic())
@@ -1153,11 +1153,11 @@ static void Overworld_TryMapConnectionMusicTransition(void)
         currentMusic = GetCurrentMapMusic();
         if (currentMusic == MUS_SURF)
             return;
-        if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && Overworld_MusicCanOverrideMapMusic(MUS_SURF))
+        if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING) && Overworld_MusicCanOverrideMapMusic(MUS_SURF))
             newMusic = MUS_SURF;
         if (newMusic != currentMusic)
         {
-            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
+            if (IsPlayerBiking())
                 FadeOutAndFadeInNewMapMusic(newMusic, 4, 4);
             else
                 FadeOutAndPlayNewMapMusic(newMusic, 8);
@@ -1487,7 +1487,7 @@ static void DoCB1_Overworld(u16 newKeys, u16 heldKeys)
         }
     }
     // If stop running but keep holding B -> fix follower frame.
-    if (PlayerHasFollowerNPC() && (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT) && IsPlayerStandingStill())
+    if (PlayerHasFollowerNPC() && (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_NORMAL) && IsPlayerStandingStill())
         ObjectEventSetHeldMovement(&gObjectEvents[GetFollowerNPCObjectId()], GetFaceDirectionAnimNum(gObjectEvents[GetFollowerNPCObjectId()].facingDirection));
     RunQuestLogCB();
 }

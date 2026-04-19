@@ -32,7 +32,7 @@ u32 FldEff_UseDig(void)
     u8 taskId = CreateFieldEffectShowMon();
 
     FLDEFF_SET_FUNC_TO_DATA(StartDigFieldEffect);
-    SetPlayerAvatarTransitionState(PLAYER_STATE_NORMAL);
+    SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_NORMAL);
     return FALSE;
 }
 

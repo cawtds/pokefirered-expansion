@@ -1863,7 +1863,7 @@ static bool8 IsInDungeonMap(void)
 void SetHelpContextForMap(void)
 {
     HelpSystem_EnableToggleWithRButton();
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING))
         SetHelpContext(HELPCONTEXT_SURFING);
     else if (IsInDungeonMap())
         SetHelpContext(HELPCONTEXT_DUNGEON);

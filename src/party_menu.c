@@ -4505,7 +4505,7 @@ bool32 FieldMove_SetUpSurf(void)
 
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     if (MetatileBehavior_IsFastWater(MapGridGetMetatileBehaviorAt(x, y)) != TRUE
-     && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING)
+     && !TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING)
      && IsPlayerFacingSurfableFishableWater() == TRUE)
     {
         gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
@@ -4519,7 +4519,7 @@ static void DisplayCantUseSurfMessage(void)
 {
     s16 x, y;
 
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING))
     {
         DisplayPartyMenuStdMessage(PARTY_MSG_ALREADY_SURFING);
     }

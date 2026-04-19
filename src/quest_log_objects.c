@@ -136,10 +136,10 @@ void QL_TryStopSurfing(void)
         s16 x, y;
 
         PlayerGetDestCoords(&x, &y);
-        if (!MetatileBehavior_IsSurfable(MapGridGetMetatileBehaviorAt(x, y)) && TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+        if (!MetatileBehavior_IsSurfable(MapGridGetMetatileBehaviorAt(x, y)) && TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING))
         {
             struct ObjectEvent * objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-            SetPlayerAvatarTransitionState(PLAYER_STATE_NORMAL);
+            SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_NORMAL);
             DestroySprite(&gSprites[objectEvent->fieldEffectSpriteId]);
         }
     }

@@ -7,7 +7,7 @@
 static void Task_WateringBerryTreeAnim_End(u8 taskId)
 {
     SetPlayerAvatarTransitionState(GetPlayerAvatarState());
-    gPlayerAvatar.dashTransition = gPlayerAvatar.dash;
+    gPlayerAvatar.dashTransition = gPlayerAvatar.dashing;
     gPlayerAvatar.forcedTransition = gPlayerAvatar.forced;
     gPlayerAvatar.controllableTransition = gPlayerAvatar.controllable;
     DestroyTask(taskId);

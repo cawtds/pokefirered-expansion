@@ -261,7 +261,7 @@ void Task_UseORASDowsingMachine(u8 taskId)
     }
     else
     {
-        if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
+        if (IsPlayerBiking())
             GetOnOffBike(TRUE);
 
         StartORASDowseFieldEffect();

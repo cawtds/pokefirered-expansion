@@ -602,9 +602,9 @@ static bool8 DexNavPickTile(enum EncounterType environment, u8 areaX, u8 areaY, 
             metatileAttributes = MapGridGetMetatileAttributeAt(topX, topY, METATILE_ATTRIBUTES_ALL);
             //Check for objects
             nextIter = FALSE;
-            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
+            if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE) || TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE))
                 tileBuffer = SNEAKING_PROXIMITY + 3;
-            else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH))
+            else if (gPlayerAvatar.dashing)
                 tileBuffer = SNEAKING_PROXIMITY + 1;
 
             if (GetPlayerDistance(topX, topY) <= tileBuffer)
@@ -1076,7 +1076,7 @@ bool32 OnStep_DexNavSearch(void)
         }
     }
 
-    if (sDexNavSearchDataPtr->proximity <= SNEAKING_PROXIMITY && TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH | PLAYER_AVATAR_FLAG_BIKE))
+    if (sDexNavSearchDataPtr->proximity <= SNEAKING_PROXIMITY && (TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE) || TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE) || gPlayerAvatar.dashing))
     { // running/biking too close
         //always do event script, even if player hasn't revealed a hidden mon. It's assumed they would be creeping towards it
         EndDexNavSearchSetupScript(EventScript_MovedTooFast);
@@ -2518,7 +2518,7 @@ bool32 TryFindHiddenPokemon(void)
             }
             break;
         case 1: // water
-            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+            if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING))
             {
                 if (Random() % 100 < HIDDEN_MON_PROBABILTY)
                 {

@@ -99,7 +99,7 @@ static bool8 RockClimb_Init(struct Task *task, struct ObjectEvent *objectEvent)
     // Put follower into pokeball before using Rock Climb
     HideFollowerForFieldEffect();
     gPlayerAvatar.preventStep = TRUE;
-    SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_SURFING);
+    SetPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING);
     PlayerGetDestCoords(&task->tDestX, &task->tDestY);
     MoveCoords(gObjectEvents[gPlayerAvatar.objectEventId].movementDirection, &task->tDestX, &task->tDestY);
     task->tState++;
@@ -231,8 +231,7 @@ static bool8 RockClimb_ContinueRideOrEnd(struct Task *task, struct ObjectEvent *
     }
 
     LockPlayerFieldControls();
-    gPlayerAvatar.flags &= ~PLAYER_AVATAR_FLAG_SURFING;
-    gPlayerAvatar.flags |= PLAYER_AVATAR_FLAG_ON_FOOT;
+    gPlayerAvatar.playerState = PLAYER_AVATAR_STATE_NORMAL;
     task->tState++;
     return FALSE;
 }
