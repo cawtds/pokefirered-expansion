@@ -3234,26 +3234,26 @@ static void Task_HandleInput_SelectMove(u8 taskId)
         }
         else if (JOY_NEW(DPAD_DOWN))
         {
-            if (sMoveSelectionCursorPos < 4)
+            if (sMoveSelectionCursorPos < MAX_MON_MOVES)
             {
-                u8 v0 = 4;
+                u8 selectionLimit = MAX_MON_MOVES;
 
                 sMonSummaryScreen->selectMoveInputHandlerState = 2;
 
                 if (sMonSummaryScreen->isSwappingMoves == TRUE)
                 {
-                    if (sMoveSelectionCursorPos == 5 - 2)
+                    if (sMoveSelectionCursorPos == MAX_MON_MOVES - 1)
                     {
                         sMoveSelectionCursorPos = 0;
                         sMonSummaryScreen->selectMoveInputHandlerState = 2;
                         PlaySE(SE_SELECT);
                         return;
                     }
-                    v0--;
+                    selectionLimit--;
                 }
 
-                for (i = sMoveSelectionCursorPos; i < v0; i++)
-                    if (sMonSummaryScreen->moveIds[i + 1] != 0)
+                for (i = sMoveSelectionCursorPos; i < selectionLimit; i++)
+                    if (sMonSummaryScreen->moveIds[i + 1] != MOVE_NONE)
                     {
                         PlaySE(SE_SELECT);
                         sMoveSelectionCursorPos = i + 1;
@@ -3273,7 +3273,7 @@ static void Task_HandleInput_SelectMove(u8 taskId)
 
                 return;
             }
-            else if (sMoveSelectionCursorPos == 4)
+            else if (sMoveSelectionCursorPos == MAX_MON_MOVES)
             {
                 sMoveSelectionCursorPos = 0;
                 sMonSummaryScreen->selectMoveInputHandlerState = 2;
@@ -3284,7 +3284,7 @@ static void Task_HandleInput_SelectMove(u8 taskId)
         else if (JOY_NEW(A_BUTTON))
         {
             PlaySE(SE_SELECT);
-            if (sMoveSelectionCursorPos == 4)
+            if (sMoveSelectionCursorPos == MAX_MON_MOVES)
             {
                 sMoveSelectionCursorPos = 0;
                 sMoveSwapCursorPos = 0;
