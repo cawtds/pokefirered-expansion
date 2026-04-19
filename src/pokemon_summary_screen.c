@@ -205,110 +205,86 @@ static void DestroyTypeIconSprites(void);
 
 struct PokemonSummaryScreenData
 {
-    u16 bg1TilemapBuffer[0x800];
-    u16 bg2TilemapBuffer[0x800];
-    u16 bg3TilemapBuffer[0x800];
-    u8 ALIGNED(4) windowIds[SUMMARY_WINDOW_COUNT];
-
-    u8 ALIGNED(4) ballIconSpriteId;
-    u8 ALIGNED(4) monPicSpriteId;
-    u8 ALIGNED(4) monIconSpriteId;
-
-    u8 ALIGNED(4) inputHandlerTaskId;
-    u8 ALIGNED(4) inhibitPageFlipInput;
-
-    u8 ALIGNED(4) numMonPicBounces;
-
-    bool32 isEnemyParty;
-
-    u8 ALIGNED(4) speciesNameStrBuf[POKEMON_NAME_LENGTH + 1];
-    u8 ALIGNED(4) nicknameStrBuf[POKEMON_NAME_LENGTH + 1];
-    u8 ALIGNED(4) otNameStrBuf[12];
-    u8 ALIGNED(4) otNameStrBufs[2][12];
-
-    u8 ALIGNED(4) dexNumStrBuf[5];
-    u8 ALIGNED(4) otIdStrBuf[7];
-    u8 ALIGNED(4) itemNameStrBuf[ITEM_NAME_LENGTH + 1];
-
-    u8 ALIGNED(4) genderSymbolStrBuf[3];
-    u8 ALIGNED(4) levelStrBuf[7];
-
-    u8 ALIGNED(4) statValueStrBufs[NUM_STATS][30];
-    u16 curHpStrXpos;
-    u16 atkStrXpos;
-    u16 defStrXpos;
-    u16 spAStrXpos;
-    u16 spDStrXpos;
-    u16 speStrXpos;
-
-    u8 ALIGNED(4) moveCurPpStrBufs[MAX_MON_MOVES + 1][11];
-    u16 curPpXpos[MAX_MON_MOVES + 1];
-    u8 ALIGNED(4) moveMaxPpStrBufs[MAX_MON_MOVES + 1][11];
-    u16 maxPpXpos[MAX_MON_MOVES + 1];
-
-    u8 ALIGNED(4) moveNameStrBufs[MAX_MON_MOVES + 1][MOVE_NAME_LENGTH + 1];
-    u8 ALIGNED(4) movePowerStrBufs[MAX_MON_MOVES + 1][5];
-    u8 ALIGNED(4) moveAccuracyStrBufs[MAX_MON_MOVES + 1][5];
-
-    u8 ALIGNED(4) expPointsStrBuf[9];
-    u16 expStrXpos;
-    u8 ALIGNED(4) expToNextLevelStrBuf[9];
-    u16 toNextLevelXpos;
-
-    u8 ALIGNED(4) abilityNameStrBuf[ABILITY_NAME_LENGTH + 1];
-    u8 ALIGNED(4) abilityDescStrBuf[52];
-
-    u8 ALIGNED(4) isEgg;
-    u8 ALIGNED(4) isBadEgg;
-
-    u8 ALIGNED(4) mode;
-    u8 ALIGNED(4) lastIndex;
-    enum PokemonSummaryScreenPage curPageIndex;
-    u8 ALIGNED(4) isBoxMon;
-    u8 ALIGNED(4) monTypes[3];
-
-    u8 ALIGNED(4) pageFlipDirection;
-
-    u8 ALIGNED(4) lockMovesFlag;
-
-    u8 ALIGNED(4) whichBgLayerToTranslate;
-    u8 ALIGNED(4) skillsPageBgNum;
-    u8 ALIGNED(4) infoAndMovesPageBgNum;
-    u8 ALIGNED(4) flippingPages;
-    s16 ALIGNED(4) flipPagesBgHofs;
-
-    enum Type moveTypes[MAX_MON_MOVES + 1];
-    enum Move moveIds[MAX_MON_MOVES + 1];
-    u8 ALIGNED(4) numMoves;
-    u8 ALIGNED(4) isSwappingMoves;
-
-    u8 ALIGNED(4) curMonStatusAilment;
-
-    enum PokemonSummaryScreenState screenState;
-    u8 ALIGNED(4) summarySetupStep;
-    u8 ALIGNED(4) loadBgGfxStep;
-    u8 ALIGNED(4) spriteCreationStep;
-    u8 ALIGNED(4) bufferStringsStep;
-    u8 ALIGNED(4) taskState;
-    u8 ALIGNED(4) selectMoveInputHandlerState;
-    u8 ALIGNED(4) switchMonTaskState;
-
-    struct Pokemon currentMon;
-
     union
     {
         struct Pokemon * mons;
         struct BoxPokemon * boxMons;
     } monList;
-
-    MainCallback savedCallback;
-    struct Sprite *markingSprite;
-
-    u8 ALIGNED(4) lastPageFlipDirection;
+    bool32 isEnemyParty;
+    enum PokemonSummaryScreenPage curPageIndex;
     enum PokemonSummaryScreenSkillPageMode skillsPageMode:2;
+    enum PokemonSummaryScreenState screenState;
+    MainCallback savedCallback;
+    struct Pokemon currentMon;
+    struct Sprite *markingSprite;
+    enum Move moveIds[MAX_MON_MOVES + 1];
+    enum Type moveTypes[MAX_MON_MOVES + 1];
+    s16 flipPagesBgHofs;
+    u16 atkStrXpos;
+    u16 bg1TilemapBuffer[0x800];
+    u16 bg2TilemapBuffer[0x800];
+    u16 bg3TilemapBuffer[0x800];
+    u16 curHpStrXpos;
+    u16 curPpXpos[MAX_MON_MOVES + 1];
+    u16 defStrXpos;
+    u16 expStrXpos;
+    u16 maxPpXpos[MAX_MON_MOVES + 1];
+    u16 spAStrXpos;
+    u16 spDStrXpos;
+    u16 speStrXpos;
+    u16 toNextLevelXpos;
+    u8 abilityDescStrBuf[52];
+    u8 abilityNameStrBuf[ABILITY_NAME_LENGTH + 1];
+    u8 ballIconSpriteId;
+    u8 bufferStringsStep;
     u8 categoryIconSpriteId;
-    u8 moveTypeIconSpriteIds[MAX_MON_MOVES + 1];
+    u8 curMonStatusAilment;
+    u8 dexNumStrBuf[5];
+    u8 expPointsStrBuf[9];
+    u8 expToNextLevelStrBuf[9];
+    u8 flippingPages;
+    u8 genderSymbolStrBuf[3];
+    u8 infoAndMovesPageBgNum;
+    u8 inhibitPageFlipInput;
+    u8 inputHandlerTaskId;
+    u8 isBadEgg;
+    u8 isBoxMon;
+    u8 isEgg;
+    u8 isSwappingMoves;
+    u8 itemNameStrBuf[ITEM_NAME_LENGTH + 1];
+    u8 lastIndex;
+    u8 lastPageFlipDirection;
+    u8 levelStrBuf[7];
+    u8 loadBgGfxStep;
+    u8 lockMovesFlag;
+    u8 mode;
+    u8 monIconSpriteId;
+    u8 monPicSpriteId;
     u8 monTypeIconSpriteIds[3];
+    u8 monTypes[3];
+    u8 moveAccuracyStrBufs[MAX_MON_MOVES + 1][5];
+    u8 moveCurPpStrBufs[MAX_MON_MOVES + 1][11];
+    u8 moveMaxPpStrBufs[MAX_MON_MOVES + 1][11];
+    u8 moveNameStrBufs[MAX_MON_MOVES + 1][MOVE_NAME_LENGTH + 1];
+    u8 movePowerStrBufs[MAX_MON_MOVES + 1][5];
+    u8 moveTypeIconSpriteIds[MAX_MON_MOVES + 1];
+    u8 nicknameStrBuf[POKEMON_NAME_LENGTH + 1];
+    u8 numMonPicBounces;
+    u8 numMoves;
+    u8 otIdStrBuf[7];
+    u8 otNameStrBuf[12];
+    u8 otNameStrBufs[2][12];
+    u8 pageFlipDirection;
+    u8 selectMoveInputHandlerState;
+    u8 skillsPageBgNum;
+    u8 speciesNameStrBuf[POKEMON_NAME_LENGTH + 1];
+    u8 spriteCreationStep;
+    u8 statValueStrBufs[NUM_STATS][30];
+    u8 summarySetupStep;
+    u8 switchMonTaskState;
+    u8 taskState;
+    u8 whichBgLayerToTranslate;
+    u8 windowIds[SUMMARY_WINDOW_COUNT];
 };
 
 struct ExpBarObjs
@@ -329,49 +305,20 @@ struct HpBarObjs
 
 struct MonPicBounceState
 {
-    u8 ALIGNED(4) animFrame;
-    u8 ALIGNED(4) initDelay;
-    u8 ALIGNED(4) vigor;
-};
-
-struct MoveSelectionCursor
-{
-    struct Sprite *sprite;
-    u16 whichSprite;
-    u16 tileTag;
-    u16 palTag;
-};
-
-struct MonStatusIconObj
-{
-    struct Sprite *sprite;
-    u16 tileTag;
-    u16 palTag;
-};
-
-struct PokerusIconObj
-{
-    struct Sprite *sprite;
-    u16 tileTag;
-    u16 palTag;
-};
-
-struct ShinyStarObjData
-{
-    struct Sprite *sprite;
-    u16 tileTag;
-    u16 palTag;
+    u8 animFrame;
+    u8 initDelay;
+    u8 vigor;
 };
 
 EWRAM_DATA u8 gLastViewedMonIndex = 0;
 EWRAM_DATA MainCallback gInitialSummaryScreenCallback = NULL; // stores callback from the first time the screen is opened from the party or PC menu
 static EWRAM_DATA struct PokemonSummaryScreenData *sMonSummaryScreen = NULL;
-static EWRAM_DATA struct MoveSelectionCursor *sMoveSelectionCursorObjs[4] = {};
-static EWRAM_DATA struct MonStatusIconObj *sStatusIcon = NULL;
+static EWRAM_DATA struct Sprite *sMoveSelectionCursorObjs[4] = {};
+static EWRAM_DATA struct Sprite *sStatusIcon = NULL;
+static EWRAM_DATA struct Sprite *sPokerusIconObj = NULL;
+static EWRAM_DATA struct Sprite *sShinyStarObjData = NULL;
 static EWRAM_DATA struct HpBarObjs *sHpBarObjs = NULL;
 static EWRAM_DATA struct ExpBarObjs *sExpBarObjs = NULL;
-static EWRAM_DATA struct PokerusIconObj *sPokerusIconObj = NULL;
-static EWRAM_DATA struct ShinyStarObjData *sShinyStarObjData = NULL;
 static EWRAM_DATA u8 sMoveSelectionCursorPos = 0;
 static EWRAM_DATA u8 sMoveSwapCursorPos = 0;
 static EWRAM_DATA struct MonPicBounceState *sMonPicBounceState = NULL;
@@ -1814,20 +1761,6 @@ static void BufferEVString(u8 stat)
     if (stat != STAT_HP)
         ApplyNatureColor(dst, stat);
 }
-
-static const u8 sText_JudgeNoGood[] = _("No good");
-static const u8 sText_JudgeDecent[] = _("Decent");
-static const u8 sText_JudgePrettyGood[] = _("Pretty good");
-static const u8 sText_JudgeVeryGood[] = _("Very good");
-static const u8 sText_JudgeFantastic[] = _("Fantastic");
-static const u8 sText_JudgeBest[] = _("Best");
-static const u8 sText_JudgeHyperTrained[] = _("Hyper trained!");
-static const u8 sText_GradeS[] = _("S");
-static const u8 sText_GradeA[] = _("A");
-static const u8 sText_GradeB[] = _("B");
-static const u8 sText_GradeC[] = _("C");
-static const u8 sText_GradeD[] = _("D");
-static const u8 sText_GradeF[] = _("F");
 
 static void BufferIVTextString(u8 *dst, u8 statValue, bool32 isHyperTrained)
 {
@@ -3953,10 +3886,8 @@ static void CreateMoveSelectionCursorObjs(u16 tileTag, u16 palTag)
     gfxBufferPtrs[0] = AllocZeroed(0x20 * 64);
     gfxBufferPtrs[1] = AllocZeroed(0x20 * 64);
 
-    sMoveSelectionCursorObjs[0] = AllocZeroed(sizeof(struct MoveSelectionCursor));
-    sMoveSelectionCursorObjs[1] = AllocZeroed(sizeof(struct MoveSelectionCursor));
-    sMoveSelectionCursorObjs[2] = AllocZeroed(sizeof(struct MoveSelectionCursor));
-    sMoveSelectionCursorObjs[3] = AllocZeroed(sizeof(struct MoveSelectionCursor));
+    for (u32 i = 0; i < ARRAY_COUNT(sMoveSelectionCursorObjs); i++)
+        sMoveSelectionCursorObjs[i] = NULL;
 
     DecompressDataWithHeaderWram(sMoveSelectionCursorTiles_Left, gfxBufferPtrs[0]);
     DecompressDataWithHeaderWram(sMoveSelectionCursorTiles_Right, gfxBufferPtrs[1]);
@@ -3984,14 +3915,11 @@ static void CreateMoveSelectionCursorObjs(u16 tileTag, u16 palTag)
         LoadSpritePalette(&palette);
 
         spriteId = CreateSprite(&template, 64 * (i % 2) + 152, sMoveSelectionCursorPos * 28 + 34, i % 2);
-        sMoveSelectionCursorObjs[i]->sprite = &gSprites[spriteId];
-        sMoveSelectionCursorObjs[i]->whichSprite = i;
-        sMoveSelectionCursorObjs[i]->tileTag = tileTag + i;
-        sMoveSelectionCursorObjs[i]->palTag = palTag;
-        sMoveSelectionCursorObjs[i]->sprite->subpriority = i;
+        sMoveSelectionCursorObjs[i] = &gSprites[spriteId];
+        sMoveSelectionCursorObjs[i]->subpriority = i;
 
         if (i > 1)
-            StartSpriteAnim(sMoveSelectionCursorObjs[i]->sprite, 1);
+            StartSpriteAnim(sMoveSelectionCursorObjs[i], 1);
     }
 
     ShoworHideMoveSelectionCursor(TRUE);
@@ -4004,7 +3932,7 @@ static void ShoworHideMoveSelectionCursor(bool8 invisible)
 {
     u8 i;
     for (i = 0; i < 4; i++)
-        sMoveSelectionCursorObjs[i]->sprite->invisible = invisible;
+        sMoveSelectionCursorObjs[i]->invisible = invisible;
 }
 
 static void SpriteCB_MoveSelectionCursor(struct Sprite *sprite)
@@ -4016,22 +3944,22 @@ static void SpriteCB_MoveSelectionCursor(struct Sprite *sprite)
         if (sMonSummaryScreen->isSwappingMoves == TRUE && i > 1)
             continue;
 
-        sMoveSelectionCursorObjs[i]->sprite->y = sMoveSelectionCursorPos * 28 + 34;
+        sMoveSelectionCursorObjs[i]->y = sMoveSelectionCursorPos * 28 + 34;
     }
 
     if (sMonSummaryScreen->isSwappingMoves != TRUE)
     {
         if (sMonSummaryScreen->curPageIndex == PSS_PAGE_MOVES_INFO)
         {
-            sMoveSelectionCursorObjs[0]->sprite->invisible = FALSE;
-            sMoveSelectionCursorObjs[1]->sprite->invisible = FALSE;
+            sMoveSelectionCursorObjs[0]->invisible = FALSE;
+            sMoveSelectionCursorObjs[1]->invisible = FALSE;
         }
         return;
     }
 
     for (i = 0; i < 2; i++)
     {
-        sprite = sMoveSelectionCursorObjs[i]->sprite;
+        sprite = sMoveSelectionCursorObjs[i];
         sprite->data[0]++;
 
         if (sprite->invisible)
@@ -4056,50 +3984,43 @@ static void DestroyMoveSelectionCursorObjs(void)
 
     for (i = 0; i < 4; i++)
     {
-        if (sMoveSelectionCursorObjs[i]->sprite != NULL)
-            DestroySpriteAndFreeResources(sMoveSelectionCursorObjs[i]->sprite);
-
-        TRY_FREE_AND_SET_NULL(sMoveSelectionCursorObjs[i]);
+        if (sMoveSelectionCursorObjs[i] != NULL)
+        {
+            DestroySpriteAndFreeResources(sMoveSelectionCursorObjs[i]);
+            sMoveSelectionCursorObjs[i] = NULL;
+        }
     }
 }
 
 static void CreateMonStatusIconObj(u16 tileTag, u16 palTag)
 {
     u16 spriteId;
-    void *gfxBufferPtr;
-
-    sStatusIcon = AllocZeroed(sizeof(struct MonStatusIconObj));
-    gfxBufferPtr = AllocZeroed(0x20 * 32);
+    void *gfxBufferPtr = AllocZeroed(0x20 * 32);
 
     DecompressDataWithHeaderWram(gSummaryScreen_StatusAilmentIcon_Gfx, gfxBufferPtr);
 
-    if (sStatusIcon != NULL)
-    {
-        struct SpriteSheet sheet = {
-            .data = gfxBufferPtr,
-            .size = 0x20 * 32,
-            .tag = tileTag
-        };
+    struct SpriteSheet sheet = {
+        .data = gfxBufferPtr,
+        .size = 0x20 * 32,
+        .tag = tileTag
+    };
 
-        struct SpritePalette palette = {.data = gSummaryScreen_StatusAilmentIcon_Pal, .tag = palTag};
-        struct SpriteTemplate template = {
-            .tileTag = tileTag,
-            .paletteTag = palTag,
-            .oam = &sStatusAilmentIconOamData,
-            .anims = sStatusAilmentIconAnimTable,
-            .images = NULL,
-            .affineAnims = gDummySpriteAffineAnimTable,
-            .callback = SpriteCallbackDummy,
-        };
+    struct SpritePalette palette = {.data = gSummaryScreen_StatusAilmentIcon_Pal, .tag = palTag};
+    struct SpriteTemplate template = {
+        .tileTag = tileTag,
+        .paletteTag = palTag,
+        .oam = &sStatusAilmentIconOamData,
+        .anims = sStatusAilmentIconAnimTable,
+        .images = NULL,
+        .affineAnims = gDummySpriteAffineAnimTable,
+        .callback = SpriteCallbackDummy,
+    };
 
-        LoadSpriteSheet(&sheet);
-        LoadSpritePalette(&palette);
+    LoadSpriteSheet(&sheet);
+    LoadSpritePalette(&palette);
 
-        spriteId = CreateSprite(&template, 0, 0, 0);
-        sStatusIcon->sprite = &gSprites[spriteId];
-        sStatusIcon->tileTag = tileTag;
-        sStatusIcon->palTag = palTag;
-    }
+    spriteId = CreateSprite(&template, 0, 0, 0);
+    sStatusIcon = &gSprites[spriteId];
 
     ShowOrHideStatusIcon(TRUE);
     UpdateMonStatusIconObj();
@@ -4108,10 +4029,11 @@ static void CreateMonStatusIconObj(u16 tileTag, u16 palTag)
 
 static void DestroyMonStatusIconObj(void)
 {
-    if (sStatusIcon->sprite != NULL)
-        DestroySpriteAndFreeResources(sStatusIcon->sprite);
+    if (sStatusIcon == NULL)
+        return;
 
-    TRY_FREE_AND_SET_NULL(sStatusIcon);
+    DestroySpriteAndFreeResources(sStatusIcon);
+    sStatusIcon = NULL;
 }
 
 static void UpdateMonStatusIconObj(void)
@@ -4124,30 +4046,30 @@ static void UpdateMonStatusIconObj(void)
         return;
     }
 
-    StartSpriteAnim(sStatusIcon->sprite, sMonSummaryScreen->curMonStatusAilment - 1);
+    StartSpriteAnim(sStatusIcon, sMonSummaryScreen->curMonStatusAilment - 1);
     ShowOrHideStatusIcon(FALSE);
 }
 
 static void ShowOrHideStatusIcon(u8 invisible)
 {
     if (sMonSummaryScreen->curMonStatusAilment == AILMENT_NONE || sMonSummaryScreen->isEgg)
-        sStatusIcon->sprite->invisible = TRUE;
+        sStatusIcon->invisible = TRUE;
     else
-        sStatusIcon->sprite->invisible = invisible;
+        sStatusIcon->invisible = invisible;
 
     if (sMonSummaryScreen->curPageIndex == PSS_PAGE_MOVES_INFO)
     {
-        if (sStatusIcon->sprite->y != 45)
+        if (sStatusIcon->y != 45)
         {
-            sStatusIcon->sprite->x = 16;
-            sStatusIcon->sprite->y = 45;
+            sStatusIcon->x = 16;
+            sStatusIcon->y = 45;
             return;
         }
     }
-    else if (sStatusIcon->sprite->y != 38)
+    else if (sStatusIcon->y != 38)
     {
-        sStatusIcon->sprite->x = 16;
-        sStatusIcon->sprite->y = 38;
+        sStatusIcon->x = 16;
+        sStatusIcon->y = 38;
         return;
     }
 }
@@ -4450,38 +4372,32 @@ static void CreatePokerusIconObj(u16 tileTag, u16 palTag)
     u16 spriteId;
     void *gfxBufferPtr;
 
-    sPokerusIconObj = AllocZeroed(sizeof(struct PokerusIconObj));
     gfxBufferPtr = AllocZeroed(0x20 * 1);
 
     DecompressDataWithHeaderWram(sPokerusIconObjTiles, gfxBufferPtr);
 
-    if (sPokerusIconObj != NULL)
-    {
-        struct SpriteSheet sheet = {
-            .data = gfxBufferPtr,
-            .size = 0x20 * 1,
-            .tag = tileTag
-        };
+    struct SpriteSheet sheet = {
+        .data = gfxBufferPtr,
+        .size = 0x20 * 1,
+        .tag = tileTag
+    };
 
-        struct SpritePalette palette = {.data = sPokerusIconObjPal, .tag = palTag};
-        struct SpriteTemplate template = {
-            .tileTag = tileTag,
-            .paletteTag = palTag,
-            .oam = &sPokerusIconObjOamData,
-            .anims = sPokerusIconObjAnimTable,
-            .images = NULL,
-            .affineAnims = gDummySpriteAffineAnimTable,
-            .callback = SpriteCallbackDummy,
-        };
+    struct SpritePalette palette = {.data = sPokerusIconObjPal, .tag = palTag};
+    struct SpriteTemplate template = {
+        .tileTag = tileTag,
+        .paletteTag = palTag,
+        .oam = &sPokerusIconObjOamData,
+        .anims = sPokerusIconObjAnimTable,
+        .images = NULL,
+        .affineAnims = gDummySpriteAffineAnimTable,
+        .callback = SpriteCallbackDummy,
+    };
 
-        LoadSpriteSheet(&sheet);
-        LoadSpritePalette(&palette);
+    LoadSpriteSheet(&sheet);
+    LoadSpritePalette(&palette);
 
-        spriteId = CreateSprite(&template, 114, 92, 0);
-        sPokerusIconObj->sprite = &gSprites[spriteId];
-        sPokerusIconObj->tileTag = tileTag;
-        sPokerusIconObj->palTag = palTag;
-    }
+    spriteId = CreateSprite(&template, 114, 92, 0);
+    sPokerusIconObj = &gSprites[spriteId];
 
     HideShowPokerusIcon(TRUE);
     ShowPokerusIconObjIfHasOrHadPokerus();
@@ -4491,10 +4407,11 @@ static void CreatePokerusIconObj(u16 tileTag, u16 palTag)
 
 static void DestroyPokerusIconObj(void)
 {
-    if (sPokerusIconObj->sprite != NULL)
-        DestroySpriteAndFreeResources(sPokerusIconObj->sprite);
+    if (sPokerusIconObj == NULL)
+        return;
 
-    TRY_FREE_AND_SET_NULL(sPokerusIconObj);
+    DestroySpriteAndFreeResources(sPokerusIconObj);
+    sPokerusIconObj = NULL;
 }
 
 static void ShowPokerusIconObjIfHasOrHadPokerus(void)
@@ -4511,22 +4428,22 @@ static void HideShowPokerusIcon(bool8 invisible)
     if (!ShouldPokemonShowActivePokerus(&sMonSummaryScreen->currentMon)
         && CheckMonHasHadPokerus(&sMonSummaryScreen->currentMon))
     {
-        sPokerusIconObj->sprite->invisible = invisible;
+        sPokerusIconObj->invisible = invisible;
         return;
     }
     else
-        sPokerusIconObj->sprite->invisible = TRUE;
+        sPokerusIconObj->invisible = TRUE;
 
     if (sMonSummaryScreen->curPageIndex == PSS_PAGE_MOVES_INFO)
     {
-        sPokerusIconObj->sprite->invisible = TRUE;
-        sPokerusIconObj->sprite->x = 16;
-        sPokerusIconObj->sprite->y = 44;
+        sPokerusIconObj->invisible = TRUE;
+        sPokerusIconObj->x = 16;
+        sPokerusIconObj->y = 44;
     }
     else
     {
-        sPokerusIconObj->sprite->x = 114;
-        sPokerusIconObj->sprite->y = 92;
+        sPokerusIconObj->x = 114;
+        sPokerusIconObj->y = 92;
     }
 }
 
@@ -4535,37 +4452,31 @@ static void CreateShinyStarObj(u16 tileTag, u16 palTag)
     u16 spriteId;
     void *gfxBufferPtr;
 
-    sShinyStarObjData = AllocZeroed(sizeof(struct ShinyStarObjData));
     gfxBufferPtr = AllocZeroed(0x20 * 2);
 
     DecompressDataWithHeaderWram(sStarObjTiles, gfxBufferPtr);
 
-    if (sShinyStarObjData != NULL)
-    {
-        struct SpriteSheet sheet = {
-            .data = gfxBufferPtr,
-            .size = 0x20 * 2,
-            .tag = tileTag
-        };
+    struct SpriteSheet sheet = {
+        .data = gfxBufferPtr,
+        .size = 0x20 * 2,
+        .tag = tileTag
+    };
 
-        struct SpritePalette palette = {.data = sStarObjPal, .tag = palTag};
-        struct SpriteTemplate template = {
-            .tileTag = tileTag,
-            .paletteTag = palTag,
-            .oam = &sStarObjOamData,
-            .anims = sStarObjAnimTable,
-            .images = NULL,
-            .affineAnims = gDummySpriteAffineAnimTable,
-            .callback = SpriteCallbackDummy,
-        };
+    struct SpritePalette palette = {.data = sStarObjPal, .tag = palTag};
+    struct SpriteTemplate template = {
+        .tileTag = tileTag,
+        .paletteTag = palTag,
+        .oam = &sStarObjOamData,
+        .anims = sStarObjAnimTable,
+        .images = NULL,
+        .affineAnims = gDummySpriteAffineAnimTable,
+        .callback = SpriteCallbackDummy,
+    };
 
-        LoadSpriteSheet(&sheet);
-        LoadSpritePalette(&palette);
-        spriteId = CreateSprite(&template, 106, 40, 0);
-        sShinyStarObjData->sprite = &gSprites[spriteId];
-        sShinyStarObjData->tileTag = tileTag;
-        sShinyStarObjData->palTag = palTag;
-    }
+    LoadSpriteSheet(&sheet);
+    LoadSpritePalette(&palette);
+    spriteId = CreateSprite(&template, 106, 40, 0);
+    sShinyStarObjData = &gSprites[spriteId];
 
     HideShowShinyStar(TRUE);
     ShowShinyStarObjIfMonShiny();
@@ -4575,29 +4486,30 @@ static void CreateShinyStarObj(u16 tileTag, u16 palTag)
 
 static void DestroyShinyStarObj(void)
 {
-    if (sShinyStarObjData->sprite != NULL)
-        DestroySpriteAndFreeResources(sShinyStarObjData->sprite);
+    if (sShinyStarObjData == NULL)
+        return;
 
-    TRY_FREE_AND_SET_NULL(sShinyStarObjData);
+    DestroySpriteAndFreeResources(sShinyStarObjData);
+    sShinyStarObjData = NULL;
 }
 
 static void HideShowShinyStar(bool8 invisible)
 {
     if (IsMonShiny(&sMonSummaryScreen->currentMon) == TRUE
         && !sMonSummaryScreen->isEgg)
-        sShinyStarObjData->sprite->invisible = invisible;
+        sShinyStarObjData->invisible = invisible;
     else
-        sShinyStarObjData->sprite->invisible = TRUE;
+        sShinyStarObjData->invisible = TRUE;
 
     if (sMonSummaryScreen->curPageIndex == PSS_PAGE_MOVES_INFO)
     {
-        sShinyStarObjData->sprite->x = 8;
-        sShinyStarObjData->sprite->y = 24;
+        sShinyStarObjData->x = 8;
+        sShinyStarObjData->y = 24;
     }
     else
     {
-        sShinyStarObjData->sprite->x = 106;
-        sShinyStarObjData->sprite->y = 40;
+        sShinyStarObjData->x = 106;
+        sShinyStarObjData->y = 40;
     }
 }
 
