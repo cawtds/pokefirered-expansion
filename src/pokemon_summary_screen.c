@@ -93,115 +93,112 @@ enum MoveTextColor
     MOVE_TEXT_COLOR_3,
 };
 
-// needs conflicting header to match (curIndex is s8 in the function, but has to be defined as u8 here)
-extern s16 SeekToNextMonInBox(struct BoxPokemon * boxMons, u8 curIndex, u8 maxIndex, u8 flags);
-
-static void BufferSelectedMonData(struct Pokemon * mon);
-static void CB2_SetUpPSS(void);
-static void PokeSum_TryPlayMonCry(void);
-static void PokeSum_RemoveWindows(u8 curPageIndex);
-static void Task_PokeSum_FlipPages(u8 taskId);
-static void Task_FlipPages_FromInfo(u8 taskId);
-static void Task_PokeSum_SwitchDisplayedPokemon(u8 taskId);
-static void PokeSum_SeekToNextMon(u8 taskId, s8 direction);
-static void Task_DestroyResourcesOnExit(u8 taskId);
-static void PokeSum_HideSpritesBeforePageFlip(void);
-static void PokeSum_ShowSpritesBeforePageFlip(void);
-static void PokeSum_UpdateWin1ActiveFlag(u8 curPageIndex);
-static void PokeSum_AddWindows(enum PokemonSummaryScreenPage curPageIndex);
-static void PokeSum_PrintPageHeaderText(u8 curPageIndex);
-static void PokeSum_InitBgCoordsBeforePageFlips(void);
+static bool32 CurrentMonIsFromGBA(void);
+static bool32 IsMultiBattlePartner(void);
+static bool32 MapSecIsInKantoOrSevii(u8 mapSec);
+static enum Move GetMonMoveBySlotId(struct Pokemon *mon, u8 moveSlot);
+static s8 SeekToNextMonInMultiParty(s8 direction);
+static s8 SeekToNextMonInSingleParty(s8 direction);
+static u16 GetMonPpByMoveSlot(struct Pokemon *mon, u8 moveSlot);
+static u8 PokeSum_BufferOtName_IsEqualToCurrentOwner(struct Pokemon * mon);
+static u8 PokeSum_HandleCreateSprites(void);
+static u8 PokeSum_HandleLoadBgGfx(void);
 static u8 PokeSum_IsPageFlipFinished(u8);
-static void PokeSum_SetHelpContext(void);
-static void Task_HandleInput_SelectMove(u8 id);
-static void PokeSum_CopyNewBgTilemapBeforePageFlip_2(void);
-static void PokeSum_CopyNewBgTilemapBeforePageFlip(void);
-static void PokeSum_DrawPageProgressTiles(void);
-static void PokeSum_PrintRightPaneText(void);
-static void PokeSum_PrintBottomPaneText(void);
-static void PokeSum_PrintAbilityDataOrMoveTypes(void);
-static void PokeSum_PrintMonTypeIcons(void);
-static void PokeSum_PrintPageName(const u8 * str);
-static void PrintControlsString(void);
-static void PrintMonLevelNickOnWindow2(const u8 *str);
-static void PokeSum_UpdateBgPriorityForPageFlip(u8 setBg0Priority, u8 keepBg1Bg2PriorityOrder);
-static void ShowOrHideHpBarObjs(u8 invisible);
-static void ShowOrHideExpBarObjs(u8 invisible);
-static void PokeSum_ShowOrHideMonPicSprite(u8 invisible);
-static void PokeSum_ShowOrHideMonMarkingsSprite(u8 invisible);
-static void ShowOrHideBallIconObj(u8 invisible);
-static void ShowOrHideStatusIcon(u8 invisible);
+static u8 PokeSum_Setup_BufferStrings(void);
+static u8 StatusToAilment(u32 status);
+static void BufferMonInfo(void);
+static void BufferMonMoveI(u8);
+static void BufferMonMoves(void);
+static void BufferMonSkills(void);
+static void BufferSelectedMonData(struct Pokemon * mon);
+static void CB2_RunPokemonSummaryScreen(void);
+static void CB2_SetUpPSS(void);
+static void CommitStaticWindowTilemaps(void);
+static void CreateBallIconObj(void);
+static void CreateExpBarObjs(u16, u16);
+static void CreateHpBarObjs(u16, u16);
+static void CreateStatusIconSprite(u16, u16);
+static void CreateMoveSelectionCursorSprites(u16, u16);
+static void CreatePokerusIconSprite(u16, u16);
+static void CreateShinyIconSprite(u16, u16);
+static void CreateTypeIconSprites(void);
+static void DestroyTypeIconSprites(void);
+static void HideMonTypeIcons(void);
+static void HideMoveTypeIcons(void);
 static void HideShowPokerusIcon(u8 invisible);
 static void HideShowShinyStar(u8 invisible);
-static void ShoworHideMoveSelectionCursor(u8 invisible);
-static void PokeSum_ShowOrHideMonIconSprite(u8 invisible);
-static void PokeSum_Setup_ResetCallbacks(void);
-static void PokeSum_Setup_InitGpu(void);
-static void PokeSum_Setup_SpritesReset(void);
-static u8 PokeSum_HandleLoadBgGfx(void);
-static u8 PokeSum_HandleCreateSprites(void);
-static void PokeSum_CreateWindows(void);
-static u8 PokeSum_Setup_BufferStrings(void);
-static void CommitStaticWindowTilemaps(void);
-static void PokeSum_Setup_SetVBlankCallback(void);
-static void PokeSum_FinishSetup(void);
-static void BufferMonInfo(void);
-static void BufferMonSkills(void);
-static void BufferMonMoves(void);
-static u8 StatusToAilment(u32 status);
-static void BufferMonMoveI(u8);
-static enum Move GetMonMoveBySlotId(struct Pokemon *mon, u8 moveSlot);
-static u16 GetMonPpByMoveSlot(struct Pokemon *mon, u8 moveSlot);
-static void CreateShinyStarObj(u16, u16);
-static void CreatePokerusIconObj(u16, u16);
-static void PokeSum_CreateMonMarkingsSprite(void);
-static void CreateMoveSelectionCursorObjs(u16, u16);
-static void CreateMonStatusIconObj(u16, u16);
-static void CreateHpBarObjs(u16, u16);
-static void CreateExpBarObjs(u16, u16);
-static void CreateBallIconObj(void);
+static void PokeSum_AddWindows(enum PokemonSummaryScreenPage curPageIndex);
+static void PokeSum_CopyNewBgTilemapBeforePageFlip_2(void);
+static void PokeSum_CopyNewBgTilemapBeforePageFlip(void);
 static void PokeSum_CreateMonIconSprite(void);
+static void PokeSum_CreateMonMarkingsSprite(void);
 static void PokeSum_CreateMonPicSprite(void);
-static void Task_InputHandler_SelectOrForgetMove(u8 taskId);
-static void CB2_RunPokemonSummaryScreen(void);
-static void PrintInfoPage(void);
-static void PrintSkillsPage(void);
-static void PrintMovesPage(void);
-static void PokeSum_PrintMoveName(u8 i);
-static void PokeSum_PrintTrainerMemo(void);
-static void PokeSum_PrintExpPoints_NextLv(void);
-static void PokeSum_PrintSelectedMoveStats(void);
-static void PokeSum_PrintTrainerMemo_Mon(void);
-static void PokeSum_PrintTrainerMemo_Egg(void);
-static bool32 MapSecIsInKantoOrSevii(u8 mapSec);
-static bool32 IsMultiBattlePartner(void);
-static void PokeSum_PrintTrainerMemo_Mon_NotHeldByOT(void);
-static bool32 CurrentMonIsFromGBA(void);
-static u8 PokeSum_BufferOtName_IsEqualToCurrentOwner(struct Pokemon * mon);
-static void PokeSum_PrintAbilityNameAndDesc(void);
-static void PokeSum_DrawMoveTypeIcons(void);
+static void PokeSum_CreateWindows(void);
+static void PokeSum_DestroyMonMarkingsSprite(void);
 static void PokeSum_DestroySprites(void);
+static void PokeSum_DrawMoveTypeIcons(void);
+static void PokeSum_DrawPageProgressTiles(void);
+static void PokeSum_FinishSetup(void);
 static void PokeSum_FlipPages_HandleBgHofs(void);
-static void SwapMonMoveSlots(void);
-static void SwapBoxMonMoveSlots(void);
-static void UpdateCurrentMonBufferFromPartyOrBox(struct Pokemon * mon);
+static void PokeSum_HideSpritesBeforePageFlip(void);
+static void PokeSum_InitBgCoordsBeforePageFlips(void);
+static void PokeSum_PrintAbilityDataOrMoveTypes(void);
+static void PokeSum_PrintAbilityNameAndDesc(void);
+static void PokeSum_PrintBottomPaneText(void);
+static void PokeSum_PrintExpPoints_NextLv(void);
+static void PokeSum_PrintMonTypeIcons(void);
+static void PokeSum_PrintMoveName(u8 i);
+static void PokeSum_PrintPageHeaderText(u8 curPageIndex);
+static void PokeSum_PrintPageName(const u8 * str);
+static void PokeSum_PrintRightPaneText(void);
+static void PokeSum_PrintSelectedMoveStats(void);
+static void PokeSum_PrintTrainerMemo_Egg(void);
+static void PokeSum_PrintTrainerMemo_Mon_NotHeldByOT(void);
+static void PokeSum_PrintTrainerMemo_Mon(void);
+static void PokeSum_PrintTrainerMemo(void);
+static void PokeSum_RemoveWindows(u8 curPageIndex);
+static void PokeSum_SeekToNextMon(u8 taskId, s8 direction);
+static void PokeSum_SetHelpContext(void);
 static void PokeSum_SetMonPicSpriteCallback(u16 spriteId);
-static void SpriteCB_MoveSelectionCursor(struct Sprite *sprite);
-static void UpdateMonStatusIconObj(void);
-static void UpdateHpBarObjs(void);
-static void UpdateExpBarObjs(void);
+static void PokeSum_Setup_InitGpu(void);
+static void PokeSum_Setup_ResetCallbacks(void);
+static void PokeSum_Setup_SetVBlankCallback(void);
+static void PokeSum_Setup_SpritesReset(void);
+static void PokeSum_ShowOrHideMonIconSprite(u8 invisible);
+static void PokeSum_ShowOrHideMonMarkingsSprite(u8 invisible);
+static void PokeSum_ShowOrHideMonPicSprite(u8 invisible);
+static void PokeSum_ShowSpritesBeforePageFlip(void);
+static void PokeSum_TryPlayMonCry(void);
+static void PokeSum_UpdateBgPriorityForPageFlip(u8 setBg0Priority, u8 keepBg1Bg2PriorityOrder);
+static void PokeSum_UpdateMonMarkingsAnim(void);
+static void PokeSum_UpdateWin1ActiveFlag(u8 curPageIndex);
+static void PrintControlsString(void);
+static void PrintInfoPage(void);
+static void PrintMonLevelNickOnWindow2(const u8 *str);
+static void PrintMovesPage(void);
+static void PrintSkillsPage(void);
+static void ShowOrHideBallIconObj(u8 invisible);
+static void ShowOrHideExpBarObjs(u8 invisible);
+static void ShowOrHideHpBarObjs(u8 invisible);
+static void ShoworHideMoveSelectionCursor(u8 invisible);
+static void ShowOrHideStatusIcon(u8 invisible);
 static void ShowPokerusIconObjIfHasOrHadPokerus(void);
 static void ShowShinyStarObjIfMonShiny(void);
-static void PokeSum_DestroyMonMarkingsSprite(void);
-static void PokeSum_UpdateMonMarkingsAnim(void);
-static s8 SeekToNextMonInSingleParty(s8 direction);
-static s8 SeekToNextMonInMultiParty(s8 direction);
-static void CreateTypeIconSprites(void);
-static void UpdateMoveTypeIconSprites(void);
+static void SpriteCB_MoveSelectionCursor(struct Sprite *sprite);
+static void SwapBoxMonMoveSlots(void);
+static void SwapMonMoveSlots(void);
+static void Task_DestroyResourcesOnExit(u8 taskId);
+static void Task_FlipPages_FromInfo(u8 taskId);
+static void Task_HandleInput_SelectMove(u8 id);
+static void Task_InputHandler_SelectOrForgetMove(u8 taskId);
+static void Task_PokeSum_FlipPages(u8 taskId);
+static void Task_PokeSum_SwitchDisplayedPokemon(u8 taskId);
+static void UpdateCurrentMonBufferFromPartyOrBox(struct Pokemon * mon);
+static void UpdateExpBarObjs(void);
+static void UpdateHpBarObjs(void);
+static void UpdateMonStatusIconObj(void);
 static void UpdateMonTypeIconSprites(bool32 isInfoPage);
-static void HideMoveTypeIcons(void);
-static void HideMonTypeIcons(void);
-static void DestroyTypeIconSprites(void);
+static void UpdateMoveTypeIconSprites(void);
 
 struct PokemonSummaryScreenData
 {
@@ -1948,19 +1945,19 @@ static u8 PokeSum_HandleCreateSprites(void)
     switch (sMonSummaryScreen->spriteCreationStep)
     {
     case 0:
-        CreateShinyStarObj(TAG_PSS_UNK_A0, TAG_PSS_UNK_A0);
+        CreateShinyIconSprite(TAG_PSS_UNK_A0, TAG_PSS_UNK_A0);
         break;
     case 1:
-        CreatePokerusIconObj(TAG_PSS_UNK_96, TAG_PSS_UNK_96);
+        CreatePokerusIconSprite(TAG_PSS_UNK_96, TAG_PSS_UNK_96);
         break;
     case 2:
         PokeSum_CreateMonMarkingsSprite();
         break;
     case 3:
-        CreateMoveSelectionCursorObjs(TAG_PSS_UNK_64, TAG_PSS_UNK_64);
+        CreateMoveSelectionCursorSprites(TAG_PSS_UNK_64, TAG_PSS_UNK_64);
         break;
     case 4:
-        CreateMonStatusIconObj(TAG_PSS_UNK_6E, TAG_PSS_UNK_6E);
+        CreateStatusIconSprite(TAG_PSS_UNK_6E, TAG_PSS_UNK_6E);
         break;
     case 5:
         CreateHpBarObjs(TAG_PSS_UNK_78, TAG_PSS_UNK_78);
@@ -3901,7 +3898,7 @@ static struct Sprite *CreateIconSprite(const u32 *tiles, u32 size, const u16 *pa
     return &gSprites[spriteId];
 }
 
-static void CreateMoveSelectionCursorObjs(u16 tileTag, u16 palTag)
+static void CreateMoveSelectionCursorSprites(u16 tileTag, u16 palTag)
 {
     u8 i;
     u8 spriteId;
@@ -4015,7 +4012,7 @@ static void DestroyMoveSelectionCursorObjs(void)
     }
 }
 
-static void CreateMonStatusIconObj(u16 tileTag, u16 palTag)
+static void CreateStatusIconSprite(u16 tileTag, u16 palTag)
 {
     sStatusIcon = CreateIconSprite(gSummaryScreen_StatusAilmentIcon_Gfx, 0x20 * 32, gSummaryScreen_StatusAilmentIcon_Pal, &sStatusAilmentIconOamData, sStatusAilmentIconAnimTable, tileTag, palTag, 0, 0);
     ShowOrHideStatusIcon(TRUE);
@@ -4257,9 +4254,6 @@ static void CreateExpBarObjs(u16 tileTag, u16 palTag)
             .paletteTag = palTag,
             .oam = &sHpOrExpBarOamData,
             .anims = sHpOrExpBarAnimTable,
-            .images = NULL,
-            .affineAnims = gDummySpriteAffineAnimTable,
-            .callback = SpriteCallbackDummy,
         };
 
         sExpBarObjs->xpos[i] = i * 8 + 156;
@@ -4358,7 +4352,7 @@ static void ShowOrHideExpBarObjs(u8 invisible)
         sExpBarObjs->sprites[i]->invisible = invisible;
 }
 
-static void CreatePokerusIconObj(u16 tileTag, u16 palTag)
+static void CreatePokerusIconSprite(u16 tileTag, u16 palTag)
 {
     sPokerusIconObj = CreateIconSprite(sPokerusIconObjTiles, 0x20 * 1, sPokerusIconObjPal, &sPokerusIconObjOamData, sPokerusIconObjAnimTable, tileTag, palTag, 114, 92);
     HideShowPokerusIcon(TRUE);
@@ -4407,41 +4401,11 @@ static void HideShowPokerusIcon(bool8 invisible)
     }
 }
 
-static void CreateShinyStarObj(u16 tileTag, u16 palTag)
+static void CreateShinyIconSprite(u16 tileTag, u16 palTag)
 {
-    u16 spriteId;
-    void *gfxBufferPtr;
-
-    gfxBufferPtr = AllocZeroed(0x20 * 2);
-
-    DecompressDataWithHeaderWram(sStarObjTiles, gfxBufferPtr);
-
-    struct SpriteSheet sheet = {
-        .data = gfxBufferPtr,
-        .size = 0x20 * 2,
-        .tag = tileTag
-    };
-
-    struct SpritePalette palette = {.data = sStarObjPal, .tag = palTag};
-    struct SpriteTemplate template = {
-        .tileTag = tileTag,
-        .paletteTag = palTag,
-        .oam = &sStarObjOamData,
-        .anims = sStarObjAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
-    };
-
-    LoadSpriteSheet(&sheet);
-    LoadSpritePalette(&palette);
-    spriteId = CreateSprite(&template, 106, 40, 0);
-    sShinyStarObjData = &gSprites[spriteId];
-
+    sShinyStarObjData = CreateIconSprite(sStarObjTiles, 0x20 * 2, sStarObjPal, &sStarObjOamData, sStarObjAnimTable, tileTag, palTag, 106, 40);
     HideShowShinyStar(TRUE);
     ShowShinyStarObjIfMonShiny();
-
-    TRY_FREE_AND_SET_NULL(gfxBufferPtr);
 }
 
 static void DestroyShinyStarObj(void)
