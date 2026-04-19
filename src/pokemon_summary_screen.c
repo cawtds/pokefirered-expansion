@@ -159,7 +159,7 @@ static void PokeSum_PrintTrainerMemo(void);
 static void PokeSum_RemoveWindows(u8 curPageIndex);
 static void ChangeSummaryPokemon(u8 taskId, s8 direction);
 static void PokeSum_SetHelpContext(void);
-static void PokeSum_SetMonPicSpriteCallback(u16 spriteId);
+static void SetMonPicSpriteCallback(u16 spriteId);
 static void PokeSum_Setup_InitGpu(void);
 static void PokeSum_Setup_SetVBlankCallback(void);
 static void PokeSum_Setup_SpritesReset(void);
@@ -3737,45 +3737,32 @@ static void PokeSum_CreateMonPicSprite(void)
     sMonSummaryScreen->monPicSpriteId = spriteId;
 
     PokeSum_ShowOrHideMonPicSprite(TRUE);
-    PokeSum_SetMonPicSpriteCallback(spriteId);
+    SetMonPicSpriteCallback(spriteId);
 }
 
-static void PokeSum_SetMonPicSpriteCallback(u16 spriteId)
+static void SetEggPicSpriteCallback(struct Sprite *sprite)
 {
-    u16 curHp;
-    u16 maxHp;
+    u8 friendship = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_FRIENDSHIP);
 
-    sMonSummaryScreen->numMonPicBounces = 0;
-
-    if (sMonSummaryScreen->isEgg == TRUE)
+    if (friendship <= 5)
     {
-        u8 friendship = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_FRIENDSHIP);
-
-        if (friendship <= 5)
-            sMonPicBounceState->vigor = 2;
-        else
-        {
-            if (friendship <= 10)
-                sMonPicBounceState->vigor = 1;
-            else if (friendship <= 40)
-                sMonPicBounceState->vigor = 0;
-        }
-
-        gSprites[spriteId].callback = SpriteCB_PokeSum_EggPicShake;
-        return;
+        sMonPicBounceState->vigor = 2;
+    }
+    else
+    {
+        if (friendship <= 10)
+            sMonPicBounceState->vigor = 1;
+        else if (friendship <= 40)
+            sMonPicBounceState->vigor = 0;
     }
 
-    if (sMonSummaryScreen->curMonStatusAilment != AILMENT_NONE && sMonSummaryScreen->curMonStatusAilment != AILMENT_PKRS)
-    {
-        if (sMonSummaryScreen->curMonStatusAilment == AILMENT_FNT)
-            return;
+    sprite->callback = SpriteCB_PokeSum_EggPicShake;
+}
 
-        gSprites[spriteId].callback = SpriteCB_MonPicDummy;
-        return;
-    }
-
-    curHp = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_HP);
-    maxHp = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_MAX_HP);
+static void SetDefaultMonPicSpriteCallback(struct Sprite *sprite)
+{
+    u16 curHp = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_HP);
+    u16 maxHp = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_MAX_HP);
 
     if (curHp == maxHp)
         sMonPicBounceState->vigor = 3;
@@ -3786,7 +3773,34 @@ static void PokeSum_SetMonPicSpriteCallback(u16 spriteId)
     else
         sMonPicBounceState->vigor = 0;
 
-    gSprites[spriteId].callback = SpriteCB_PokeSum_MonPicSprite;
+    sprite->callback = SpriteCB_PokeSum_MonPicSprite;
+}
+
+static void SetStatusMonPicSpriteCallback(struct Sprite *sprite)
+{
+    if (sMonSummaryScreen->curMonStatusAilment == AILMENT_FNT)
+        return;
+
+    sprite->callback = SpriteCB_MonPicDummy;
+}
+
+static void SetMonPicSpriteCallback(u16 spriteId)
+{
+    sMonSummaryScreen->numMonPicBounces = 0;
+
+    if (sMonSummaryScreen->isEgg == TRUE)
+    {
+        SetEggPicSpriteCallback(&gSprites[spriteId]);
+        return;
+    }
+
+    if (sMonSummaryScreen->curMonStatusAilment != AILMENT_NONE && sMonSummaryScreen->curMonStatusAilment != AILMENT_PKRS)
+    {
+        SetStatusMonPicSpriteCallback(&gSprites[spriteId]);
+        return;
+    }
+
+    SetDefaultMonPicSpriteCallback(&gSprites[spriteId]);
 }
 
 static void PokeSum_ShowOrHideMonPicSprite(u8 invisible)
