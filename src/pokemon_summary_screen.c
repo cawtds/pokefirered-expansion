@@ -156,7 +156,7 @@ static void PokeSum_PrintTrainerMemo_Egg(void);
 static void PokeSum_PrintTrainerMemo_Mon_NotHeldByOT(void);
 static void PokeSum_PrintTrainerMemo_Mon(void);
 static void PokeSum_PrintTrainerMemo(void);
-static void PokeSum_RemoveWindows(u8 curPageIndex);
+static void PokeSum_RemoveWindows(void);
 static void ChangeSummaryPokemon(u8 taskId, s8 direction);
 static void PokeSum_SetHelpContext(void);
 static void SetMonPicSpriteCallback(u16 spriteId);
@@ -606,9 +606,9 @@ static void Task_InputHandler_Info(u8 taskId)
     case PSS_STATE_HANDLEINPUT:
         if (IsActiveOverworldLinkBusy() == TRUE)
             return;
-        else if (IsLinkRecvQueueAtOverworldMax() == TRUE)
+        if (IsLinkRecvQueueAtOverworldMax() == TRUE)
             return;
-        else if (FuncIsActiveTask(Task_PokeSum_SwitchDisplayedPokemon))
+        if (FuncIsActiveTask(Task_PokeSum_SwitchDisplayedPokemon))
             return;
 
         if (sMonSummaryScreen->curPageIndex != PSS_PAGE_MOVES_INFO)
@@ -625,7 +625,7 @@ static void Task_InputHandler_Info(u8 taskId)
                     PlaySE(SE_SELECT);
                     HideBg(0);
                     sMonSummaryScreen->pageFlipDirection = 1;
-                    PokeSum_RemoveWindows(sMonSummaryScreen->curPageIndex);
+                    PokeSum_RemoveWindows();
                     sMonSummaryScreen->curPageIndex++;
                     sMonSummaryScreen->screenState = PSS_STATE_FLIPPAGES;
                 }
@@ -643,7 +643,7 @@ static void Task_InputHandler_Info(u8 taskId)
                     PlaySE(SE_SELECT);
                     HideBg(0);
                     sMonSummaryScreen->pageFlipDirection = 0;
-                    PokeSum_RemoveWindows(sMonSummaryScreen->curPageIndex);
+                    PokeSum_RemoveWindows();
                     sMonSummaryScreen->curPageIndex--;
                     sMonSummaryScreen->screenState = PSS_STATE_FLIPPAGES;
                 }
@@ -701,7 +701,7 @@ static void Task_InputHandler_Info(u8 taskId)
                 {
                     PlaySE(SE_SELECT);
                     sMonSummaryScreen->pageFlipDirection = 1;
-                    PokeSum_RemoveWindows(sMonSummaryScreen->curPageIndex);
+                    PokeSum_RemoveWindows();
                     sMonSummaryScreen->curPageIndex++;
                     sMonSummaryScreen->screenState = PSS_STATE_FLIPPAGES;
                 }
@@ -753,9 +753,9 @@ static void Task_InputHandler_Info(u8 taskId)
         sMonSummaryScreen->screenState = PSS_STATE_ATEXIT_WAITLINKDELAY;
         break;
     case PSS_STATE_ATEXIT_WAITLINKDELAY:
-        if (Overworld_LinkRecvQueueLengthMoreThan2() == TRUE)
+        if (Overworld_IsRecvQueueAtMax() == TRUE)
             return;
-        else if (IsLinkRecvQueueAtOverworldMax() == TRUE)
+        if (IsLinkRecvQueueAtOverworldMax() == TRUE)
             return;
 
         sMonSummaryScreen->screenState = PSS_STATE_ATEXIT_WAITFADE;
@@ -763,7 +763,6 @@ static void Task_InputHandler_Info(u8 taskId)
     default:
         if (!gPaletteFade.active)
             Task_DestroyResourcesOnExit(taskId);
-
         break;
     }
 }
@@ -2667,7 +2666,7 @@ static void Task_DestroyResourcesOnExit(u8 taskId)
     if (IsCryPlayingOrClearCrySongs() == TRUE)
         StopCryAndClearCrySongs();
 
-    PokeSum_RemoveWindows(sMonSummaryScreen->curPageIndex);
+    PokeSum_RemoveWindows();
     FreeAllWindowBuffers();
     DestroyTask(taskId);
     SetMainCallback2(sMonSummaryScreen->savedCallback);
@@ -2900,13 +2899,10 @@ static void PokeSum_AddWindows(enum PokemonSummaryScreenPage curPageIndex)
         sMonSummaryScreen->windowIds[i + 3] = AddWindow(&pageTemplate[i]);
 }
 
-static void PokeSum_RemoveWindows(u8 curPageIndex)
+static void PokeSum_RemoveWindows(void)
 {
-    u8 i;
-
-    for (i = 0; i < 7; i++)
+    for (u32 i = 0; i < ARRAY_COUNT(sMonSummaryScreen->windowIds); i++)
         RemoveWindow(sMonSummaryScreen->windowIds[i]);
-
 }
 
 static void PokeSum_SetHelpContext(void)
@@ -3297,7 +3293,7 @@ static void Task_HandleInput_SelectMove(u8 taskId)
                 sMonSummaryScreen->isSwappingMoves = FALSE;
                 ShoworHideMoveSelectionCursor(TRUE);
                 sMonSummaryScreen->pageFlipDirection = 0;
-                PokeSum_RemoveWindows(sMonSummaryScreen->curPageIndex);
+                PokeSum_RemoveWindows();
                 sMonSummaryScreen->curPageIndex--;
                 sMonSummaryScreen->selectMoveInputHandlerState = 1;
                 return;
@@ -3351,7 +3347,7 @@ static void Task_HandleInput_SelectMove(u8 taskId)
             HideMonTypeIcons();
             ShoworHideMoveSelectionCursor(TRUE);
             sMonSummaryScreen->pageFlipDirection = 0;
-            PokeSum_RemoveWindows(sMonSummaryScreen->curPageIndex);
+            PokeSum_RemoveWindows();
             sMonSummaryScreen->curPageIndex--;
             sMonSummaryScreen->selectMoveInputHandlerState = 1;
         }
@@ -4717,7 +4713,7 @@ static void Task_PokeSum_SwitchDisplayedPokemon(u8 taskId)
         sMonSummaryScreen->switchMonTaskState++;
         break;
     case 11:
-        if (!Overworld_LinkRecvQueueLengthMoreThan2() && !IsLinkRecvQueueAtOverworldMax())
+        if (!Overworld_IsRecvQueueAtMax() && !IsLinkRecvQueueAtOverworldMax())
         {
             PokeSum_CreateSprites();
             PlayMonCry();
