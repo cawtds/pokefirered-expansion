@@ -3874,6 +3874,33 @@ static void PokeSum_DestroyMonIconSprite(void)
     FreeAndDestroyMonIconSprite(&gSprites[sMonSummaryScreen->monIconSpriteId]);
 }
 
+static struct Sprite *CreateIconSprite(const u32 *tiles, u32 size, const u16 *palData, const struct OamData *oam, const union AnimCmd *const *anims, u16 tileTag, u16 palTag, s16 x, s16 y)
+{
+    u16 spriteId;
+    void *buffer = AllocZeroed(size);
+
+    DecompressDataWithHeaderWram(tiles, buffer);
+
+    struct SpriteSheet sheet = { .data = buffer, .size = size, .tag = tileTag };
+    struct SpritePalette palette = { .data = palData, .tag = palTag };
+    struct SpriteTemplate template =
+    {
+        .tileTag = tileTag,
+        .paletteTag = palTag,
+        .oam = oam,
+        .anims = anims,
+    };
+
+    LoadSpriteSheet(&sheet);
+    LoadSpritePalette(&palette);
+
+    spriteId = CreateSprite(&template, 114, 92, 0);
+
+    TRY_FREE_AND_SET_NULL(buffer);
+
+    return &gSprites[spriteId];
+}
+
 static void CreateMoveSelectionCursorObjs(u16 tileTag, u16 palTag)
 {
     u8 i;
@@ -3990,37 +4017,9 @@ static void DestroyMoveSelectionCursorObjs(void)
 
 static void CreateMonStatusIconObj(u16 tileTag, u16 palTag)
 {
-    u16 spriteId;
-    void *gfxBufferPtr = AllocZeroed(0x20 * 32);
-
-    DecompressDataWithHeaderWram(gSummaryScreen_StatusAilmentIcon_Gfx, gfxBufferPtr);
-
-    struct SpriteSheet sheet = {
-        .data = gfxBufferPtr,
-        .size = 0x20 * 32,
-        .tag = tileTag
-    };
-
-    struct SpritePalette palette = {.data = gSummaryScreen_StatusAilmentIcon_Pal, .tag = palTag};
-    struct SpriteTemplate template = {
-        .tileTag = tileTag,
-        .paletteTag = palTag,
-        .oam = &sStatusAilmentIconOamData,
-        .anims = sStatusAilmentIconAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
-    };
-
-    LoadSpriteSheet(&sheet);
-    LoadSpritePalette(&palette);
-
-    spriteId = CreateSprite(&template, 0, 0, 0);
-    sStatusIcon = &gSprites[spriteId];
-
+    sStatusIcon = CreateIconSprite(gSummaryScreen_StatusAilmentIcon_Gfx, 0x20 * 32, gSummaryScreen_StatusAilmentIcon_Pal, &sStatusAilmentIconOamData, sStatusAilmentIconAnimTable, tileTag, palTag, 0, 0);
     ShowOrHideStatusIcon(TRUE);
     UpdateMonStatusIconObj();
-    TRY_FREE_AND_SET_NULL(gfxBufferPtr);
 }
 
 static void DestroyMonStatusIconObj(void)
@@ -4361,40 +4360,9 @@ static void ShowOrHideExpBarObjs(u8 invisible)
 
 static void CreatePokerusIconObj(u16 tileTag, u16 palTag)
 {
-    u16 spriteId;
-    void *gfxBufferPtr;
-
-    gfxBufferPtr = AllocZeroed(0x20 * 1);
-
-    DecompressDataWithHeaderWram(sPokerusIconObjTiles, gfxBufferPtr);
-
-    struct SpriteSheet sheet = {
-        .data = gfxBufferPtr,
-        .size = 0x20 * 1,
-        .tag = tileTag
-    };
-
-    struct SpritePalette palette = {.data = sPokerusIconObjPal, .tag = palTag};
-    struct SpriteTemplate template = {
-        .tileTag = tileTag,
-        .paletteTag = palTag,
-        .oam = &sPokerusIconObjOamData,
-        .anims = sPokerusIconObjAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
-    };
-
-    LoadSpriteSheet(&sheet);
-    LoadSpritePalette(&palette);
-
-    spriteId = CreateSprite(&template, 114, 92, 0);
-    sPokerusIconObj = &gSprites[spriteId];
-
+    sPokerusIconObj = CreateIconSprite(sPokerusIconObjTiles, 0x20 * 1, sPokerusIconObjPal, &sPokerusIconObjOamData, sPokerusIconObjAnimTable, tileTag, palTag, 114, 92);
     HideShowPokerusIcon(TRUE);
     ShowPokerusIconObjIfHasOrHadPokerus();
-
-    TRY_FREE_AND_SET_NULL(gfxBufferPtr);
 }
 
 static void DestroyPokerusIconObj(void)
