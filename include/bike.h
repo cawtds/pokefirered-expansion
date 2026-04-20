@@ -39,15 +39,14 @@ enum
     ACRO_STATE_TURN_JUMP,
 };
 
-void BikeClearState(u32 directionHistory, u32 abStartSelectHistory);
-bool8 IsBikingDisallowedByPlayer(void);
-void GetOnOffBike(bool32 dowsing);
-s16 GetPlayerSpeed(void);
-bool8 RS_IsRunningDisallowed(u8 r0);
-void MovePlayerOnBike(u8 direction, u16 newKeys, u16 heldKeys);
 bool32 IsRunningDisallowed(u8 metatileBehavior);
+bool32 IsBikingDisallowedByPlayer(void);
+bool32 IsPlayerNotUsingAcroBikeOnBumpySlope(void);
+s16 GetPlayerSpeed(void);
 void Bike_HandleBumpySlopeJump(void);
 void Bike_UpdateBikeCounterSpeed(u8 counter);
-bool8 IsPlayerNotUsingAcroBikeOnBumpySlope(void);
+void BikeClearState(void);
+void GetOnOffBike(enum AvatarState transitionState);
+void MovePlayerOnBike(u8 direction, u16 newKeys, u16 heldKeys);
 
 #endif //GUARD_BIKE_H

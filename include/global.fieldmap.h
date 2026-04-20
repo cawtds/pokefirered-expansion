@@ -309,7 +309,7 @@ struct ObjectEventGraphicsInfo
     /*0x20*/ const union AffineAnimCmd *const *affineAnims;
 };
 
-enum PlayerState
+enum __attribute__((packed)) AvatarState
 {
     PLAYER_AVATAR_STATE_NORMAL,
     PLAYER_AVATAR_STATE_MACH_BIKE,
@@ -323,8 +323,6 @@ enum PlayerState
 
     PLAYER_AVATAR_STATE_COUNT,
 };
-
-#define PLAYER_AVATAR_FLAG_SURFING      (1 << PLAYER_AVATAR_STATE_SURFING)
 
 enum
 {
@@ -376,8 +374,8 @@ enum
 
 struct PlayerAvatar
 {
-    enum PlayerState playerState;
-    enum PlayerState transitionState;
+    enum AvatarState playerState;
+    enum AvatarState transitionState;
     bool8 forced:1;
     bool8 forcedTransition:1;
     bool8 dashing:1;

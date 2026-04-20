@@ -262,7 +262,7 @@ void Task_UseORASDowsingMachine(u8 taskId)
     else
     {
         if (IsPlayerBiking())
-            GetOnOffBike(TRUE);
+            GetOnOffBike(PLAYER_AVATAR_STATE_COUNT);
 
         StartORASDowseFieldEffect();
     }

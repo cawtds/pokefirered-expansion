@@ -70,7 +70,7 @@ static void QL_GfxTransition_Bike(void)
     QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_MACH_BIKE));
     ObjectEventTurn(objectEvent, objectEvent->movementDirection);
     SetPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE);
-    BikeClearState(0, 0);
+    BikeClearState();
 }
 
 static void QL_GfxTransition_Fish(void)

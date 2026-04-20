@@ -304,8 +304,8 @@ static void ItemUseOnFieldCB_Bicycle(u8 taskId)
 {
     if (!IsPlayerBiking())
         PlaySE(SE_BIKE_BELL);
-    GetOnOffBike(FALSE);
 
+    GetOnOffBike(PLAYER_AVATAR_STATE_MACH_BIKE);
     FollowerNPC_HandleBike();
     ScriptUnfreezeObjectEvents();
     UnlockPlayerFieldControls();

@@ -30,7 +30,7 @@
 #include "constants/songs.h"
 #include "constants/trainer_types.h"
 
-static EWRAM_DATA struct ObjectEvent * sPlayerObjectPtr = NULL;
+static EWRAM_DATA struct ObjectEvent *sPlayerObjectPtr = NULL;
 static EWRAM_DATA u8 sTeleportSavedFacingDirection = DIR_NONE;
 EWRAM_DATA struct ObjectEvent gObjectEvents[OBJECT_EVENTS_COUNT] = {};
 EWRAM_DATA struct PlayerAvatar gPlayerAvatar = {};
@@ -720,13 +720,13 @@ static void CheckAcroBikeCollision(s16 x, s16 y, u8 metatileBehavior, u8 *collis
     }
 }
 
-void SetPlayerAvatarTransitionState(enum PlayerState transitionState)
+void SetPlayerAvatarTransitionState(enum AvatarState transitionState)
 {
     gPlayerAvatar.transitionState = transitionState;
     DoPlayerAvatarTransition();
 }
 
-static void (*const sPlayerAvatarStateTransitionFuncs[])(struct ObjectEvent *) =
+static void (*const sPlayerAvatarStateTransitionFuncs[PLAYER_AVATAR_STATE_COUNT])(struct ObjectEvent *) =
 {
     [PLAYER_AVATAR_STATE_NORMAL]       = PlayerAvatarTransition_Normal,
     [PLAYER_AVATAR_STATE_MACH_BIKE]    = PlayerAvatarTransition_Bike,
@@ -749,8 +749,8 @@ static void ResetTransitionStates(void)
 
 static void DoPlayerAvatarTransition(void)
 {
-    enum PlayerState transitionState = gPlayerAvatar.transitionState;
-    if (transitionState != PLAYER_AVATAR_STATE_COUNT)
+    enum AvatarState transitionState = gPlayerAvatar.transitionState;
+    if (transitionState < PLAYER_AVATAR_STATE_COUNT)
         sPlayerAvatarStateTransitionFuncs[transitionState](&gObjectEvents[gPlayerAvatar.objectEventId]);
 
     if (gPlayerAvatar.controllableTransition)
@@ -774,7 +774,7 @@ static void PlayerAvatarTransition_Bike(struct ObjectEvent * playerObjEvent)
 {
     QuestLogTryRecordPlayerAvatarGfxTransition(QL_PLAYER_GFX_BIKE);
     QuestLogCallUpdatePlayerSprite(QL_PLAYER_GFX_BIKE);
-    BikeClearState(0, 0);
+    BikeClearState();
 }
 
 static void PlayerAvatarTransition_Surfing(struct ObjectEvent * playerObjEvent)
@@ -1097,12 +1097,12 @@ void MovePlayerToMapCoords(s16 x, s16 y)
     MoveObjectEventToMapCoords(&gObjectEvents[gPlayerAvatar.objectEventId], x, y);
 }
 
-bool32 TestPlayerAvatarState(enum PlayerState state)
+bool32 TestPlayerAvatarState(enum AvatarState state)
 {
     return gPlayerAvatar.playerState == state;
 }
 
-enum PlayerState GetPlayerAvatarState(void)
+enum AvatarState GetPlayerAvatarState(void)
 {
     return gPlayerAvatar.playerState;
 }
@@ -1148,12 +1148,12 @@ static const enum ObjectEventGfx sHoennLinkPartnerGfxIds[GENDER_COUNT] =
     OBJ_EVENT_GFX_RS_MAY
 };
 
-enum ObjectEventGfx GetRivalAvatarGraphicsIdByStateIdAndGender(enum PlayerState state, enum Gender gender)
+enum ObjectEventGfx GetRivalAvatarGraphicsIdByStateIdAndGender(enum AvatarState state, enum Gender gender)
 {
     return GetPlayerAvatarGraphicsIdByStateIdAndGender(state, gender);
 }
 
-enum ObjectEventGfx GetPlayerAvatarGraphicsIdByStateIdAndGender(enum PlayerState state, enum Gender gender)
+enum ObjectEventGfx GetPlayerAvatarGraphicsIdByStateIdAndGender(enum AvatarState state, enum Gender gender)
 {
     return sPlayerAvatarGfxIds[state][gender];
 }
@@ -1163,7 +1163,7 @@ enum ObjectEventGfx GetRSAvatarGraphicsIdByGender(enum Gender gender)
     return sHoennLinkPartnerGfxIds[gender];
 }
 
-enum ObjectEventGfx GetPlayerAvatarGraphicsIdByStateId(enum PlayerState state)
+enum ObjectEventGfx GetPlayerAvatarGraphicsIdByStateId(enum AvatarState state)
 {
     return GetPlayerAvatarGraphicsIdByStateIdAndGender(state, gPlayerAvatar.gender);
 }
@@ -1216,14 +1216,14 @@ void ClearPlayerAvatarInfo(void)
     memset(&gPlayerAvatar, 0, sizeof(struct PlayerAvatar));
 }
 
-void SetPlayerAvatarState(enum PlayerState playerState)
+void SetPlayerAvatarState(enum AvatarState playerState)
 {
     gPlayerAvatar.playerState = playerState;
 }
 
-enum PlayerState GetPlayerAvatarStateTransitionByGraphicsId(enum ObjectEventGfx graphicsId, enum Gender gender)
+enum AvatarState GetPlayerAvatarStateTransitionByGraphicsId(enum ObjectEventGfx graphicsId, enum Gender gender)
 {
-    for (enum PlayerState playerState = PLAYER_AVATAR_STATE_NORMAL; playerState < PLAYER_AVATAR_STATE_COUNT; playerState++)
+    for (enum AvatarState playerState = PLAYER_AVATAR_STATE_NORMAL; playerState < PLAYER_AVATAR_STATE_COUNT; playerState++)
     {
         if (sPlayerAvatarGfxIds[playerState][gender] == graphicsId)
             return playerState;
@@ -1239,7 +1239,7 @@ enum ObjectEventGfx GetPlayerAvatarGraphicsIdByCurrentState(void)
 
 void SetPlayerAvatarExtraStateTransition(enum ObjectEventGfx graphicsId)
 {
-    enum PlayerState playerState = GetPlayerAvatarStateTransitionByGraphicsId(graphicsId, gPlayerAvatar.gender);
+    enum AvatarState playerState = GetPlayerAvatarStateTransitionByGraphicsId(graphicsId, gPlayerAvatar.gender);
 
     gPlayerAvatar.transitionState = playerState;
     gPlayerAvatar.controllableTransition = TRUE;

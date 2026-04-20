@@ -10,20 +10,20 @@
 #include "constants/map_types.h"
 #include "constants/songs.h"
 
-static u8 GetBikeTransitionId(u8 *, u16, u16);
-static void Bike_SetBikeStill(void);
+static bool8 MetatileBehaviorForbidsBiking(u8);
+static u8 BikeInputHandler_Normal(u8 *, u16, u16);
+static u8 BikeInputHandler_Slope(u8 *, u16, u16);
+static u8 BikeInputHandler_Turning(u8 *, u16, u16);
 static u8 CanBikeFaceDirectionOnRail(u8 direction, u8 metatileBehavior);
 static u8 GetBikeCollision(u8);
 static u8 GetBikeCollisionAt(struct ObjectEvent *playerObjEvent, s16 x, s16 y, u8 direction, u8 metatileBehavior);
-static bool8 MetatileBehaviorForbidsBiking(u8);
+static u8 GetBikeTransitionId(u8 *, u16, u16);
+static void Bike_SetBikeStill(void);
 static void BikeTransition_FaceDirection(u8);
 static void BikeTransition_TurnDirection(u8);
 static void BikeTransition_MoveDirection(u8);
 static void BikeTransition_Downhill(u8);
 static void BikeTransition_Uphill(u8);
-static u8 BikeInputHandler_Normal(u8 *, u16, u16);
-static u8 BikeInputHandler_Turning(u8 *, u16, u16);
-static u8 BikeInputHandler_Slope(u8 *, u16, u16);
 
 static void (*const sBikeTransitions[])(u8) =
 {
@@ -254,16 +254,6 @@ static u8 GetBikeCollisionAt(struct ObjectEvent *playerObjEvent, s16 x, s16 y, u
     return retVal;
 }
 
-bool8 RS_IsRunningDisallowed(u8 r0)
-{
-    if (MetatileBehaviorForbidsBiking(r0))
-        return TRUE;
-    if (gMapHeader.mapType != MAP_TYPE_INDOOR)
-        return FALSE;
-    else
-        return TRUE;
-}
-
 bool32 IsRunningDisallowed(u8 metatileBehavior)
 {
     if ((OW_RUNNING_INDOORS == GEN_3 && !gMapHeader.allowRunning) || MetatileBehaviorForbidsBiking(metatileBehavior) == TRUE)
@@ -298,7 +288,7 @@ static bool8 CanBikeFaceDirectionOnRail(u8 direction, u8 metatileBehavior)
     return TRUE;
 }
 
-bool8 IsBikingDisallowedByPlayer(void)
+bool32 IsBikingDisallowedByPlayer(void)
 {
     s16 x, y;
     u8 metatileBehavior;
@@ -313,7 +303,7 @@ bool8 IsBikingDisallowedByPlayer(void)
     return TRUE;
 }
 
-bool8 IsPlayerNotUsingAcroBikeOnBumpySlope(void)
+bool32 IsPlayerNotUsingAcroBikeOnBumpySlope(void)
 {
     if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE))
     {
@@ -323,7 +313,7 @@ bool8 IsPlayerNotUsingAcroBikeOnBumpySlope(void)
     return TRUE;
 }
 
-void GetOnOffBike(bool32 dowsing)
+void GetOnOffBike(enum AvatarState transitionState)
 {
     if (IsPlayerBiking())
     {
@@ -334,7 +324,7 @@ void GetOnOffBike(bool32 dowsing)
     else
     {
         EndORASDowsing();
-        SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_MACH_BIKE);
+        SetPlayerAvatarTransitionState(transitionState);
         if (Overworld_MusicCanOverrideMapMusic(MUS_CYCLING))
         {
             Overworld_SetSavedMusic(MUS_CYCLING);
@@ -343,7 +333,7 @@ void GetOnOffBike(bool32 dowsing)
     }
 }
 
-void BikeClearState(u32 directionHistory, u32 abStartSelectHistory)
+void BikeClearState(void)
 {
     u8 i;
 
@@ -351,8 +341,8 @@ void BikeClearState(u32 directionHistory, u32 abStartSelectHistory)
     gPlayerAvatar.newDirBackup = 0;
     gPlayerAvatar.bikeFrameCounter = 0;
     gPlayerAvatar.bikeSpeed = PLAYER_SPEED_STANDING;
-    gPlayerAvatar.directionHistory = directionHistory;
-    gPlayerAvatar.abStartSelectHistory = abStartSelectHistory;
+    gPlayerAvatar.directionHistory = 0;
+    gPlayerAvatar.abStartSelectHistory = 0;
     gPlayerAvatar.lastSpinTile = 0;
     for (i = 0; i < ARRAY_COUNT(gPlayerAvatar.dirTimerHistory); ++i)
             gPlayerAvatar.dirTimerHistory[i] = 0;
@@ -376,12 +366,12 @@ s16 GetPlayerSpeed(void)
 
     if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_MACH_BIKE)
         return machBikeSpeeds[gPlayerAvatar.bikeFrameCounter];
-    else if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_ACRO_BIKE)
+    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_ACRO_BIKE)
         return PLAYER_SPEED_FASTER;
-    else if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_SURFING || gPlayerAvatar.dashing)
+    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_SURFING || gPlayerAvatar.dashing)
         return PLAYER_SPEED_FAST;
-    else
-        return PLAYER_SPEED_NORMAL;
+
+    return PLAYER_SPEED_NORMAL;
 }
 
 void Bike_HandleBumpySlopeJump(void)
@@ -389,15 +379,15 @@ void Bike_HandleBumpySlopeJump(void)
     s16 x, y;
     u8 tileBehavior;
 
-    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_ACRO_BIKE)
+    if (gPlayerAvatar.playerState != PLAYER_AVATAR_STATE_ACRO_BIKE)
+        return;
+
+    PlayerGetDestCoords(&x, &y);
+    tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+    if (MetatileBehavior_IsBumpySlope(tileBehavior))
     {
-        PlayerGetDestCoords(&x, &y);
-        tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
-        if (MetatileBehavior_IsBumpySlope(tileBehavior))
-        {
-            gPlayerAvatar.acroBikeState = BIKE_STATE_SLOPE;
-            PlayerUseAcroBikeOnBumpySlope(GetPlayerMovementDirection());
-        }
+        gPlayerAvatar.acroBikeState = BIKE_STATE_SLOPE;
+        PlayerUseAcroBikeOnBumpySlope(GetPlayerMovementDirection());
     }
 }
 
