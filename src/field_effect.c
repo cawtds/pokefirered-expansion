@@ -3618,7 +3618,7 @@ static void SurfFieldEffect_JumpOnSurfBlob(struct Task *task)
         return;
 
     objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-    ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+    ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_SURFING));
     ObjectEventClearHeldMovementIfFinished(objectEvent);
     ObjectEventSetHeldMovement(objectEvent, GetJumpSpecialMovementAction(objectEvent->movementDirection));
     FollowerNPC_FollowerToWater();
@@ -3718,11 +3718,11 @@ static void UseVsSeeker_ResetPlayerGraphics(struct Task *task)
         return;
 
     if (IsPlayerBiking())
-        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_MACH_BIKE));
+        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_MACH_BIKE));
     else if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_SURFING)
-        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_SURFING));
     else
-        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL));
+        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_NORMAL));
 
     ObjectEventForceSetHeldMovement(playerObj, GetFaceDirectionMovementAction(playerObj->facingDirection));
     task->tState = VS_SEEKER_END;
@@ -3898,7 +3898,7 @@ static void FlyOutFieldEffect_JumpOnBird(struct Task *task)
         return;
 
     objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-    ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+    ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_SURFING));
     StartSpriteAnim(&gSprites[objectEvent->spriteId], ANIM_GET_ON_OFF_POKEMON_WEST);
     objectEvent->inanimate = TRUE;
     ObjectEventSetHeldMovement(objectEvent, MOVEMENT_ACTION_JUMP_IN_PLACE_LEFT);
@@ -4155,7 +4155,7 @@ static void FlyInFieldEffect_BirdSwoopDown(struct Task *task)
     SetPlayerAvatarState(PLAYER_AVATAR_STATE_NORMAL);
     if (task->tAvatarState == PLAYER_AVATAR_STATE_SURFING)
         SetSurfBlob_BobState(playerObj->fieldEffectSpriteId, BOB_NONE);
-    ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+    ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_SURFING));
     CameraObjectFreeze();
     ObjectEventTurn(playerObj, DIR_WEST);
     StartSpriteAnim(&gSprites[playerObj->spriteId], ANIM_GET_ON_OFF_POKEMON_WEST);
@@ -4255,7 +4255,7 @@ static void FlyInFieldEffect_End(struct Task *task)
         state = PLAYER_AVATAR_STATE_SURFING;
         SetSurfBlob_BobState(playerObj->fieldEffectSpriteId, BOB_PLAYER_AND_MON);
     }
-    ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(state));
+    ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGfxForState(state));
     ObjectEventTurn(playerObj, DIR_SOUTH);
     gPlayerAvatar.playerState = task->tAvatarState;
     gPlayerAvatar.preventStep = FALSE;

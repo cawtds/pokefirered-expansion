@@ -1132,55 +1132,95 @@ void StopPlayerAvatar(void)
 
 static const enum ObjectEventGfx sPlayerAvatarGfxIds[PLAYER_AVATAR_STATE_COUNT][GENDER_COUNT] =
 {
-    [PLAYER_AVATAR_STATE_NORMAL]     = {OBJ_EVENT_GFX_RED_NORMAL,     OBJ_EVENT_GFX_GREEN_NORMAL},
-    [PLAYER_AVATAR_STATE_MACH_BIKE]  = {OBJ_EVENT_GFX_RED_BIKE,       OBJ_EVENT_GFX_GREEN_BIKE},
-    [PLAYER_AVATAR_STATE_ACRO_BIKE]  = {OBJ_EVENT_GFX_RED_BIKE,       OBJ_EVENT_GFX_GREEN_BIKE},
-    [PLAYER_AVATAR_STATE_SURFING]    = {OBJ_EVENT_GFX_RED_SURF,       OBJ_EVENT_GFX_GREEN_SURF},
-    [PLAYER_AVATAR_STATE_FIELD_MOVE] = {OBJ_EVENT_GFX_RED_FIELD_MOVE, OBJ_EVENT_GFX_GREEN_FIELD_MOVE},
-    [PLAYER_AVATAR_STATE_FISHING]    = {OBJ_EVENT_GFX_RED_FISH,       OBJ_EVENT_GFX_GREEN_FISH},
-    [PLAYER_AVATAR_STATE_VSSEEKER]   = {OBJ_EVENT_GFX_RED_VS_SEEKER,  OBJ_EVENT_GFX_GREEN_VS_SEEKER},
-    [PLAYER_AVATAR_STATE_WATERING]   = {OBJ_EVENT_GFX_RED_WATERING,   OBJ_EVENT_GFX_GREEN_WATERING},
+    [PLAYER_AVATAR_STATE_NORMAL] =
+    {
+        [MALE]   = OBJ_EVENT_GFX_RED_NORMAL,
+        [FEMALE] = OBJ_EVENT_GFX_GREEN_NORMAL,
+    },
+    [PLAYER_AVATAR_STATE_MACH_BIKE] =
+    {
+        [MALE]   = OBJ_EVENT_GFX_RED_BIKE,
+        [FEMALE] = OBJ_EVENT_GFX_GREEN_BIKE,
+    },
+    [PLAYER_AVATAR_STATE_ACRO_BIKE] =
+    {
+        [MALE]   = OBJ_EVENT_GFX_RED_BIKE,
+        [FEMALE] = OBJ_EVENT_GFX_GREEN_BIKE,
+    },
+    [PLAYER_AVATAR_STATE_SURFING] =
+    {
+        [MALE]   = OBJ_EVENT_GFX_RED_SURF,
+        [FEMALE] = OBJ_EVENT_GFX_GREEN_SURF,
+    },
+    [PLAYER_AVATAR_STATE_FIELD_MOVE] =
+    {
+        [MALE]   = OBJ_EVENT_GFX_RED_FIELD_MOVE,
+        [FEMALE] = OBJ_EVENT_GFX_GREEN_FIELD_MOVE,
+    },
+    [PLAYER_AVATAR_STATE_FISHING] =
+    {
+        [MALE]   = OBJ_EVENT_GFX_RED_FISH,
+        [FEMALE] = OBJ_EVENT_GFX_GREEN_FISH,
+    },
+    [PLAYER_AVATAR_STATE_VSSEEKER] =
+    {
+        [MALE]   = OBJ_EVENT_GFX_RED_VS_SEEKER,
+        [FEMALE] = OBJ_EVENT_GFX_GREEN_VS_SEEKER,
+    },
+    [PLAYER_AVATAR_STATE_WATERING] =
+    {
+        [MALE]   = OBJ_EVENT_GFX_RED_WATERING,
+        [FEMALE] = OBJ_EVENT_GFX_GREEN_WATERING,
+    },
 };
 
-static const enum ObjectEventGfx sHoennLinkPartnerGfxIds[GENDER_COUNT] =
+static inline enum ObjectEventGfx GetHoennPlayerAvatarGfx(enum Gender gender)
 {
-    OBJ_EVENT_GFX_RS_BRENDAN,
-    OBJ_EVENT_GFX_RS_MAY
-};
-
-enum ObjectEventGfx GetRivalAvatarGraphicsIdByStateIdAndGender(enum AvatarState state, enum Gender gender)
-{
-    return GetPlayerAvatarGraphicsIdByStateIdAndGender(state, gender);
+    return gender == MALE ? OBJ_EVENT_GFX_RS_BRENDAN : OBJ_EVENT_GFX_RS_MAY;
 }
 
-enum ObjectEventGfx GetPlayerAvatarGraphicsIdByStateIdAndGender(enum AvatarState state, enum Gender gender)
+enum ObjectEventGfx GetPlayerAvatarGfxForVersion(enum AvatarState state, enum Gender gender, enum GameVersion version)
 {
-    return sPlayerAvatarGfxIds[state][gender];
+    switch (version)
+    {
+        case VERSION_FIRE_RED:
+        case VERSION_LEAF_GREEN:
+        default:
+            return sPlayerAvatarGfxIds[state][gender];
+        case VERSION_SAPPHIRE:
+        case VERSION_RUBY:
+        case VERSION_EMERALD:
+            return GetHoennPlayerAvatarGfx(gender);
+    }
 }
 
-enum ObjectEventGfx GetRSAvatarGraphicsIdByGender(enum Gender gender)
+enum ObjectEventGfx GetPlayerAvatarGfxForGender(enum AvatarState state, enum Gender gender)
 {
-    return sHoennLinkPartnerGfxIds[gender];
+    return GetPlayerAvatarGfxForVersion(state, gender, GAME_VERSION);
 }
 
-enum ObjectEventGfx GetPlayerAvatarGraphicsIdByStateId(enum AvatarState state)
+enum ObjectEventGfx GetPlayerAvatarGfxForState(enum AvatarState state)
 {
-    return GetPlayerAvatarGraphicsIdByStateIdAndGender(state, gPlayerAvatar.gender);
+    return GetPlayerAvatarGfxForGender(state, gPlayerAvatar.gender);
+}
+
+enum ObjectEventGfx GetPlayerAvatarGfxForCurrentState(void)
+{
+    return GetPlayerAvatarGfxForGender(gPlayerAvatar.playerState, gPlayerAvatar.gender);
 }
 
 enum Gender GetPlayerAvatarGenderByGraphicsId(enum ObjectEventGfx graphicsId)
 {
-    switch (graphicsId)
+    for (enum AvatarState state = 0; state < ARRAY_COUNT(sPlayerAvatarGfxIds); state++)
     {
-    case OBJ_EVENT_GFX_GREEN_NORMAL:
-    case OBJ_EVENT_GFX_GREEN_BIKE:
-    case OBJ_EVENT_GFX_GREEN_SURF:
-    case OBJ_EVENT_GFX_GREEN_FIELD_MOVE:
-    case OBJ_EVENT_GFX_GREEN_FISH:
-        return FEMALE;
-    default:
-        return MALE;
+        const enum ObjectEventGfx *playerGraphicIds = sPlayerAvatarGfxIds[state];
+
+        for (enum Gender gender = 0; gender < ARRAY_COUNT(sPlayerAvatarGfxIds[state]); gender++)
+            if (graphicsId == playerGraphicIds[gender])
+                return gender;
     }
+
+    return MALE;
 }
 
 bool8 IsPlayerSurfingNorth(void)
@@ -1232,11 +1272,6 @@ enum AvatarState GetPlayerAvatarStateTransitionByGraphicsId(enum ObjectEventGfx 
     return PLAYER_AVATAR_STATE_NORMAL;
 }
 
-enum ObjectEventGfx GetPlayerAvatarGraphicsIdByCurrentState(void)
-{
-    return sPlayerAvatarGfxIds[gPlayerAvatar.playerState][gPlayerAvatar.gender];
-}
-
 void SetPlayerAvatarExtraStateTransition(enum ObjectEventGfx graphicsId)
 {
     enum AvatarState playerState = GetPlayerAvatarStateTransitionByGraphicsId(graphicsId, gPlayerAvatar.gender);
@@ -1253,7 +1288,7 @@ void InitPlayerAvatar(s16 x, s16 y, u8 direction, enum Gender gender)
     struct ObjectEvent *objectEvent;
 
     playerObjEventTemplate.localId = LOCALID_PLAYER;
-    playerObjEventTemplate.graphicsId = GetPlayerAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, gender);
+    playerObjEventTemplate.graphicsId = GetPlayerAvatarGfxForGender(PLAYER_AVATAR_STATE_NORMAL, gender);
     playerObjEventTemplate.x = x - 7;
     playerObjEventTemplate.y = y - 7;
     playerObjEventTemplate.elevation = 0;
@@ -1290,7 +1325,7 @@ void SetPlayerInvisibility(bool8 invisible)
 void StartPlayerAvatarSummonMonForFieldMoveAnim(void)
 {
     EndORASDowsing();
-    ObjectEventSetGraphicsId(&gObjectEvents[gPlayerAvatar.objectEventId], GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_FIELD_MOVE));
+    ObjectEventSetGraphicsId(&gObjectEvents[gPlayerAvatar.objectEventId], GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_FIELD_MOVE));
     StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], ANIM_FIELD_MOVE);
 }
 
@@ -1304,7 +1339,7 @@ u8 GetPlayerAvatarVsSeekerGfxId(void)
     if (IsPlayerBiking())
         return sPlayerAvatarVsSeekerBikeGfxIds[gPlayerAvatar.gender];
     else
-        return GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_VSSEEKER);
+        return GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_VSSEEKER);
 }
 
 void StartPlayerAvatarVsSeekerAnim(void)
@@ -1329,7 +1364,7 @@ void PlayerUseAcroBikeOnBumpySlope(u8 direction)
 void SetPlayerAvatarWatering(u8 direction)
 {
     EndORASDowsing();
-    ObjectEventSetGraphicsId(&gObjectEvents[gPlayerAvatar.objectEventId], GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_WATERING));
+    ObjectEventSetGraphicsId(&gObjectEvents[gPlayerAvatar.objectEventId], GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_WATERING));
     StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], GetFaceDirectionAnimNum(direction));
 }
 
@@ -1598,7 +1633,7 @@ static void Task_WaitStopSurfing(u8 taskId)
 
     if (ObjectEventClearHeldMovementIfFinished(playerObjEvent))
     {
-        ObjectEventSetGraphicsId(playerObjEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL));
+        ObjectEventSetGraphicsId(playerObjEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_NORMAL));
         QL_TryRecordPlayerStepWithDuration0(playerObjEvent, GetFaceDirectionMovementAction(playerObjEvent->facingDirection));
         gPlayerAvatar.preventStep = FALSE;
         UnlockPlayerFieldControls();

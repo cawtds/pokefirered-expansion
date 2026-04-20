@@ -1396,10 +1396,9 @@ static void NamingScreen_NoIcon(void)
 
 static void NamingScreen_CreatePlayerIcon(void)
 {
-    enum ObjectEventGfx rivalGfxId;
+    enum ObjectEventGfx rivalGfxId = GetPlayerAvatarGfxForGender(PLAYER_AVATAR_STATE_NORMAL, sNamingScreen->monSpecies);
     u8 spriteId;
 
-    rivalGfxId = GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, sNamingScreen->monSpecies);
     spriteId = CreateObjectGraphicsSprite(rivalGfxId, SpriteCallbackDummy, 56, 37, 0);
     gSprites[spriteId].oam.priority = 3;
     StartSpriteAnim(&gSprites[spriteId], ANIM_STD_GO_SOUTH);

@@ -59,7 +59,7 @@ void QuestLogCallUpdatePlayerSprite(u8 state)
 static void QL_GfxTransition_Normal(void)
 {
     struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-    QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL));
+    QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_NORMAL));
     ObjectEventTurn(objectEvent, objectEvent->movementDirection);
     SetPlayerAvatarState(PLAYER_AVATAR_STATE_NORMAL);
 }
@@ -67,7 +67,7 @@ static void QL_GfxTransition_Normal(void)
 static void QL_GfxTransition_Bike(void)
 {
     struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-    QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_MACH_BIKE));
+    QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_MACH_BIKE));
     ObjectEventTurn(objectEvent, objectEvent->movementDirection);
     SetPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE);
     BikeClearState();
@@ -88,7 +88,7 @@ static void QL_GfxTransition_Fish(void)
     }
     else
     {
-        QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_FISHING));
+        QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_FISHING));
         StartSpriteAnim(sprite, GetFishingDirectionAnimNum(objectEvent->facingDirection));
     }
 }
@@ -103,7 +103,7 @@ static void Task_QLFishMovement(u8 taskId)
         case 0:
             ObjectEventClearHeldMovementIfActive(objectEvent);
             objectEvent->enableAnim = TRUE;
-            QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_FISHING));
+            QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_FISHING));
             StartSpriteAnim(sprite, GetFishingDirectionAnimNum(objectEvent->facingDirection));
             gTasks[taskId].data[0]++;
             gTasks[taskId].data[1] = 0;
@@ -124,9 +124,9 @@ static void Task_QLFishMovement(u8 taskId)
             if (sprite->animEnded)
             {
                 if (gPlayerAvatar.playerState != PLAYER_AVATAR_STATE_SURFING)
-                    QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL));
+                    QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_NORMAL));
                 else
-                    QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+                    QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_SURFING));
                 ObjectEventTurn(objectEvent, objectEvent->movementDirection);
                 sprite->x2 = 0;
                 sprite->y2 = 0;
@@ -144,7 +144,7 @@ static void QL_GfxTransition_StartSurf(void)
 
     if (gPlayerAvatar.playerState != PLAYER_AVATAR_STATE_SURFING)
     {
-        QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+        QL_SetObjectGraphicsId(objectEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_SURFING));
         ObjectEventTurn(objectEvent, objectEvent->movementDirection);
         SetPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING);
         gFieldEffectArguments[0] = objectEvent->currentCoords.x;

@@ -134,7 +134,7 @@ static bool8 RockClimb_JumpOnRockClimbBlob(struct Task *task, struct ObjectEvent
     if (!FieldEffectActiveListContains(FLDEFF_FIELD_MOVE_SHOW_MON))
     {
         objectEvent->noShadow = TRUE; // hide shadow
-        ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+        ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_SURFING));
         ObjectEventClearHeldMovementIfFinished(objectEvent);
         ObjectEventSetHeldMovement(objectEvent, GetJumpSpecialMovementAction(objectEvent->movementDirection));
         gFieldEffectArguments[0] = task->tDestX;
@@ -256,7 +256,7 @@ static bool8 RockClimb_WaitStopRockClimb(struct Task *task, struct ObjectEvent *
     struct ObjectEvent *followerObject = GetFollowerObject();
     if (ObjectEventClearHeldMovementIfFinished(objectEvent))
     {
-        ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL));
+        ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_NORMAL));
         ObjectEventSetHeldMovement(objectEvent, GetFaceDirectionMovementAction(objectEvent->facingDirection));
         gPlayerAvatar.preventStep = FALSE;
         if (followerObject)

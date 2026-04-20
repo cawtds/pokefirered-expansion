@@ -3752,16 +3752,9 @@ static void CreateLinkPlayerSprite(u8 linkPlayerId, enum GameVersion gameVersion
 
     if (linkPlayerObjEvent->active)
     {
-        if (gameVersion == VERSION_FIRE_RED || gameVersion == VERSION_LEAF_GREEN)
-        {
-            objEvent->spriteId = CreateObjectGraphicsSprite(
-                GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, linkGender(objEvent)),
-                SpriteCB_LinkPlayer, 0, 0, 0);
-        }
-        else
-        {
-            objEvent->spriteId = CreateObjectGraphicsSprite(GetRSAvatarGraphicsIdByGender(linkGender(objEvent)), SpriteCB_LinkPlayer, 0, 0, 0);
-        }
+        enum ObjectEventGfx playerGfx = GetPlayerAvatarGfxForVersion(PLAYER_AVATAR_STATE_NORMAL, linkGender(objEvent), gameVersion);
+
+        objEvent->spriteId = CreateObjectGraphicsSprite(playerGfx, SpriteCB_LinkPlayer, 0, 0, 0);
 
         sprite = &gSprites[objEvent->spriteId];
         sprite->coordOffsetEnabled = TRUE;

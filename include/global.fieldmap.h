@@ -383,13 +383,13 @@ struct PlayerAvatar
     bool8 controllable:1;
     bool8 controllableTransition:1;
     u8 unused:2;
-    /*0x02*/ u8 runningState:7; // this is a static running state. 00 is not moving, 01 is turn direction, 02 is moving.
-             u8 creeping:1;
-    /*0x03*/ u8 tileTransitionState; // this is a transition running state: 00 is not moving, 01 is transition between tiles, 02 means you are on the frame in which you have centered on a tile but are about to keep moving, even if changing directions. 2 is also used for a ledge hop, since you are transitioning.
-    /*0x04*/ u8 spriteId;
-    /*0x05*/ u8 objectEventId;
-    /*0x06*/ bool8 preventStep;
-    /*0x07*/ u8 gender;
+    u8 runningState:7; // this is a static running state. 00 is not moving, 01 is turn direction, 02 is moving.
+    u8 creeping:1;
+    u8 tileTransitionState; // this is a transition running state: 00 is not moving, 01 is transition between tiles, 02 means you are on the frame in which you have centered on a tile but are about to keep moving, even if changing directions. 2 is also used for a ledge hop, since you are transitioning.
+    u8 spriteId;
+    u8 objectEventId;
+    bool8 preventStep;
+    enum Gender gender;
     // These are not used in FRLG
     u8 acroBikeState;
     u8 newDirBackup;
