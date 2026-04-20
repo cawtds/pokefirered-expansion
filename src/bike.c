@@ -334,7 +334,7 @@ void GetOnOffBike(bool32 dowsing)
     else
     {
         EndORASDowsing();
-        SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_ACRO_BIKE);
+        SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_MACH_BIKE);
         if (Overworld_MusicCanOverrideMapMusic(MUS_CYCLING))
         {
             Overworld_SetSavedMusic(MUS_CYCLING);

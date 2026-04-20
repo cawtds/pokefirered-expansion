@@ -234,8 +234,7 @@ static void TurnNPCIntoFollower(u32 localId, u32 followerFlags, u32 setScript, c
     SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
 
     // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
-    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE)
-    &&  (TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE) || TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE)))
+    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE) && IsPlayerBiking())
         SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_NORMAL);
 
     // Set the follower sprite to match the player state.
@@ -842,7 +841,7 @@ void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr)
     SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
 
     // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
-    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE) && (TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE) || TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE)))
+    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE) && IsPlayerBiking())
         SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_NORMAL);
 
     // Set the follower sprite to match the player state.
@@ -1354,7 +1353,7 @@ void CreateFollowerNPCAvatar(void)
 
 void FollowerNPC_HandleSprite(void)
 {
-    if ((TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE) || TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE)) && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE))
+    if (IsPlayerBiking() && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE))
     {
         if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_MACH_BIKE)
             SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_MACH_BIKE);

@@ -2416,8 +2416,7 @@ bool32 IsStatePreventingFollower(void)
 {
     return TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING)
         || TestPlayerAvatarState(PLAYER_AVATAR_STATE_UNDERWATER)
-        || TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE)
-        || TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE)
+        || IsPlayerBiking()
         || gPlayerAvatar.forced;
 }
 

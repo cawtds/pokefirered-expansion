@@ -602,7 +602,7 @@ static bool8 DexNavPickTile(enum EncounterType environment, u8 areaX, u8 areaY, 
             metatileAttributes = MapGridGetMetatileAttributeAt(topX, topY, METATILE_ATTRIBUTES_ALL);
             //Check for objects
             nextIter = FALSE;
-            if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE) || TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE))
+            if (IsPlayerBiking())
                 tileBuffer = SNEAKING_PROXIMITY + 3;
             else if (gPlayerAvatar.dashing)
                 tileBuffer = SNEAKING_PROXIMITY + 1;
@@ -1076,7 +1076,7 @@ bool32 OnStep_DexNavSearch(void)
         }
     }
 
-    if (sDexNavSearchDataPtr->proximity <= SNEAKING_PROXIMITY && (TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE) || TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE) || gPlayerAvatar.dashing))
+    if (sDexNavSearchDataPtr->proximity <= SNEAKING_PROXIMITY && (IsPlayerBiking() || gPlayerAvatar.dashing))
     { // running/biking too close
         //always do event script, even if player hasn't revealed a hidden mon. It's assumed they would be creeping towards it
         EndDexNavSearchSetupScript(EventScript_MovedTooFast);

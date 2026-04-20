@@ -177,7 +177,7 @@ static void npc_clear_strange_bits(struct ObjectEvent *objEvent)
 
 static void MovePlayerAvatarUsingKeypadInput(u8 direction, u16 newKeys, u16 heldKeys)
 {
-    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_MACH_BIKE || gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_ACRO_BIKE)
+    if (IsPlayerBiking())
         MovePlayerOnBike(direction, newKeys, heldKeys);
     else
         MovePlayerNotOnBike(direction, heldKeys);
@@ -1123,7 +1123,7 @@ void StopPlayerAvatar(void)
 
     npc_clear_strange_bits(playerObjEvent);
     SetObjectEventDirection(playerObjEvent, playerObjEvent->facingDirection);
-    if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE) || TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE))
+    if (IsPlayerBiking())
     {
         Bike_HandleBumpySlopeJump();
         Bike_UpdateBikeCounterSpeed(0);
@@ -1301,7 +1301,7 @@ static const u8 sPlayerAvatarVsSeekerBikeGfxIds[] = {
 
 u8 GetPlayerAvatarVsSeekerGfxId(void)
 {
-    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_MACH_BIKE || gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_ACRO_BIKE)
+    if (IsPlayerBiking())
         return sPlayerAvatarVsSeekerBikeGfxIds[gPlayerAvatar.gender];
     else
         return GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_VSSEEKER);

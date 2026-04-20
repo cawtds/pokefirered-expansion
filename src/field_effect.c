@@ -3717,7 +3717,7 @@ static void UseVsSeeker_ResetPlayerGraphics(struct Task *task)
     if (!ObjectEventClearHeldMovementIfFinished(playerObj))
         return;
 
-    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_ACRO_BIKE || gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_MACH_BIKE)
+    if (IsPlayerBiking())
         ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_MACH_BIKE));
     else if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_SURFING)
         ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
