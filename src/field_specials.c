@@ -291,8 +291,9 @@ void Special_ViewWallClock(void)
 
 void ForcePlayerOntoBike(void)
 {
-    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
-        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_MACH_BIKE);
+    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_NORMAL)
+        SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_MACH_BIKE);
+
     Overworld_SetSavedMusic(MUS_CYCLING);
     Overworld_ChangeMusicTo(MUS_CYCLING);
 }
@@ -304,9 +305,9 @@ void ResetCyclingRoadChallengeData(void)
 
 u8 GetPlayerAvatarBike(void)
 {
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE))
+    if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE))
         return 1;
-    else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE))
+    else if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE))
         return 2;
     else
         return 0;
@@ -1725,7 +1726,7 @@ static void Task_ListMenuRemoveScrollIndicatorArrowPair(u8 taskId)
 void ForcePlayerToStartSurfing(void)
 {
     SetHelpContext(HELPCONTEXT_SURFING);
-    SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_SURFING);
+    SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_SURFING);
 }
 
 static const enum Species sStarterSpecies[] = {

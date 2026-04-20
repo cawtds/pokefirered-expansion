@@ -98,7 +98,7 @@ typedef u16 (*KeyInterCB)(u32 key);
 
 struct InitialPlayerAvatarState
 {
-    u8 transitionFlags;
+    enum AvatarState transitionState;
     u8 direction;
     bool8 hasDirectionSet;
 };
@@ -153,8 +153,8 @@ s16 gTimeUpdateCounter; // playTimeVBlanks will eventually overflow, so this is 
 static u8 CountBadgesForOverworldWhiteOutLossCalculation(void);
 static void Overworld_ResetStateAfterWhitingOut(void);
 static void SetWhiteoutWarpDestination(void);
-static u8 GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, u16 metatileBehavior, u8 mapType);
-static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, u8 transitionFlags, u16 metatileBehavior, u8 mapType);
+static enum AvatarState GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, u16 metatileBehavior, u8 mapType);
+static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, enum AvatarState transitionState, u16 metatileBehavior, u8 mapType);
 static u16 GetCenterScreenMetatileBehavior(void);
 static void SetDefaultFlashLevel(void);
 static void Overworld_TryMapConnectionMusicTransition(void);
@@ -909,14 +909,14 @@ static void QL_LoadMapNormal(void)
 void ResetInitialPlayerAvatarState(void)
 {
     sInitialPlayerAvatarState.direction = DIR_SOUTH;
-    sInitialPlayerAvatarState.transitionFlags = PLAYER_AVATAR_FLAG_ON_FOOT;
+    sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_NORMAL;
     sInitialPlayerAvatarState.hasDirectionSet = FALSE;
 }
 
 static void SetInitialPlayerAvatarStateWithDirection(u8 dirn)
 {
     sInitialPlayerAvatarState.direction = dirn;
-    sInitialPlayerAvatarState.transitionFlags = PLAYER_AVATAR_FLAG_ON_FOOT;
+    sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_NORMAL;
     sInitialPlayerAvatarState.hasDirectionSet = TRUE;
 }
 
@@ -924,16 +924,17 @@ void StoreInitialPlayerAvatarState(void)
 {
     sInitialPlayerAvatarState.direction = GetPlayerFacingDirection();
 
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE))
-        sInitialPlayerAvatarState.transitionFlags = PLAYER_AVATAR_FLAG_MACH_BIKE;
-    else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE))
-        sInitialPlayerAvatarState.transitionFlags = PLAYER_AVATAR_FLAG_ACRO_BIKE;
-    else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-        sInitialPlayerAvatarState.transitionFlags = PLAYER_AVATAR_FLAG_SURFING;
-    else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_UNDERWATER))
-        sInitialPlayerAvatarState.transitionFlags = PLAYER_AVATAR_FLAG_UNDERWATER;
+    if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE))
+        sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_MACH_BIKE;
+    else if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE))
+        sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_ACRO_BIKE;
+    else if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING))
+        sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_SURFING;
+    else if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_UNDERWATER))
+        sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_UNDERWATER;
     else
-        sInitialPlayerAvatarState.transitionFlags = PLAYER_AVATAR_FLAG_ON_FOOT;
+        sInitialPlayerAvatarState.transitionState = PLAYER_AVATAR_STATE_NORMAL;
+
     sInitialPlayerAvatarState.hasDirectionSet = FALSE;
 }
 
@@ -942,32 +943,33 @@ struct InitialPlayerAvatarState *GetInitialPlayerAvatarState(void)
     struct InitialPlayerAvatarState playerStruct;
     u8 mapType = GetCurrentMapType();
     u16 metatileBehavior = GetCenterScreenMetatileBehavior();
-    u8 transitionFlags = GetAdjustedInitialTransitionFlags(&sInitialPlayerAvatarState, metatileBehavior, mapType);
-    playerStruct.transitionFlags = transitionFlags;
-    playerStruct.direction = GetAdjustedInitialDirection(&sInitialPlayerAvatarState, transitionFlags, metatileBehavior, mapType);
+    enum AvatarState transitionState = GetAdjustedInitialTransitionFlags(&sInitialPlayerAvatarState, metatileBehavior, mapType);
+
+    playerStruct.transitionState = transitionState;
+    playerStruct.direction = GetAdjustedInitialDirection(&sInitialPlayerAvatarState, transitionState, metatileBehavior, mapType);
     playerStruct.hasDirectionSet = FALSE;
     sInitialPlayerAvatarState = playerStruct;
     return &sInitialPlayerAvatarState;
 }
 
-static u8 GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, u16 metatileBehavior, u8 mapType)
+static enum AvatarState GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, u16 metatileBehavior, u8 mapType)
 {
     if (mapType != MAP_TYPE_INDOOR && FlagGet(FLAG_SYS_CRUISE_MODE))
-        return PLAYER_AVATAR_FLAG_ON_FOOT;
+        return PLAYER_AVATAR_STATE_NORMAL;
     else if (mapType == MAP_TYPE_UNDERWATER)
-        return PLAYER_AVATAR_FLAG_UNDERWATER;
+        return PLAYER_AVATAR_STATE_UNDERWATER;
     else if (MetatileBehavior_IsSurfableInSeafoamIslands(metatileBehavior) == TRUE)
-        return PLAYER_AVATAR_FLAG_ON_FOOT;
+        return PLAYER_AVATAR_STATE_NORMAL;
     else if (MetatileBehavior_IsSurfable(metatileBehavior) == TRUE)
-        return PLAYER_AVATAR_FLAG_SURFING;
+        return PLAYER_AVATAR_STATE_SURFING;
     else if (Overworld_IsBikingAllowed() != TRUE)
-        return PLAYER_AVATAR_FLAG_ON_FOOT;
-    else if (playerStruct->transitionFlags == PLAYER_AVATAR_FLAG_MACH_BIKE)
-        return PLAYER_AVATAR_FLAG_MACH_BIKE;
-    else if (playerStruct->transitionFlags != PLAYER_AVATAR_FLAG_ACRO_BIKE)
-        return PLAYER_AVATAR_FLAG_ON_FOOT;
+        return PLAYER_AVATAR_STATE_NORMAL;
+    else if (playerStruct->transitionState == PLAYER_AVATAR_STATE_MACH_BIKE)
+        return PLAYER_AVATAR_STATE_MACH_BIKE;
+    else if (playerStruct->transitionState != PLAYER_AVATAR_STATE_MACH_BIKE)
+        return PLAYER_AVATAR_STATE_NORMAL;
     else
-        return PLAYER_AVATAR_FLAG_ACRO_BIKE;
+        return PLAYER_AVATAR_STATE_ACRO_BIKE;
 }
 
 bool8 MetatileBehavior_IsSurfableInSeafoamIslands(u16 metatileBehavior)
@@ -982,7 +984,7 @@ bool8 MetatileBehavior_IsSurfableInSeafoamIslands(u16 metatileBehavior)
     return FALSE;
 }
 
-static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, u8 transitionFlags, u16 metatileBehavior, u8 mapType)
+static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, enum AvatarState transitionState, u16 metatileBehavior, u8 mapType)
 {
     if (FlagGet(FLAG_SYS_CRUISE_MODE) && mapType == MAP_TYPE_OCEAN_ROUTE)
         return DIR_EAST;
@@ -1002,8 +1004,8 @@ static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStr
         return DIR_WEST;
     else if (MetatileBehavior_IsDirectionalUpLeftStairWarp(metatileBehavior) == TRUE || MetatileBehavior_IsDirectionalDownLeftStairWarp(metatileBehavior) == TRUE)
         return DIR_EAST;
-    else if ((playerStruct->transitionFlags == PLAYER_AVATAR_FLAG_UNDERWATER  && transitionFlags == PLAYER_AVATAR_FLAG_SURFING)
-             || (playerStruct->transitionFlags == PLAYER_AVATAR_FLAG_SURFING && transitionFlags == PLAYER_AVATAR_FLAG_UNDERWATER ))
+    else if ((playerStruct->transitionState == PLAYER_AVATAR_STATE_UNDERWATER  && transitionState == PLAYER_AVATAR_STATE_SURFING)
+             || (playerStruct->transitionState == PLAYER_AVATAR_STATE_SURFING && transitionState == PLAYER_AVATAR_STATE_UNDERWATER ))
         return playerStruct->direction;
     else if (MetatileBehavior_IsLadder(metatileBehavior) == TRUE)
         return playerStruct->direction;
@@ -1115,7 +1117,7 @@ void Overworld_PlaySpecialMapMusic(void)
 
     if (gSaveBlock1Ptr->savedMusic)
         music = gSaveBlock1Ptr->savedMusic;
-    else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && Overworld_MusicCanOverrideMapMusic(MUS_SURF))
+    else if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING) && Overworld_MusicCanOverrideMapMusic(MUS_SURF))
         music = MUS_SURF;
 
     if (music != GetCurrentMapMusic())
@@ -1151,11 +1153,11 @@ static void Overworld_TryMapConnectionMusicTransition(void)
         currentMusic = GetCurrentMapMusic();
         if (currentMusic == MUS_SURF)
             return;
-        if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && Overworld_MusicCanOverrideMapMusic(MUS_SURF))
+        if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING) && Overworld_MusicCanOverrideMapMusic(MUS_SURF))
             newMusic = MUS_SURF;
         if (newMusic != currentMusic)
         {
-            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
+            if (IsPlayerBiking())
                 FadeOutAndFadeInNewMapMusic(newMusic, 4, 4);
             else
                 FadeOutAndPlayNewMapMusic(newMusic, 8);
@@ -1485,7 +1487,7 @@ static void DoCB1_Overworld(u16 newKeys, u16 heldKeys)
         }
     }
     // If stop running but keep holding B -> fix follower frame.
-    if (PlayerHasFollowerNPC() && (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT) && IsPlayerStandingStill())
+    if (PlayerHasFollowerNPC() && (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_NORMAL) && IsPlayerStandingStill())
         ObjectEventSetHeldMovement(&gObjectEvents[GetFollowerNPCObjectId()], GetFaceDirectionAnimNum(gObjectEvents[GetFollowerNPCObjectId()].facingDirection));
     RunQuestLogCB();
 }
@@ -2400,7 +2402,7 @@ static void InitObjectEventsLocal(void)
     GetCameraFocusCoords(&x, &y);
     player = GetInitialPlayerAvatarState();
     InitPlayerAvatar(x, y, player->direction, gSaveBlock2Ptr->playerGender);
-    SetPlayerAvatarTransitionFlags(player->transitionFlags);
+    SetPlayerAvatarTransitionState(player->transitionState);
     ResetInitialPlayerAvatarState();
     TrySpawnObjectEvents(0, 0);
     FollowerNPC_HandleSprite();
@@ -3750,16 +3752,9 @@ static void CreateLinkPlayerSprite(u8 linkPlayerId, enum GameVersion gameVersion
 
     if (linkPlayerObjEvent->active)
     {
-        if (gameVersion == VERSION_FIRE_RED || gameVersion == VERSION_LEAF_GREEN)
-        {
-            objEvent->spriteId = CreateObjectGraphicsSprite(
-                GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, linkGender(objEvent)),
-                SpriteCB_LinkPlayer, 0, 0, 0);
-        }
-        else
-        {
-            objEvent->spriteId = CreateObjectGraphicsSprite(GetRSAvatarGraphicsIdByGender(linkGender(objEvent)), SpriteCB_LinkPlayer, 0, 0, 0);
-        }
+        enum ObjectEventGfx playerGfx = GetPlayerAvatarGfxForVersion(PLAYER_AVATAR_STATE_NORMAL, linkGender(objEvent), gameVersion);
+
+        objEvent->spriteId = CreateObjectGraphicsSprite(playerGfx, SpriteCB_LinkPlayer, 0, 0, 0);
 
         sprite = &gSprites[objEvent->spriteId];
         sprite->coordOffsetEnabled = TRUE;

@@ -111,11 +111,11 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
     {
         if (GetPlayerSpeed() != PLAYER_SPEED_FASTEST)
         {
-            if ((newKeys & START_BUTTON) && !(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_FORCED))
+            if ((newKeys & START_BUTTON) && !gPlayerAvatar.forced)
                 input->pressedStartButton = TRUE;
             if (!QL_IS_PLAYBACK_STATE)
             {
-                if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_FORCED))
+                if (!gPlayerAvatar.forced)
                 {
                     if (newKeys & SELECT_BUTTON)
                         input->pressedSelectButton = TRUE;
@@ -675,9 +675,9 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
 
 static const u8 *GetInteractedWaterScript(struct MapPosition *unused1, u8 metatileBehavior, u8 direction)
 {
-    if (MetatileBehavior_IsFastWater(metatileBehavior) == TRUE && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    if (MetatileBehavior_IsFastWater(metatileBehavior) == TRUE && !TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING))
         return EventScript_CurrentTooFast;
-    if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING)
+    if (!TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING)
      && IsPlayerFacingSurfableFishableWater() == TRUE
      && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_SURF))
         return EventScript_UseSurf;
@@ -703,7 +703,7 @@ static bool8 TryStartStepBasedScript(struct MapPosition *position, u16 metatileB
         return TRUE;
     if (TryStartStepCountScript(metatileBehavior) == TRUE)
         return TRUE;
-    if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_FORCED) && !MetatileBehavior_IsForcedMovementTile(metatileBehavior) && UpdateRepelCounter() == TRUE)
+    if (!gPlayerAvatar.forced && !MetatileBehavior_IsForcedMovementTile(metatileBehavior) && UpdateRepelCounter() == TRUE)
         return TRUE;
     if (OnStep_DexNavSearch())
         return TRUE;
@@ -740,7 +740,7 @@ static bool8 TryStartStepCountScript(u16 metatileBehavior)
     UpdateHappinessStepCounter();
     UpdateFollowerStepCounter();
 
-    if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_FORCED) && !MetatileBehavior_IsForcedMovementTile(metatileBehavior))
+    if (!gPlayerAvatar.forced && !MetatileBehavior_IsForcedMovementTile(metatileBehavior))
     {
         if (UpdateVsSeekerStepCounter() == TRUE)
         {
@@ -932,9 +932,9 @@ static bool8 TryArrowWarp(struct MapPosition *position, u16 metatileBehavior, u8
         else if (IsDirectionalStairWarpMetatileBehavior(metatileBehavior, direction) == TRUE)
         {
             delay = 0;
-            if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
+            if (IsPlayerBiking())
             {
-                SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+                SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_NORMAL);
                 delay = 12;
             }
             StoreInitialPlayerAvatarState();

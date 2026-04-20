@@ -137,7 +137,7 @@ void ItemUseOnFieldCB_Itemfinder(u8 taskId)
 
     if (I_ORAS_DOWSING_FLAG != 0)
     {
-        if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_UNDERWATER))
+        if (!TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING) && !TestPlayerAvatarState(PLAYER_AVATAR_STATE_UNDERWATER))
             gTasks[taskId].func = Task_UseORASDowsingMachine;
         else
             DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_OakForbidsUseOfItemHere, Task_NoResponse_CleanUp);

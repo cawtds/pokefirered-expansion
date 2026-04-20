@@ -762,8 +762,8 @@ static void Task_DoorWarp(u8 taskId)
     {
     case DOORWARP_OPEN_DOOR:
         // Stop running.
-        if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH))
-            SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+        if (gPlayerAvatar.dashing)
+            SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_NORMAL);
 
         // Just in case came out and went right back in, reset follower NPC door state.
         SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);

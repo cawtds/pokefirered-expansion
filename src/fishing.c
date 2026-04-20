@@ -385,7 +385,7 @@ static bool32 Fishing_StartEncounter(struct Task *task)
 
             ObjectEventSetGraphicsId(playerObjEvent, task->tPlayerGfxId);
             ObjectEventTurn(playerObjEvent, playerObjEvent->movementDirection);
-            if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
+            if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_SURFING)
                 SetSurfBlob_PlayerOffset(gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId, FALSE, 0);
             gSprites[gPlayerAvatar.spriteId].x2 = 0;
             gSprites[gPlayerAvatar.spriteId].y2 = 0;
@@ -443,7 +443,7 @@ static bool32 Fishing_PutRodAway(struct Task *task)
 
         ObjectEventSetGraphicsId(playerObjEvent, task->tPlayerGfxId);
         ObjectEventTurn(playerObjEvent, playerObjEvent->movementDirection);
-        if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
+        if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_SURFING)
             SetSurfBlob_PlayerOffset(gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId, FALSE, 0);
         gSprites[gPlayerAvatar.spriteId].x2 = 0;
         gSprites[gPlayerAvatar.spriteId].y2 = 0;
@@ -623,7 +623,7 @@ void AlignFishingAnimationFrames(void)
         playerSprite->y2 = -8;
     if (animType == 10 || animType == 11)
         playerSprite->y2 = 8;
-    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
+    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_SURFING)
         SetSurfBlob_PlayerOffset(gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId, TRUE, playerSprite->y2);
 }
 

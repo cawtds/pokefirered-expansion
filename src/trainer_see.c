@@ -414,7 +414,7 @@ static void StartTrainerApproach(TaskFunc followupFunc)
     else
         taskId = gApproachingTrainers[1].taskId;
 
-    if (PlayerHasFollowerNPC() && (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT))
+    if (PlayerHasFollowerNPC() && (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_NORMAL))
         ObjectEventForceSetHeldMovement(&gObjectEvents[GetFollowerNPCObjectId()], GetFaceDirectionAnimNum(gObjectEvents[GetFollowerNPCObjectId()].facingDirection));
 
     taskFunc = Task_RunTrainerSeeFuncList;

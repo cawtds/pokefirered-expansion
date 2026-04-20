@@ -1285,7 +1285,7 @@ static void FieldCallback_FlyIntoMap(void)
     FadeInFromBlack();
     CreateTask(Task_FlyIntoMap, 0);
     gObjectEvents[gPlayerAvatar.objectEventId].invisible = TRUE;
-    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
+    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_SURFING)
         ObjectEventTurn(&gObjectEvents[gPlayerAvatar.objectEventId], DIR_WEST);
 
     LockPlayerFieldControls();
@@ -1509,7 +1509,7 @@ static bool32 FallWarpEffect_End(struct Task *task)
     if (MetatileBehavior_IsSurfableInSeafoamIslands(MapGridGetMetatileBehaviorAt(x, y)) == TRUE)
     {
         VarSet(VAR_TEMP_1, 1);
-        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_SURFING);
+        SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_SURFING);
         SetHelpContext(HELPCONTEXT_SURFING);
     }
     DestroyTask(FindTaskIdByFunc(Task_FallWarpFieldEffect));
@@ -3580,7 +3580,7 @@ static void SurfFieldEffect_Init(struct Task *task)
     // Put follower into pokeball before using Surf
     HideFollowerForFieldEffect();
     gPlayerAvatar.preventStep = TRUE;
-    SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_SURFING);
+    SetPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING);
     PlayerGetDestCoords(&task->tDestX, &task->tDestY);
     MoveCoords(gObjectEvents[gPlayerAvatar.objectEventId].movementDirection, &task->tDestX, &task->tDestY);
     task->tState = SURF_FIELD_MOVE_POSE;
@@ -3618,7 +3618,7 @@ static void SurfFieldEffect_JumpOnSurfBlob(struct Task *task)
         return;
 
     objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-    ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+    ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_SURFING));
     ObjectEventClearHeldMovementIfFinished(objectEvent);
     ObjectEventSetHeldMovement(objectEvent, GetJumpSpecialMovementAction(objectEvent->movementDirection));
     FollowerNPC_FollowerToWater();
@@ -3638,7 +3638,7 @@ static void SurfFieldEffect_End(struct Task *task)
     if (ObjectEventClearHeldMovementIfFinished(objectEvent))
     {
         gPlayerAvatar.preventStep = FALSE;
-        gPlayerAvatar.flags &= ~PLAYER_AVATAR_FLAG_CONTROLLABLE;
+        gPlayerAvatar.controllable = FALSE;
         ObjectEventSetHeldMovement(objectEvent, GetFaceDirectionMovementAction(objectEvent->movementDirection));
         if (followerObject)
             ObjectEventClearHeldMovementIfFinished(followerObject);
@@ -3717,12 +3717,12 @@ static void UseVsSeeker_ResetPlayerGraphics(struct Task *task)
     if (!ObjectEventClearHeldMovementIfFinished(playerObj))
         return;
 
-    if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_ACRO_BIKE | PLAYER_AVATAR_FLAG_MACH_BIKE))
-        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_MACH_BIKE));
-    else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
-        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+    if (IsPlayerBiking())
+        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_MACH_BIKE));
+    else if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_SURFING)
+        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_SURFING));
     else
-        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL));
+        ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_NORMAL));
 
     ObjectEventForceSetHeldMovement(playerObj, GetFaceDirectionMovementAction(playerObj->facingDirection));
     task->tState = VS_SEEKER_END;
@@ -3810,7 +3810,7 @@ static void (*const sFlyOutFieldEffectFuncs[])(struct Task *) =
 #define tMonPartyId   data[1]
 #define tBirdSpriteId data[1] // re-used
 #define tTimer        data[2]
-#define tAvatarFlags  data[15]
+#define tAvatarState  data[15]
 
 u32 FldEff_UseFly(void)
 {
@@ -3831,9 +3831,9 @@ static void FlyOutFieldEffect_FieldMovePose(struct Task *task)
     if (ObjectEventIsMovementOverridden(objectEvent) && !ObjectEventClearHeldMovementIfFinished(objectEvent))
         return;
 
-    task->tAvatarFlags = gPlayerAvatar.flags;
+    task->tAvatarState = gPlayerAvatar.playerState;
     gPlayerAvatar.preventStep = TRUE;
-    SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_ON_FOOT);
+    SetPlayerAvatarState(PLAYER_AVATAR_STATE_NORMAL);
     StartPlayerAvatarSummonMonForFieldMoveAnim();
     ObjectEventSetHeldMovement(objectEvent, MOVEMENT_ACTION_START_ANIM_IN_DIRECTION);
     task->tState = FLY_OUT_SHOW_MON;
@@ -3856,7 +3856,7 @@ static void FlyOutFieldEffect_BirdLeaveBall(struct Task *task)
     if (FieldEffectActiveListContains(FLDEFF_FIELD_MOVE_SHOW_MON))
         return;
 
-    if (task->tAvatarFlags & PLAYER_AVATAR_FLAG_SURFING)
+    if (task->tAvatarState == PLAYER_AVATAR_STATE_SURFING)
     {
         struct ObjectEvent *objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
 
@@ -3874,7 +3874,7 @@ static void FlyOutFieldEffect_WaitBirdLeave(struct Task *task)
 
     task->tState = FLY_OUT_BIRD_SWOOP_DOWN;
     task->tTimer = 16;
-    SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+    SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_NORMAL);
     ObjectEventSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], MOVEMENT_ACTION_FACE_LEFT);
 }
 
@@ -3898,7 +3898,7 @@ static void FlyOutFieldEffect_JumpOnBird(struct Task *task)
         return;
 
     objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-    ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+    ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_SURFING));
     StartSpriteAnim(&gSprites[objectEvent->spriteId], ANIM_GET_ON_OFF_POKEMON_WEST);
     objectEvent->inanimate = TRUE;
     ObjectEventSetHeldMovement(objectEvent, MOVEMENT_ACTION_JUMP_IN_PLACE_LEFT);
@@ -3947,7 +3947,7 @@ static void FlyOutFieldEffect_End(struct Task *task)
 #undef tMonPartyId
 #undef tBirdSpriteId
 #undef tTimer
-#undef tAvatarFlags
+#undef tAvatarState
 
 static u8 CreateFlyBirdSprite(void)
 {
@@ -4127,7 +4127,7 @@ static void (*const sFlyInFieldEffectFuncs[])(struct Task *task) =
 #define tBirdSpriteId data[1] // re-used
 #define tTimer1       data[1] // re-used
 #define tTimer2       data[2]
-#define tAvatarFlags  data[15]
+#define tAvatarState  data[15]
 
 u32 FldEff_FlyIn(void)
 {
@@ -4150,12 +4150,12 @@ static void FlyInFieldEffect_BirdSwoopDown(struct Task *task)
 
     task->tState = FLY_IN_FLY_IN_WITH_BIRD;
     task->tTimer2 = 33;
-    task->tAvatarFlags = gPlayerAvatar.flags;
+    task->tAvatarState = gPlayerAvatar.playerState;
     gPlayerAvatar.preventStep = TRUE;
-    SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_ON_FOOT);
-    if (task->tAvatarFlags & PLAYER_AVATAR_FLAG_SURFING)
+    SetPlayerAvatarState(PLAYER_AVATAR_STATE_NORMAL);
+    if (task->tAvatarState == PLAYER_AVATAR_STATE_SURFING)
         SetSurfBlob_BobState(playerObj->fieldEffectSpriteId, BOB_NONE);
-    ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
+    ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGfxForState(PLAYER_AVATAR_STATE_SURFING));
     CameraObjectFreeze();
     ObjectEventTurn(playerObj, DIR_WEST);
     StartSpriteAnim(&gSprites[playerObj->spriteId], ANIM_GET_ON_OFF_POKEMON_WEST);
@@ -4250,14 +4250,14 @@ static void FlyInFieldEffect_End(struct Task *task)
     playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
     state = PLAYER_AVATAR_STATE_NORMAL;
 
-    if (task->tAvatarFlags & PLAYER_AVATAR_FLAG_SURFING)
+    if (task->tAvatarState == PLAYER_AVATAR_STATE_SURFING)
     {
         state = PLAYER_AVATAR_STATE_SURFING;
         SetSurfBlob_BobState(playerObj->fieldEffectSpriteId, BOB_PLAYER_AND_MON);
     }
-    ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGraphicsIdByStateId(state));
+    ObjectEventSetGraphicsId(playerObj, GetPlayerAvatarGfxForState(state));
     ObjectEventTurn(playerObj, DIR_SOUTH);
-    gPlayerAvatar.flags = task->tAvatarFlags;
+    gPlayerAvatar.playerState = task->tAvatarState;
     gPlayerAvatar.preventStep = FALSE;
     FieldEffectActiveListRemove(FLDEFF_FLY_IN);
     DestroyTask(FindTaskIdByFunc(Task_FlyIn));
@@ -4268,7 +4268,7 @@ static void FlyInFieldEffect_End(struct Task *task)
 #undef tBirdSpriteId
 #undef tTimer1
 #undef tTimer2
-#undef tAvatarFlags
+#undef tAvatarState
 
 static void DoBirdSpriteWithPlayerAffineAnim(struct Sprite *sprite, u8 affineAnimId)
 {

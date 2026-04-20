@@ -484,7 +484,7 @@ static bool8 DoWildEncounterRateDiceRoll(u16 encounterRate)
 static bool8 WildEncounterCheck(u32 encounterRate, bool8 ignoreAbility)
 {
     encounterRate *= 16;
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
+    if (IsPlayerBiking())
         encounterRate = encounterRate * 80 / 100;
     encounterRate += sWildEncounterData.encounterRateBuff * 16 / 200;
     ApplyFluteEncounterRateMod(&encounterRate);
@@ -705,7 +705,7 @@ bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetatileBehavior)
     if (ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_ENCOUNTER_TYPE) == TILE_ENCOUNTER_LAND)
         return TryStandardWildLandEncounter(headerId, currMetatileAttrs, previousMetatileBehavior);
     else if (ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_ENCOUNTER_TYPE) == TILE_ENCOUNTER_WATER
-                || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && MetatileBehavior_IsBridge(ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR)) == TRUE))
+                || (TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING) && MetatileBehavior_IsBridge(ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR)) == TRUE))
         return TryStandardWildSurfEncounter(headerId, currMetatileAttrs, previousMetatileBehavior);
     return FALSE;
 }

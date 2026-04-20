@@ -302,10 +302,10 @@ void ItemUseOutOfBattle_Bike(u8 taskId)
 
 static void ItemUseOnFieldCB_Bicycle(u8 taskId)
 {
-    if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
+    if (!IsPlayerBiking())
         PlaySE(SE_BIKE_BELL);
-    GetOnOffBike(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE);
 
+    GetOnOffBike(PLAYER_AVATAR_STATE_MACH_BIKE);
     FollowerNPC_HandleBike();
     ScriptUnfreezeObjectEvents();
     UnlockPlayerFieldControls();
@@ -401,9 +401,9 @@ static bool8 CanFish(void)
 
     if (MetatileBehavior_IsWaterfall(behavior))
         return FALSE;
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_UNDERWATER))
+    if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_UNDERWATER))
         return FALSE;
-    if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    if (!TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING))
     {
         if (IsPlayerFacingSurfableFishableWater())
             return TRUE;
