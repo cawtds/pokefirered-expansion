@@ -217,7 +217,7 @@ u8 GetAcroWheelieHopMovementAction(enum Direction direction);
 u8 GetAcroWheelieInPlaceMovementAction(enum Direction direction);
 u8 GetAcroWheelieJumpMovementAction(enum Direction direction);
 u8 GetAcroWheelieMoveMovementAction(enum Direction direction);
-u8 GetCollisionFlagsAtCoords(struct ObjectEvent * objectEvent, s16 x, s16 y, enum Direction direction);
+u8 GetCollisionFlagsAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction);
 u8 GetFaceDirectionAnimNum(enum Direction direction);
 u8 GetFaceDirectionFastMovementAction(enum Direction direction);
 u8 GetFaceDirectionMovementAction(enum Direction direction);

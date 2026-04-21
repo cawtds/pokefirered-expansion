@@ -227,7 +227,7 @@ u16 CalcCRC16WithTable(const u8 *data, u32 length)
     return ~crc;
 }
 
-u32 CalcByteArraySum(const u8 * array, u32 size)
+u32 CalcByteArraySum(const u8 *array, u32 size)
 {
     s32 i;
     u32 result = 0;
@@ -256,7 +256,7 @@ void BlendPalette(u16 palOffset, u16 numEntries, u8 coeff, u32 blendColor)
     }
 }
 
-void BlendPalettesAt(u16 * palbuff, u16 blend_pal, u32 coefficient, s32 size)
+void BlendPalettesAt(u16 *palbuff, u16 blend_pal, u32 coefficient, s32 size)
 {
     if (coefficient == 16)
     {

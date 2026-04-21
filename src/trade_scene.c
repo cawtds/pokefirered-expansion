@@ -140,7 +140,7 @@ static void SpriteCB_BouncingPokeballDepart(struct Sprite *sprite);
 static void SpriteCB_BouncingPokeballDepartEnd(struct Sprite *sprite);
 static void SpriteCB_BouncingPokeballArrive(struct Sprite *sprite);
 static void BufferInGameTradeMonName(void);
-static void GetInGameTradeMail(struct Mail * mail, const struct InGameTrade * inGameTrade);
+static void GetInGameTradeMail(struct Mail *mail, const struct InGameTrade *inGameTrade);
 static void CB2_UpdateLinkTrade(void);
 static void CB2_WaitTradeComplete(void);
 static void CB2_SaveAndEndTrade(void);
@@ -1257,7 +1257,7 @@ static void TradeBufferOTnameAndNicknames(void)
 {
     u8 nickname[POKEMON_NAME_BUFFER_SIZE];
     u8 mpId;
-    const struct InGameTrade * inGameTrade;
+    const struct InGameTrade *inGameTrade;
 
     if (sTradeAnim->isLinkTrade)
     {
@@ -2480,7 +2480,7 @@ u16 GetInGameTradeSpeciesInfo(void)
     // Populates gStringVar1 with the name of the requested species and
     // gStringVar2 with the name of the offered species.
     // Returns the requested species.
-    const struct InGameTrade * inGameTrade = &sInGameTrades[gSpecialVar_0x8005];
+    const struct InGameTrade *inGameTrade = &sInGameTrades[gSpecialVar_0x8005];
     StringCopy(gStringVar1, gSpeciesInfo[inGameTrade->requestedSpecies].speciesName);
     StringCopy(gStringVar2, gSpeciesInfo[inGameTrade->species].speciesName);
     return inGameTrade->requestedSpecies;
@@ -2489,7 +2489,7 @@ u16 GetInGameTradeSpeciesInfo(void)
 static void BufferInGameTradeMonName(void)
 {
     u8 nickname[max(32, POKEMON_NAME_BUFFER_SIZE)];
-    const struct InGameTrade * inGameTrade = &sInGameTrades[gSpecialVar_0x8005];
+    const struct InGameTrade *inGameTrade = &sInGameTrades[gSpecialVar_0x8005];
     GetMonData(&gPlayerParty[gSpecialVar_0x8005], MON_DATA_NICKNAME, nickname);
     StringCopy_Nickname(gStringVar1, nickname);
     StringCopy(gStringVar2, gSpeciesInfo[inGameTrade->species].speciesName);
@@ -2544,7 +2544,7 @@ static void CreateInGameTradePokemonInternal(u8 playerSlot, u8 inGameTradeIdx)
     CalculateMonStats(&gEnemyParty[0]);
 }
 
-static void GetInGameTradeMail(struct Mail * mail, const struct InGameTrade * inGameTrade)
+static void GetInGameTradeMail(struct Mail *mail, const struct InGameTrade *inGameTrade)
 {
     int i;
     for (i = 0; i < MAIL_WORDS_COUNT; i++)

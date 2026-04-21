@@ -107,7 +107,7 @@ static void CameraObject_UpdateFrozen(struct Sprite *);
 static const struct ObjectEventTemplate *FindObjectEventTemplateByLocalId(u8 localId, const struct ObjectEventTemplate *templates, u8 count);
 static void ObjectEventSetSingleMovement(struct ObjectEvent *, struct Sprite *, u8);
 u8 GetDirectionToFace(s16 x1, s16 y1, s16 x2, s16 y2);
-static void FollowerSetGraphics(struct ObjectEvent * objectEvent, u32 species, bool32 shiny, bool32 female);
+static void FollowerSetGraphics(struct ObjectEvent *objectEvent, u32 species, bool32 shiny, bool32 female);
 static void ObjectEventSetGraphics(struct ObjectEvent *, const struct ObjectEventGraphicsInfo *);
 static bool8 MovementType_Disguise_Callback(struct ObjectEvent *, struct Sprite *);
 static bool8 MovementType_Buried_Callback(struct ObjectEvent *, struct Sprite *);

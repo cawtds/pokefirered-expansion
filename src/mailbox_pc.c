@@ -9,9 +9,9 @@
 #include "constants/songs.h"
 
 static EWRAM_DATA u8 sWindowIds[3] = {};
-static EWRAM_DATA struct ListMenuItem * sListMenuItems = NULL;
+static EWRAM_DATA struct ListMenuItem *sListMenuItems = NULL;
 
-static void MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu * list);
+static void MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list);
 
 static const struct WindowTemplate sWindowTemplates[] = {
     {
@@ -91,7 +91,7 @@ static void ItemPrintFunc(u8 windowId, u32 itemId, u8 y)
     }
 }
 
-u8 MailboxPC_InitListMenu(struct PlayerPCItemPageStruct * playerPcStruct)
+u8 MailboxPC_InitListMenu(struct PlayerPCItemPageStruct *playerPcStruct)
 {
     u16 i;
     for (i = 0; i < playerPcStruct->count; i++)
@@ -123,13 +123,13 @@ u8 MailboxPC_InitListMenu(struct PlayerPCItemPageStruct * playerPcStruct)
     return ListMenuInit(&gMultiuseListMenuTemplate, playerPcStruct->cursorPos, playerPcStruct->itemsAbove);
 }
 
-static void MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu * list)
+static void MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list)
 {
     if (onInit != TRUE)
         PlaySE(SE_SELECT);
 }
 
-void MailboxPC_AddScrollIndicatorArrows(struct PlayerPCItemPageStruct * playerPcStruct)
+void MailboxPC_AddScrollIndicatorArrows(struct PlayerPCItemPageStruct *playerPcStruct)
 {
     playerPcStruct->scrollIndicatorId = AddScrollIndicatorArrowPairParameterized(2, 0xC2, 0xC, 0x94, playerPcStruct->count - playerPcStruct->pageItems + 1, 110, 110, &playerPcStruct->cursorPos);
 }

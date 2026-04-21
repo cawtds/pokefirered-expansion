@@ -3675,7 +3675,7 @@ static void SwitchPartyMon(void)
 
 static void SetSwitchedPartyOrderQuestLogEvent(void)
 {
-    struct QuestLogEvent_SwitchedPartyOrder * data = Alloc(sizeof(*data));
+    struct QuestLogEvent_SwitchedPartyOrder *data = Alloc(sizeof(*data));
 
     data->species1 = GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_SPECIES_OR_EGG);
     data->species2 = GetMonData(&gPlayerParty[gPartyMenu.slotId2], MON_DATA_SPECIES_OR_EGG);

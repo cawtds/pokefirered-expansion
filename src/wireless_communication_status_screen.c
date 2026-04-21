@@ -53,8 +53,8 @@ static struct
 
 void Task_WirelessCommunicationScreen(u8 taskId);
 static void CB2_InitWirelessCommunicationScreen(void);
-static void WCSS_AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 * str, u8 x, u8 y, u8 palIdx);
-static bool32 UpdateCommunicationCounts(u32 * counts, u32 * lastCounts, u32 * activities, u8 taskId);
+static void WCSS_AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 palIdx);
+static bool32 UpdateCommunicationCounts(u32 *counts, u32 *lastCounts, u32 *activities, u8 taskId);
 
 static const u16 sPalettes[][16] = {
     INCBIN_U16("graphics/wireless_status_screen/default.gbapal"),
@@ -241,7 +241,7 @@ static void ExitWirelessCommunicationStatusScreen(void)
 }
 
 // Cycle through palettes that relocate various shades of blue to create the wave effect at the bottom of the screen.
-static void CyclePalette(s16 * counter, s16 * palIdx)
+static void CyclePalette(s16 *counter, s16 *palIdx)
 {
     s32 idx;
     if (++(*counter) > 5)
@@ -340,7 +340,7 @@ void Task_WirelessCommunicationScreen(u8 taskId)
     }
 }
 
-static void WCSS_AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 * str, u8 x, u8 y, u8 mode)
+static void WCSS_AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 mode)
 {
     u8 textColor[3];
     switch (mode)
@@ -375,7 +375,7 @@ static void WCSS_AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 * 
     AddTextPrinterParameterized4(windowId, fontId, x, y, fontId == FONT_SMALL ? 0 : 1, 0, textColor, TEXT_SKIP_DRAW, str);
 }
 
-static u32 CountPlayersInGroupAndGetActivity(struct RfuPlayer * player, u32 * groupCounts)
+static u32 CountPlayersInGroupAndGetActivity(struct RfuPlayer *player, u32 *groupCounts)
 {
     u32 activity = player->rfu.data.activity;
     s32 i, j, k;
@@ -418,7 +418,7 @@ static u32 CountPlayersInGroupAndGetActivity(struct RfuPlayer * player, u32 * gr
 
 }
 
-static bool32 HaveCountsChanged(const u32 * curCounts, const u32 * prevCounts)
+static bool32 HaveCountsChanged(const u32 *curCounts, const u32 *prevCounts)
 {
     s32 i;
 
@@ -431,11 +431,11 @@ static bool32 HaveCountsChanged(const u32 * curCounts, const u32 * prevCounts)
     return FALSE;
 }
 
-static bool32 UpdateCommunicationCounts(u32 * groupCounts, u32 * prevGroupCounts, u32 * activities, u8 taskId)
+static bool32 UpdateCommunicationCounts(u32 *groupCounts, u32 *prevGroupCounts, u32 *activities, u8 taskId)
 {
     bool32 activitiesUpdated = FALSE;
     u32 groupCountBuffer[NUM_GROUPTYPES] = {0, 0, 0, 0};
-    struct WirelessLink_Group * group = (void *)gTasks[taskId].data;
+    struct WirelessLink_Group *group = (void *)gTasks[taskId].data;
     s32 i;
 
     for (i = 0; i < NUM_TASK_DATA; i++)

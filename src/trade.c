@@ -212,7 +212,7 @@ static void ComputePartyTradeableFlags(u8 side);
 static void ComputePartyHPBarLevels(u8 side);
 static void SetTradePartyHPBarSprites(void);
 static void SaveTradeGiftRibbons(void);
-static u32 CanTradeSelectedMon(struct Pokemon * party, int partyCount, int cursorPos);
+static u32 CanTradeSelectedMon(struct Pokemon *party, int partyCount, int cursorPos);
 
 static const u8 sText_4Qmark[] = _("????");
 static const u8 sText_IsThisTradeOkay[] = _("Is this trade okay?");
@@ -936,7 +936,7 @@ static void CB2_CreateTradeMenu(void)
 
         for (i = 0; i < sTradeMenu->partyCounts[TRADE_PLAYER]; i++)
         {
-            struct Pokemon * mon = &gPlayerParty[i];
+            struct Pokemon *mon = &gPlayerParty[i];
             sTradeMenu->partySpriteIds[TRADE_PLAYER][i] = CreateMonIcon(GetMonData(mon, MON_DATA_SPECIES_OR_EGG),
                                                                 SpriteCB_MonIcon,
                                                                 (sTradeMonSpriteCoords[i][0] * 8) + 14,
@@ -947,7 +947,7 @@ static void CB2_CreateTradeMenu(void)
 
         for (i = 0; i < sTradeMenu->partyCounts[TRADE_PARTNER]; i++)
         {
-            struct Pokemon * mon = &gEnemyParty[i];
+            struct Pokemon *mon = &gEnemyParty[i];
             sTradeMenu->partySpriteIds[TRADE_PARTNER][i] = CreateMonIcon(GetMonData(mon, MON_DATA_SPECIES_OR_EGG, NULL),
                                                                 SpriteCB_MonIcon,
                                                                 (sTradeMonSpriteCoords[i + PARTY_SIZE][0] * 8) + 14,
@@ -1428,7 +1428,7 @@ static bool8 BufferTradeParties(void)
 {
     u8 id = GetMultiplayerId();
     int i;
-    struct Pokemon * mon;
+    struct Pokemon *mon;
 
     switch (sTradeMenu->bufferPartyState)
     {
@@ -2363,7 +2363,7 @@ static void PrintPartyNicknames(u8 whichParty)
 {
     u8 buff[POKEMON_NAME_BUFFER_SIZE];
     u8 nickname[max(32, POKEMON_NAME_BUFFER_SIZE)];
-    struct Pokemon * party = (whichParty == TRADE_PLAYER) ? gPlayerParty : gEnemyParty;
+    struct Pokemon *party = (whichParty == TRADE_PLAYER) ? gPlayerParty : gEnemyParty;
     u8 i;
     for (i = 0; i < sTradeMenu->partyCounts[whichParty]; i++)
     {
@@ -2721,10 +2721,10 @@ static void SaveTradeGiftRibbons(void)
     }
 }
 
-static u32 CanTradeSelectedMon(struct Pokemon * playerParty, int partyCount, int monIdx)
+static u32 CanTradeSelectedMon(struct Pokemon *playerParty, int partyCount, int monIdx)
 {
     int i, numMonsLeft;
-    struct LinkPlayer * partner;
+    struct LinkPlayer *partner;
     int species[PARTY_SIZE];
     int species2[PARTY_SIZE];
 

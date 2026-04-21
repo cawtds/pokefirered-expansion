@@ -35,10 +35,10 @@ static EWRAM_DATA enum Direction sTeleportSavedFacingDirection = DIR_NONE;
 EWRAM_DATA struct ObjectEvent gObjectEvents[OBJECT_EVENTS_COUNT] = {};
 EWRAM_DATA struct PlayerAvatar gPlayerAvatar = {};
 
-static u8 ObjectEventCB2_NoMovement2(struct ObjectEvent * object, struct Sprite *sprite);
+static u8 ObjectEventCB2_NoMovement2(struct ObjectEvent *object, struct Sprite *sprite);
 static bool8 TryUpdatePlayerSpinDirection(void);
-static bool8 TryInterruptObjectEventSpecialAnim(struct ObjectEvent * playerObjEvent, enum Direction direction);
-static void NpcClearStrangeBits(struct ObjectEvent * playerObjEvent);
+static bool8 TryInterruptObjectEventSpecialAnim(struct ObjectEvent *playerObjEvent, enum Direction direction);
+static void NpcClearStrangeBits(struct ObjectEvent *playerObjEvent);
 static void MovePlayerAvatarUsingKeypadInput(enum Direction direction, u16 newKeys, u16 heldKeys);
 static void PlayerAllowForcedMovementIfMovingSameDirection(void);
 static bool8 ForcedMovement_None(void);
@@ -72,11 +72,11 @@ static bool8 ShouldJumpLedge(s16 x, s16 y, enum Direction direction);
 static bool8 TryPushBoulder(s16 x, s16 y, enum Direction direction);
 static void CheckAcroBikeCollision(s16 x, s16 y, u8 metatileBehavior, enum Collision *collision);
 static void DoPlayerAvatarTransition(void);
-static void PlayerAvatarTransition_Dummy(struct ObjectEvent * playerObject);
-static void PlayerAvatarTransition_Normal(struct ObjectEvent * playerObject);
-static void PlayerAvatarTransition_Bike(struct ObjectEvent * playerObject);
-static void PlayerAvatarTransition_Surfing(struct ObjectEvent * playerObject);
-static void PlayerAvatarTransition_Underwater(struct ObjectEvent * playerObject);
+static void PlayerAvatarTransition_Dummy(struct ObjectEvent *playerObject);
+static void PlayerAvatarTransition_Normal(struct ObjectEvent *playerObject);
+static void PlayerAvatarTransition_Bike(struct ObjectEvent *playerObject);
+static void PlayerAvatarTransition_Surfing(struct ObjectEvent *playerObject);
+static void PlayerAvatarTransition_Underwater(struct ObjectEvent *playerObject);
 static bool8 PlayerIsAnimActive(void);
 static bool8 PlayerCheckIfAnimFinishedOrInactive(void);
 static bool8 PlayerAnimIsMultiFrameStationary(void);
@@ -84,35 +84,35 @@ static bool8 PlayerAnimIsMultiFrameStationaryAndStateNotTurning(void);
 static void PlayCollisionSoundIfNotFacingWarp(enum Direction direction);
 static void PlayerGoSpin(enum Direction direction);
 static void PlayerApplyTileForcedMovement(u8 metatileBehavior);
-static void HandleWarpArrowSpriteHideShow(struct ObjectEvent * playerObjEvent);
+static void HandleWarpArrowSpriteHideShow(struct ObjectEvent *playerObjEvent);
 static void StartStrengthAnim(u8 objectEventId, enum Direction direction);
 static void Task_BumpBoulder(u8 taskId);
-static bool8 DoBoulderInit(struct Task *task, struct ObjectEvent * playerObj, struct ObjectEvent * boulderObj);
-static bool8 DoBoulderDust(struct Task *task, struct ObjectEvent * playerObj, struct ObjectEvent * boulderObj);
-static bool8 DoBoulderFinish(struct Task *task, struct ObjectEvent * playerObj, struct ObjectEvent * boulderObj);
+static bool8 DoBoulderInit(struct Task *task, struct ObjectEvent *playerObj, struct ObjectEvent *boulderObj);
+static bool8 DoBoulderDust(struct Task *task, struct ObjectEvent *playerObj, struct ObjectEvent *boulderObj);
+static bool8 DoBoulderFinish(struct Task *task, struct ObjectEvent *playerObj, struct ObjectEvent *boulderObj);
 static void DoPlayerMatJump(void);
 static void DoPlayerAvatarSecretBaseMatJump(u8 taskId);
-static bool8 PlayerAvatar_DoSecretBaseMatJump(struct Task *task, struct ObjectEvent * playerObj);
+static bool8 PlayerAvatar_DoSecretBaseMatJump(struct Task *task, struct ObjectEvent *playerObj);
 static void DoPlayerMatSpin(void);
 static void PlayerAvatar_DoSecretBaseMatSpin(u8 taskId);
-static bool8 PlayerAvatar_SecretBaseMatSpinStep0(struct Task *task, struct ObjectEvent * playerObj);
-static bool8 PlayerAvatar_SecretBaseMatSpinStep1(struct Task *task, struct ObjectEvent * playerObj);
-static bool8 PlayerAvatar_SecretBaseMatSpinStep2(struct Task *task, struct ObjectEvent * playerObj);
-static bool8 PlayerAvatar_SecretBaseMatSpinStep3(struct Task *task, struct ObjectEvent * playerObj);
+static bool8 PlayerAvatar_SecretBaseMatSpinStep0(struct Task *task, struct ObjectEvent *playerObj);
+static bool8 PlayerAvatar_SecretBaseMatSpinStep1(struct Task *task, struct ObjectEvent *playerObj);
+static bool8 PlayerAvatar_SecretBaseMatSpinStep2(struct Task *task, struct ObjectEvent *playerObj);
+static bool8 PlayerAvatar_SecretBaseMatSpinStep3(struct Task *task, struct ObjectEvent *playerObj);
 static void CreateStopSurfingTask(enum Direction direction);
 static void Task_StopSurfingInit(u8 taskId);
 static void Task_WaitStopSurfing(u8 taskId);
 
 static void Task_TeleportWarpOutPlayerAnim(u8 taskId);
 static void Task_TeleportWarpInPlayerAnim(u8 taskId);
-static u8 TeleportAnim_RotatePlayer(struct ObjectEvent * object, s16 *timer);
+static u8 TeleportAnim_RotatePlayer(struct ObjectEvent *object, s16 *timer);
 
 void MovementType_Player(struct Sprite *sprite)
 {
     UpdateObjectEventCurrentMovement(&gObjectEvents[sprite->data[0]], sprite, (bool8 (*)(struct ObjectEvent *, struct Sprite *))ObjectEventCB2_NoMovement2);
 }
 
-static u8 ObjectEventCB2_NoMovement2(struct ObjectEvent * object, struct Sprite *sprite)
+static u8 ObjectEventCB2_NoMovement2(struct ObjectEvent *object, struct Sprite *sprite)
 {
     return 0;
 }
@@ -767,31 +767,31 @@ static void DoPlayerAvatarTransition(void)
     ResetTransitionStates();
 }
 
-static void PlayerAvatarTransition_Dummy(struct ObjectEvent * playerObjEvent)
+static void PlayerAvatarTransition_Dummy(struct ObjectEvent *playerObjEvent)
 {
 
 }
 
-static void PlayerAvatarTransition_Normal(struct ObjectEvent * playerObjEvent)
+static void PlayerAvatarTransition_Normal(struct ObjectEvent *playerObjEvent)
 {
     QuestLogTryRecordPlayerAvatarGfxTransition(QL_PLAYER_GFX_NORMAL);
     QuestLogCallUpdatePlayerSprite(QL_PLAYER_GFX_NORMAL);
 }
 
-static void PlayerAvatarTransition_Bike(struct ObjectEvent * playerObjEvent)
+static void PlayerAvatarTransition_Bike(struct ObjectEvent *playerObjEvent)
 {
     QuestLogTryRecordPlayerAvatarGfxTransition(QL_PLAYER_GFX_BIKE);
     QuestLogCallUpdatePlayerSprite(QL_PLAYER_GFX_BIKE);
     BikeClearState();
 }
 
-static void PlayerAvatarTransition_Surfing(struct ObjectEvent * playerObjEvent)
+static void PlayerAvatarTransition_Surfing(struct ObjectEvent *playerObjEvent)
 {
     QuestLogTryRecordPlayerAvatarGfxTransition(QL_PLAYER_GFX_SURF);
     QuestLogCallUpdatePlayerSprite(QL_PLAYER_GFX_SURF);
 }
 
-static void PlayerAvatarTransition_Underwater(struct ObjectEvent * playerObjEvent)
+static void PlayerAvatarTransition_Underwater(struct ObjectEvent *playerObjEvent)
 {
 
 }
@@ -871,13 +871,13 @@ static void PlayerSetAnimId(u8 movementActionId, u8 copyableMovement)
     }
 }
 
-static void QL_TryRecordPlayerStepWithDuration0(struct ObjectEvent * objectEvent, u8 movementAction)
+static void QL_TryRecordPlayerStepWithDuration0(struct ObjectEvent *objectEvent, u8 movementAction)
 {
     if (!ObjectEventSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], movementAction))
         QuestLogRecordPlayerStepWithDuration(movementAction, 0);
 }
 
-static void QL_TryRecordNPCStepWithDuration32(struct ObjectEvent * objectEvent, u8 movementAction)
+static void QL_TryRecordNPCStepWithDuration32(struct ObjectEvent *objectEvent, u8 movementAction)
 {
     if (!ObjectEventSetHeldMovement(objectEvent, movementAction))
         QuestLogRecordNPCStepWithDuration(objectEvent->localId, objectEvent->mapNum, objectEvent->mapGroup, movementAction, 32);
@@ -1403,7 +1403,7 @@ static void HandleWarpArrowSpriteHideShow(struct ObjectEvent *objectEvent)
     SetSpriteInvisible(objectEvent->warpArrowSpriteId);
 }
 
-static bool8 (*const sBoulderTaskSteps[])(struct Task *task, struct ObjectEvent * playerObj, struct ObjectEvent * boulderObj) = {
+static bool8 (*const sBoulderTaskSteps[])(struct Task *task, struct ObjectEvent *playerObj, struct ObjectEvent *boulderObj) = {
     DoBoulderInit,
     DoBoulderDust,
     DoBoulderFinish
@@ -1504,7 +1504,7 @@ static bool8 PlayerAvatar_DoSecretBaseMatJump(struct Task *task, struct ObjectEv
     return FALSE;
 }
 
-static bool8 (*const sPlayerAvatarSecretBaseMatSpin[])(struct Task *task, struct ObjectEvent * playerObj) = {
+static bool8 (*const sPlayerAvatarSecretBaseMatSpin[])(struct Task *task, struct ObjectEvent *playerObj) = {
     PlayerAvatar_SecretBaseMatSpinStep0,
     PlayerAvatar_SecretBaseMatSpinStep1,
     PlayerAvatar_SecretBaseMatSpinStep2,

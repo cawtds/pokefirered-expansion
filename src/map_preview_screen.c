@@ -486,7 +486,7 @@ bool32 ForestMapPreviewScreenIsRunning(void)
 
 static void Task_RunMapPreviewScreenForest(u8 taskId)
 {
-    s16 * data;
+    s16 *data;
 
     data = gTasks[taskId].data;
     switch (data[0])
@@ -565,7 +565,7 @@ static void Task_RunMapPreviewScreenForest(u8 taskId)
     }
 }
 
-const struct MapPreviewScreen * GetDungeonMapPreviewScreenInfo(u8 mapsec)
+const struct MapPreviewScreen *GetDungeonMapPreviewScreenInfo(u8 mapsec)
 {
     u8 idx;
 

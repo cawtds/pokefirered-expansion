@@ -20,7 +20,7 @@ enum {
     FUNC_RUN_BUFFER,
 };
 
-static EWRAM_DATA struct MysteryGiftClient * sClient = NULL;
+static EWRAM_DATA struct MysteryGiftClient *sClient = NULL;
 
 static void MysteryGiftClient_Init(struct MysteryGiftClient *, u32, u32);
 static u32 MysteryGiftClient_CallFunc(struct MysteryGiftClient *);
@@ -34,7 +34,7 @@ void MysteryGiftClient_Create(void)
     MysteryGiftClient_Init(sClient, 1, 0);
 }
 
-u32 MysteryGiftClient_Run(u16 * endVal)
+u32 MysteryGiftClient_Run(u16 *endVal)
 {
     u32 result;
     if (sClient == NULL)
@@ -64,7 +64,7 @@ void MysteryGiftClient_SetParam(u32 val)
     sClient->param = val;
 }
 
-static void MysteryGiftClient_Init(struct MysteryGiftClient * client, u32 sendPlayerId, u32 recvPlayerId)
+static void MysteryGiftClient_Init(struct MysteryGiftClient *client, u32 sendPlayerId, u32 recvPlayerId)
 {
     client->unused = 0;
     client->funcId = FUNC_INIT;
@@ -76,7 +76,7 @@ static void MysteryGiftClient_Init(struct MysteryGiftClient * client, u32 sendPl
     MysteryGiftLink_Init(&client->link, sendPlayerId, recvPlayerId);
 }
 
-static void MysteryGiftClient_Free(struct MysteryGiftClient * client)
+static void MysteryGiftClient_Free(struct MysteryGiftClient *client)
 {
     Free(client->sendBuffer);
     Free(client->recvBuffer);
@@ -84,20 +84,20 @@ static void MysteryGiftClient_Free(struct MysteryGiftClient * client)
     Free(client->msg);
 }
 
-static void MysteryGiftClient_CopyRecvScript(struct MysteryGiftClient * client)
+static void MysteryGiftClient_CopyRecvScript(struct MysteryGiftClient *client)
 {
     memcpy(client->script, client->recvBuffer, MG_LINK_BUFFER_SIZE);
     client->cmdidx = 0;
 }
 
-static void MysteryGiftClient_InitSendWord(struct MysteryGiftClient * client, u32 ident, u32 word)
+static void MysteryGiftClient_InitSendWord(struct MysteryGiftClient *client, u32 ident, u32 word)
 {
     CpuFill32(0, client->sendBuffer, MG_LINK_BUFFER_SIZE);
     *(u32 *)client->sendBuffer = word;
     MysteryGiftLink_InitSend(&client->link, ident, client->sendBuffer, sizeof(word));
 }
 
-static u32 Client_Init(struct MysteryGiftClient * client)
+static u32 Client_Init(struct MysteryGiftClient *client)
 {
     memcpy(client->script, gMysteryGiftClientScript_Init, MG_LINK_BUFFER_SIZE);
     client->cmdidx = 0;
@@ -106,12 +106,12 @@ static u32 Client_Init(struct MysteryGiftClient * client)
     return CLI_RET_INIT;
 }
 
-static u32 Client_Done(struct MysteryGiftClient * client)
+static u32 Client_Done(struct MysteryGiftClient *client)
 {
     return CLI_RET_END;
 }
 
-static u32 Client_Recv(struct MysteryGiftClient * client)
+static u32 Client_Recv(struct MysteryGiftClient *client)
 {
     if (MysteryGiftLink_Recv(&client->link))
     {
@@ -121,7 +121,7 @@ static u32 Client_Recv(struct MysteryGiftClient * client)
     return CLI_RET_ACTIVE;
 }
 
-static u32 Client_Send(struct MysteryGiftClient * client)
+static u32 Client_Send(struct MysteryGiftClient *client)
 {
     if (MysteryGiftLink_Send(&client->link))
     {
@@ -131,10 +131,10 @@ static u32 Client_Send(struct MysteryGiftClient * client)
     return CLI_RET_ACTIVE;
 }
 
-static u32 Client_Run(struct MysteryGiftClient * client)
+static u32 Client_Run(struct MysteryGiftClient *client)
 {
     // process command
-    struct MysteryGiftClientCmd * cmd = &client->script[client->cmdidx];
+    struct MysteryGiftClientCmd *cmd = &client->script[client->cmdidx];
     client->cmdidx++;
     switch (cmd->instr)
     {
@@ -246,7 +246,7 @@ static u32 Client_Run(struct MysteryGiftClient * client)
     return CLI_RET_ACTIVE;
 }
 
-static u32 Client_Wait(struct MysteryGiftClient * client)
+static u32 Client_Wait(struct MysteryGiftClient *client)
 {
     if (client->funcState)
     {
@@ -256,7 +256,7 @@ static u32 Client_Wait(struct MysteryGiftClient * client)
     return CLI_RET_ACTIVE;
 }
 
-static u32 Client_RunMysteryEventScript(struct MysteryGiftClient * client)
+static u32 Client_RunMysteryEventScript(struct MysteryGiftClient *client)
 {
     switch (client->funcState)
     {
@@ -275,7 +275,7 @@ static u32 Client_RunMysteryEventScript(struct MysteryGiftClient * client)
     return CLI_RET_ACTIVE;
 }
 
-static u32 Client_RunBufferScript(struct MysteryGiftClient * client)
+static u32 Client_RunBufferScript(struct MysteryGiftClient *client)
 {
     u32 (*func)(u32 *, struct SaveBlock2 *, struct SaveBlock1 *) = (void *)client->bufferScript;
     if (func(&client->param, gSaveBlock2Ptr, gSaveBlock1Ptr) == 1)
@@ -286,7 +286,7 @@ static u32 Client_RunBufferScript(struct MysteryGiftClient * client)
     return CLI_RET_ACTIVE;
 }
 
-static u32 MysteryGiftClient_CallFunc(struct MysteryGiftClient * client)
+static u32 MysteryGiftClient_CallFunc(struct MysteryGiftClient *client)
 {
     u32 (*funcs[])(struct MysteryGiftClient *) = {
         [FUNC_INIT] = Client_Init,

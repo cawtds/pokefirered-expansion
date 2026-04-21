@@ -24,29 +24,29 @@ typedef u8 (*TrainerApproachFunc)(struct ObjectEvent *, s16, s16, s16);
 typedef bool32 (*TrainerSeeFunc)(u8, struct Task *, struct ObjectEvent *);
 
 static u8 CheckTrainer(u8 trainerObjId);
-static u8 GetTrainerApproachDistance(struct ObjectEvent * trainerObj);
-static u8 GetTrainerApproachDistanceSouth(struct ObjectEvent * trainerObj, s16 range, s16 x, s16 y);
-static u8 GetTrainerApproachDistanceNorth(struct ObjectEvent * trainerObj, s16 range, s16 x, s16 y);
-static u8 GetTrainerApproachDistanceWest(struct ObjectEvent * trainerObj, s16 range, s16 x, s16 y);
-static u8 GetTrainerApproachDistanceEast(struct ObjectEvent * trainerObj, s16 range, s16 x, s16 y);
+static u8 GetTrainerApproachDistance(struct ObjectEvent *trainerObj);
+static u8 GetTrainerApproachDistanceSouth(struct ObjectEvent *trainerObj, s16 range, s16 x, s16 y);
+static u8 GetTrainerApproachDistanceNorth(struct ObjectEvent *trainerObj, s16 range, s16 x, s16 y);
+static u8 GetTrainerApproachDistanceWest(struct ObjectEvent *trainerObj, s16 range, s16 x, s16 y);
+static u8 GetTrainerApproachDistanceEast(struct ObjectEvent *trainerObj, s16 range, s16 x, s16 y);
 static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 approachDistance, enum Direction direction);
 static void InitTrainerApproachTask(struct ObjectEvent *trainerObj, u8 range);
 static void Task_RunTrainerSeeFuncList(u8 taskId);
-static bool32 TrainerSeeFunc_Idle(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_StartExclMark(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_WaitExclMark(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_TrainerApproach(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_PrepareToEngage(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_End(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_BeginRemoveDisguise(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_WaitRemoveDisguise(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_TrainerInAshFacesPlayer(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_BeginJumpOutOfAsh(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_WaitJumpOutOfAsh(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_EndJumpOutOfAsh(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_OffscreenAboveTrainerCreateCameraObj(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveUp(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
-static bool32 TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveDown(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
+static bool32 TrainerSeeFunc_Idle(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_StartExclMark(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_WaitExclMark(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_TrainerApproach(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_PrepareToEngage(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_End(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_BeginRemoveDisguise(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_WaitRemoveDisguise(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_TrainerInAshFacesPlayer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_BeginJumpOutOfAsh(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_WaitJumpOutOfAsh(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_EndJumpOutOfAsh(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_OffscreenAboveTrainerCreateCameraObj(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveUp(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool32 TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveDown(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static void Task_DestroyTrainerApproachTask(u8 taskId);
 static void SpriteCB_TrainerIcons(struct Sprite *sprite);
 static void SetIconSpriteData(struct Sprite *sprite, u16 fldEffId, u8 spriteAnimNum);
@@ -63,7 +63,7 @@ EWRAM_DATA u8 gApproachingTrainerId = 0;
 static const u16 sGfx_Emoticons[] = INCBIN_U16("graphics/misc/emoticons.4bpp");
 static const u8 sEmotion_Gfx[] = INCBIN_U8("graphics/misc/emotes.4bpp");
 
-// u8 func(struct ObjectEvent * trainerObj, s16 range, s16 x, s16 y)
+// u8 func(struct ObjectEvent *trainerObj, s16 range, s16 x, s16 y)
 // range is the maximum distance the trainer can see
 // x and y are the player's coordinates
 // Returns distance to walk if trainer has unobstructed view of player
@@ -93,7 +93,7 @@ enum {
     TRSEE_OFFSCREEN_MOVE_CAMERA_DOWN,
 };
 
-// bool8 func(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
+// bool8 func(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 // Returns TRUE to run the next func immediately
 // Returns FALSE to delay the next func to the next frame
 static const TrainerSeeFunc sTrainerSeeFuncList[] = {
@@ -439,12 +439,12 @@ static void Task_RunTrainerSeeFuncList(u8 taskId)
 
 // TrainerSeeFuncs
 
-static bool32 TrainerSeeFunc_Idle(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
+static bool32 TrainerSeeFunc_Idle(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     return FALSE;
 }
 
-static bool32 TrainerSeeFunc_StartExclMark(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
+static bool32 TrainerSeeFunc_StartExclMark(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     u8 action;
     // FRLG introduces trainers who can see the player from offscreen above.
@@ -464,7 +464,7 @@ static bool32 TrainerSeeFunc_StartExclMark(u8 taskId, struct Task *task, struct 
     return TRUE;
 }
 
-static bool32 TrainerSeeFunc_WaitExclMark(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
+static bool32 TrainerSeeFunc_WaitExclMark(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     if (FieldEffectActiveListContains(FLDEFF_EXCLAMATION_MARK_ICON))
     {
@@ -481,7 +481,7 @@ static bool32 TrainerSeeFunc_WaitExclMark(u8 taskId, struct Task *task, struct O
     }
 }
 
-static bool32 TrainerSeeFunc_TrainerApproach(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
+static bool32 TrainerSeeFunc_TrainerApproach(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     if (!ObjectEventIsMovementOverridden(trainerObj) || ObjectEventClearHeldMovementIfFinished(trainerObj))
     {
@@ -499,7 +499,7 @@ static bool32 TrainerSeeFunc_TrainerApproach(u8 taskId, struct Task *task, struc
     return FALSE;
 }
 
-static bool32 TrainerSeeFunc_PrepareToEngage(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
+static bool32 TrainerSeeFunc_PrepareToEngage(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     struct ObjectEvent *playerObj;
 
@@ -520,7 +520,7 @@ static bool32 TrainerSeeFunc_PrepareToEngage(u8 taskId, struct Task *task, struc
     return FALSE;
 }
 
-static bool32 TrainerSeeFunc_End(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
+static bool32 TrainerSeeFunc_End(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
 
@@ -531,7 +531,7 @@ static bool32 TrainerSeeFunc_End(u8 taskId, struct Task *task, struct ObjectEven
 }
 
 // Jumps here if disguised. Not used in FRLG.
-static bool32 TrainerSeeFunc_BeginRemoveDisguise(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
+static bool32 TrainerSeeFunc_BeginRemoveDisguise(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     if (!ObjectEventIsMovementOverridden(trainerObj)
      || ObjectEventClearHeldMovementIfFinished(trainerObj))
@@ -542,7 +542,7 @@ static bool32 TrainerSeeFunc_BeginRemoveDisguise(u8 taskId, struct Task *task, s
     return FALSE;
 }
 
-static bool32 TrainerSeeFunc_WaitRemoveDisguise(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
+static bool32 TrainerSeeFunc_WaitRemoveDisguise(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     if (ObjectEventClearHeldMovementIfFinished(trainerObj))
         task->tFuncId = 3;
@@ -551,7 +551,7 @@ static bool32 TrainerSeeFunc_WaitRemoveDisguise(u8 taskId, struct Task *task, st
 }
 
 // Jump here if buried in ash. Not used in FRLG.
-static bool32 TrainerSeeFunc_TrainerInAshFacesPlayer(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
+static bool32 TrainerSeeFunc_TrainerInAshFacesPlayer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     if (!ObjectEventIsMovementOverridden(trainerObj)
         || ObjectEventClearHeldMovementIfFinished(trainerObj))
@@ -562,7 +562,7 @@ static bool32 TrainerSeeFunc_TrainerInAshFacesPlayer(u8 taskId, struct Task *tas
     return FALSE;
 }
 
-static bool32 TrainerSeeFunc_BeginJumpOutOfAsh(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
+static bool32 TrainerSeeFunc_BeginJumpOutOfAsh(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     if (ObjectEventCheckHeldMovementStatus(trainerObj))
     {
@@ -576,7 +576,7 @@ static bool32 TrainerSeeFunc_BeginJumpOutOfAsh(u8 taskId, struct Task *task, str
     return FALSE;
 }
 
-static bool32 TrainerSeeFunc_WaitJumpOutOfAsh(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
+static bool32 TrainerSeeFunc_WaitJumpOutOfAsh(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     struct Sprite *sprite;
 
@@ -638,7 +638,7 @@ static bool32 TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveUp(u8 taskId, str
     return FALSE;
 }
 
-static bool32 TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveDown(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj)
+static bool32 TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveDown(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     u8 specialObjectId;
     TryGetObjectEventIdByLocalIdAndMap(LOCALID_CAMERA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &specialObjectId);
@@ -674,7 +674,7 @@ static bool32 TrainerSeeFunc_OffscreenAboveTrainerCameraObjMoveDown(u8 taskId, s
 static void Task_RevealTrainer_RunTrainerSeeFuncList(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
-    struct ObjectEvent * trainerObj;
+    struct ObjectEvent *trainerObj;
 
     // another objEvent loaded into by loadword?
     LoadWordFromTwoHalfwords((u16 *)&task->data[1], (u32 *)&trainerObj);

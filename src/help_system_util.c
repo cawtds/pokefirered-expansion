@@ -151,7 +151,7 @@ u8 RunHelpSystemCallback(void)
 
 void SaveCallbacks(void)
 {
-    vu16 * dma;
+    vu16 *dma;
     sVideoState.savedVblankCb = gMain.vblankCallback;
     sVideoState.savedHblankCb = gMain.hblankCallback;
     gMain.vblankCallback = NULL;
@@ -379,7 +379,7 @@ void HS_ShowOrHideScrollArrows(u8 which, u8 mode)
     }
 }
 
-void HelpSystemRenderText(u8 fontId, u8 * dest, const u8 * src, u8 x, u8 y, u8 width, u8 height)
+void HelpSystemRenderText(u8 fontId, u8 *dest, const u8 *src, u8 x, u8 y, u8 width, u8 height)
 {
     // fontId -> sp+24
     // dest -> sp+28
@@ -581,7 +581,7 @@ void DecompressAndRenderGlyph(u8 fontId, u16 glyph, struct Bitmap *srcBlit, stru
     BlitBitmapRect4Bit(srcBlit, destBlit, 0, 0, x, y, gCurGlyph.width, gCurGlyph.height, 0);
 }
 
-void HelpSystem_PrintTextInTopLeftCorner(const u8 * str)
+void HelpSystem_PrintTextInTopLeftCorner(const u8 *str)
 {
     union TextColor color = {
         .background = TEXT_DYNAMIC_COLOR_6,
@@ -594,7 +594,7 @@ void HelpSystem_PrintTextInTopLeftCorner(const u8 * str)
     HelpSystemRenderText(5, gDecompressionBuffer + 0x3D00, str, 6, 2, 7, 2);
 }
 
-void HelpSystem_PrintTextRightAlign_Row52(const u8 * str)
+void HelpSystem_PrintTextRightAlign_Row52(const u8 *str)
 {
     union TextColor color = {
         .background = TEXT_DYNAMIC_COLOR_6,
@@ -608,7 +608,7 @@ void HelpSystem_PrintTextRightAlign_Row52(const u8 * str)
     HelpSystemRenderText(0, gDecompressionBuffer + 0x3400, str, left, 2, 16, 2);
 }
 
-void HelpSystem_PrintTextAt(const u8 * str, u8 x, u8 y)
+void HelpSystem_PrintTextAt(const u8 *str, u8 x, u8 y)
 {
     union TextColor color = {
         .background = TEXT_DYNAMIC_COLOR_6,
@@ -621,7 +621,7 @@ void HelpSystem_PrintTextAt(const u8 * str, u8 x, u8 y)
     HelpSystemRenderText(FONT_NORMAL, gDecompressionBuffer + 0x0000, str, x, y, 26, 16);
 }
 
-void HelpSystem_PrintQuestionAndAnswerPair(const u8 * question, const u8 * answer)
+void HelpSystem_PrintQuestionAndAnswerPair(const u8 *question, const u8 *answer)
 {
     union TextColor color = {
         .background = TEXT_DYNAMIC_COLOR_5,
@@ -636,7 +636,7 @@ void HelpSystem_PrintQuestionAndAnswerPair(const u8 * question, const u8 * answe
     HelpSystemRenderText(2, gDecompressionBuffer + 0x09C0, answer, 0, 0, 26, 13);
 }
 
-void HelpSystem_PrintTopicMouseoverDescription(const u8 * str)
+void HelpSystem_PrintTopicMouseoverDescription(const u8 *str)
 {
     union TextColor color = {
         .background = TEXT_COLOR_WHITE,
@@ -665,7 +665,7 @@ void HelpSystem_FillPanel1(void)
     CpuFill16(0xFFFF, gDecompressionBuffer + 0x0000, 0x3400);
 }
 
-void HelpSystem_InitListMenuController(struct HelpSystemListMenu * a0, u8 a1, u8 a2)
+void HelpSystem_InitListMenuController(struct HelpSystemListMenu *a0, u8 a1, u8 a2)
 {
     gHelpSystemListMenu.sub = a0->sub;
     gHelpSystemListMenu.itemsAbove = a1;

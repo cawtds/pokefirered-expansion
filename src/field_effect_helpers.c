@@ -21,7 +21,7 @@
 #define REFLECTION_PAL_TAG(tag, num) ((tag) == TAG_NONE ? (num) + PAL_RAW_REFLECTION_OFFSET : (tag) + PAL_TAG_REFLECTION_OFFSET)
 
 static void UpdateObjectReflectionSprite(struct Sprite *sprite);
-static void LoadObjectReflectionPalette(struct ObjectEvent * objectEvent, struct Sprite *sprite);
+static void LoadObjectReflectionPalette(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static void LoadObjectHighBridgeReflectionPalette(struct ObjectEvent *, struct Sprite *sprite);
 static void LoadObjectRegularReflectionPalette(struct ObjectEvent *, struct Sprite *sprite);
 static void UpdateGrassFieldEffectSubpriority(struct Sprite *sprite, u8 z, u8 offset);
@@ -31,9 +31,9 @@ static void UpdateFeetInFlowingWaterFieldEffect(struct Sprite *sprite);
 static void UpdateAshFieldEffect_Step0(struct Sprite *sprite);
 static void UpdateAshFieldEffect_Step1(struct Sprite *sprite);
 static void UpdateAshFieldEffect_Step2(struct Sprite *sprite);
-static void SynchroniseSurfAnim(struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static void SynchroniseSurfPosition(struct ObjectEvent * objectEvent, struct Sprite *sprite);
-static void CreateBobbingEffect(struct ObjectEvent * objectEvent, struct Sprite *linkedSprite, struct Sprite *sprite);
+static void SynchroniseSurfAnim(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+static void SynchroniseSurfPosition(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+static void CreateBobbingEffect(struct ObjectEvent *objectEvent, struct Sprite *linkedSprite, struct Sprite *sprite);
 static void SpriteCB_UnderwaterSurfBlob(struct Sprite *sprite);
 static u32 ShowDisguiseFieldEffect(u32 fldEff, const struct SpriteTemplate* template, u32 paletteNum);
 
@@ -57,7 +57,7 @@ void SetUpShadow(struct ObjectEvent *objectEvent)
     FldEff_Shadow();
 }
 
-void SetUpReflection(struct ObjectEvent * objectEvent, struct Sprite *sprite, bool8 stillReflection)
+void SetUpReflection(struct ObjectEvent *objectEvent, struct Sprite *sprite, bool8 stillReflection)
 {
     struct Sprite *reflectionSprite;
 
@@ -80,12 +80,12 @@ void SetUpReflection(struct ObjectEvent * objectEvent, struct Sprite *sprite, bo
         reflectionSprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
 }
 
-static s16 GetReflectionVerticalOffset(struct ObjectEvent * objectEvent)
+static s16 GetReflectionVerticalOffset(struct ObjectEvent *objectEvent)
 {
     return GetObjectEventGraphicsInfo(objectEvent->graphicsId)->height - 2;
 }
 
-static void LoadObjectReflectionPalette(struct ObjectEvent * objectEvent, struct Sprite *reflectionSprite)
+static void LoadObjectReflectionPalette(struct ObjectEvent *objectEvent, struct Sprite *reflectionSprite)
 {
     u8 bridgeType;
     u16 bridgeReflectionVerticalOffsets[] = {
@@ -498,7 +498,7 @@ void UpdateTallGrassFieldEffect(struct Sprite *sprite)
     u8 metatileBehavior;
     u8 localId;
     u8 objectEventId;
-    struct ObjectEvent * objectEvent;
+    struct ObjectEvent *objectEvent;
 
     mapNum = sprite->data[5] >> 8;
     mapGroup = sprite->data[5];
@@ -637,7 +637,7 @@ void UpdateLongGrassFieldEffect(struct Sprite *sprite)
     u8 metatileBehavior;
     u8 localId;
     u8 objectEventId;
-    struct ObjectEvent * objectEvent;
+    struct ObjectEvent *objectEvent;
 
     mapNum = sprite->data[5] >> 8;
     mapGroup = sprite->data[5];
@@ -690,7 +690,7 @@ u32 FldEff_JumpLongGrass(void)
 u32 FldEff_ShortGrass(void)
 {
     u8 objectEventId;
-    struct ObjectEvent * objectEvent;
+    struct ObjectEvent *objectEvent;
     u8 spriteId;
     struct Sprite *sprite;
     const struct SpritePalette *spritePalette = GetGeneralFieldPalette1();
@@ -718,7 +718,7 @@ void UpdateShortGrassFieldEffect(struct Sprite *sprite)
     u8 objectEventId;
     s16 x;
     s16 y;
-    const struct ObjectEventGraphicsInfo * graphicsInfo;
+    const struct ObjectEventGraphicsInfo *graphicsInfo;
     struct Sprite *linkedSprite;
 
     if (TryGetObjectEventIdByLocalIdAndMap(sprite->data[0], sprite->data[1], sprite->data[2], &objectEventId) || !gObjectEvents[objectEventId].inShortGrass)
@@ -991,10 +991,10 @@ static void FadeFootprintsTireTracks_Step1(struct Sprite *sprite)
 u32 FldEff_Splash(void)
 {
     u8 objectEventId;
-    struct ObjectEvent * objectEvent;
+    struct ObjectEvent *objectEvent;
     u8 spriteId;
     struct Sprite *sprite;
-    const struct ObjectEventGraphicsInfo * graphicsInfo;
+    const struct ObjectEventGraphicsInfo *graphicsInfo;
     struct Sprite *linkedSprite;
 
     FieldEffectScript_LoadFadedPal(&gSpritePalette_GeneralFieldEffect0);
@@ -1074,10 +1074,10 @@ u32 FldEff_JumpBigSplash(void)
 u32 FldEff_FeetInFlowingWater(void)
 {
     u8 objectEventId;
-    struct ObjectEvent * objectEvent;
+    struct ObjectEvent *objectEvent;
     u8 spriteId;
     struct Sprite *sprite;
-    const struct ObjectEventGraphicsInfo * graphicsInfo;
+    const struct ObjectEventGraphicsInfo *graphicsInfo;
 
     FieldEffectScript_LoadFadedPal(&gSpritePalette_GeneralFieldEffect0);
     objectEventId = GetObjectEventIdByLocalIdAndMap(gFieldEffectArguments[0], gFieldEffectArguments[1], gFieldEffectArguments[2]);
@@ -1105,7 +1105,7 @@ static void UpdateFeetInFlowingWaterFieldEffect(struct Sprite *sprite)
 {
     u8 objectEventId;
     struct Sprite *linkedSprite;
-    struct ObjectEvent * objectEvent;
+    struct ObjectEvent *objectEvent;
 
     if (TryGetObjectEventIdByLocalIdAndMap(sprite->data[0], sprite->data[1], sprite->data[2], &objectEventId) || !gObjectEvents[objectEventId].inShallowFlowingWater)
     {
@@ -1152,7 +1152,7 @@ u32 FldEff_Ripple(void)
 u32 FldEff_HotSpringsWater(void)
 {
     u8 objectEventId;
-    struct ObjectEvent * objectEvent;
+    struct ObjectEvent *objectEvent;
     u8 spriteId;
     struct Sprite *sprite;
     const struct SpritePalette *spritePalette = GetGeneralFieldPalette1();
@@ -1178,7 +1178,7 @@ u32 FldEff_HotSpringsWater(void)
 void UpdateHotSpringsWaterFieldEffect(struct Sprite *sprite)
 {
     u8 objectEventId;
-    const struct ObjectEventGraphicsInfo * graphicsInfo;
+    const struct ObjectEventGraphicsInfo *graphicsInfo;
     struct Sprite *linkedSprite;
 
     if (TryGetObjectEventIdByLocalIdAndMap(sprite->data[0], sprite->data[1], sprite->data[2], &objectEventId) || !gObjectEvents[objectEventId].inHotSprings)
@@ -1546,10 +1546,10 @@ u32 FldEff_Dust(void)
 u32 FldEff_SandPile(void)
 {
     u8 objectEventId;
-    struct ObjectEvent * objectEvent;
+    struct ObjectEvent *objectEvent;
     u8 spriteId;
     struct Sprite *sprite;
-    const struct ObjectEventGraphicsInfo * graphicsInfo;
+    const struct ObjectEventGraphicsInfo *graphicsInfo;
 
     FieldEffectScript_LoadFadedPal(&gSpritePalette_GeneralFieldEffect0);
     objectEventId = GetObjectEventIdByLocalIdAndMap(gFieldEffectArguments[0], gFieldEffectArguments[1], gFieldEffectArguments[2]);
@@ -1690,7 +1690,7 @@ static u32 ShowDisguiseFieldEffect(u32 fldEff, const struct SpriteTemplate* temp
 void UpdateDisguiseFieldEffect(struct Sprite *sprite)
 {
     u8 objectEventId;
-    const struct ObjectEventGraphicsInfo * graphicsInfo;
+    const struct ObjectEventGraphicsInfo *graphicsInfo;
     struct Sprite *linkedSprite;
 
     if (TryGetObjectEventIdByLocalIdAndMap(sprite->data[2], sprite->data[3], sprite->data[4], &objectEventId))
@@ -1719,7 +1719,7 @@ void UpdateDisguiseFieldEffect(struct Sprite *sprite)
     }
 }
 
-void StartRevealDisguise(struct ObjectEvent * objectEvent)
+void StartRevealDisguise(struct ObjectEvent *objectEvent)
 {
     if (objectEvent->directionSequenceIndex == 1)
     {
@@ -1727,7 +1727,7 @@ void StartRevealDisguise(struct ObjectEvent * objectEvent)
     }
 }
 
-bool8 UpdateRevealDisguise(struct ObjectEvent * objectEvent)
+bool8 UpdateRevealDisguise(struct ObjectEvent *objectEvent)
 {
     struct Sprite *sprite;
 
@@ -1814,7 +1814,7 @@ static void UpdateGrassFieldEffectSubpriority(struct Sprite *sprite, u8 z, u8 of
     SetObjectSubpriorityByElevation(z, sprite, offset);
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
-        struct ObjectEvent * objectEvent = &gObjectEvents[i];
+        struct ObjectEvent *objectEvent = &gObjectEvents[i];
         if (objectEvent->active)
         {
             linkedSprite = &gSprites[objectEvent->spriteId];

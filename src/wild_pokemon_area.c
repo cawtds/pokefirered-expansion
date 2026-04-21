@@ -17,7 +17,7 @@ struct RoamerPair
 };
 
 static u32 GetRoamerIndex(enum Species species);
-static s32 GetRoamerPokedexAreaMarkers(enum Species species, struct Subsprite * subsprites);
+static s32 GetRoamerPokedexAreaMarkers(enum Species species, struct Subsprite *subsprites);
 static bool32 IsSpeciesOnMap(const struct WildPokemonHeader *data, u32 headerId, enum Species species);
 static bool32 IsSpeciesInEncounterTable(const struct WildPokemonInfo *pokemon, enum Species species, s32 count);
 static u16 GetMapSecIdFromWildMonHeader(const struct WildPokemonHeader *header);
@@ -303,7 +303,7 @@ static u16 GetMapSecIdFromWildMonHeader(const struct WildPokemonHeader *header)
 // Search a MAPSEC -> DEX_AREA table for the given mapsec.
 // Assigns the DEX_AREA (if found) to 'dexArea', and the first unread table index to 'index'.
 // Returns TRUE if DEX_AREA was found, FALSE otherwise.
-static bool32 FindDexAreaByMapSec(u16 mapSecId, const u16 (*table)[2], s32 count, s32 * index, u16 * dexArea)
+static bool32 FindDexAreaByMapSec(u16 mapSecId, const u16 (*table)[2], s32 count, s32 *index, u16 *dexArea)
 {
     s32 i;
     for (i = *index; i < count; i++)

@@ -104,7 +104,7 @@ static EWRAM_DATA struct {
     u8 contextMenuWindowId;
     u8 scrollArrowsTaskId;
     u16 currItem;
-    const u8 * menuActionIndices;
+    const u8 *menuActionIndices;
     u8 numMenuActions;
     s16 seqId;
     u8 typeIconSpriteId;
@@ -124,7 +124,7 @@ extern const u8 gPokedudeText_ReadTMDescription[];
 static const u8 sText_TMCaseWillBePutAway[] = _("The TM CASE will be\nput away.");
 
 static EWRAM_DATA void *sTilemapBuffer = NULL;
-static EWRAM_DATA struct ListMenuItem * sListMenuItemsBuffer = NULL;
+static EWRAM_DATA struct ListMenuItem *sListMenuItemsBuffer = NULL;
 static EWRAM_DATA u8 (* sListMenuStringsBuffer)[29] = NULL;
 
 static void CB2_SetUpTMCaseUI_Blocking(void);
@@ -170,17 +170,17 @@ static void Task_AfterSale_ReturnToList(u8 taskId);
 static void Task_Pokedude_Start(u8 taskId);
 static void Task_Pokedude_Run(u8 taskId);
 static void InitWindowTemplatesAndPals(void);
-static void TMCase_Print(u8 windowId, u8 fontId, const u8 * str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx);
+static void TMCase_Print(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx);
 static void TMCase_SetWindowBorder1(u8 windowId);
 static void TMCase_SetWindowBorder2(u8 windowId);
-static void PrintMessageWithFollowupTask(u8 taskId, u8 fontId, const u8 * str, TaskFunc func);
+static void PrintMessageWithFollowupTask(u8 taskId, u8 fontId, const u8 *str, TaskFunc func);
 static void PrintTitle(void);
 static void DrawMoveInfoLabels(void);
 static void PlaceHMTileInWindow(u8 windowId, u8 x, u8 y);
 static void PrintPlayersMoney(void);
-static void HandleCreateYesNoMenu(u8 taskId, const struct YesNoFuncTable * ptrs);
-static u8 AddContextMenu(u8 * windowId, u8 windowIndex);
-static void RemoveContextMenu(u8 * windowId);
+static void HandleCreateYesNoMenu(u8 taskId, const struct YesNoFuncTable *ptrs);
+static u8 AddContextMenu(u8 *windowId, u8 windowIndex);
+static void RemoveContextMenu(u8 *windowId);
 static u8 CreateDiscSprite(enum Item itemId);
 static void SetDiscSpriteAnim(struct Sprite *sprite, u8 tmIdx);
 static void TintDiscpriteByType(enum Type type);
@@ -648,14 +648,14 @@ static bool8 HandleLoadTMCaseGraphicsAndPalettes(void)
 
 static void CreateTMCaseListMenuBuffers(void)
 {
-    struct BagPocket * pocket = &gBagPockets[POCKET_TM_HM];
+    struct BagPocket *pocket = &gBagPockets[POCKET_TM_HM];
     sListMenuItemsBuffer = Alloc((pocket->capacity + 1) * sizeof(struct ListMenuItem));
     sListMenuStringsBuffer = Alloc(sTMCaseDynamicResources->numTMs * 29);
 }
 
 static void InitTMCaseListMenuItems(void)
 {
-    struct BagPocket * pocket = &gBagPockets[POCKET_TM_HM];
+    struct BagPocket *pocket = &gBagPockets[POCKET_TM_HM];
     u16 i;
 
     for (i = 0; i < sTMCaseDynamicResources->numTMs; i++)
@@ -754,7 +754,7 @@ static void List_ItemPrintFunc(u8 windowId, u32 itemIndex, u8 y)
 
 static void PrintDescription(s32 itemIndex)
 {
-    const u8 * str;
+    const u8 *str;
 
     if (itemIndex != LIST_CANCEL)
         str = GetItemDescription(GetBagItemId(POCKET_TM_HM, itemIndex));
@@ -893,7 +893,7 @@ static void Task_BeginFadeOutFromTMCase(u8 taskId)
 
 static void Task_FadeOutAndCloseTMCase(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     if (!gPaletteFade.active)
     {
@@ -911,7 +911,7 @@ static void Task_FadeOutAndCloseTMCase(u8 taskId)
 
 static void Task_HandleListInput(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     s32 input;
 
     if (!gPaletteFade.active)
@@ -964,7 +964,7 @@ static void ReturnToList(u8 taskId)
 // menu with a list of actions that can be taken.
 static void Task_SelectedTMHM_Field(u8 taskId)
 {
-    u8 * strbuf;
+    u8 *strbuf;
 
     // Create context window
     TMCase_SetWindowBorder2(WIN_SELECTED_MSG);
@@ -1112,7 +1112,7 @@ static void Task_WaitButtonAfterErrorPrint(u8 taskId)
 
 static void CloseMessageAndReturnToList(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     DestroyListMenuTask(tListTaskId, &sTMCaseStaticResources.scrollOffset, &sTMCaseStaticResources.selectedRow);
     tListTaskId = ListMenuInit(&gMultiuseListMenuTemplate, sTMCaseStaticResources.scrollOffset, sTMCaseStaticResources.selectedRow);
@@ -1129,7 +1129,7 @@ static void CloseMessageAndReturnToList(u8 taskId)
 
 static void Action_Exit(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     RemoveContextMenu(&sTMCaseDynamicResources->contextMenuWindowId);
     ClearStdWindowAndFrameToTransparent(WIN_SELECTED_MSG, FALSE);
@@ -1146,7 +1146,7 @@ static void Action_Exit(u8 taskId)
 
 static void Task_SelectedTMHM_GiveParty(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     if (!GetItemImportance(GetBagItemId(POCKET_TM_HM, tListPos)))
     {
@@ -1162,7 +1162,7 @@ static void Task_SelectedTMHM_GiveParty(u8 taskId)
 
 static void Task_SelectedTMHM_GivePC(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     if (!GetItemImportance(GetBagItemId(POCKET_TM_HM, tListPos)))
     {
@@ -1214,7 +1214,7 @@ static void Task_SelectedTMHM_Sell(u8 taskId)
 
 static void Task_AskConfirmSaleWithAmount(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     ConvertIntToDecimalStringN(gStringVar3, GetItemSellPrice(gSpecialVar_ItemId) * tItemCount, STR_CONV_MODE_LEFT_ALIGN, 6);
     StringExpandPlaceholders(gStringVar4, gText_ICanPayThisMuch_WouldThatBeOkay);
@@ -1228,7 +1228,7 @@ static void Task_PlaceYesNoBox(u8 taskId)
 
 static void Task_SaleOfTMsCanceled(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     ClearStdWindowAndFrameToTransparent(WIN_MONEY, FALSE);
     ClearDialogWindowAndFrameToTransparent(WIN_MESSAGE, FALSE);
@@ -1304,7 +1304,7 @@ static void Task_QuantitySelect_HandleInput(u8 taskId)
 
 static void Task_PrintSaleConfirmedText(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     PutWindowTilemap(WIN_LIST);
     ScheduleBgCopyTilemapToVram(0);
@@ -1316,7 +1316,7 @@ static void Task_PrintSaleConfirmedText(u8 taskId)
 
 static void Task_DoSaleOfTMs(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     PlaySE(SE_SHOP);
     RemoveBagItem(gSpecialVar_ItemId, tItemCount);
@@ -1366,7 +1366,7 @@ void Pokedude_InitTMCase(void)
 
 static void Task_Pokedude_Start(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     if (!gPaletteFade.active)
     {
@@ -1380,7 +1380,7 @@ static void Task_Pokedude_Start(u8 taskId)
 
 static void Task_Pokedude_Run(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     if (JOY_NEW(B_BUTTON))
     {
@@ -1529,7 +1529,7 @@ static void InitWindowTemplatesAndPals(void)
     ScheduleBgCopyTilemapToVram(0);
 }
 
-static void TMCase_Print(u8 windowId, u8 fontId, const u8 * str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx)
+static void TMCase_Print(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx)
 {
     AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sTextColors[colorIdx], speed, str);
 }
@@ -1544,7 +1544,7 @@ static void TMCase_SetWindowBorder2(u8 windowId)
     DrawStdFrameWithCustomTileAndPalette(windowId, FALSE, 0x78, 13);
 }
 
-static void PrintMessageWithFollowupTask(u8 taskId, u8 fontId, const u8 * str, TaskFunc func)
+static void PrintMessageWithFollowupTask(u8 taskId, u8 fontId, const u8 *str, TaskFunc func)
 {
     DisplayMessageAndContinueTask(taskId, WIN_MESSAGE, 0x64, 0x0B, fontId, GetPlayerTextSpeedDelay(), str, func);
     ScheduleBgCopyTilemapToVram(1);
@@ -1631,7 +1631,7 @@ static void HandleCreateYesNoMenu(u8 taskId, const struct YesNoFuncTable *ptrs)
     CreateYesNoMenuWithCallbacks(taskId, &sYesNoWindowTemplate, FONT_NORMAL, 0, 2, 91, 14, ptrs);
 }
 
-static u8 AddContextMenu(u8 * windowId, u8 windowIndex)
+static u8 AddContextMenu(u8 *windowId, u8 windowIndex)
 {
     if (*windowId == WINDOW_NONE)
     {
@@ -1642,7 +1642,7 @@ static u8 AddContextMenu(u8 * windowId, u8 windowIndex)
     return *windowId;
 }
 
-static void RemoveContextMenu(u8 * windowId)
+static void RemoveContextMenu(u8 *windowId)
 {
     ClearStdWindowAndFrameToTransparent(*windowId, FALSE);
     ClearWindowTilemap(*windowId);

@@ -195,7 +195,7 @@ void SetBagItemsPointers(void)
     gBagPockets[POCKET_BERRIES].id = POCKET_BERRIES;
 }
 
-u8 *CopyItemName(enum Item itemId, u8 * dest)
+u8 *CopyItemName(enum Item itemId, u8 *dest)
 {
     return StringCopy(dest, GetItemName(itemId));
 }
@@ -925,7 +925,7 @@ void TrySetObtainedItemQuestLogEvent(enum Item itemId)
     {
         if (itemId != ITEM_TOWN_MAP || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_PALLET_TOWN_RIVALS_HOUSE) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_PALLET_TOWN_RIVALS_HOUSE)))
         {
-            struct QuestLogEvent_StoryItem * data = malloc(sizeof(*data));
+            struct QuestLogEvent_StoryItem *data = malloc(sizeof(*data));
             data->itemId = itemId;
             data->mapSec = gMapHeader.regionMapSectionId;
             SetQuestLogEvent(QL_EVENT_OBTAINED_STORY_ITEM, (const u16 *)data);

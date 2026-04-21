@@ -172,7 +172,7 @@ static void Task_QLVSSeekerMovement(u8 taskId)
     }
 }
 
-static void QL_SetObjectGraphicsId(struct ObjectEvent * object, u16 graphicsId)
+static void QL_SetObjectGraphicsId(struct ObjectEvent *object, u16 graphicsId)
 {
     ObjectEventSetGraphicsId(object, graphicsId);
 }

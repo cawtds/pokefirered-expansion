@@ -368,7 +368,7 @@ static void GetAwaitingCommunicationText(u8 *dst, u8 caseId)
 void TryBecomeLinkLeader(void)
 {
     u8 taskId;
-    struct WirelessLink_Leader * data;
+    struct WirelessLink_Leader *data;
 
     taskId = CreateTask(Task_TryBecomeLinkLeader, 0);
     sWirelessLinkMain.leader = data = (void *)(gTasks[taskId].data);
@@ -382,7 +382,7 @@ void TryBecomeLinkLeader(void)
 static void Task_TryBecomeLinkLeader(u8 taskId)
 {
     u32 id, val;
-    struct WirelessLink_Leader * data = sWirelessLinkMain.leader;
+    struct WirelessLink_Leader *data = sWirelessLinkMain.leader;
 
     switch (data->state)
     {
@@ -684,7 +684,7 @@ static void Task_TryBecomeLinkLeader(u8 taskId)
     }
 }
 
-static void Leader_DestroyResources(struct WirelessLink_Leader * data)
+static void Leader_DestroyResources(struct WirelessLink_Leader *data)
 {
     ClearWindowTilemap(data->nPlayerModeWindowId);
     ClearStdWindowAndFrame(data->nPlayerModeWindowId, FALSE);
@@ -785,7 +785,7 @@ static void GetGroupLeaderSentAnOKMessage(u8 *dst, u8 caseId)
     }
 }
 
-static bool8 Leader_SetStateIfMemberListChanged(struct WirelessLink_Leader * data, u32 joinedState, u32 droppedState)
+static bool8 Leader_SetStateIfMemberListChanged(struct WirelessLink_Leader *data, u32 joinedState, u32 droppedState)
 {
     switch (LeaderUpdateGroupMembership(data->playerList))
     {
@@ -808,7 +808,7 @@ static bool8 Leader_SetStateIfMemberListChanged(struct WirelessLink_Leader * dat
 
 static void ItemPrintFunc_PossibleGroupMembers(u8 windowId, u32 id, u8 y)
 {
-    struct WirelessLink_Leader * data = sWirelessLinkMain.leader;
+    struct WirelessLink_Leader *data = sWirelessLinkMain.leader;
     u8 colorIdx = UR_COLOR_DEFAULT;
 
     switch (data->playerList->players[id].groupScheduledAnim)
@@ -825,9 +825,9 @@ static void ItemPrintFunc_PossibleGroupMembers(u8 windowId, u32 id, u8 y)
     PrintGroupCandidateOnWindow(windowId, 0, y, &data->playerList->players[id], colorIdx, id);
 }
 
-static u8 LeaderUpdateGroupMembership(struct RfuPlayerList * list)
+static u8 LeaderUpdateGroupMembership(struct RfuPlayerList *list)
 {
-    struct WirelessLink_Leader * data = sWirelessLinkMain.leader;
+    struct WirelessLink_Leader *data = sWirelessLinkMain.leader;
     u8 ret = UNION_ROOM_SPAWN_NONE;
     s32 id;
     u8 i;
@@ -915,7 +915,7 @@ static u8 LeaderPrunePlayerList(struct RfuPlayerList *list)
 void TryJoinLinkGroup(void)
 {
     u8 taskId;
-    struct WirelessLink_Group * data;
+    struct WirelessLink_Group *data;
 
     taskId = CreateTask(Task_TryJoinLinkGroup, 0);
     sWirelessLinkMain.group = data = (void *)(gTasks[taskId].data);
@@ -929,7 +929,7 @@ void TryJoinLinkGroup(void)
 static void Task_TryJoinLinkGroup(u8 taskId)
 {
     s32 id;
-    struct WirelessLink_Group * data = sWirelessLinkMain.group;
+    struct WirelessLink_Group *data = sWirelessLinkMain.group;
 
     switch (data->state)
     {
@@ -1198,9 +1198,9 @@ static void Task_TryJoinLinkGroup(u8 taskId)
     }
 }
 
-static u32 IsTryingToTradeAcrossVersionTooSoon(struct WirelessLink_Group * data, s32 id)
+static u32 IsTryingToTradeAcrossVersionTooSoon(struct WirelessLink_Group *data, s32 id)
 {
-    struct RfuPlayer * partner = &data->playerList->players[id];
+    struct RfuPlayer *partner = &data->playerList->players[id];
 
     if (sPlayerCurrActivity == ACTIVITY_TRADE
      && partner->rfu.data.compatibility.version != VERSION_FIRE_RED
@@ -1219,7 +1219,7 @@ static u32 IsTryingToTradeAcrossVersionTooSoon(struct WirelessLink_Group * data,
     return UR_TRADE_PARTNER_NOT_READY;
 }
 
-static void AskToJoinRfuGroup(struct WirelessLink_Group * data, s32 id)
+static void AskToJoinRfuGroup(struct WirelessLink_Group *data, s32 id)
 {
     data->leaderId = id;
     LoadWirelessStatusIndicatorSpriteGfx();
@@ -1233,7 +1233,7 @@ static void AskToJoinRfuGroup(struct WirelessLink_Group * data, s32 id)
 u8 CreateTask_ListenToWireless(void)
 {
     u8 taskId;
-    struct WirelessLink_Group * data;
+    struct WirelessLink_Group *data;
 
     taskId = CreateTask(Task_ListenToWireless, 0);
     sWirelessLinkMain.group = data = (void *)(gTasks[taskId].data);
@@ -1248,7 +1248,7 @@ u8 CreateTask_ListenToWireless(void)
 
 static void Task_ListenToWireless(u8 taskId)
 {
-    struct WirelessLink_Group * data = sWirelessLinkMain.group;
+    struct WirelessLink_Group *data = sWirelessLinkMain.group;
 
     switch (data->state)
     {
@@ -1313,7 +1313,7 @@ static bool32 IsPartnerActivityAcceptable(u32 activity, u32 group)
     return FALSE;
 }
 
-static u8 GetGroupListTextColor(struct WirelessLink_Group * data, u32 id)
+static u8 GetGroupListTextColor(struct WirelessLink_Group *data, u32 id)
 {
     if (data->playerList->players[id].groupScheduledAnim == UNION_ROOM_SPAWN_IN)
     {
@@ -1330,7 +1330,7 @@ static u8 GetGroupListTextColor(struct WirelessLink_Group * data, u32 id)
 
 static void ListMenuItemPrintFunc_UnionRoomGroups(u8 windowId, u32 id, u8 y)
 {
-    struct WirelessLink_Group * data = sWirelessLinkMain.group;
+    struct WirelessLink_Group *data = sWirelessLinkMain.group;
     u8 colorId = GetGroupListTextColor(data, id);
 
     PrintGroupMemberOnWindow(windowId, 8, y, &data->playerList->players[id], colorId, id);
@@ -1338,7 +1338,7 @@ static void ListMenuItemPrintFunc_UnionRoomGroups(u8 windowId, u32 id, u8 y)
 
 static u8 GetNewLeaderCandidate(void)
 {
-    struct WirelessLink_Group * data = sWirelessLinkMain.group;
+    struct WirelessLink_Group *data = sWirelessLinkMain.group;
     u8 ret = 0;
     u8 i;
     s32 id;
@@ -1738,7 +1738,7 @@ static void CreateTask_StartActivity(void)
 void CreateTask_SendMysteryGift(u32 activity)
 {
     u8 taskId;
-    struct WirelessLink_Leader * data;
+    struct WirelessLink_Leader *data;
 
     taskId = CreateTask(Task_SendMysteryGift, 0);
     sWirelessLinkMain.leader = data = (void *)(gTasks[taskId].data);
@@ -1751,7 +1751,7 @@ void CreateTask_SendMysteryGift(u32 activity)
 
 static void Task_SendMysteryGift(u8 taskId)
 {
-    struct WirelessLink_Leader * data = sWirelessLinkMain.leader;
+    struct WirelessLink_Leader *data = sWirelessLinkMain.leader;
     struct WindowTemplate winTemplate;
     s32 val;
 
@@ -1946,7 +1946,7 @@ static void Task_SendMysteryGift(u8 taskId)
 void CreateTask_LinkMysteryGiftWithFriend(u32 activity)
 {
     u8 taskId;
-    struct WirelessLink_Group * data;
+    struct WirelessLink_Group *data;
 
     taskId = CreateTask(Task_CardOrNewsWithFriend, 0);
     sWirelessLinkMain.group = data = (void *)(gTasks[taskId].data);
@@ -1962,7 +1962,7 @@ static void Task_CardOrNewsWithFriend(u8 taskId)
 {
     s32 id;
     struct WindowTemplate listWinTemplate;
-    struct WirelessLink_Group * data = sWirelessLinkMain.group;
+    struct WirelessLink_Group *data = sWirelessLinkMain.group;
 
     switch (data->state)
     {
@@ -2108,7 +2108,7 @@ static void Task_CardOrNewsWithFriend(u8 taskId)
 void CreateTask_LinkMysteryGiftOverWireless(u32 activity)
 {
     u8 taskId;
-    struct WirelessLink_Group * data;
+    struct WirelessLink_Group *data;
 
     taskId = CreateTask(Task_CardOrNewsOverWireless, 0);
     sWirelessLinkMain.group = data = (void *)(gTasks[taskId].data);
@@ -2124,7 +2124,7 @@ static void Task_CardOrNewsOverWireless(u8 taskId)
 {
     s32 id;
     struct WindowTemplate winTemplate;
-    struct WirelessLink_Group * data = sWirelessLinkMain.group;
+    struct WirelessLink_Group *data = sWirelessLinkMain.group;
 
     switch (data->state)
     {
@@ -2286,7 +2286,7 @@ static void Task_CardOrNewsOverWireless(u8 taskId)
 
 void RunUnionRoom(void)
 {
-    struct WirelessLink_URoom * uroom;
+    struct WirelessLink_URoom *uroom;
 
     ResetHostRfuGameData();
     CreateTask(Task_RunUnionRoom, 10);
@@ -2314,7 +2314,7 @@ static u16 ReadAsU16(const u8 *ptr)
 
 static void ScheduleFieldMessageWithFollowupState(u32 nextState, const u8 *src)
 {
-    struct WirelessLink_URoom * uroom = sWirelessLinkMain.uRoom;
+    struct WirelessLink_URoom *uroom = sWirelessLinkMain.uRoom;
 
     uroom->state = UR_STATE_PRINT_MSG;
     uroom->stateAfterPrint = nextState;
@@ -2324,7 +2324,7 @@ static void ScheduleFieldMessageWithFollowupState(u32 nextState, const u8 *src)
 
 static void ScheduleFieldMessageAndExit(const u8 *src)
 {
-    struct WirelessLink_URoom * uroom = sWirelessLinkMain.uRoom;
+    struct WirelessLink_URoom *uroom = sWirelessLinkMain.uRoom;
 
     uroom->state = UR_STATE_PRINT_AND_EXIT;
     if (src != gStringVar4)
@@ -2336,12 +2336,12 @@ static void ScheduleFieldMessageAndExit(const u8 *src)
 // Note: This probably could be alloced instead, but I'm not familiar enough with the union room system.
 static EWRAM_DATA ALIGNED(4) u8 sPlayerListBuffer[PLAYER_LIST_BUFFER_SIZE];
 
-static void CopyPlayerListToBuffer(struct WirelessLink_URoom * uroom)
+static void CopyPlayerListToBuffer(struct WirelessLink_URoom *uroom)
 {
     memcpy(sPlayerListBuffer, uroom->playerList, PLAYER_LIST_BUFFER_SIZE);
 }
 
-static void CopyPlayerListFromBuffer(struct WirelessLink_URoom * uroom)
+static void CopyPlayerListFromBuffer(struct WirelessLink_URoom *uroom)
 {
     memcpy(uroom->playerList, sPlayerListBuffer, PLAYER_LIST_BUFFER_SIZE);
 }
@@ -2351,7 +2351,7 @@ static void Task_RunUnionRoom(u8 taskId)
     u32 id = 0;
     s32 input = 0;
     s32 playerGender = MALE;
-    struct WirelessLink_URoom * uroom = sWirelessLinkMain.uRoom;
+    struct WirelessLink_URoom *uroom = sWirelessLinkMain.uRoom;
     s16 *taskData = gTasks[taskId].data;
 
     switch (uroom->state)
@@ -3119,7 +3119,7 @@ void SetUsingUnionRoomStartMenu(void)
         gSpecialVar_Result = UR_INTERACT_START_MENU;
 }
 
-static void ReceiveUnionRoomActivityPacket(struct WirelessLink_URoom * uroom)
+static void ReceiveUnionRoomActivityPacket(struct WirelessLink_URoom *uroom)
 {
     if (gRecvCmds[1][1] != 0 && (gRecvCmds[1][0] & RFUCMD_MASK) == RFUCMD_SEND_PACKET)
     {
@@ -3132,7 +3132,7 @@ static void ReceiveUnionRoomActivityPacket(struct WirelessLink_URoom * uroom)
     }
 }
 
-static bool32 HandleContactFromOtherPlayer(struct WirelessLink_URoom * uroom)
+static bool32 HandleContactFromOtherPlayer(struct WirelessLink_URoom *uroom)
 {
     if (uroom->recvActivityRequest[0] != 0)
     {
@@ -3160,7 +3160,7 @@ static bool32 HandleContactFromOtherPlayer(struct WirelessLink_URoom * uroom)
 
 void InitUnionRoom(void)
 {
-    struct WirelessLink_URoom * data;
+    struct WirelessLink_URoom *data;
 
     if (!ShouldCheckForUnionRoom())
         return;
@@ -3184,7 +3184,7 @@ static void Task_InitUnionRoom(u8 taskId)
 {
     s32 i;
     u8 text[32];
-    struct WirelessLink_URoom * data = sWirelessLinkMain.uRoom;
+    struct WirelessLink_URoom *data = sWirelessLinkMain.uRoom;
 
     switch (data->state)
     {
@@ -3270,7 +3270,7 @@ static u8 HandlePlayerListUpdate(void)
 {
     s32 i;
     u8 j;
-    struct WirelessLink_URoom * data = sWirelessLinkMain.uRoom;
+    struct WirelessLink_URoom *data = sWirelessLinkMain.uRoom;
     s32 retVal = PLIST_NONE;
 
     // If someone new joined, register them in spawnPlayer
@@ -3385,7 +3385,7 @@ static void Task_SearchForChildOrParent(u8 taskId)
     }
 }
 
-static u8 CreateTask_SearchForChildOrParent(struct RfuIncomingPlayerList * parentList, struct RfuIncomingPlayerList * childList, u32 linkGroup)
+static u8 CreateTask_SearchForChildOrParent(struct RfuIncomingPlayerList *parentList, struct RfuIncomingPlayerList *childList, u32 linkGroup)
 {
     u8 taskId = CreateTask(Task_SearchForChildOrParent, 0);
     struct RfuIncomingPlayerList ** data = (void *)gTasks[taskId].data;
@@ -3415,7 +3415,7 @@ static void Task_ListenForCompatiblePartners(u8 taskId)
     }
 }
 
-static bool32 HasWonderCardOrNewsByLinkGroup(struct RfuGameData * data, s16 linkGroup)
+static bool32 HasWonderCardOrNewsByLinkGroup(struct RfuGameData *data, s16 linkGroup)
 {
     if (linkGroup == LINK_GROUP_WONDER_CARD)
     {
@@ -3451,7 +3451,7 @@ static void Task_ListenForWonderDistributor(u8 taskId)
     }
 }
 
-static u8 CreateTask_ListenForCompatiblePartners(struct RfuIncomingPlayerList * main4, u32 linkGroup)
+static u8 CreateTask_ListenForCompatiblePartners(struct RfuIncomingPlayerList *main4, u32 linkGroup)
 {
     u8 taskId = CreateTask(Task_ListenForCompatiblePartners, 0);
     struct RfuIncomingPlayerList ** list = (void *) gTasks[taskId].data;
@@ -3460,7 +3460,7 @@ static u8 CreateTask_ListenForCompatiblePartners(struct RfuIncomingPlayerList * 
     return taskId;
 }
 
-static u8 CreateTask_ListenForWonderDistributor(struct RfuIncomingPlayerList * main4, u32 linkGroup)
+static u8 CreateTask_ListenForWonderDistributor(struct RfuIncomingPlayerList *main4, u32 linkGroup)
 {
     u8 taskId = CreateTask(Task_ListenForWonderDistributor, 0);
     struct RfuIncomingPlayerList ** list = (void *) gTasks[taskId].data;
@@ -3538,7 +3538,7 @@ static s8 UnionRoomHandleYesNo(u8 *state, bool32 noDraw)
     return MENU_NOTHING_CHOSEN;
 }
 
-static u8 CreateTradeBoardWindow(const struct WindowTemplate * template)
+static u8 CreateTradeBoardWindow(const struct WindowTemplate *template)
 {
     u8 windowId = AddWindow(template);
     DrawStdWindowFrame(windowId, FALSE);
@@ -3555,7 +3555,7 @@ static void DeleteTradeBoardWindow(u8 windowId)
     RemoveWindow(windowId);
 }
 
-static s32 ListMenuHandler_AllItemsAvailable(u8 *state, u8 *windowId, u8 *listMenuId, const struct WindowTemplate * winTemplate, const struct ListMenuTemplate * menuTemplate)
+static s32 ListMenuHandler_AllItemsAvailable(u8 *state, u8 *windowId, u8 *listMenuId, const struct WindowTemplate *winTemplate, const struct ListMenuTemplate *menuTemplate)
 {
     s32 input;
 
@@ -3595,9 +3595,9 @@ static s32 ListMenuHandler_AllItemsAvailable(u8 *state, u8 *windowId, u8 *listMe
 }
 
 static s32 TradeBoardMenuHandler(u8 *state, u8 *mainWindowId, u8 *listMenuId, u8 *headerWindowId,
-                                 const struct WindowTemplate * winTemplate,
-                                 const struct ListMenuTemplate * menuTemplate,
-                                 struct RfuPlayerList * list)
+                                 const struct WindowTemplate *winTemplate,
+                                 const struct ListMenuTemplate *menuTemplate,
+                                 struct RfuPlayerList *list)
 {
     s32 input;
     s32 idx;
@@ -3742,7 +3742,7 @@ static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y
     AddTextPrinter(&printerTemplate, TEXT_SKIP_DRAW, NULL);
 }
 
-static void ClearRfuPlayerList(struct RfuPlayer * x20arr, u8 count)
+static void ClearRfuPlayerList(struct RfuPlayer *x20arr, u8 count)
 {
     s32 i;
 
@@ -3756,7 +3756,7 @@ static void ClearRfuPlayerList(struct RfuPlayer * x20arr, u8 count)
     }
 }
 
-static void ClearIncomingPlayerList(struct RfuIncomingPlayer * x1Carr, u8 count)
+static void ClearIncomingPlayerList(struct RfuIncomingPlayer *x1Carr, u8 count)
 {
     s32 i;
 
@@ -3768,7 +3768,7 @@ static void ClearIncomingPlayerList(struct RfuIncomingPlayer * x1Carr, u8 count)
 }
 
 // Checks player name and trainer id, returns TRUE if they are not the same
-static bool8 ArePlayersDifferent(struct RfuPlayerData * player1, const struct RfuPlayerData * player2)
+static bool8 ArePlayersDifferent(struct RfuPlayerData *player1, const struct RfuPlayerData *player2)
 {
     s32 i;
 
@@ -3787,7 +3787,7 @@ static bool8 ArePlayersDifferent(struct RfuPlayerData * player1, const struct Rf
     return FALSE;
 }
 
-static bool32 ArePlayerDataDifferent(struct RfuPlayerData * player1, struct RfuPlayerData * player2)
+static bool32 ArePlayerDataDifferent(struct RfuPlayerData *player1, struct RfuPlayerData *player2)
 {
     s32 i;
 
@@ -3812,7 +3812,7 @@ static bool32 ArePlayerDataDifferent(struct RfuPlayerData * player1, struct RfuP
     return FALSE;
 }
 
-static u32 GetNewIncomingPlayerId(struct RfuPlayer * player, struct RfuIncomingPlayer * incomingPlayer)
+static u32 GetNewIncomingPlayerId(struct RfuPlayer *player, struct RfuIncomingPlayer *incomingPlayer)
 {
     u8 result = 0xFF;
     s32 i;
@@ -3829,7 +3829,7 @@ static u32 GetNewIncomingPlayerId(struct RfuPlayer * player, struct RfuIncomingP
     return result;
 }
 
-static u8 TryAddIncomingPlayerToList(struct RfuPlayer * players, struct RfuIncomingPlayer * incomingPlayer, u8 count)
+static u8 TryAddIncomingPlayerToList(struct RfuPlayer *players, struct RfuIncomingPlayer *incomingPlayer, u8 count)
 {
     s32 i;
 
@@ -3852,7 +3852,7 @@ static u8 TryAddIncomingPlayerToList(struct RfuPlayer * players, struct RfuIncom
     return 0xFF;
 }
 
-static void PrintGroupMemberOnWindow(u8 windowId, u8 x, u8 y, struct RfuPlayer * player, u8 colorIdx, u8 id)
+static void PrintGroupMemberOnWindow(u8 windowId, u8 x, u8 y, struct RfuPlayer *player, u8 colorIdx, u8 id)
 {
     u8 activity;
     u8 trainerId[6];
@@ -3875,7 +3875,7 @@ static void PrintGroupMemberOnWindow(u8 windowId, u8 x, u8 y, struct RfuPlayer *
     }
 }
 
-static void PrintGroupCandidateOnWindow(u8 windowId, u8 x, u8 y, struct RfuPlayer * player, u8 colorIdx, u8 id)
+static void PrintGroupCandidateOnWindow(u8 windowId, u8 x, u8 y, struct RfuPlayer *player, u8 colorIdx, u8 id)
 {
     u8 id_str[6];
     u8 uname[30];
@@ -3925,18 +3925,18 @@ static u32 GetResponseIdx_InviteToURoomActivity(s32 activity)
     }
 }
 
-static u32 ConvPartnerUnameAndGetWhetherMetAlready(struct RfuPlayer * player)
+static u32 ConvPartnerUnameAndGetWhetherMetAlready(struct RfuPlayer *player)
 {
     u8 name[30];
     CopyAndTranslatePlayerName2(name, *player);
     return PlayerHasMetTrainerBefore(ReadAsU16(player->rfu.data.compatibility.playerTrainerId), name);
 }
 
-static s32 UnionRoomGetPlayerInteractionResponse(struct RfuPlayerList * list, bool8 overrideGender, u8 playerIdx, u32 playerGender)
+static s32 UnionRoomGetPlayerInteractionResponse(struct RfuPlayerList *list, bool8 overrideGender, u8 playerIdx, u32 playerGender)
 {
     bool32 metBefore;
 
-    struct RfuPlayer * player = &list->players[playerIdx];
+    struct RfuPlayer *player = &list->players[playerIdx];
 
     if (!player->rfu.data.startedActivity && !overrideGender)
     {
@@ -3985,7 +3985,7 @@ static void ItemPrintFunc_Unused(u8 windowId, u32 itemId, u8 y)
 {
 }
 
-static void TradeBoardPrintItemInfo(u8 windowId, u8 y, struct RfuGameData * data, const u8 * playerName, u8 colorIdx)
+static void TradeBoardPrintItemInfo(u8 windowId, u8 y, struct RfuGameData *data, const u8 *playerName, u8 colorIdx)
 {
     u8 levelStr[4];
     enum Species species = data->tradeSpecies;
@@ -4008,8 +4008,8 @@ static void TradeBoardPrintItemInfo(u8 windowId, u8 y, struct RfuGameData * data
 
 static void TradeBoardListMenuItemPrintFunc(u8 windowId, u32 itemId, u8 y)
 {
-    struct WirelessLink_Leader * leader = sWirelessLinkMain.leader;
-    struct RfuGameData * gameData;
+    struct WirelessLink_Leader *leader = sWirelessLinkMain.leader;
+    struct RfuGameData *gameData;
     s32 i, j;
     u8 playerName[RFU_USER_NAME_LENGTH];
 
@@ -4037,7 +4037,7 @@ static void TradeBoardListMenuItemPrintFunc(u8 windowId, u32 itemId, u8 y)
     }
 }
 
-static s32 GetIndexOfNthTradeBoardOffer(struct RfuPlayer * players, s32 n)
+static s32 GetIndexOfNthTradeBoardOffer(struct RfuPlayer *players, s32 n)
 {
     s32 i;
     s32 j = 0;
@@ -4054,7 +4054,7 @@ static s32 GetIndexOfNthTradeBoardOffer(struct RfuPlayer * players, s32 n)
     return -1;
 }
 
-static s32 GetUnionRoomPlayerGender(s32 playerIdx, struct RfuPlayerList * list)
+static s32 GetUnionRoomPlayerGender(s32 playerIdx, struct RfuPlayerList *list)
 {
     return list->players[playerIdx].rfu.data.playerGender;
 }
@@ -4123,7 +4123,7 @@ static void GetURoomActivityStartMsg(u8 *dst, u8 activity)
     }
 }
 
-static s32 GetChatLeaderActionRequestMessage(u8 *dst, u32 gender, u16 *activityData, struct WirelessLink_URoom * uroom)
+static s32 GetChatLeaderActionRequestMessage(u8 *dst, u32 gender, u16 *activityData, struct WirelessLink_URoom *uroom)
 {
     s32 result = 0;
     enum Species species = SPECIES_NONE;
@@ -4177,7 +4177,7 @@ static s32 GetChatLeaderActionRequestMessage(u8 *dst, u32 gender, u16 *activityD
     return result;
 }
 
-static bool32 PollPartnerYesNoResponse(struct WirelessLink_URoom * uroom)
+static bool32 PollPartnerYesNoResponse(struct WirelessLink_URoom *uroom)
 {
     if (gRecvCmds[0][1] != 0)
     {
@@ -4220,7 +4220,7 @@ static bool32 HasAtLeastTwoMonsOfLevel30OrLower(void)
         return FALSE;
 }
 
-static void ResetUnionRoomTrade(struct UnionRoomTrade * uroomTrade)
+static void ResetUnionRoomTrade(struct UnionRoomTrade *uroomTrade)
 {
     uroomTrade->state = URTRADE_STATE_NONE;
     uroomTrade->type = 0;
@@ -4237,7 +4237,7 @@ void Script_ResetUnionRoomTrade(void)
     ResetUnionRoomTrade(&sUnionRoomTrade);
 }
 
-static bool32 RegisterTradeMonAndGetIsEgg(u32 monId, struct UnionRoomTrade * trade)
+static bool32 RegisterTradeMonAndGetIsEgg(u32 monId, struct UnionRoomTrade *trade)
 {
     trade->playerSpecies = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES_OR_EGG);
     trade->playerLevel = GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL);
@@ -4248,14 +4248,14 @@ static bool32 RegisterTradeMonAndGetIsEgg(u32 monId, struct UnionRoomTrade * tra
         return FALSE;
 }
 
-static void RegisterTradeMon(u32 monId, struct UnionRoomTrade * trade)
+static void RegisterTradeMon(u32 monId, struct UnionRoomTrade *trade)
 {
     trade->species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES_OR_EGG);
     trade->level = GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL);
     trade->personality = GetMonData(&gPlayerParty[monId], MON_DATA_PERSONALITY);
 }
 
-static u32 GetPartyPositionOfRegisteredMon(struct UnionRoomTrade * trade, u8 multiplayerId)
+static u32 GetPartyPositionOfRegisteredMon(struct UnionRoomTrade *trade, u8 multiplayerId)
 {
     u16 response = 0;
     enum Species species;
@@ -4319,7 +4319,7 @@ static u8 GetLinkPlayerInfoFlags(s32 linkPlayer)
     return retval;
 }
 
-static u8 GetActivePartnersInfo(struct WirelessLink_URoom * uroom)
+static u8 GetActivePartnersInfo(struct WirelessLink_URoom *uroom)
 {
     u8 retVal = PINFO_ACTIVE_FLAG;
     u8 i;
@@ -4337,9 +4337,9 @@ static u8 GetActivePartnersInfo(struct WirelessLink_URoom * uroom)
     return retVal;
 }
 
-static void ViewURoomPartnerTrainerCard(u8 *unused, struct WirelessLink_URoom * uroom, bool8 isParent)
+static void ViewURoomPartnerTrainerCard(u8 *unused, struct WirelessLink_URoom *uroom, bool8 isParent)
 {
-    struct TrainerCard * trainerCard = &gTrainerCards[GetMultiplayerId() ^ 1];
+    struct TrainerCard *trainerCard = &gTrainerCards[GetMultiplayerId() ^ 1];
     s32 i;
     s32 n;
 

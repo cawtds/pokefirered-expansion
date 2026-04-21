@@ -191,7 +191,7 @@ static void DoLoadMap_QLPlayback(u8 *state);
 static bool32 LoadMap_QLPlayback(u8 *state);
 static bool32 SetUpScrollSceneForCredits(u8 *state, u8 unused);
 static bool8 MapLdr_Credits(void);
-static void CameraCB_CreditsPan(struct CameraObject * camera);
+static void CameraCB_CreditsPan(struct CameraObject *camera);
 static void Task_OvwldCredits_FadeOut(u8 taskId);
 static void Task_OvwldCredits_WaitFade(u8 taskId);
 
@@ -243,7 +243,7 @@ static u8 FlipVerticalAndClearForced(u8 newFacing, u8 oldFacing);
 static u8 LinkPlayerDetectCollision(u8 selfObjEventId, u8 a2, s16 x, s16 y);
 static void SpriteCB_LinkPlayer(struct Sprite *sprite);
 
-extern const struct MapLayout * gMapLayouts[];
+extern const struct MapLayout *gMapLayouts[];
 extern const struct MapHeader *const *gMapGroups[];
 
 // Routines related to game state on warping in
@@ -462,7 +462,7 @@ static void LoadObjEventTemplatesFromHeader(void)
             u8 localId = gMapHeader.events->objectEvents[i].targetLocalId;
             u8 mapNum = gMapHeader.events->objectEvents[i].targetMapNum;
             u8 mapGroup = gMapHeader.events->objectEvents[i].targetMapGroup;
-            const struct MapHeader * connectionMap = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum);
+            const struct MapHeader *connectionMap = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum);
 
             gSaveBlock1Ptr->objectEventTemplates[i] = connectionMap->events->objectEvents[localId - 1];
             gSaveBlock1Ptr->objectEventTemplates[i].localId = gMapHeader.events->objectEvents[i].localId;
@@ -483,8 +483,8 @@ static void LoadObjEventTemplatesFromHeader(void)
 static void LoadSaveblockObjEventScripts(void)
 {
     int i;
-    const struct ObjectEventTemplate * src = gMapHeader.events->objectEvents;
-    struct ObjectEventTemplate * savObjTemplates = gSaveBlock1Ptr->objectEventTemplates;
+    const struct ObjectEventTemplate *src = gMapHeader.events->objectEvents;
+    struct ObjectEventTemplate *savObjTemplates = gSaveBlock1Ptr->objectEventTemplates;
 
     for (i = 0; i < OBJECT_EVENT_TEMPLATES_COUNT; i++)
     {
@@ -495,7 +495,7 @@ static void LoadSaveblockObjEventScripts(void)
 void SetObjEventTemplateCoords(u8 localId, s16 x, s16 y)
 {
     int i;
-    struct ObjectEventTemplate * savObjTemplates = gSaveBlock1Ptr->objectEventTemplates;
+    struct ObjectEventTemplate *savObjTemplates = gSaveBlock1Ptr->objectEventTemplates;
     for (i = 0; i < OBJECT_EVENT_TEMPLATES_COUNT; i++)
     {
         if (savObjTemplates[i].localId == localId)
@@ -760,7 +760,7 @@ void SetContinueGameWarpToDynamicWarp(int unused)
     gSaveBlock1Ptr->continueGameWarp = gSaveBlock1Ptr->dynamicWarp;
 }
 
-static const struct MapConnection * GetMapConnection(u8 dir)
+static const struct MapConnection *GetMapConnection(u8 dir)
 {
     s32 i;
     s32 count = gMapHeader.connections->count;
@@ -1060,14 +1060,14 @@ void SetCurrentMapLayout(u16 mapLayoutId)
     gCurrentSecondaryTileset = GetSecondaryTilesetFromLayout(gMapHeader.mapLayout);
 }
 
-void Overworld_SetWarpDestinationFromWarp(struct WarpData * warp)
+void Overworld_SetWarpDestinationFromWarp(struct WarpData *warp)
 {
     sWarpDestination = *warp;
 }
 
 // Routines related to map music
 
-static u16 GetLocationMusic(struct WarpData * warp)
+static u16 GetLocationMusic(struct WarpData *warp)
 {
     return Overworld_GetMapHeaderByGroupAndId(warp->mapGroup, warp->mapNum)->music;
 }
@@ -2636,7 +2636,7 @@ static bool8 FieldCB2_Credits_WaitFade(void)
         return FALSE;
 }
 
-bool32 Overworld_DoScrollSceneForCredits(u8 *state_p, const struct CreditsOverworldCmd * script, u8 tintMode)
+bool32 Overworld_DoScrollSceneForCredits(u8 *state_p, const struct CreditsOverworldCmd *script, u8 tintMode)
 {
     sCreditsOverworld_Script = script;
     gGlobalFieldTintMode = tintMode;
@@ -2749,7 +2749,7 @@ static bool8 MapLdr_Credits(void)
     return FALSE;
 }
 
-static void CameraCB_CreditsPan(struct CameraObject * camera)
+static void CameraCB_CreditsPan(struct CameraObject *camera)
 {
     if (sCreditsOverworld_CmdLength == 0)
     {

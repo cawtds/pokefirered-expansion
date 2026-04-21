@@ -44,7 +44,7 @@ static const u8 sGiftRibbonsMonDataIds[] =
 
 #define CM_PER_INCH 2.54
 
-static u32 GetMonSizeHash(struct Pokemon * pkmn)
+static u32 GetMonSizeHash(struct Pokemon *pkmn)
 {
     u16 personality = GetMonData(pkmn, MON_DATA_PERSONALITY);
     u16 hpIV = GetMonData(pkmn, MON_DATA_HP_IV) & 0xF;
@@ -106,7 +106,7 @@ static u8 CompareMonSize(enum Species species, u16 *sizeRecord)
     }
     else
     {
-        struct Pokemon * pkmn = &gPlayerParty[gSpecialVar_Result];
+        struct Pokemon *pkmn = &gPlayerParty[gSpecialVar_Result];
 
         if (GetMonData(pkmn, MON_DATA_IS_EGG) == TRUE || GetMonData(pkmn, MON_DATA_SPECIES) != species)
         {
@@ -200,7 +200,7 @@ void GiveGiftRibbonToParty(u8 index, u8 ribbonId)
         gSaveBlock1Ptr->giftRibbons[index] = ribbonId;
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            struct Pokemon * mon = &gPlayerParty[i];
+            struct Pokemon *mon = &gPlayerParty[i];
 
             if (GetMonData(mon, MON_DATA_SPECIES) != SPECIES_NONE && !GetMonData(mon, MON_DATA_SANITY_IS_EGG))
             {

@@ -15,8 +15,8 @@ void TrySetQuestLogBattleEvent(void)
     if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_POKEDUDE)) && (gBattleOutcome == B_OUTCOME_WON || gBattleOutcome == B_OUTCOME_CAUGHT))
     {
         // Why allocate both of these? Only one will ever be used at a time
-        struct QuestLogEvent_TrainerBattle * trainerData = Alloc(sizeof(*trainerData));
-        struct QuestLogEvent_WildBattle * wildData = Alloc(sizeof(*wildData));
+        struct QuestLogEvent_TrainerBattle *trainerData = Alloc(sizeof(*trainerData));
+        struct QuestLogEvent_WildBattle *wildData = Alloc(sizeof(*wildData));
         u16 eventId;
         u16 playerEndingHP;
         u16 playerMaxHP;
@@ -102,7 +102,7 @@ void TrySetQuestLogLinkBattleEvent(void)
 
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
     {
-        struct QuestLogEvent_LinkBattle * data = Alloc(sizeof(*data));
+        struct QuestLogEvent_LinkBattle *data = Alloc(sizeof(*data));
         data->outcome = gBattleOutcome - 1; // 0 = won, 1 = lost, 2 = drew
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
@@ -136,7 +136,7 @@ void TrySetQuestLogLinkBattleEvent(void)
     }
 }
 
-static void GetLinkMultiBattlePlayerIndexes(s32 * partnerIdx, s32 * opponentIdxs)
+static void GetLinkMultiBattlePlayerIndexes(s32 *partnerIdx, s32 *opponentIdxs)
 {
     s32 i;
     s32 numOpponentsFound = 0;

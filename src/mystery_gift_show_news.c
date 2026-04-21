@@ -22,7 +22,7 @@ enum {
 struct WonderNewsData
 {
     struct WonderNews news;
-    const struct WonderGraphics * gfx;
+    const struct WonderGraphics *gfx;
     bool8 verticalScrollDisabled:1;
     u8 enterExitState:7;
     u8 arrowTaskId;
@@ -40,7 +40,7 @@ struct WonderNewsData
     u8 bgTilemapBuffer[0x1000];
 };
 
-static EWRAM_DATA struct WonderNewsData * sWonderNewsData = NULL;
+static EWRAM_DATA struct WonderNewsData *sWonderNewsData = NULL;
 
 static void BufferNewsText(void);
 static void DrawNewsWindows(void);
@@ -109,7 +109,7 @@ static const struct WonderGraphics sNewsGraphics[NUM_WONDER_BGS] = {
     {.titleTextPal = 1, .bodyTextPal = 0, .tiles = sNews7Gfx, .map = sNews7Map, .pal = sNews7Pal}
 };
 
-bool32 WonderNews_Init(const struct WonderNews * news)
+bool32 WonderNews_Init(const struct WonderNews *news)
 {
     if (news == NULL)
         return FALSE;

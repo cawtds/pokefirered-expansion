@@ -208,7 +208,7 @@ void QuestLogRecordNPCStepWithDuration(u8 localId, u8 mapNum, u8 mapGroup, u8 mo
 void QL_AfterRecordFishActionSuccessful(void);
 void QL_ResetDefeatedWildMonRecord(void);
 void QL_RestoreMapLayoutId(void);
-void QL_RecordFieldInput(struct FieldInput * fieldInput);
+void QL_RecordFieldInput(struct FieldInput *fieldInput);
 void QL_TryRunActions(void);
 void RunQuestLogCB(void);
 void QL_HandleInput(void);

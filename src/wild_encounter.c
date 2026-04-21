@@ -287,7 +287,7 @@ u16 GetCurrentMapWildMonHeaderId(void)
 
     for (i = 0; ; i++)
     {
-        const struct WildPokemonHeader * wildHeader = &gWildMonHeaders[i];
+        const struct WildPokemonHeader *wildHeader = &gWildMonHeaders[i];
         if (wildHeader->mapGroup == MAP_GROUP(MAP_UNDEFINED))
             break;
 
@@ -410,7 +410,7 @@ void CreateWildMon(enum Species species, u8 level, u8 unownSlot)
 
 #define TRY_GET_ABILITY_INFLUENCED_WILD_MON_INDEX(wildPokemon, type, ability, ptr, count) TryGetAbilityInfluencedWildMonIndex(wildPokemon, type, ability, ptr, count)
 
-static bool8 TryGenerateWildMon(const struct WildPokemonInfo * wildMonInfo, u8 area, u8 flags)
+static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, u8 area, u8 flags)
 {
     u8 wildMonIndex = 0;
     u8 level;
@@ -463,7 +463,7 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo * wildMonInfo, u8 a
     return TRUE;
 }
 
-static u16 GenerateFishingEncounter(const struct WildPokemonInfo * wildMonInfo, u8 rod)
+static u16 GenerateFishingEncounter(const struct WildPokemonInfo *wildMonInfo, u8 rod)
 {
     u8 wildMonIndex = ChooseWildMonIndex_Fishing(rod);
     u16 wildMonSpecies = wildMonInfo->wildPokemon[wildMonIndex].species;
@@ -558,7 +558,7 @@ static bool8 AllowWildCheckOnNewMetatile(void)
 
 bool8 TryStandardWildLandEncounter(u16 headerId, u32 currMetatileAttrs, u16 previousMetatileBehavior)
 {
-    struct Roamer * roamer;
+    struct Roamer *roamer;
     enum Season season;
     enum TimeOfDay timeOfDay;
     GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_LAND, &season, &timeOfDay);
@@ -605,7 +605,7 @@ bool8 TryStandardWildLandEncounter(u16 headerId, u32 currMetatileAttrs, u16 prev
 
 bool8 TryStandardWildSurfEncounter(u16 headerId, u32 currMetatileAttrs, u16 previousMetatileBehavior)
 {
-    struct Roamer * roamer;
+    struct Roamer *roamer;
     enum Season season;
     enum TimeOfDay timeOfDay;
     GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_WATER, &season, &timeOfDay);
@@ -883,7 +883,7 @@ u16 GetLocalWaterMon(void)
     if (headerId != HEADER_NONE)
     {
         GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_WATER, &season, &timeOfDay);
-        const struct WildPokemonInfo * waterMonsInfo = gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].waterMonsInfo;
+        const struct WildPokemonInfo *waterMonsInfo = gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].waterMonsInfo;
 
         if (waterMonsInfo)
             return waterMonsInfo->wildPokemon[ChooseWildMonIndex_Water()].species;

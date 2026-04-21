@@ -51,7 +51,7 @@ u8 FlagSet(u16 id);
 u8 FlagToggle(u16 id);
 u8 FlagClear(u16 id);
 bool8 FlagGet(u16 id);
-u16 * GetVarPointer(u16 id);
+u16 *GetVarPointer(u16 id);
 bool32 IsMysteryGiftEnabled(void);
 void ResetSpecialVars(void);
 void ClearMysteryGiftFlags(void);

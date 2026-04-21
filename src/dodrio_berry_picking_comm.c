@@ -239,7 +239,7 @@ void SendPacket_PickState(u8 pickState)
 
 bool32 RecvPacket_PickState(u32 playerId, u8 *pickState)
 {
-    struct PickStatePacket * packet;
+    struct PickStatePacket *packet;
 
     if ((gRecvCmds[0][0] & RFUCMD_MASK) != RFUCMD_SEND_PACKET)
         return FALSE;
@@ -264,7 +264,7 @@ void SendPacket_ReadyToEnd(bool32 ready)
 
 bool32 RecvPacket_ReadyToEnd(u32 playerId)
 {
-    struct ReadyToEndPacket * packet;
+    struct ReadyToEndPacket *packet;
 
     if ((gRecvCmds[0][0] & RFUCMD_MASK) != RFUCMD_SEND_PACKET)
         return FALSE;

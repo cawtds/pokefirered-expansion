@@ -72,7 +72,7 @@
 static EWRAM_DATA u8 sTutorMoveAndElevatorWindowId = 0;
 static EWRAM_DATA u16 sElevatorScroll = 0;
 static EWRAM_DATA u16 sElevatorCursorPos = 0;
-static EWRAM_DATA struct ListMenuItem * sListMenuItems = NULL;
+static EWRAM_DATA struct ListMenuItem *sListMenuItems = NULL;
 static EWRAM_DATA u8 sScrollableMultichoice_ItemSpriteId = 0;
 static EWRAM_DATA u8 sBattlePointsWindowId = 0;
 static EWRAM_DATA u8 sFrontierExchangeCorner_ItemIconWindowId = 0;
@@ -95,7 +95,7 @@ static void AnimateElevatorWindowView(u16 floorNum, enum Direction direction);
 static void Task_AnimateElevatorWindowView(u8 taskId);
 static void Task_CreateScriptListMenu(u8 taskId);
 static void InitScrollableMultichoice(void);
-static void ScrollableMultichoice_MoveCursor(s32 nothing, bool8 is, struct ListMenu * used);
+static void ScrollableMultichoice_MoveCursor(s32 nothing, bool8 is, struct ListMenu *used);
 static void ScrollableMultichoice_ProcessInput(u8 taskId);
 static void CloseScrollableMultichoice(u8 taskId);
 static void Task_SuspendListMenu(u8 taskId);
@@ -368,7 +368,7 @@ u16 GetWeekCount(void)
 
 u8 GetLeadMonFriendship(void)
 {
-    struct Pokemon * pokemon = &gPlayerParty[GetLeadMonIndex()];
+    struct Pokemon *pokemon = &gPlayerParty[GetLeadMonIndex()];
     if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) == 255)
         return 6;
     else if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) >= 200)
@@ -394,7 +394,7 @@ void FieldShowRegionMap(void)
 bool8 PlayerHasGrassPokemonInParty(void)
 {
     u8 i;
-    struct Pokemon * pokemon;
+    struct Pokemon *pokemon;
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
@@ -742,7 +742,7 @@ u8 GetLeadMonIndex(void)
 {
     u8 partyCount = CalculatePlayerPartyCount();
     u8 i;
-    struct Pokemon * pokemon;
+    struct Pokemon *pokemon;
     for (i = 0; i < partyCount; i++)
     {
         pokemon = &gPlayerParty[i];
@@ -1586,7 +1586,7 @@ static void InitScrollableMultichoice(void)
     gScrollableMultichoice_ListMenuTemplate.cursorKind = 0;
 }
 
-static void ScrollableMultichoice_MoveCursor(s32 nothing, bool8 is, struct ListMenu * used)
+static void ScrollableMultichoice_MoveCursor(s32 nothing, bool8 is, struct ListMenu *used)
 {
     u8 taskId;
     struct Task *task;
@@ -1823,7 +1823,7 @@ u8 ContextNpcGetTextColor(void)
 
 static bool8 HasMonBeenRenamed(u8 idx)
 {
-    struct Pokemon * pokemon = &gPlayerParty[idx];
+    struct Pokemon *pokemon = &gPlayerParty[idx];
     u8 language;
     GetMonData(pokemon, MON_DATA_NICKNAME, gStringVar1);
     language = GetMonData(pokemon, MON_DATA_LANGUAGE, &language);
@@ -1860,7 +1860,7 @@ size_t CountDigits(s32 value)
 
 bool8 NameRaterWasNicknameChanged(void)
 {
-    struct Pokemon * pokemon = &gPlayerParty[gSpecialVar_0x8004];
+    struct Pokemon *pokemon = &gPlayerParty[gSpecialVar_0x8004];
     GetMonData(pokemon, MON_DATA_NICKNAME, gStringVar1);
     if (StringCompare(gStringVar3, gStringVar1) == 0)
         return FALSE;
@@ -1870,7 +1870,7 @@ bool8 NameRaterWasNicknameChanged(void)
 
 void ChangeBoxPokemonNickname(void)
 {
-    struct BoxPokemon * pokemon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
+    struct BoxPokemon *pokemon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
     enum Species species;
     u8 gender;
     u32 personality;

@@ -40,7 +40,7 @@ struct MailAttrStruct
     u8 nameX;
     u8 messageTop;
     u8 messageLeft;
-    const struct MailEcWordLayout * linesLayout;
+    const struct MailEcWordLayout *linesLayout;
 };
 
 struct MailGfxData
@@ -57,7 +57,7 @@ struct MailViewResources {
     u8 authorNameBuffer[12];
     void (*savedCallback)(void);
     void (*showMailCallback)(void);
-    struct Mail * mail;
+    struct Mail *mail;
     bool8 messageExists;
     u8 nameX;
     u8 mailType;
@@ -67,14 +67,14 @@ struct MailViewResources {
     u8 mailArrangementType;
     u8 *(*copyEasyChatWord)(u8 *dest, u16 word);
     u8 *(*convertEasyChatWordsToString)(u8 *dest, const u16 *src, u16 length1, u16 length2);
-    const struct MailAttrStruct * messageLayout;
+    const struct MailAttrStruct *messageLayout;
     u16 bg1TilemapBuffer[BG_SCREEN_SIZE];
     u16 bg2TilemapBuffer[BG_SCREEN_SIZE];
 };
 
 static const u8 sText_From[] = _("From ");
 
-static EWRAM_DATA struct MailViewResources * sMailViewResources = NULL;
+static EWRAM_DATA struct MailViewResources *sMailViewResources = NULL;
 
 static void CB2_InitMailView(void);
 static void BufferMailMessage(void);
@@ -439,7 +439,7 @@ static const struct MailAttrStruct sMessageLayouts_5x2[] = {
     },
 };
 
-void ReadMail(struct Mail * mail, void (*savedCallback)(void), bool8 messageExists)
+void ReadMail(struct Mail *mail, void (*savedCallback)(void), bool8 messageExists)
 {
     u16 sp0;
     enum Species species;

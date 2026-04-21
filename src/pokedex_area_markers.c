@@ -187,7 +187,7 @@ const s8 sAreaMarkers[][4] = {
 
 static void Task_ShowAreaMarkers(u8 taskId)
 {
-    struct PAM_TaskData * data = (void *)gTasks[taskId].data;
+    struct PAM_TaskData *data = (void *)gTasks[taskId].data;
     gSprites[data->spriteId].invisible = FALSE;
 }
 
@@ -196,8 +196,8 @@ u8 CreatePokedexAreaMarkers(enum Species species, u16 tilesTag, u8 palIdx, u8 y)
     struct SpriteTemplate spriteTemplate;
     struct CompressedSpriteSheet spriteSheet;
     u8 taskId;
-    struct PAM_TaskData * data;
-    struct Subsprite * subsprites;
+    struct PAM_TaskData *data;
+    struct Subsprite *subsprites;
 
     // Load gfx
     spriteSheet.data = sMarkerTiles;
@@ -245,7 +245,7 @@ u8 CreatePokedexAreaMarkers(enum Species species, u16 tilesTag, u8 palIdx, u8 y)
 
 void DestroyPokedexAreaMarkers(u8 taskId)
 {
-    struct PAM_TaskData * data = (void *)gTasks[taskId].data;
+    struct PAM_TaskData *data = (void *)gTasks[taskId].data;
     FreeSpriteTilesByTag(data->tilesTag);
     DestroySprite(&gSprites[data->spriteId]);
     Free(data->buffer);
@@ -263,7 +263,7 @@ void DestroyPokedexAreaMarkers(u8 taskId)
     DestroyTask(taskId);
 }
 
-void GetAreaMarkerSubsprite(s32 i, s32 dexArea, struct Subsprite * subsprites)
+void GetAreaMarkerSubsprite(s32 i, s32 dexArea, struct Subsprite *subsprites)
 {
     subsprites[i] = *sSubsprites[sAreaMarkers[dexArea][0]];
     subsprites[i].x = sAreaMarkers[dexArea][1];
@@ -272,6 +272,6 @@ void GetAreaMarkerSubsprite(s32 i, s32 dexArea, struct Subsprite * subsprites)
 
 u8 GetNumPokedexAreaMarkers(u8 taskId)
 {
-    struct PAM_TaskData * data = (void *)gTasks[taskId].data;
+    struct PAM_TaskData *data = (void *)gTasks[taskId].data;
     return data->subsprites.subspriteCount;
 }

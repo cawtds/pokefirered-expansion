@@ -89,7 +89,7 @@ static const u8 sText_WhatsHipAndHappening[] = _("What's hip and happening?");
 static const u8 sText_Interview[] = _("Interview");
 static const u8 sText_Questionnaire[] = _("QUESTIONNAIRE");
 
-static EWRAM_DATA struct EasyChatScreen * sEasyChatScreen = NULL;
+static EWRAM_DATA struct EasyChatScreen *sEasyChatScreen = NULL;
 
 static void CB2_EasyChatScreen(void);
 static void Task_InitEasyChat(u8 taskId);

@@ -122,7 +122,7 @@ static void CB2_BerryFix(void)
 
 static void Task_BerryFixMain(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     switch (tState)
     {

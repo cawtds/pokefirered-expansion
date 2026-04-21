@@ -311,7 +311,7 @@ static void Task_Seagallop_2(u8 taskId)
 
 static void Task_Seagallop_3(void)
 {
-    const s8 * warpInfo;
+    const s8 *warpInfo;
 
     if (gSpecialVar_0x8006 >= ARRAY_COUNT(sSeag))
         gSpecialVar_0x8006 = 0;

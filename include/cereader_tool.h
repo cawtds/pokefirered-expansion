@@ -43,9 +43,9 @@ struct EReaderTrainerTowerSet
     struct TrainerTowerFloor floors[MAX_TRAINER_TOWER_FLOORS];
 };
 
-bool32 ValidateTrainerTowerData(struct EReaderTrainerTowerSet * ttdata);
-bool32 CEReaderTool_SaveTrainerTower(struct EReaderTrainerTowerSet * ttdata);
-bool32 CEReaderTool_LoadTrainerTower(struct EReaderTrainerTowerSet * ttdata);
+bool32 ValidateTrainerTowerData(struct EReaderTrainerTowerSet *ttdata);
+bool32 CEReaderTool_SaveTrainerTower(struct EReaderTrainerTowerSet *ttdata);
+bool32 CEReaderTool_LoadTrainerTower(struct EReaderTrainerTowerSet *ttdata);
 bool32 ReadTrainerTowerAndValidate(void);
 
 #endif //GUARD_CEREADER_TOOL_H

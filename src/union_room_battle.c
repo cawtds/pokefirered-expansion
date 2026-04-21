@@ -23,7 +23,7 @@ static const u8 sText_CommStandbyAwaitingOtherPlayer[] = _("Communication standb
 static const u8 sText_BattleWasRefused[] = _("The battle was refused.{PAUSE 0x3C}");
 static const u8 sText_RefusedBattle[] = _("Refused the battle.{PAUSE 0x3C}");
 
-static EWRAM_DATA struct UnionRoomBattleWork * sWork = NULL;
+static EWRAM_DATA struct UnionRoomBattleWork *sWork = NULL;
 
 static const struct BgTemplate sBgTemplates[] = {
     {
@@ -69,7 +69,7 @@ static void SetUpPartiesAndStartBattle(void)
     SetMainCallback2(CB2_InitBattle);
 }
 
-static void UnionRoomBattle_CreateTextPrinter(u8 windowId, const u8 * str, u8 x, u8 y, s32 speed)
+static void UnionRoomBattle_CreateTextPrinter(u8 windowId, const u8 *str, u8 x, u8 y, s32 speed)
 {
     s32 letterSpacing = 1;
     s32 lineSpacing = 1;
@@ -77,7 +77,7 @@ static void UnionRoomBattle_CreateTextPrinter(u8 windowId, const u8 * str, u8 x,
     AddTextPrinterParameterized4(windowId, FONT_NORMAL_COPY_2, x, y, letterSpacing, lineSpacing, sTextColors, speed, str);
 }
 
-static bool32 UnionRoomBattle_PrintTextOnWindow0(s16 * state, const u8 * str, s32 speed)
+static bool32 UnionRoomBattle_PrintTextOnWindow0(s16 *state, const u8 *str, s32 speed)
 {
     switch (*state)
     {

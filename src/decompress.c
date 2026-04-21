@@ -624,7 +624,7 @@ ARM_FUNC __attribute__((flatten, noinline, no_reorder)) __attribute__((optimize(
     u32 currBits = *data++;
     u32 currSymbol = 0;
     u32 bitIndex = sBitIndex;
-    u32 * resultVec_32 = (u32*)(resultVec); // Since we're doing 2 symbols at one time we store as word which is faster than storing two halfwords.
+    u32 *resultVec_32 = (u32*)(resultVec); // Since we're doing 2 symbols at one time we store as word which is faster than storing two halfwords.
 
     do
     {

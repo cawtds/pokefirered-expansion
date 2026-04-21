@@ -180,7 +180,7 @@ struct NamingScreenData
     /*0x1E3C*/ MainCallback returnCallback;
 };
 
-static EWRAM_DATA struct NamingScreenData * sNamingScreen = NULL;
+static EWRAM_DATA struct NamingScreenData *sNamingScreen = NULL;
 
 static void CB2_LoadNamingScreen(void);
 static void NamingScreen_Init(void);
@@ -1443,7 +1443,7 @@ static void NamingScreen_CreateRivalIcon(void)
         gNamingScreenRival_Pal, PALTAG_RIVAL
     };
     struct SpriteTemplate template;
-    const struct SubspriteTable * tables_p;
+    const struct SubspriteTable *tables_p;
     u8 spriteId;
 
     CopyObjectGraphicsInfoToSpriteTemplate(OBJ_EVENT_GFX_RED_NORMAL, SpriteCallbackDummy, &template, &tables_p);

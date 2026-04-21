@@ -100,7 +100,7 @@ static enum Move GetMonMoveBySlotId(struct Pokemon *mon, u8 moveSlot);
 static s8 AdvanceMultiBattleMonIndex(s8 direction);
 static s8 AdvanceMonIndex(s8 direction);
 static u16 GetMonPpByMoveSlot(struct Pokemon *mon, u8 moveSlot);
-static u8 PokeSum_BufferOtName_IsEqualToCurrentOwner(struct Pokemon * mon);
+static u8 PokeSum_BufferOtName_IsEqualToCurrentOwner(struct Pokemon *mon);
 static u8 PokeSum_HandleCreateSprites(void);
 static u8 PokeSum_HandleLoadBgGfx(void);
 static u8 PokeSum_IsPageFlipFinished(u8);
@@ -110,7 +110,7 @@ static void BufferMonInfo(void);
 static void BufferMonMoveI(u8);
 static void BufferMonMoves(void);
 static void BufferMonSkills(void);
-static void BufferSelectedMonData(struct Pokemon * mon);
+static void BufferSelectedMonData(struct Pokemon *mon);
 static void MainCB2(void);
 static void CB2_InitSummaryScreen(void);
 static void CommitStaticWindowTilemaps(void);
@@ -149,7 +149,7 @@ static void PokeSum_PrintExpPoints_NextLv(void);
 static void PokeSum_PrintMonTypeIcons(void);
 static void PokeSum_PrintMoveName(u8 i);
 static void PokeSum_PrintPageHeaderText(u8 curPageIndex);
-static void PokeSum_PrintPageName(const u8 * str);
+static void PokeSum_PrintPageName(const u8 *str);
 static void PokeSum_PrintRightPaneText(void);
 static void PokeSum_PrintSelectedMoveStats(void);
 static void PokeSum_PrintTrainerMemo_Egg(void);
@@ -2030,7 +2030,7 @@ static void PokeSum_FinishSetup(void)
     SetMainCallback2(MainCB2);
 }
 
-static void PokeSum_PrintPageName(const u8 * str)
+static void PokeSum_PrintPageName(const u8 *str)
 {
     FillWindowPixelBuffer(sMonSummaryScreen->windowIds[PSS_WIN_PAGE_NAME], 0);
     AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[PSS_WIN_PAGE_NAME], FONT_NORMAL, 4, 1, sLevelNickTextColors[1], 0, str);
@@ -2049,7 +2049,7 @@ static void PokeSum_PrintControlsString(const u8 *str)
     PutWindowTilemap(sMonSummaryScreen->windowIds[PSS_WIN_CONTROLS]);
 }
 
-static void PrintMonLevelNickOnWindow2(const u8 * str)
+static void PrintMonLevelNickOnWindow2(const u8 *str)
 {
     FillWindowPixelBuffer(sMonSummaryScreen->windowIds[PSS_WIN_LVL_NICK], 0);
 
@@ -3119,7 +3119,7 @@ static void BufferSelectedMonData(struct Pokemon *mon)
     }
 }
 
-static enum Move GetMonMoveBySlotId(struct Pokemon * mon, u8 moveSlot)
+static enum Move GetMonMoveBySlotId(struct Pokemon *mon, u8 moveSlot)
 {
     enum Move move;
 
@@ -3141,7 +3141,7 @@ static enum Move GetMonMoveBySlotId(struct Pokemon * mon, u8 moveSlot)
     return move;
 }
 
-static u16 GetMonPpByMoveSlot(struct Pokemon * mon, u8 moveSlot)
+static u16 GetMonPpByMoveSlot(struct Pokemon *mon, u8 moveSlot)
 {
     u16 pp;
 
@@ -3380,8 +3380,8 @@ static void Task_HandleInput_SelectMove(u8 taskId)
 
 static void SwapMonMoveSlots(void)
 {
-    struct Pokemon * partyMons;
-    struct Pokemon * mon;
+    struct Pokemon *partyMons;
+    struct Pokemon *mon;
 
     u16 move1, move2;
     u8 pp1, pp2;
@@ -3415,8 +3415,8 @@ static void SwapMonMoveSlots(void)
 
 static void SwapBoxMonMoveSlots(void)
 {
-    struct BoxPokemon * boxMons;
-    struct BoxPokemon * boxMon;
+    struct BoxPokemon *boxMons;
+    struct BoxPokemon *boxMon;
 
     u16 move1, move2;
     u8 pp1, pp2;
@@ -3448,17 +3448,17 @@ static void SwapBoxMonMoveSlots(void)
     SetBoxMonData(boxMon, MON_DATA_PP_BONUSES, &allMovesPPBonuses);
 }
 
-static void UpdateCurrentMonBufferFromPartyOrBox(struct Pokemon * mon)
+static void UpdateCurrentMonBufferFromPartyOrBox(struct Pokemon *mon)
 {
     if (!sMonSummaryScreen->isBoxMon)
     {
-        struct Pokemon * partyMons;
+        struct Pokemon *partyMons;
         partyMons = sMonSummaryScreen->monList.mons;
         *mon = partyMons[GetLastViewedMonIndex()];
     }
     else
     {
-        struct BoxPokemon * boxMons;
+        struct BoxPokemon *boxMons;
         boxMons = sMonSummaryScreen->monList.boxMons;
         BoxMonToMon(&boxMons[GetLastViewedMonIndex()], mon);
     }
@@ -4578,7 +4578,7 @@ static s8 AdvanceMonIndex(s8 delta)
     return -1;
 }
 
-static u8 IsValidToViewInMulti(struct Pokemon * partyMons)
+static u8 IsValidToViewInMulti(struct Pokemon *partyMons)
 {
     if (GetMonData(partyMons, MON_DATA_SPECIES) == SPECIES_NONE)
         return FALSE;

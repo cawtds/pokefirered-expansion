@@ -93,7 +93,7 @@ int msort(void * data, size_t count, size_t size, cmpfun cmp) {
     return result;
 }
 
-static void write_tree(unsigned char * dest, HuffNode_t * tree, int nitems, struct BitEncoding * encoding) {
+static void write_tree(unsigned char * dest, HuffNode_t * tree, int nitems, struct BitEncoding *encoding) {
     /*
      * The example used to guide this function encodes the tree in a
      * breadth-first manner.  We attempt to emulate that here.
@@ -193,7 +193,7 @@ static inline void read_32_le(unsigned char * src, int * srcPos, uint32_t * buff
     *buff = tmp;
 }
 
-static void write_bits(unsigned char * dest, int * destPos, struct BitEncoding * encoding, int value, uint32_t * buff, int * buffBits) {
+static void write_bits(unsigned char * dest, int * destPos, struct BitEncoding *encoding, int value, uint32_t * buff, int * buffBits) {
     int nbits = encoding[value].nbits;
     uint32_t bitstring = encoding[value].bitstring;
 
@@ -234,7 +234,7 @@ unsigned char * HuffCompress(unsigned char * src, int srcSize, int * compressedS
     if (freqs == NULL)
         goto fail;
 
-    struct BitEncoding * encoding = calloc(nitems, sizeof(struct BitEncoding));
+    struct BitEncoding *encoding = calloc(nitems, sizeof(struct BitEncoding));
     if (encoding == NULL)
         goto fail;
 

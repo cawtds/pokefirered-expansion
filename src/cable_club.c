@@ -407,13 +407,13 @@ static void Task_LinkupAwaitTrainerCardData(u8 taskId)
         enum GameVersion version = gLinkPlayers[i].version & 0xFF;
         if (version != VERSION_FIRE_RED && version != VERSION_LEAF_GREEN)
         {
-            const struct TrainerCardRSE * src = (const struct TrainerCardRSE *)gBlockRecvBuffer[i];
+            const struct TrainerCardRSE *src = (const struct TrainerCardRSE *)gBlockRecvBuffer[i];
             gTrainerCards[i].rse = *src;
             gTrainerCards[i].version = gLinkPlayers[i].version;
         }
         else
         {
-            const struct TrainerCard * src = (const struct TrainerCard *)gBlockRecvBuffer[i];
+            const struct TrainerCard *src = (const struct TrainerCard *)gBlockRecvBuffer[i];
             gTrainerCards[i] = *src;
         }
     }

@@ -91,8 +91,8 @@ void FieldEffectFreePaletteIfUnused(u8 paletteNum);
 void FieldCallback_UseFly(void);
 void HideFollowerForFieldEffect(void);
 
-void FieldEffectScript_LoadFadedPal(const struct SpritePalette * spritePalette);
-void FieldEffectScript_LoadPal(const struct SpritePalette * spritePalette);
+void FieldEffectScript_LoadFadedPal(const struct SpritePalette *spritePalette);
+void FieldEffectScript_LoadPal(const struct SpritePalette *spritePalette);
 
 bool8 IsRockClimbActive(void);
 

@@ -56,7 +56,7 @@ struct TeachyTvBuf
 };
 
 static EWRAM_DATA struct TeachyTvCtrlBlk sStaticResources = {0};
-static EWRAM_DATA struct TeachyTvBuf * sResources = NULL;
+static EWRAM_DATA struct TeachyTvBuf *sResources = NULL;
 
 static void TTVcmd_TransitionRenderBg2TeachyTvGraphicInitNpcPos(u8 taskId);
 static void TTVcmd_ClearBg2TeachyTvGraphic(u8 taskId);
@@ -105,7 +105,7 @@ static void TeachyTvPushBackNewMapPalIndexArrayEntry(const struct MapLayout *mSt
 static void TeachyTvComputeMapTilesFromTilesetAndMetaTiles(const u16 *metaTilesArray, u8 *blockBuf, u8 *tileset);
 static void TeachyTvComputeSingleMapTileBlockFromTilesetAndMetaTiles(u8 *blockBuf, u8 *tileset, u8 metaTile);
 static u16 TeachyTvComputePalIndexArrayEntryByMetaTile(u8 *palIndexArrayBuf, u16 metaTile);
-static void TeachyTvLoadMapPalette(const struct MapLayout * mStruct, const u8 *palIndexArray);
+static void TeachyTvLoadMapPalette(const struct MapLayout *mStruct, const u8 *palIndexArray);
 
 #include "data/text/teachy_tv.h"
 
@@ -576,7 +576,7 @@ static void TeachyTvSetupScrollIndicatorArrowPair(void)
 {
     if (!CheckBagHasItem(ITEM_TM_CASE, 1))
     {
-        struct TeachyTvBuf * temp = sResources;
+        struct TeachyTvBuf *temp = sResources;
         temp->scrollIndicatorArrowPairId = 0xFF;
     }
     else
@@ -638,7 +638,7 @@ static void TeachyTvClearWindowRegs(void)
 
 static void TeachyTvBg2AnimController(void)
 {
-    u16 * tilemapBuffer = GetBgTilemapBuffer(2);
+    u16 *tilemapBuffer = GetBgTilemapBuffer(2);
     u8 i, j;
     for (i = 1; i < 13; i++)
     {
@@ -719,7 +719,7 @@ static void TeachyTvQuitFadeControlAndTaskDel(u8 taskId)
 
 static void TeachyTvOptionListController(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     s32 input;
 
     TeachyTvBg2AnimController();
@@ -788,7 +788,7 @@ static void TTVcmd_ClearBg2TeachyTvGraphic(u8 taskId)
 
 static void TTVcmd_NpcMoveAndSetupTextPrinter(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     struct Sprite *spriteAddr = &gSprites[data[1]];
     if (data[2] != 35)
         ++data[2];
@@ -1165,7 +1165,7 @@ static void TeachyTvGrassAnimationObjCallback(struct Sprite *sprite)
 
 static u8 TeachyTvGrassAnimationCheckIfNeedsToGenerateGrassObj(s16 x, s16 y)
 {
-    const u8 * arr;
+    const u8 *arr;
     int high, low;
     if ((x < 0) || (y < 0))
         return 0;
@@ -1223,15 +1223,15 @@ static void TeachyTvRestorePlayerPartyCallback(void)
 
 static void TeachyTvLoadBg3Map(u16 *buffer)
 {
-    u16 * bgTilesBuffer;
-    u8 * mapTilesRowBuffer;
+    u16 *bgTilesBuffer;
+    u8 *mapTilesRowBuffer;
     u16 i, j, k;
     u16 currentBlockIdx;
     void *tilesetsBuffer;
     void *palIndicesBuffer;
     u16 numMapTilesRows = 0;
     const struct MapLayout *layout = &Route1_Layout;
-    u16 * blockIndicesBuffer = AllocZeroed(0x800);
+    u16 *blockIndicesBuffer = AllocZeroed(0x800);
     tilesetsBuffer = AllocZeroed(NUM_TILES_TOTAL * TILE_SIZE_4BPP);
     palIndicesBuffer = Alloc(16);
     memset(palIndicesBuffer, 0xFF, 16);
@@ -1295,7 +1295,7 @@ static void TeachyTvLoadMapTilesetToBuffer(const struct Tileset *ts, u8 *dstBuff
 
 static void TeachyTvPushBackNewMapPalIndexArrayEntry(const struct MapLayout *mStruct, u16 *buf1, u8 *palIndexArray, u16 mapEntry, u16 offset)
 {
-    const u16 * metaTileEntryAddr;
+    const u16 *metaTileEntryAddr;
     if (mapEntry < NUM_METATILES_IN_PRIMARY)
         metaTileEntryAddr = &GetPrimaryTileset(mStruct)->metatiles[8 * mapEntry];
     else
@@ -1322,8 +1322,8 @@ static void TeachyTvComputeMapTilesFromTilesetAndMetaTiles(const u16 *metaTilesA
 static void TeachyTvComputeSingleMapTileBlockFromTilesetAndMetaTiles(u8 *blockBuf, u8 *tileset, u8 metaTile)
 {
     u8 i, j;
-    u8 * buffer = AllocZeroed(0x20);
-    u8 * src = AllocZeroed(0x20);
+    u8 *buffer = AllocZeroed(0x20);
+    u8 *src = AllocZeroed(0x20);
     CpuFastCopy(tileset, buffer, 0x20);
     if (metaTile & 1)
     {
@@ -1387,10 +1387,10 @@ static u16 TeachyTvComputePalIndexArrayEntryByMetaTile(u8 *palIndexArrayBuf, u16
     return (0xF - i);
 }
 
-static void TeachyTvLoadMapPalette(const struct MapLayout * mStruct, const u8 * palIndexArray)
+static void TeachyTvLoadMapPalette(const struct MapLayout *mStruct, const u8 *palIndexArray)
 {
     u8 i;
-    const u16 * dest;
+    const u16 *dest;
 
     for (i = 0; i < 16; i++)
     {

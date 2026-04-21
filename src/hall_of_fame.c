@@ -76,7 +76,7 @@ static void Task_HofPC_HandleExit(u8 taskId);
 static void Task_HofPC_PrintDataIsCorrupted(u8 taskId);
 static void Task_HofPC_ExitOnButtonPress(u8 taskId);
 static void HallOfFame_PrintWelcomeText(u8 a0, u8 a1);
-static void HallOfFame_PrintMonInfo(struct HallofFameMon * hofMon, u8 a1, u8 a2);
+static void HallOfFame_PrintMonInfo(struct HallofFameMon *hofMon, u8 a1, u8 a2);
 static void HallOfFame_PrintPlayerInfo(u8 a0, u8 a1);
 static void ClearVramOamPltt_LoadHofPal(void);
 static void HofInit_ResetGpuBuffersAndLoadConfettiGfx(void);

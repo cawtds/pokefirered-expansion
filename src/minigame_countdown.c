@@ -12,7 +12,7 @@ static bool32 IsStartGraphicAnimRunning(u8 spriteId);
 static void SpriteCB_Start(struct Sprite *sprite);
 static void Load321StartGfx(u16 tilesTag, u16 palTag);
 static u8 CreateNumberSprite(u16 tilesTag, u16 palTag, s16 x, s16 y, u8 subpriority);
-static void CreateStartSprite(u16 tilesTag, u16 palTag, s16 x, s16 y, u8 subpriority, s16 * spriteId2_p, s16 * spriteId3_p);
+static void CreateStartSprite(u16 tilesTag, u16 palTag, s16 x, s16 y, u8 subpriority, s16 *spriteId2_p, s16 *spriteId3_p);
 
 #define tState       data[0]
 #define tTilesTag    data[2]
@@ -41,7 +41,7 @@ bool32 IsMinigameCountdownRunning(void)
 
 static void Task_MinigameCountdown(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     switch (tState)
     {
@@ -161,7 +161,7 @@ static bool32 IsStartGraphicAnimRunning(u8 spriteId)
 
 static void SpriteCB_Start(struct Sprite *sprite)
 {
-    s16 * data = sprite->data;
+    s16 *data = sprite->data;
     s32 y;
 
     switch (sprite->data[0])
@@ -314,7 +314,7 @@ static u8 CreateNumberSprite(u16 tilesTag, u16 palTag, s16 x, s16 y, u8 subprior
     return CreateSprite(&spriteTemplate, x, y, subpriority);
 }
 
-static void CreateStartSprite(u16 tilesTag, u16 palTag, s16 x, s16 y, u8 subpriority, s16 * spriteId2_p, s16 * spriteId3_p)
+static void CreateStartSprite(u16 tilesTag, u16 palTag, s16 x, s16 y, u8 subpriority, s16 *spriteId2_p, s16 *spriteId3_p)
 {
     struct SpriteTemplate spriteTemplate = {
         .oam = &sOamData_Start,
