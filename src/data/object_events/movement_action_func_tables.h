@@ -484,9 +484,9 @@ u8 (*const gMovementActionFuncs_WalkFastDiagonalUpRight[])(struct ObjectEvent *,
 u8 (*const gMovementActionFuncs_WalkFastDiagonalDownLeft[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_WalkFastDiagonalDownRight[])(struct ObjectEvent *, struct Sprite *);
 
-static u8 GetMoveDirectionFastAnimNum(u8 direction);
-static u8 GetMoveDirectionFasterAnimNum(u8 direction);
-static u8 GetMoveDirectionFastestAnimNum(u8 direction);
+static u8 GetMoveDirectionFastAnimNum(enum Direction direction);
+static u8 GetMoveDirectionFasterAnimNum(enum Direction direction);
+static u8 GetMoveDirectionFastestAnimNum(enum Direction direction);
 
 static bool8 (*const *const sMovementActionFuncs[])(struct ObjectEvent *, struct Sprite *) = {
     [MOVEMENT_ACTION_FACE_DOWN]                          = sMovementActionFuncs_FaceDown,
@@ -691,7 +691,7 @@ static bool8 (*const sMovementActionFuncs_FaceRight[])(struct ObjectEvent *, str
     MovementAction_PauseSpriteAnim,
 };
 
-static bool8 (*const sDirectionAnimFuncsBySpeed[])(u8) = {
+static u8 (*const sDirectionAnimFuncsBySpeed[])(enum Direction) = {
     [MOVE_SPEED_NORMAL] = GetMoveDirectionAnimNum,
     [MOVE_SPEED_FAST_1] = GetMoveDirectionFastAnimNum,
     [MOVE_SPEED_FAST_2] = GetMoveDirectionFastAnimNum,

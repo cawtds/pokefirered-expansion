@@ -91,7 +91,7 @@ static void Task_EndScreenShake(u8 taskId);
 static enum Species SampleResortGorgeousMon(void);
 static u16 SampleResortGorgeousReward(void);
 static void Task_ElevatorShake(u8 taskId);
-static void AnimateElevatorWindowView(u16 nfloors, bool8 direction);
+static void AnimateElevatorWindowView(u16 floorNum, enum Direction direction);
 static void Task_AnimateElevatorWindowView(u8 taskId);
 static void Task_CreateScriptListMenu(u8 taskId);
 static void InitScrollableMultichoice(void);
@@ -500,7 +500,7 @@ static void PcTurnOnUpdateMetatileId(bool16 flickerOff)
     u16 metatileId = GetPcAnimationMetatileId();
     s8 deltaX = 0;
     s8 deltaY = 0;
-    u8 direction = GetPlayerFacingDirection();
+    enum Direction direction = GetPlayerFacingDirection();
 
     switch (direction)
     {
@@ -516,6 +516,8 @@ static void PcTurnOnUpdateMetatileId(bool16 flickerOff)
         deltaX = 1;
         deltaY = -1;
         break;
+    default:
+        break;
     }
 
     MapGridSetMetatileIdAt(gSaveBlock1Ptr->pos.x + deltaX + MAP_OFFSET, gSaveBlock1Ptr->pos.y + deltaY + MAP_OFFSET, metatileId | MAPGRID_COLLISION_MASK);
@@ -524,9 +526,8 @@ static void PcTurnOnUpdateMetatileId(bool16 flickerOff)
 void AnimatePcTurnOff()
 {
     u16 metatileId;
-    s8 deltaX = 0;
-    s8 deltaY = 0;
-    u8 direction = GetPlayerFacingDirection();
+    s8 deltaX, deltaY;
+    enum Direction direction = GetPlayerFacingDirection();
 
     if (IsPlayerInFrontOfPC() == FALSE)
         return;
@@ -546,6 +547,11 @@ void AnimatePcTurnOff()
     case DIR_EAST:
         deltaX = 1;
         deltaY = -1;
+        break;
+    case DIR_SOUTH:
+    default:
+        deltaX = 0;
+        deltaY = 0;
         break;
     }
 
@@ -1334,7 +1340,7 @@ void CloseElevatorCurrentFloorWindow(void)
     RemoveWindow(sTutorMoveAndElevatorWindowId);
 }
 
-static void AnimateElevatorWindowView(u16 nfloors, u8 direction)
+static void AnimateElevatorWindowView(u16 floorNum, enum Direction direction)
 {
     u8 taskId;
     if (FuncIsActiveTask(Task_AnimateElevatorWindowView) != TRUE)
@@ -1343,7 +1349,7 @@ static void AnimateElevatorWindowView(u16 nfloors, u8 direction)
         gTasks[taskId].data[0] = 0;
         gTasks[taskId].data[1] = 0;
         gTasks[taskId].data[2] = direction;
-        gTasks[taskId].data[3] = sElevatorWindowAnimDuration[nfloors];
+        gTasks[taskId].data[3] = sElevatorWindowAnimDuration[floorNum];
     }
 }
 

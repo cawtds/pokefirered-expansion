@@ -580,7 +580,7 @@ bool32 TryRunFromBattle(enum BattlerId battler)
         if (GetBattlerSide(battler) == B_SIDE_PLAYER)
             effect++;
     }
-    else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL) && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+    else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_TOWER) && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
         effect++;
     }
@@ -9233,7 +9233,7 @@ bool32 CanStealItem(enum BattlerId battlerStealing, enum BattlerId battlerItem, 
 {
     enum BattleSide stealerSide = GetBattlerSide(battlerStealing);
 
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER)
         return FALSE;
 
     // Check if the battler trying to steal should be able to
@@ -10807,7 +10807,7 @@ void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 
      || !(gBattleTypeFlags & (BATTLE_TYPE_LINK
                              | BATTLE_TYPE_EREADER_TRAINER
                              | BATTLE_TYPE_RECORDED_LINK
-                             | BATTLE_TYPE_TRAINER_HILL
+                             | BATTLE_TYPE_TRAINER_TOWER
                              | BATTLE_TYPE_FRONTIER))))
     {
         const struct Evolution *evolutions = GetSpeciesEvolutions(gBattleMons[gBattlerAttacker].species);

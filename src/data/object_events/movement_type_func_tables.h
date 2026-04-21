@@ -151,17 +151,17 @@ static bool8 MovementType_RaiseHandAndJump_Step0(struct ObjectEvent *objectEvent
 static bool8 MovementType_RaiseHandAndSwim_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_RaiseHandAndMove_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 
-static u8 GetVectorDirection(s16 dx, s16 dy, s16 absdx, s16 absdy);
-static u8 GetLimitedVectorDirection_SouthNorth(s16 dx, s16 dy, s16 absdx, s16 absdy);
-static u8 GetLimitedVectorDirection_WestEast(s16 dx, s16 dy, s16 absdx, s16 absdy);
-static u8 GetLimitedVectorDirection_WestNorth(s16 dx, s16 dy, s16 absdx, s16 absdy);
-static u8 GetLimitedVectorDirection_EastNorth(s16 dx, s16 dy, s16 absdx, s16 absdy);
-static u8 GetLimitedVectorDirection_WestSouth(s16 dx, s16 dy, s16 absdx, s16 absdy);
-static u8 GetLimitedVectorDirection_EastSouth(s16 dx, s16 dy, s16 absdx, s16 absdy);
-static u8 GetLimitedVectorDirection_SouthNorthWest(s16 dx, s16 dy, s16 absdx, s16 absdy);
-static u8 GetLimitedVectorDirection_SouthNorthEast(s16 dx, s16 dy, s16 absdx, s16 absdy);
-static u8 GetLimitedVectorDirection_NorthWestEast(s16 dx, s16 dy, s16 absdx, s16 absdy);
-static u8 GetLimitedVectorDirection_SouthWestEast(s16 dx, s16 dy, s16 absdx, s16 absdy);
+static enum Direction GetVectorDirection(s16 dx, s16 dy, s16 absdx, s16 absdy);
+static enum Direction GetLimitedVectorDirection_SouthNorth(s16 dx, s16 dy, s16 absdx, s16 absdy);
+static enum Direction GetLimitedVectorDirection_WestEast(s16 dx, s16 dy, s16 absdx, s16 absdy);
+static enum Direction GetLimitedVectorDirection_WestNorth(s16 dx, s16 dy, s16 absdx, s16 absdy);
+static enum Direction GetLimitedVectorDirection_EastNorth(s16 dx, s16 dy, s16 absdx, s16 absdy);
+static enum Direction GetLimitedVectorDirection_WestSouth(s16 dx, s16 dy, s16 absdx, s16 absdy);
+static enum Direction GetLimitedVectorDirection_EastSouth(s16 dx, s16 dy, s16 absdx, s16 absdy);
+static enum Direction GetLimitedVectorDirection_SouthNorthWest(s16 dx, s16 dy, s16 absdx, s16 absdy);
+static enum Direction GetLimitedVectorDirection_SouthNorthEast(s16 dx, s16 dy, s16 absdx, s16 absdy);
+static enum Direction GetLimitedVectorDirection_NorthWestEast(s16 dx, s16 dy, s16 absdx, s16 absdy);
+static enum Direction GetLimitedVectorDirection_SouthWestEast(s16 dx, s16 dy, s16 absdx, s16 absdy);
 
 u8 (*const gMovementTypeFuncs_WanderAround[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WanderAround_Step0,
@@ -183,20 +183,21 @@ u8 (*const gMovementTypeFuncs_WanderAroundSlower[])(struct ObjectEvent *, struct
     MovementType_WanderAround_Step6,
 };
 
-const u8 gStandardDirections[] = {DIR_SOUTH, DIR_NORTH, DIR_WEST, DIR_EAST};
+const enum Direction gStandardDirections[] = {DIR_SOUTH, DIR_NORTH, DIR_WEST, DIR_EAST};
 
-u8 (*const gGetVectorDirectionFuncs[])(s16, s16, s16, s16) = {
-    GetVectorDirection,
-    GetLimitedVectorDirection_SouthNorth,
-    GetLimitedVectorDirection_WestEast,
-    GetLimitedVectorDirection_WestNorth,
-    GetLimitedVectorDirection_EastNorth,
-    GetLimitedVectorDirection_WestSouth,
-    GetLimitedVectorDirection_EastSouth,
-    GetLimitedVectorDirection_SouthNorthWest,
-    GetLimitedVectorDirection_SouthNorthEast,
-    GetLimitedVectorDirection_NorthWestEast,
-    GetLimitedVectorDirection_SouthWestEast,
+enum Direction (*const gGetVectorDirectionFuncs[])(s16, s16, s16, s16) =
+{
+    [RUNFOLLOW_ANY]              = GetVectorDirection,
+    [RUNFOLLOW_NORTH_SOUTH]      = GetLimitedVectorDirection_SouthNorth,
+    [RUNFOLLOW_EAST_WEST]        = GetLimitedVectorDirection_WestEast,
+    [RUNFOLLOW_NORTH_WEST]       = GetLimitedVectorDirection_WestNorth,
+    [RUNFOLLOW_NORTH_EAST]       = GetLimitedVectorDirection_EastNorth,
+    [RUNFOLLOW_SOUTH_WEST]       = GetLimitedVectorDirection_WestSouth,
+    [RUNFOLLOW_SOUTH_EAST]       = GetLimitedVectorDirection_EastSouth,
+    [RUNFOLLOW_NORTH_SOUTH_WEST] = GetLimitedVectorDirection_SouthNorthWest,
+    [RUNFOLLOW_NORTH_SOUTH_EAST] = GetLimitedVectorDirection_SouthNorthEast,
+    [RUNFOLLOW_NORTH_EAST_WEST]  = GetLimitedVectorDirection_NorthWestEast,
+    [RUNFOLLOW_SOUTH_EAST_WEST]  = GetLimitedVectorDirection_SouthWestEast,
 };
 
 u8 (*const gMovementTypeFuncs_LookAround[])(struct ObjectEvent *, struct Sprite *) = {
@@ -217,7 +218,7 @@ u8 (*const gMovementTypeFuncs_WanderUpAndDown[])(struct ObjectEvent *, struct Sp
     MovementType_WanderUpAndDown_Step6,
 };
 
-const u8 gUpAndDownDirections[] = {DIR_SOUTH, DIR_NORTH};
+const enum Direction gUpAndDownDirections[] = {DIR_SOUTH, DIR_NORTH};
 
 u8 (*const gMovementTypeFuncs_WanderLeftAndRight[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WanderLeftAndRight_Step0,
@@ -229,7 +230,7 @@ u8 (*const gMovementTypeFuncs_WanderLeftAndRight[])(struct ObjectEvent *, struct
     MovementType_WanderLeftAndRight_Step6,
 };
 
-const u8 gLeftAndRightDirections[] = {DIR_WEST, DIR_EAST};
+const enum Direction gLeftAndRightDirections[] = {DIR_WEST, DIR_EAST};
 
 u8 (*const gMovementTypeFuncs_FaceDirection[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_FaceDirection_Step0,
@@ -269,7 +270,7 @@ u8 (*const gMovementTypeFuncs_FaceUpAndLeft[])(struct ObjectEvent *, struct Spri
     MovementType_FaceUpAndLeft_Step4,
 };
 
-const u8 gUpAndLeftDirections[] = {DIR_NORTH, DIR_WEST};
+const enum Direction gUpAndLeftDirections[] = {DIR_NORTH, DIR_WEST};
 
 u8 (*const gMovementTypeFuncs_FaceUpAndRight[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_FaceUpAndRight_Step0,
@@ -279,7 +280,7 @@ u8 (*const gMovementTypeFuncs_FaceUpAndRight[])(struct ObjectEvent *, struct Spr
     MovementType_FaceUpAndRight_Step4,
 };
 
-const u8 gUpAndRightDirections[] = {DIR_NORTH, DIR_EAST};
+const enum Direction gUpAndRightDirections[] = {DIR_NORTH, DIR_EAST};
 
 u8 (*const gMovementTypeFuncs_FaceDownAndLeft[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_FaceDownAndLeft_Step0,
@@ -289,7 +290,7 @@ u8 (*const gMovementTypeFuncs_FaceDownAndLeft[])(struct ObjectEvent *, struct Sp
     MovementType_FaceDownAndLeft_Step4,
 };
 
-const u8 gDownAndLeftDirections[] = {DIR_SOUTH, DIR_WEST};
+const enum Direction gDownAndLeftDirections[] = {DIR_SOUTH, DIR_WEST};
 
 u8 (*const gMovementTypeFuncs_FaceDownAndRight[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_FaceDownAndRight_Step0,
@@ -299,7 +300,7 @@ u8 (*const gMovementTypeFuncs_FaceDownAndRight[])(struct ObjectEvent *, struct S
     MovementType_FaceDownAndRight_Step4,
 };
 
-const u8 gDownAndRightDirections[] = {DIR_SOUTH, DIR_EAST};
+const enum Direction gDownAndRightDirections[] = {DIR_SOUTH, DIR_EAST};
 
 u8 (*const gMovementTypeFuncs_FaceDownUpAndLeft[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_FaceDownUpAndLeft_Step0,
@@ -309,7 +310,7 @@ u8 (*const gMovementTypeFuncs_FaceDownUpAndLeft[])(struct ObjectEvent *, struct 
     MovementType_FaceDownUpAndLeft_Step4,
 };
 
-const u8 gDownUpAndLeftDirections[] = {DIR_NORTH, DIR_SOUTH, DIR_WEST, DIR_SOUTH};
+const enum Direction gDownUpAndLeftDirections[] = {DIR_NORTH, DIR_SOUTH, DIR_WEST, DIR_SOUTH};
 
 u8 (*const gMovementTypeFuncs_FaceDownUpAndRight[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_FaceDownUpAndRight_Step0,
@@ -319,7 +320,7 @@ u8 (*const gMovementTypeFuncs_FaceDownUpAndRight[])(struct ObjectEvent *, struct
     MovementType_FaceDownUpAndRight_Step4,
 };
 
-const u8 gDownUpAndRightDirections[] = {DIR_SOUTH, DIR_NORTH, DIR_EAST, DIR_SOUTH};
+const enum Direction gDownUpAndRightDirections[] = {DIR_SOUTH, DIR_NORTH, DIR_EAST, DIR_SOUTH};
 
 u8 (*const gMovementTypeFuncs_FaceUpLeftAndRight[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_FaceUpLeftAndRight_Step0,
@@ -329,7 +330,7 @@ u8 (*const gMovementTypeFuncs_FaceUpLeftAndRight[])(struct ObjectEvent *, struct
     MovementType_FaceUpLeftAndRight_Step4,
 };
 
-const u8 gUpLeftAndRightDirections[] = {DIR_NORTH, DIR_WEST, DIR_EAST, DIR_NORTH};
+const enum Direction gUpLeftAndRightDirections[] = {DIR_NORTH, DIR_WEST, DIR_EAST, DIR_NORTH};
 
 u8 (*const gMovementTypeFuncs_FaceDownLeftAndRight[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_FaceDownLeftAndRight_Step0,
@@ -339,7 +340,7 @@ u8 (*const gMovementTypeFuncs_FaceDownLeftAndRight[])(struct ObjectEvent *, stru
     MovementType_FaceDownLeftAndRight_Step4,
 };
 
-const u8 gDownLeftAndRightDirections[] = {DIR_WEST, DIR_EAST, DIR_SOUTH, DIR_SOUTH};
+const enum Direction gDownLeftAndRightDirections[] = {DIR_WEST, DIR_EAST, DIR_SOUTH, DIR_SOUTH};
 
 u8 (*const gMovementTypeFuncs_RotateCounterclockwise[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_RotateCounterclockwise_Step0,
@@ -348,7 +349,7 @@ u8 (*const gMovementTypeFuncs_RotateCounterclockwise[])(struct ObjectEvent *, st
     MovementType_RotateCounterclockwise_Step3,
 };
 
-const u8 gCounterclockwiseDirections[] = {DIR_SOUTH, DIR_EAST, DIR_WEST, DIR_SOUTH, DIR_NORTH};
+const enum Direction gCounterclockwiseDirections[] = {DIR_SOUTH, DIR_EAST, DIR_WEST, DIR_SOUTH, DIR_NORTH};
 
 u8 (*const gMovementTypeFuncs_RotateClockwise[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_RotateClockwise_Step0,
@@ -357,7 +358,7 @@ u8 (*const gMovementTypeFuncs_RotateClockwise[])(struct ObjectEvent *, struct Sp
     MovementType_RotateClockwise_Step3,
 };
 
-const u8 gClockwiseDirections[] = {DIR_SOUTH, DIR_WEST, DIR_EAST, DIR_NORTH, DIR_SOUTH};
+const enum Direction gClockwiseDirections[] = {DIR_SOUTH, DIR_WEST, DIR_EAST, DIR_NORTH, DIR_SOUTH};
 
 u8 (*const gMovementTypeFuncs_WalkBackAndForth[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkBackAndForth_Step0,
@@ -372,7 +373,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceUpRightLeftDown[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gUpRightLeftDownDirections[] = {DIR_NORTH, DIR_EAST, DIR_WEST, DIR_SOUTH};
+const enum Direction gUpRightLeftDownDirections[] = {DIR_NORTH, DIR_EAST, DIR_WEST, DIR_SOUTH};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceRightLeftDownUp[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -380,7 +381,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceRightLeftDownUp[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gRightLeftDownUpDirections[] = {DIR_EAST, DIR_WEST, DIR_SOUTH, DIR_NORTH};
+const enum Direction gRightLeftDownUpDirections[] = {DIR_EAST, DIR_WEST, DIR_SOUTH, DIR_NORTH};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceDownUpRightLeft[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -388,7 +389,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceDownUpRightLeft[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gDownUpRightLeftDirections[] = {DIR_SOUTH, DIR_NORTH, DIR_EAST, DIR_WEST};
+const enum Direction gDownUpRightLeftDirections[] = {DIR_SOUTH, DIR_NORTH, DIR_EAST, DIR_WEST};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceLeftDownUpRight[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -396,7 +397,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceLeftDownUpRight[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gLeftDownUpRightDirections[] = {DIR_WEST, DIR_SOUTH, DIR_NORTH, DIR_EAST};
+const enum Direction gLeftDownUpRightDirections[] = {DIR_WEST, DIR_SOUTH, DIR_NORTH, DIR_EAST};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceUpLeftRightDown[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -404,7 +405,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceUpLeftRightDown[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gUpLeftRightDownDirections[] = {DIR_NORTH, DIR_WEST, DIR_EAST, DIR_SOUTH};
+const enum Direction gUpLeftRightDownDirections[] = {DIR_NORTH, DIR_WEST, DIR_EAST, DIR_SOUTH};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceLeftRightDownUp[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -412,7 +413,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceLeftRightDownUp[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gLeftRightDownUpDirections[] = {DIR_WEST, DIR_EAST, DIR_SOUTH, DIR_NORTH};
+const enum Direction gLeftRightDownUpDirections[] = {DIR_WEST, DIR_EAST, DIR_SOUTH, DIR_NORTH};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceDownUpLeftRight[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -426,7 +427,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceRightDownUpLeft[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gRightDownUpLeftDirections[] = {DIR_EAST, DIR_SOUTH, DIR_NORTH, DIR_WEST};
+const enum Direction gRightDownUpLeftDirections[] = {DIR_EAST, DIR_SOUTH, DIR_NORTH, DIR_WEST};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceLeftUpDownRight[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -434,7 +435,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceLeftUpDownRight[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gLeftUpDownRightDirections[] = {DIR_WEST, DIR_NORTH, DIR_SOUTH, DIR_EAST};
+const enum Direction gLeftUpDownRightDirections[] = {DIR_WEST, DIR_NORTH, DIR_SOUTH, DIR_EAST};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceUpDownRightLeft[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -442,7 +443,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceUpDownRightLeft[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gUpDownRightLeftDirections[] = {DIR_NORTH, DIR_SOUTH, DIR_EAST, DIR_WEST};
+const enum Direction gUpDownRightLeftDirections[] = {DIR_NORTH, DIR_SOUTH, DIR_EAST, DIR_WEST};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceRightLeftUpDown[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -450,7 +451,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceRightLeftUpDown[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gRightLeftUpDownDirections[] = {DIR_EAST, DIR_WEST, DIR_NORTH, DIR_SOUTH};
+const enum Direction gRightLeftUpDownDirections[] = {DIR_EAST, DIR_WEST, DIR_NORTH, DIR_SOUTH};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceDownRightLeftUp[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -458,7 +459,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceDownRightLeftUp[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gDownRightLeftUpDirections[] = {DIR_SOUTH, DIR_EAST, DIR_WEST, DIR_NORTH};
+const enum Direction gDownRightLeftUpDirections[] = {DIR_SOUTH, DIR_EAST, DIR_WEST, DIR_NORTH};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceRightUpDownLeft[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -466,7 +467,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceRightUpDownLeft[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gRightUpDownLeftDirections[] = {DIR_EAST, DIR_NORTH, DIR_SOUTH, DIR_WEST};
+const enum Direction gRightUpDownLeftDirections[] = {DIR_EAST, DIR_NORTH, DIR_SOUTH, DIR_WEST};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceUpDownLeftRight[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -474,7 +475,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceUpDownLeftRight[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gUpDownLeftRightDirections[] = {DIR_NORTH, DIR_SOUTH, DIR_WEST, DIR_EAST};
+const enum Direction gUpDownLeftRightDirections[] = {DIR_NORTH, DIR_SOUTH, DIR_WEST, DIR_EAST};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceLeftRightUpDown[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -482,7 +483,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceLeftRightUpDown[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gLeftRightUpDownDirections[] = {DIR_WEST, DIR_EAST, DIR_NORTH, DIR_SOUTH};
+const enum Direction gLeftRightUpDownDirections[] = {DIR_WEST, DIR_EAST, DIR_NORTH, DIR_SOUTH};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceDownLeftRightUp[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -490,7 +491,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceDownLeftRightUp[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gDownLeftRightUpDirections[] = {DIR_SOUTH, DIR_WEST, DIR_EAST, DIR_NORTH};
+const enum Direction gDownLeftRightUpDirections[] = {DIR_SOUTH, DIR_WEST, DIR_EAST, DIR_NORTH};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceUpLeftDownRight[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -498,7 +499,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceUpLeftDownRight[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gUpLeftDownRightDirections[] = {DIR_NORTH, DIR_WEST, DIR_SOUTH, DIR_EAST};
+const enum Direction gUpLeftDownRightDirections[] = {DIR_NORTH, DIR_WEST, DIR_SOUTH, DIR_EAST};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceDownRightUpLeft[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -506,7 +507,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceDownRightUpLeft[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gDownRightUpLeftDirections[] = {DIR_SOUTH, DIR_EAST, DIR_NORTH, DIR_WEST};
+const enum Direction gDownRightUpLeftDirections[] = {DIR_SOUTH, DIR_EAST, DIR_NORTH, DIR_WEST};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceLeftDownRightUp[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -514,7 +515,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceLeftDownRightUp[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gLeftDownRightUpDirections[] = {DIR_WEST, DIR_SOUTH, DIR_EAST, DIR_NORTH};
+const enum Direction gLeftDownRightUpDirections[] = {DIR_WEST, DIR_SOUTH, DIR_EAST, DIR_NORTH};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceRightUpLeftDown[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -522,7 +523,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceRightUpLeftDown[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gRightUpLeftDownDirections[] = {DIR_EAST, DIR_NORTH, DIR_WEST, DIR_SOUTH};
+const enum Direction gRightUpLeftDownDirections[] = {DIR_EAST, DIR_NORTH, DIR_WEST, DIR_SOUTH};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceUpRightDownLeft[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -530,7 +531,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceUpRightDownLeft[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gUpRightDownLeftDirections[] = {DIR_NORTH, DIR_EAST, DIR_SOUTH, DIR_WEST};
+const enum Direction gUpRightDownLeftDirections[] = {DIR_NORTH, DIR_EAST, DIR_SOUTH, DIR_WEST};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceDownLeftUpRight[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -538,7 +539,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceDownLeftUpRight[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gDownLeftUpRightDirections[] = {DIR_SOUTH, DIR_WEST, DIR_NORTH, DIR_EAST};
+const enum Direction gDownLeftUpRightDirections[] = {DIR_SOUTH, DIR_WEST, DIR_NORTH, DIR_EAST};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceLeftUpRightDown[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -546,7 +547,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceLeftUpRightDown[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gLeftUpRightDownDirections[] = {DIR_WEST, DIR_NORTH, DIR_EAST, DIR_SOUTH};
+const enum Direction gLeftUpRightDownDirections[] = {DIR_WEST, DIR_NORTH, DIR_EAST, DIR_SOUTH};
 
 u8 (*const gMovementTypeFuncs_WalkSequenceRightDownLeftUp[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkSequence_Step0,
@@ -554,7 +555,7 @@ u8 (*const gMovementTypeFuncs_WalkSequenceRightDownLeftUp[])(struct ObjectEvent 
     MovementType_WalkSequence_Step2,
 };
 
-const u8 gRightDownLeftUpDirections[] = {DIR_EAST, DIR_SOUTH, DIR_WEST, DIR_NORTH};
+const enum Direction gRightDownLeftUpDirections[] = {DIR_EAST, DIR_SOUTH, DIR_WEST, DIR_NORTH};
 
 u8 (*const gMovementTypeFuncs_CopyPlayer[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_CopyPlayer_Step0,

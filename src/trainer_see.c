@@ -29,7 +29,7 @@ static u8 GetTrainerApproachDistanceSouth(struct ObjectEvent * trainerObj, s16 r
 static u8 GetTrainerApproachDistanceNorth(struct ObjectEvent * trainerObj, s16 range, s16 x, s16 y);
 static u8 GetTrainerApproachDistanceWest(struct ObjectEvent * trainerObj, s16 range, s16 x, s16 y);
 static u8 GetTrainerApproachDistanceEast(struct ObjectEvent * trainerObj, s16 range, s16 x, s16 y);
-static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent * trainerObj, u8 approachDistance, u8 facingDirection);
+static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 approachDistance, enum Direction direction);
 static void InitTrainerApproachTask(struct ObjectEvent *trainerObj, u8 range);
 static void Task_RunTrainerSeeFuncList(u8 taskId);
 static bool32 TrainerSeeFunc_Idle(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
@@ -353,12 +353,11 @@ static u8 GetTrainerApproachDistanceEast(struct ObjectEvent *trainerObj, s16 ran
         return 0;
 }
 
-static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 approachDistance, u8 direction)
+static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 approachDistance, enum Direction direction)
 {
     s16 x, y;
     u8 rangeX, rangeY;
-    u8 i;
-    u8 collision;
+    enum Collision collision;
 
     if (approachDistance == 0)
         return 0;
@@ -366,10 +365,10 @@ static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 ap
     x = trainerObj->currentCoords.x;
     y = trainerObj->currentCoords.y;
 
-    for (i = 0; i <= approachDistance - 1; i++, MoveCoords(direction, &x, &y))
+    for (u32 i = 0; i <= approachDistance - 1; i++, MoveCoords(direction, &x, &y))
     {
-        collision = GetCollisionFlagsAtCoords(trainerObj, x, y, direction);
-        if (collision != 0 && (collision & ~(1 << (COLLISION_OUTSIDE_RANGE - 1))))
+        u8 collisionFlags = GetCollisionFlagsAtCoords(trainerObj, x, y, direction);
+        if (collisionFlags != 0 && (collisionFlags & ~(1 << (COLLISION_OUTSIDE_RANGE - 1))))
             return 0;
     }
 

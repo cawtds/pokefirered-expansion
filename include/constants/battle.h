@@ -102,8 +102,7 @@ enum BattleSide
 #define BATTLE_TYPE_TOWER_LINK_MULTI   (1 << 23)
 #define BATTLE_TYPE_RECORDED           (1 << 24)
 #define BATTLE_TYPE_RECORDED_LINK      (1 << 25)
-#define BATTLE_TYPE_TRAINER_HILL       (1 << 26)
-#define BATTLE_TYPE_TRAINER_TOWER      BATTLE_TYPE_TRAINER_HILL
+#define BATTLE_TYPE_TRAINER_TOWER      (1 << 26)
 #define BATTLE_TYPE_SECRET_BASE        (1 << 27)
 #define BATTLE_TYPE_GHOST              (1 << 28)
 #define BATTLE_TYPE_POKEDUDE           (1 << 29)
@@ -114,7 +113,7 @@ enum BattleSide
 #define BATTLE_TYPE_RECORDED_INVALID        ((BATTLE_TYPE_LINK | BATTLE_TYPE_SAFARI | BATTLE_TYPE_FIRST_BATTLE                  \
                                              | BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_ROAMER | BATTLE_TYPE_EREADER_TRAINER    \
                                              | BATTLE_TYPE_LEGENDARY | BATTLE_TYPE_POKEDUDE                                     \
-                                             | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_SECRET_BASE))
+                                             | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_TOWER | BATTLE_TYPE_SECRET_BASE))
 
 #define WILD_DOUBLE_BATTLE                  ((gBattleTypeFlags & BATTLE_TYPE_DOUBLE && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER))))
 #define RECORDED_WILD_BATTLE                ((gBattleTypeFlags & BATTLE_TYPE_RECORDED) && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER)))

@@ -4045,7 +4045,7 @@ static void SetFlyWarpDestination(u16 mapsec)
     }
     else
     {
-        SetWarpDestinationToMapWarp(sMapFlyDestinations[idx][0], sMapFlyDestinations[idx][1], -1);
+        SetWarpDestinationToMapWarp(sMapFlyDestinations[idx][0], sMapFlyDestinations[idx][1], WARP_ID_NONE);
     }
     ReturnToFieldFromFlyMapSelect();
 }

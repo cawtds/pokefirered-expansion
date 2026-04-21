@@ -168,6 +168,8 @@ static bool8 RockClimb_WaitJumpOnRockClimbBlob(struct Task *task, struct ObjectE
             else if (MetatileBehavior_IsRockClimbable(MapGridGetMetatileBehaviorAt(task->tDestX - 1, task->tDestY + 1)))
                 objectEvent->movementDirection = DIR_SOUTHWEST;
             break;
+        default:
+            break;
         }
 
         task->tState = STATE_ROCK_CLIMB_CONTINUE_RIDE;

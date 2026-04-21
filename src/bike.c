@@ -10,22 +10,22 @@
 #include "constants/map_types.h"
 #include "constants/songs.h"
 
-static bool8 MetatileBehaviorForbidsBiking(u8);
-static u8 BikeInputHandler_Normal(u8 *, u16, u16);
-static u8 BikeInputHandler_Slope(u8 *, u16, u16);
-static u8 BikeInputHandler_Turning(u8 *, u16, u16);
-static u8 CanBikeFaceDirectionOnRail(u8 direction, u8 metatileBehavior);
-static u8 GetBikeCollision(u8);
-static u8 GetBikeCollisionAt(struct ObjectEvent *playerObjEvent, s16 x, s16 y, u8 direction, u8 metatileBehavior);
-static u8 GetBikeTransitionId(u8 *, u16, u16);
+static bool32 CanBikeFaceDirectionOnRail(enum Direction direction, u8 metatileBehavior);
+static bool32 MetatileBehaviorForbidsBiking(u8 metatileBehavior);
+static enum BikeTransitionId BikeInputHandler_Normal(enum Direction *, u16, u16);
+static enum BikeTransitionId BikeInputHandler_Slope(enum Direction *, u16, u16);
+static enum BikeTransitionId BikeInputHandler_Turning(enum Direction *, u16, u16);
+static enum BikeTransitionId GetBikeTransitionId(enum Direction *, u16, u16);
+static enum Collision GetBikeCollision(enum Direction direction);
+static enum Collision GetBikeCollisionAt(struct ObjectEvent *playerObjEvent, s16 x, s16 y, enum Direction direction, u8 metatileBehavior);
 static void Bike_SetBikeStill(void);
-static void BikeTransition_FaceDirection(u8);
-static void BikeTransition_TurnDirection(u8);
-static void BikeTransition_MoveDirection(u8);
-static void BikeTransition_Downhill(u8);
-static void BikeTransition_Uphill(u8);
+static void BikeTransition_FaceDirection(enum Direction direction);
+static void BikeTransition_TurnDirection(enum Direction direction);
+static void BikeTransition_MoveDirection(enum Direction direction);
+static void BikeTransition_Downhill(enum Direction direction);
+static void BikeTransition_Uphill(enum Direction direction);
 
-static void (*const sBikeTransitions[])(u8) =
+static void (*const sBikeTransitions[])(enum Direction) =
 {
     [BIKE_TRANS_FACE_DIRECTION] = BikeTransition_FaceDirection,
     [BIKE_TRANS_TURNING]        = BikeTransition_TurnDirection,
@@ -34,27 +34,27 @@ static void (*const sBikeTransitions[])(u8) =
     [BIKE_TRANS_UPHILL]         = BikeTransition_Uphill,
 };
 
-static u8 (*const sBikeInputHandlers[])(u8 *, u16, u16) =
+static enum BikeTransitionId (*const sBikeInputHandlers[])(enum Direction *, u16, u16) =
 {
     [BIKE_STATE_NORMAL]  = BikeInputHandler_Normal,
     [BIKE_STATE_TURNING] = BikeInputHandler_Turning,
     [BIKE_STATE_SLOPE]   = BikeInputHandler_Slope,
 };
 
-void MovePlayerOnBike(u8 direction, u16 newKeys, u16 heldKeys)
+void MovePlayerOnBike(enum Direction direction, u16 newKeys, u16 heldKeys)
 {
     sBikeTransitions[GetBikeTransitionId(&direction, newKeys, heldKeys)](direction);
 }
 
-static u8 GetBikeTransitionId(u8 *direction, u16 newKeys, u16 heldKeys)
+static enum BikeTransitionId GetBikeTransitionId(enum Direction *direction, u16 newKeys, u16 heldKeys)
 {
     return sBikeInputHandlers[gPlayerAvatar.acroBikeState](direction, newKeys, heldKeys);
 }
 
-static u8 BikeInputHandler_Normal(u8 *direction_p, u16 newKeys, u16 heldKeys)
+static enum BikeTransitionId BikeInputHandler_Normal(enum Direction *direction_p, u16 newKeys, u16 heldKeys)
 {
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-    u8 direction = GetPlayerMovementDirection();
+    enum Direction direction = GetPlayerMovementDirection();
 
     // fix direction when moving on sideways stairs
     switch (direction)
@@ -66,6 +66,12 @@ static u8 BikeInputHandler_Normal(u8 *direction_p, u16 newKeys, u16 heldKeys)
     case DIR_SOUTHEAST:
     case DIR_NORTHEAST:
         direction = DIR_EAST;
+        break;
+    case DIR_NONE:
+    case DIR_SOUTH:
+    case DIR_NORTH:
+    case DIR_WEST:
+    case DIR_EAST:
         break;
     }
 
@@ -114,7 +120,7 @@ static u8 BikeInputHandler_Normal(u8 *direction_p, u16 newKeys, u16 heldKeys)
     }
 }
 
-static u8 BikeInputHandler_Turning(u8 *direction_p, u16 newKeys, u16 heldKeys)
+static enum BikeTransitionId BikeInputHandler_Turning(enum Direction *direction_p, u16 newKeys, u16 heldKeys)
 {
     *direction_p = gPlayerAvatar.newDirBackup;
     gPlayerAvatar.runningState = TURN_DIRECTION;
@@ -123,9 +129,9 @@ static u8 BikeInputHandler_Turning(u8 *direction_p, u16 newKeys, u16 heldKeys)
     return BIKE_TRANS_TURNING;
 }
 
-static u8 BikeInputHandler_Slope(u8 *direction_p, u16 newKeys, u16 heldKeys)
+static enum BikeTransitionId BikeInputHandler_Slope(enum Direction *direction_p, u16 newKeys, u16 heldKeys)
 {
-    u8 direction = GetPlayerMovementDirection();
+    enum Direction direction = GetPlayerMovementDirection();
     u8 playerObjEventId = gPlayerAvatar.objectEventId;
     if (MetatileBehavior_IsCyclingRoadPullDownTile(playerObjEventId[gObjectEvents].currentMetatileBehavior) == TRUE)
     {
@@ -160,12 +166,12 @@ static u8 BikeInputHandler_Slope(u8 *direction_p, u16 newKeys, u16 heldKeys)
     }
 }
 
-static void BikeTransition_FaceDirection(u8 direction)
+static void BikeTransition_FaceDirection(enum Direction direction)
 {
     PlayerFaceDirection(direction);
 }
 
-static void BikeTransition_TurnDirection(u8 direction)
+static void BikeTransition_TurnDirection(enum Direction direction)
 {
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
 
@@ -174,7 +180,7 @@ static void BikeTransition_TurnDirection(u8 direction)
     PlayerFaceDirection(direction);
 }
 
-static void BikeTransition_MoveDirection(u8 direction)
+static void BikeTransition_MoveDirection(enum Direction direction)
 {
     struct ObjectEvent *playerObjEvent;
 
@@ -185,7 +191,7 @@ static void BikeTransition_MoveDirection(u8 direction)
     }
     else
     {
-        u8 collision = GetBikeCollision(direction);
+        enum Collision collision = GetBikeCollision(direction);
 
         if (collision > COLLISION_NONE && collision <= COLLISION_ISOLATED_HORIZONTAL_RAIL)
         {
@@ -210,9 +216,9 @@ static void BikeTransition_MoveDirection(u8 direction)
     }
 }
 
-static void BikeTransition_Downhill(u8 v)
+static void BikeTransition_Downhill(enum Direction direction)
 {
-    u8 collision = GetBikeCollision(DIR_SOUTH);
+    enum Collision collision = GetBikeCollision(DIR_SOUTH);
 
     if (collision == COLLISION_NONE)
         PlayerWalkFaster(DIR_SOUTH);
@@ -220,13 +226,13 @@ static void BikeTransition_Downhill(u8 v)
         PlayerJumpLedge(DIR_SOUTH);
 }
 
-static void BikeTransition_Uphill(u8 direction)
+static void BikeTransition_Uphill(enum Direction direction)
 {
     if (GetBikeCollision(direction) == COLLISION_NONE)
         PlayerWalkNormal(direction);
 }
 
-static u8 GetBikeCollision(u8 direction)
+static enum Collision GetBikeCollision(enum Direction direction)
 {
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
     s16 x, y;
@@ -239,19 +245,19 @@ static u8 GetBikeCollision(u8 direction)
     return GetBikeCollisionAt(playerObjEvent, x, y, direction, metatileBehavior);
 }
 
-static u8 GetBikeCollisionAt(struct ObjectEvent *playerObjEvent, s16 x, s16 y, u8 direction, u8 metatileBehavior)
+static enum Collision GetBikeCollisionAt(struct ObjectEvent *playerObjEvent, s16 x, s16 y, enum Direction direction, u8 metatileBehavior)
 {
-    u8 retVal = CheckForObjectEventCollision(playerObjEvent, x, y, direction, metatileBehavior);
+    enum Collision collision = CheckForObjectEventCollision(playerObjEvent, x, y, direction, metatileBehavior);
 
-    if (retVal <= COLLISION_OBJECT_EVENT)
+    if (collision <= COLLISION_OBJECT_EVENT)
     {
         bool8 isCrackedIce = MetatileBehavior_IsCrackedIce(metatileBehavior);
         if (isCrackedIce == TRUE)
             return COLLISION_COUNT;
-        if (retVal == COLLISION_NONE && MetatileBehaviorForbidsBiking(metatileBehavior))
-            retVal = COLLISION_IMPASSABLE;
+        if (collision == COLLISION_NONE && MetatileBehaviorForbidsBiking(metatileBehavior))
+            collision = COLLISION_IMPASSABLE;
     }
-    return retVal;
+    return collision;
 }
 
 bool32 IsRunningDisallowed(u8 metatileBehavior)
@@ -262,7 +268,7 @@ bool32 IsRunningDisallowed(u8 metatileBehavior)
     return FALSE;
 }
 
-static bool8 MetatileBehaviorForbidsBiking(u8 metatileBehavior)
+static bool32 MetatileBehaviorForbidsBiking(u8 metatileBehavior)
 {
     if (MetatileBehavior_IsRunningDisallowed(metatileBehavior))
         return TRUE;
@@ -273,7 +279,7 @@ static bool8 MetatileBehaviorForbidsBiking(u8 metatileBehavior)
     return TRUE;
 }
 
-static bool8 CanBikeFaceDirectionOnRail(u8 direction, u8 metatileBehavior)
+static bool32 CanBikeFaceDirectionOnRail(enum Direction direction, u8 metatileBehavior)
 {
     if (direction == DIR_EAST || direction == DIR_WEST)
     {
@@ -335,8 +341,6 @@ void GetOnOffBike(enum AvatarState transitionState)
 
 void BikeClearState(void)
 {
-    u8 i;
-
     gPlayerAvatar.acroBikeState = BIKE_STATE_NORMAL;
     gPlayerAvatar.newDirBackup = 0;
     gPlayerAvatar.bikeFrameCounter = 0;
@@ -344,8 +348,8 @@ void BikeClearState(void)
     gPlayerAvatar.directionHistory = 0;
     gPlayerAvatar.abStartSelectHistory = 0;
     gPlayerAvatar.lastSpinTile = 0;
-    for (i = 0; i < ARRAY_COUNT(gPlayerAvatar.dirTimerHistory); ++i)
-            gPlayerAvatar.dirTimerHistory[i] = 0;
+    for (u32 i = 0; i < ARRAY_COUNT(gPlayerAvatar.dirTimerHistory); i++)
+        gPlayerAvatar.dirTimerHistory[i] = 0;
 }
 
 void Bike_UpdateBikeCounterSpeed(u8 counter)
@@ -397,13 +401,13 @@ void Bike_HandleBumpySlopeJump(void)
 // its possible that at some point Game Freak intended for the acro bike to have more complex tricks: but only the acro jump combinations can be seen in the final ROM.
 struct BikeHistoryInputInfo
 {
-    u32 dirHistoryMatch; // the direction you need to press
+    enum Direction dirHistoryMatch; // the direction you need to press
     u32 abStartSelectHistoryMatch; // the button you need to press
     u32 dirHistoryMask; // mask applied so that way only the recent nybble (the recent input) is checked
     u32 abStartSelectHistoryMask; // mask applied so that way only the recent nybble (the recent input) is checked
     const u8 *dirTimerHistoryList; // list of timers to check for direction before the button+dir combination can be verified.
     const u8 *abStartSelectHistoryList; // list of timers to check for buttons before the button+dir combination can be verified.
-    u32 direction; // direction to jump
+    enum Direction direction; // direction to jump
 };
 
 // this is a list of timers to compare against later, terminated with 0. the only timer being compared against is 4 frames in this list.

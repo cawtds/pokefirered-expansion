@@ -723,9 +723,9 @@ bool8 MetatileBehavior_IsPokeMartShelf(u8 metatileBehavior)
         return FALSE;
 }
 
-bool8 MetatileBehavior_IsPlayerFacingPokemonCenterSign(u8 metatileBehavior, u8 playerDirection)
+bool8 MetatileBehavior_IsPlayerFacingPokemonCenterSign(u8 metatileBehavior, enum Direction direction)
 {
-    if (playerDirection != DIR_NORTH)
+    if (direction != DIR_NORTH)
         return FALSE;
     else if (metatileBehavior == MB_POKEMON_CENTER_SIGN)
         return TRUE;
@@ -733,9 +733,9 @@ bool8 MetatileBehavior_IsPlayerFacingPokemonCenterSign(u8 metatileBehavior, u8 p
         return FALSE;
 }
 
-bool8 MetatileBehavior_IsPlayerFacingPokeMartSign(u8 metatileBehavior, u8 playerDirection)
+bool8 MetatileBehavior_IsPlayerFacingPokeMartSign(u8 metatileBehavior, enum Direction direction)
 {
-    if (playerDirection != DIR_NORTH)
+    if (direction != DIR_NORTH)
         return FALSE;
     else if (metatileBehavior == MB_POKEMART_SIGN)
         return TRUE;

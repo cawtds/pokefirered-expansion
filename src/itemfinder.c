@@ -27,7 +27,7 @@ static void Task_ItemfinderUnderfootPrintMessage(u8 taskId);
 static void Task_ItemfinderUnderfootDigUpItem(u8 taskId);
 static void DestroyArrowAndStarTiles(void);
 static void LoadArrowAndStarTiles(void);
-static void CreateArrowSprite(u8 animNum, u8 direction);
+static void CreateArrowSprite(u8 animNum, enum Direction direction);
 static void SpriteCallback_Arrow(struct Sprite *sprite);
 static void SpriteCallback_DestroyArrow(struct Sprite *sprite);
 static u8 CreateStarSprite(void);
@@ -175,7 +175,7 @@ static void Task_NoResponse_CleanUp(u8 taskId)
 static void Task_ItemfinderResponseSoundsAndAnims(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    u8 direction;
+    enum Direction direction;
     if (tDingTimer % 25 == 0)
     {
         direction = GetPlayerDirectionTowardsHiddenItem(tItemX, tItemY);
@@ -453,7 +453,7 @@ static void RegisterHiddenItemRelativeCoordsIfCloser(u8 taskId, s16 dx, s16 dy)
     }
 }
 
-u8 GetPlayerDirectionTowardsHiddenItem(s16 itemX, s16 itemY)
+enum Direction GetPlayerDirectionTowardsHiddenItem(s16 itemX, s16 itemY)
 {
     s16 abX, abY;
 
@@ -554,7 +554,7 @@ static void DestroyArrowAndStarTiles(void)
     FreeSpriteTilesByTag(ARROW_TILE_TAG);
 }
 
-static void CreateArrowSprite(u8 animNum, u8 direction)
+static void CreateArrowSprite(u8 animNum, enum Direction direction)
 {
     u8 spriteId = CreateSprite(&sSpriteTemplate_ArrowAndStar, 120, 76, 0);
     gSprites[spriteId].oam.paletteNum = 0;
@@ -590,6 +590,8 @@ static void CreateArrowSprite(u8 animNum, u8 direction)
             gSprites[spriteId].spDeltaY = 100;
             StartSpriteAffineAnim(&gSprites[spriteId], 1);
             break;
+        default:
+            break;
         }
         break;
     case DIR_SOUTH:
@@ -610,6 +612,8 @@ static void CreateArrowSprite(u8 animNum, u8 direction)
     case DIR_EAST:
         gSprites[spriteId].spDeltaX = -100;
         gSprites[spriteId].spDeltaY = 0;
+        break;
+    default:
         break;
     }
 }
