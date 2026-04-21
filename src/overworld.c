@@ -203,8 +203,8 @@ static void ResetAllLinkStates(void);
 static void UpdateAllLinkPlayers(u16 *linkKeys, s32 selfId);
 static void UpdateHeldKeyCode(u16 interceptedKeys);
 static u32 GetLinkSendQueueLength(void);
-static u16 GetDirectionForDpadKey(u16 key);
-static void SetPlayerFacingDirection(u8 linkPlayerId, u8 setFacing);
+static enum LinkFacing GetDirectionForDpadKey(u16 keyCode);
+static void SetPlayerFacingDirection(u8 linkPlayerId, enum LinkFacing linkFacing);
 static void ResetPlayerHeldKeys(u16 *linkKeys);
 static u16 KeyInterCB_SelfIdle(u32 linkPlayerId);
 static u16 KeyInterCB_DeferToEventScript(u32 linkPlayerId);
@@ -216,7 +216,7 @@ static const u8 *TryGetTileEventScript(struct CableClubPlayer *player);
 static const u8 *TryInteractWithPlayer(struct CableClubPlayer *player);
 static bool32 IsCableClubPlayerUnfrozen(struct CableClubPlayer *player);
 static bool32 CanCableClubPlayerPressStart(struct CableClubPlayer *player);
-static u16 GetDirectionForEventScript(const u8 *script);
+static enum LinkFacing GetDirectionForEventScript(const u8 *script);
 static void InitLinkPlayerQueueScript(void);
 static void CreateConfirmLeaveTradeRoomPrompt(void);
 static void InitLinkRoomStartMenuScript(void);
@@ -231,9 +231,9 @@ static u8 GetLinkPlayerFacingDirection(u8 linkPlayerId);
 static u8 GetLinkPlayerElevation(u8 linkPlayerId);
 static u8 GetLinkPlayerIdAt(s16 x, s16 y);
 static void CreateLinkPlayerSprite(u8 i, enum GameVersion version);
-static u8 MovementEventModeCB_Normal(struct LinkPlayerObjectEvent *, struct ObjectEvent *, u8);
-static u8 MovementEventModeCB_Ignored(struct LinkPlayerObjectEvent *, struct ObjectEvent *, u8);
-static u8 MovementEventModeCB_Normal_2(struct LinkPlayerObjectEvent *, struct ObjectEvent *, u8);
+static u8 MovementEventModeCB_Normal(struct LinkPlayerObjectEvent *, struct ObjectEvent *, enum LinkFacing);
+static u8 MovementEventModeCB_Ignored(struct LinkPlayerObjectEvent *, struct ObjectEvent *, enum LinkFacing);
+static u8 MovementEventModeCB_Normal_2(struct LinkPlayerObjectEvent *, struct ObjectEvent *, enum LinkFacing);
 static u8 FacingHandler_DoNothing(struct LinkPlayerObjectEvent *, struct ObjectEvent *, u8);
 static u8 FacingHandler_DpadMovement(struct LinkPlayerObjectEvent *, struct ObjectEvent *, u8);
 static u8 FacingHandler_ForcedFacingChange(struct LinkPlayerObjectEvent *, struct ObjectEvent *, u8);
@@ -2809,7 +2809,7 @@ static void Task_OvwldCredits_WaitFade(u8 taskId)
 
 // Link related
 
-static u8 (*const sLinkPlayerMovementModes[])(struct LinkPlayerObjectEvent *, struct ObjectEvent *, u8) =
+static u8 (*const sLinkPlayerMovementModes[])(struct LinkPlayerObjectEvent *, struct ObjectEvent *, enum LinkFacing) =
 {
     [MOVEMENT_MODE_FREE]     = MovementEventModeCB_Normal,
     [MOVEMENT_MODE_FROZEN]   = MovementEventModeCB_Ignored,
@@ -2918,7 +2918,7 @@ static bool32 IsAnyPlayerInLinkState(u16 linkState)
     return FALSE;
 }
 
-static void HandleLinkPlayerKeyInput(u32 playerId, u16 key, struct CableClubPlayer *player, u16 *forceFacing)
+static void HandleLinkPlayerKeyInput(u32 playerId, u16 key, struct CableClubPlayer *player, enum LinkFacing *forceFacing)
 {
     const u8 *script;
 
@@ -3036,13 +3036,13 @@ static void UpdateAllLinkPlayers(u16 *keys, s32 selfId)
     for (i = 0; i < MAX_LINK_PLAYERS; i++)
     {
         u8 key = keys[i];
-        u16 setFacing = FACING_NONE;
+        enum LinkFacing linkFacing = FACING_NONE;
         LoadCableClubPlayer(i, selfId, &player);
-        HandleLinkPlayerKeyInput(i, key, &player, &setFacing);
+        HandleLinkPlayerKeyInput(i, key, &player, &linkFacing);
         if (sPlayerLinkStates[i] == PLAYER_LINK_STATE_IDLE)
-            setFacing = GetDirectionForDpadKey(key);
+            linkFacing = GetDirectionForDpadKey(key);
 
-        SetPlayerFacingDirection(i, setFacing);
+        SetPlayerFacingDirection(i, linkFacing);
     }
 }
 
@@ -3091,9 +3091,9 @@ static u16 KeyInterCB_ReadButtons(u32 key)
         return LINK_KEY_CODE_EMPTY;
 }
 
-static u16 GetDirectionForDpadKey(u16 a1)
+static enum LinkFacing GetDirectionForDpadKey(u16 keyCode)
 {
-    switch (a1)
+    switch (keyCode)
     {
     case LINK_KEY_CODE_DPAD_RIGHT:
         return FACING_RIGHT;
@@ -3373,7 +3373,7 @@ static const u8 *TryInteractWithPlayer(struct CableClubPlayer *player)
 
 // This returns which direction to force the player to look when one of
 // these event scripts runs.
-static u16 GetDirectionForEventScript(const u8 *script)
+static enum LinkFacing GetDirectionForEventScript(const u8 *script)
 {
     if (script == BattleColosseum_4P_EventScript_PlayerSpot0)
         return FACING_FORCED_RIGHT;
@@ -3612,7 +3612,7 @@ static u8 GetLinkPlayerIdAt(s16 x, s16 y)
     return 4;
 }
 
-static void SetPlayerFacingDirection(u8 linkPlayerId, u8 facing)
+static void SetPlayerFacingDirection(u8 linkPlayerId, enum LinkFacing linkFacing)
 {
     struct LinkPlayerObjectEvent *linkPlayerObjEvent = &gLinkPlayerObjectEvents[linkPlayerId];
     u8 objEventId = linkPlayerObjEvent->objEventId;
@@ -3620,7 +3620,7 @@ static void SetPlayerFacingDirection(u8 linkPlayerId, u8 facing)
 
     if (linkPlayerObjEvent->active)
     {
-        if (facing > FACING_FORCED_RIGHT)
+        if (linkFacing > FACING_FORCED_RIGHT)
         {
             objEvent->triggerGroundEffectsOnMove = TRUE;
         }
@@ -3628,7 +3628,7 @@ static void SetPlayerFacingDirection(u8 linkPlayerId, u8 facing)
         {
             // This is a hack to split this code onto two separate lines, without declaring a local variable.
             // C++ style inline variables would be nice here.
-#define TEMP sLinkPlayerMovementModes[linkPlayerObjEvent->movementMode](linkPlayerObjEvent, objEvent, facing)
+#define TEMP sLinkPlayerMovementModes[linkPlayerObjEvent->movementMode](linkPlayerObjEvent, objEvent, linkFacing)
 
             sMovementStatusHandler[TEMP](linkPlayerObjEvent, objEvent);
 
@@ -3638,18 +3638,18 @@ static void SetPlayerFacingDirection(u8 linkPlayerId, u8 facing)
     }
 }
 
-static u8 MovementEventModeCB_Normal(struct LinkPlayerObjectEvent *linkPlayerObjEvent, struct ObjectEvent *objEvent, u8 dir)
+static u8 MovementEventModeCB_Normal(struct LinkPlayerObjectEvent *linkPlayerObjEvent, struct ObjectEvent *objEvent, enum LinkFacing dir)
 {
     return sLinkPlayerFacingHandlers[dir](linkPlayerObjEvent, objEvent, dir);
 }
 
-static u8 MovementEventModeCB_Ignored(struct LinkPlayerObjectEvent *linkPlayerObjEvent, struct ObjectEvent *objEvent, u8 dir)
+static u8 MovementEventModeCB_Ignored(struct LinkPlayerObjectEvent *linkPlayerObjEvent, struct ObjectEvent *objEvent, enum LinkFacing dir)
 {
     return FACING_UP;
 }
 
 // Duplicate Function
-static u8 MovementEventModeCB_Normal_2(struct LinkPlayerObjectEvent *linkPlayerObjEvent, struct ObjectEvent *objEvent, u8 dir)
+static u8 MovementEventModeCB_Normal_2(struct LinkPlayerObjectEvent *linkPlayerObjEvent, struct ObjectEvent *objEvent, enum LinkFacing dir)
 {
     return sLinkPlayerFacingHandlers[dir](linkPlayerObjEvent, objEvent, dir);
 }
