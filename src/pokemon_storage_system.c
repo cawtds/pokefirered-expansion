@@ -753,7 +753,7 @@ static bool32 IsItemIconAtPosition(u8 cursorArea, u8 cursorPos);
 static u8 GetNewItemIconIdx(void);
 static u8 GetItemIconIdxByPosition(u8 cursorArea, u8 cursorPos);
 static void SetItemIconPosition(u8 id, u8 cursorArea, u8 cursorPos);
-static void LoadItemIconGfx(u8 id, const u32 * tiles, const u16 * pal);
+static void LoadItemIconGfx(u8 id, const u32 *tiles, const u16 *pal);
 static void SetItemIconAffineAnim(u8 id, u8 affineAnimNo);
 static void SetItemIconCallback(u8 id, u8 command, u8 cursorArea, u8 cursorPos);
 static void SetItemIconActive(u8 id, bool8 show);
@@ -8965,12 +8965,12 @@ static void SpriteCB_ItemIcon_HideParty(struct Sprite *sprite)
 //  SECTION: General utility
 //------------------------------------------------------------------------------
 
-void BackupPokemonStorage(struct PokemonStorage * dest)
+void BackupPokemonStorage(struct PokemonStorage *dest)
 {
     *dest = *gPokemonStoragePtr;
 }
 
-void RestorePokemonStorage(struct PokemonStorage * src)
+void RestorePokemonStorage(struct PokemonStorage *src)
 {
     *gPokemonStoragePtr = *src;
 }
@@ -9057,13 +9057,13 @@ u32 GetAndCopyBoxMonDataAt(u8 boxId, u8 boxPosition, s32 request, void *dst)
         return 0;
 }
 
-void SetBoxMonAt(u8 boxId, u8 boxPosition, struct BoxPokemon * src)
+void SetBoxMonAt(u8 boxId, u8 boxPosition, struct BoxPokemon *src)
 {
     if (boxId < TOTAL_BOXES_COUNT && boxPosition < IN_BOX_COUNT)
         gPokemonStoragePtr->boxes[boxId][boxPosition] = *src;
 }
 
-void CopyBoxMonAt(u8 boxId, u8 boxPosition, struct BoxPokemon * dst)
+void CopyBoxMonAt(u8 boxId, u8 boxPosition, struct BoxPokemon *dst)
 {
     if (boxId < TOTAL_BOXES_COUNT && boxPosition < IN_BOX_COUNT)
         *dst = gPokemonStoragePtr->boxes[boxId][boxPosition];
@@ -9075,13 +9075,13 @@ void ZeroBoxMonAt(u8 boxId, u8 boxPosition)
         ZeroBoxMonData(&gPokemonStoragePtr->boxes[boxId][boxPosition]);
 }
 
-void BoxMonAtToMon(u8 boxId, u8 boxPosition, struct Pokemon * dst)
+void BoxMonAtToMon(u8 boxId, u8 boxPosition, struct Pokemon *dst)
 {
     if (boxId < TOTAL_BOXES_COUNT && boxPosition < IN_BOX_COUNT)
         BoxMonToMon(&gPokemonStoragePtr->boxes[boxId][boxPosition], dst);
 }
 
-struct BoxPokemon * GetBoxedMonPtr(u8 boxId, u8 boxPosition)
+struct BoxPokemon *GetBoxedMonPtr(u8 boxId, u8 boxPosition)
 {
     if (boxId < TOTAL_BOXES_COUNT && boxPosition < IN_BOX_COUNT)
         return &gPokemonStoragePtr->boxes[boxId][boxPosition];
@@ -9111,21 +9111,18 @@ static void SetBoxWallpaper(u8 boxId, u8 wallpaperId)
         gPokemonStoragePtr->boxWallpapers[boxId] = wallpaperId;
 }
 
-s16 SeekToNextMonInBox(struct BoxPokemon * boxMons, s8 curIndex, u8 maxIndex, u8 flags)
+// For moving to the next Pokémon while viewing the summary screen
+s16 AdvanceStorageMonIndex(struct BoxPokemon *boxMons, u8 currIndex, u8 maxIndex, u8 mode)
 {
-    // flags:
-    // bit 0: Allow eggs
-    // bit 1: Search backwards
     s16 i;
-    s16 adder;
-    if (flags == 0 || flags == 1)
-        adder = 1;
-    else
-        adder = -1;
+    s16 direction = -1;
 
-    if (flags == 1 || flags == 3)
+    if (mode == 0 || mode == 1)
+        direction = 1;
+
+    if (mode == 1 || mode == 3)
     {
-        for (i = curIndex + adder; i >= 0 && i <= maxIndex; i += adder)
+        for (i = (s8)currIndex + direction; i >= 0 && i <= maxIndex; i += direction)
         {
             if (GetBoxMonData(&boxMons[i], MON_DATA_SPECIES) != SPECIES_NONE)
                 return i;
@@ -9133,7 +9130,7 @@ s16 SeekToNextMonInBox(struct BoxPokemon * boxMons, s8 curIndex, u8 maxIndex, u8
     }
     else
     {
-        for (i = curIndex + adder; i >= 0 && i <= maxIndex; i += adder)
+        for (i = (s8)currIndex + direction; i >= 0 && i <= maxIndex; i += direction)
         {
             if (GetBoxMonData(&boxMons[i], MON_DATA_SPECIES) != SPECIES_NONE
                 && !GetBoxMonData(&boxMons[i], MON_DATA_IS_EGG))

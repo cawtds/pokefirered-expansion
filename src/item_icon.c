@@ -75,7 +75,7 @@ u8 AddItemIconSprite(u16 tilesTag, u16 paletteTag, enum Item itemId)
     return spriteId;
 }
 
-u8 AddCustomItemIconSprite(const struct SpriteTemplate * origTemplate, u16 tilesTag, u16 paletteTag, enum Item itemId)
+u8 AddCustomItemIconSprite(const struct SpriteTemplate *origTemplate, u16 tilesTag, u16 paletteTag, enum Item itemId)
 {
     struct SpriteTemplate template;
     struct SpriteSheet spriteSheet;

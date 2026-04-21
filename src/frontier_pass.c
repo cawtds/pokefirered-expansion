@@ -757,9 +757,9 @@ static bool32 InitFrontierPass(void)
         DeactivateAllTextPrinters();
         break;
     case 6:
-        sPassGfx->mapAndCardZoomTilemap = malloc_and_decompress(sMapAndCard_Zooming_Tilemap, &sizeOut);
-        sPassGfx->mapAndCardTilemap = malloc_and_decompress(sMapAndCard_ZoomedOut_Tilemap, &sizeOut);
-        sPassGfx->battleRecordTilemap = malloc_and_decompress(sBattleRecord_Tilemap, &sizeOut);
+        sPassGfx->mapAndCardZoomTilemap = AllocAndDecompress(sMapAndCard_Zooming_Tilemap, &sizeOut);
+        sPassGfx->mapAndCardTilemap = AllocAndDecompress(sMapAndCard_ZoomedOut_Tilemap, &sizeOut);
+        sPassGfx->battleRecordTilemap = AllocAndDecompress(sBattleRecord_Tilemap, &sizeOut);
         DecompressAndCopyTileDataToVram(1, gFrontierPassBg_Gfx, 0, 0, 0);
         DecompressAndCopyTileDataToVram(2, gFrontierPassMapAndCard_Gfx, 0, 0, 0);
         break;

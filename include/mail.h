@@ -23,7 +23,7 @@
 // #define ITEM_TO_MAIL(itemId) (itemId - FIRST_MAIL_IDX)
 
 // mail.h
-void ReadMail(struct Mail * mail, void (*savedCallback)(void), bool8 messageExists);
+void ReadMail(struct Mail *mail, void (*savedCallback)(void), bool8 messageExists);
 
 // mail_data.h
 void ClearMailData(void);

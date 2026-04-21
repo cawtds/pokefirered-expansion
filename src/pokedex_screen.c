@@ -76,7 +76,7 @@ struct PokedexScreenData
     u8 numericalOrderWindowId;
     u8 orderedListMenuTaskId;
     u8 dexOrderId;
-    struct ListMenuItem * listItems;
+    struct ListMenuItem *listItems;
     u16 orderedDexCount;
     u8 windowIds[0x10];
     u16 dexSpecies;
@@ -117,7 +117,7 @@ static void DexScreen_InitGfxForNumericalOrderList(void);
 static void Task_DexScreen_CharacteristicOrder(u8 taskId);
 static void DexScreen_CreateCharacteristicListMenu(void);
 static u16 DexScreen_CountMonsInOrderedList(u8 orderIdx);
-static void DexScreen_InitListMenuForOrderedList(const struct ListMenuTemplate * template, u8 order);
+static void DexScreen_InitListMenuForOrderedList(const struct ListMenuTemplate *template, u8 order);
 static u8 DexScreen_CreateDexOrderScrollArrows(void);
 static void DexScreen_DestroyDexOrderListMenu(u8 order);
 static void Task_DexScreen_CategorySubmenu(u8 taskId);
@@ -840,8 +840,8 @@ static const struct WindowTemplate sWindowTemplate_AreaMap_SevenIsland = {
 };
 
 struct {
-    const struct WindowTemplate * window;
-    const u32 * tiles;
+    const struct WindowTemplate *window;
+    const u32 *tiles;
 } const sAreaMapStructs_SeviiIslands[] = {
     {&sWindowTemplate_AreaMap_OneIsland,   sTilemap_AreaMap_OneIsland},
     {&sWindowTemplate_AreaMap_TwoIsland,   sTilemap_AreaMap_TwoIsland},
@@ -1615,7 +1615,7 @@ static u16 DexScreen_CountMonsInOrderedList(u8 orderIdx)
     return seenCount;
 }
 
-static void DexScreen_InitListMenuForOrderedList(const struct ListMenuTemplate * template, u8 order)
+static void DexScreen_InitListMenuForOrderedList(const struct ListMenuTemplate *template, u8 order)
 {
     switch (order)
     {
@@ -3732,7 +3732,7 @@ static void Task_DexScreen_RegisterMonToPokedex(u8 taskId)
     }
 }
 
-void DexScreen_PrintStringWithAlignment(const u8 * str, s32 mode)
+void DexScreen_PrintStringWithAlignment(const u8 *str, s32 mode)
 {
     u32 x;
 

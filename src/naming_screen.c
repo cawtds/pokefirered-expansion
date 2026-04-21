@@ -178,7 +178,7 @@ struct NamingScreenData
     /*0x1E3C*/ MainCallback returnCallback;
 };
 
-static EWRAM_DATA struct NamingScreenData * sNamingScreen = NULL;
+static EWRAM_DATA struct NamingScreenData *sNamingScreen = NULL;
 
 static void CB2_LoadNamingScreen(void);
 static void NamingScreen_Init(void);
@@ -1391,10 +1391,9 @@ static void NamingScreen_NoIcon(void)
 
 static void NamingScreen_CreatePlayerIcon(void)
 {
-    u8 rivalGfxId;
+    enum ObjectEventGfx rivalGfxId = GetPlayerAvatarGfxForGender(PLAYER_AVATAR_STATE_NORMAL, sNamingScreen->monSpecies);
     u8 spriteId;
 
-    rivalGfxId = GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, sNamingScreen->monSpecies);
     spriteId = CreateObjectGraphicsSprite(rivalGfxId, SpriteCallbackDummy, 56, 37, 0);
     gSprites[spriteId].oam.priority = 3;
     StartSpriteAnim(&gSprites[spriteId], ANIM_STD_GO_SOUTH);
@@ -1439,7 +1438,7 @@ static void NamingScreen_CreateRivalIcon(void)
         gNamingScreenRival_Pal, PALTAG_RIVAL
     };
     struct SpriteTemplate template;
-    const struct SubspriteTable * tables_p;
+    const struct SubspriteTable *tables_p;
     u8 spriteId;
 
     CopyObjectGraphicsInfoToSpriteTemplate(OBJ_EVENT_GFX_RED_NORMAL, SpriteCallbackDummy, &template, &tables_p);

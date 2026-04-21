@@ -21,6 +21,13 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 
+enum ClockDirection
+{
+    CLOCK_MOVE_NONE,
+    CLOCK_MOVE_BACKWARD,
+    CLOCK_MOVE_FORWARD,
+};
+
 static void CB2_WallClock(void);
 static void Task_SetClock_WaitFadeIn(u8 taskId);
 static void Task_SetClock_HandleInput(u8 taskId);
@@ -32,9 +39,9 @@ static void Task_ViewClock_WaitFadeIn(u8 taskId);
 static void Task_ViewClock_HandleInput(u8 taskId);
 static void Task_ViewClock_FadeOut(u8 taskId);
 static void Task_ViewClock_Exit(u8 taskId);
-static u16 CalcNewMinHandAngle(u16 angle, u8 direction, u8 speed);
-static bool32 AdvanceClock(u8 taskId, u8 direction);
-static void UpdateClockPeriod(u8 taskId, u8 direction);
+static u16 CalcNewMinHandAngle(u16 angle, enum ClockDirection direction, u8 speed);
+static bool32 AdvanceClock(u8 taskId, enum ClockDirection direction);
+static void UpdateClockPeriod(u8 taskId, enum ClockDirection direction);
 static void InitClockWithRtc(u8 taskId);
 static void SpriteCB_MinuteHand(struct Sprite *sprite);
 static void SpriteCB_HourHand(struct Sprite *sprite);
@@ -57,13 +64,6 @@ enum
 {
     PERIOD_AM,
     PERIOD_PM,
-};
-
-enum
-{
-    CLOCK_MOVE_NONE,
-    CLOCK_MOVE_BACKWARD,
-    CLOCK_MOVE_FORWARD,
 };
 
 static const u8 sText_IsThisTheCorrectTime[] = _("Is this the correct time?");
@@ -923,7 +923,7 @@ static u8 CalcMinHandDelta(u16 speed)
     return 1;
 }
 
-static u16 CalcNewMinHandAngle(u16 angle, u8 direction, u8 speed)
+static u16 CalcNewMinHandAngle(u16 angle, enum ClockDirection direction, u8 speed)
 {
     u8 delta = CalcMinHandDelta(speed);
     switch (direction)
@@ -940,11 +940,13 @@ static u16 CalcNewMinHandAngle(u16 angle, u8 direction, u8 speed)
         else
             angle = 0;
         break;
+    case CLOCK_MOVE_NONE:
+        break;
     }
     return angle;
 }
 
-static bool32 AdvanceClock(u8 taskId, u8 direction)
+static bool32 AdvanceClock(u8 taskId, enum ClockDirection direction)
 {
     switch (direction)
     {
@@ -982,11 +984,13 @@ static bool32 AdvanceClock(u8 taskId, u8 direction)
             UpdateClockPeriod(taskId, direction);
         }
         break;
+    case CLOCK_MOVE_NONE:
+        break;
     }
     return FALSE;
 }
 
-static void UpdateClockPeriod(u8 taskId, u8 direction)
+static void UpdateClockPeriod(u8 taskId, enum ClockDirection direction)
 {
     u8 hours = gTasks[taskId].tHours;
     switch (direction)
@@ -1012,6 +1016,8 @@ static void UpdateClockPeriod(u8 taskId, u8 direction)
             gTasks[taskId].tPeriod = PERIOD_PM;
             break;
         }
+        break;
+    case CLOCK_MOVE_NONE:
         break;
     }
 }

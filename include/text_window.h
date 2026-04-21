@@ -16,7 +16,7 @@ extern const u16 gTextWindowFrame1_Pal[];
 
 const struct TilesPal *GetWindowFrameTilesPal(u8 id);
 void LoadWindowGfx(u8 windowId, u8 frameType, u16 destOffset, u8 palOffset);
-void rbox_fill_rectangle(u8 windowId);
+void ClearWindow(u8 windowId);
 const u16 *GetTextWindowPalette(u8 id);
 const u16 *GetOverworldTextboxPalettePtr(void);
 void LoadMessageBoxGfx(u8 windowId, u16 tileStart, u8 palette);

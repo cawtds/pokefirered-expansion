@@ -230,12 +230,11 @@ static void TurnNPCIntoFollower(u32 localId, u32 followerFlags, u32 setScript, c
     SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
 
     // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
-    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE)
-    &&  TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
-        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE) && IsPlayerBiking())
+        SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_NORMAL);
 
     // Set the follower sprite to match the player state.
-    if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ON_FOOT))
+    if (!TestPlayerAvatarState(PLAYER_AVATAR_STATE_NORMAL))
         FollowerNPC_HandleSprite();
 }
 
@@ -592,8 +591,8 @@ static void Task_FinishSurfDismount(u8 taskId)
     if (animStatus == 0)
     {
         // Temporarily stop running.
-        if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH) && ObjectEventClearHeldMovementIfFinished(&gObjectEvents[gPlayerAvatar.objectEventId]))
-            SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+        if (gPlayerAvatar.dashing && ObjectEventClearHeldMovementIfFinished(&gObjectEvents[gPlayerAvatar.objectEventId]))
+            SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_NORMAL);
 
         return;
     }
@@ -613,9 +612,8 @@ static void Task_ReallowPlayerMovement(u8 taskId)
     if (animStatus == 0)
     {
         // Temporarily stop running.
-        if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH)
-        && ObjectEventClearHeldMovementIfFinished(&gObjectEvents[gPlayerAvatar.objectEventId]))
-            SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+        if (gPlayerAvatar.dashing && ObjectEventClearHeldMovementIfFinished(&gObjectEvents[gPlayerAvatar.objectEventId]))
+            SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_NORMAL);
 
         return;
     }
@@ -655,7 +653,7 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
         {
             follower->invisible = FALSE;
             // If the follower should be surfing.
-            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+            if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING))
             {
                 SetUpSurfBlobFieldEffect(follower);
                 follower->fieldEffectSpriteId = FieldEffectStart(FLDEFF_SURF_BLOB);
@@ -839,12 +837,11 @@ void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr)
     SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
 
     // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
-    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE)
-    &&  TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
-        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+    if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE) && IsPlayerBiking())
+        SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_NORMAL);
 
     // Set the follower sprite to match the player state.
-    if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ON_FOOT))
+    if (!TestPlayerAvatarState(PLAYER_AVATAR_STATE_NORMAL))
         FollowerNPC_HandleSprite();
 
     HideNPCFollower();
@@ -896,7 +893,7 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, enum Dire
     {
         SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, FNPC_FORCED_STAY);
         SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, 0);
-        if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
+        if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_NORMAL)
             ObjectEventSetHeldMovement(follower, GetFaceDirectionAnimNum(follower->facingDirection));
 
         return MOVEMENT_INVALID;
@@ -905,7 +902,7 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, enum Dire
     if (IsStateMovement(state) && delayedState)
     {
         // Lock face direction for Acro side jump.
-        if (delayedState == MOVEMENT_ACTION_JUMP_DOWN && TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE))
+        if (delayedState == MOVEMENT_ACTION_JUMP_DOWN && TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE))
             follower->facingDirectionLocked = TRUE;
 
         newState = delayedState + (direction -1);
@@ -1071,7 +1068,7 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, enum Dire
         // Acro side hop.
         if (delayedState == MOVEMENT_ACTION_JUMP_DOWN)
         {
-            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE))
+            if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE))
                 follower->facingDirectionLocked = TRUE;
 
             return newState;
@@ -1209,7 +1206,7 @@ void NPCFollow(struct ObjectEvent *npc, u32 state, bool32 ignoreScriptActive)
         SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
 
     // Follower changes to normal sprite after getting off surf blob.
-    if (GetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE) == FOLLOWER_NPC_SPRITE_INDEX_SURF && !CheckFollowerNPCFlag(PLAYER_AVATAR_FLAG_SURFING) && follower->fieldEffectSpriteId == 0)
+    if (GetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE) == FOLLOWER_NPC_SPRITE_INDEX_SURF && !CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_SURF) && follower->fieldEffectSpriteId == 0)
     {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
         SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
@@ -1349,14 +1346,14 @@ void CreateFollowerNPCAvatar(void)
 
 void FollowerNPC_HandleSprite(void)
 {
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE) && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE))
+    if (IsPlayerBiking() && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE))
     {
-        if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE)
+        if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_MACH_BIKE)
             SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_MACH_BIKE);
-        else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ACRO_BIKE)
+        else if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_ACRO_BIKE)
             SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_ACRO_BIKE);
     }
-    else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
+    else if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_NORMAL)
     {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
     }
@@ -1456,12 +1453,12 @@ void FollowerNPC_WarpSetEnd(void)
         SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
     }
 
-    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
+    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_NORMAL)
     {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
         SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
     }
-    else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
+    else if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_SURFING)
     {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_SURF);
         SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_RECREATE);
@@ -1487,11 +1484,11 @@ void FollowerNPC_HandleBike(void)
     if (GetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE) == FOLLOWER_NPC_SPRITE_INDEX_SURF)
         return;
 
-    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE && FollowerNPCCanBike() && GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) != FNPC_DOOR_NEEDS_TO_EXIT) //Coming out door
+    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_MACH_BIKE && FollowerNPCCanBike() && GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) != FNPC_DOOR_NEEDS_TO_EXIT) //Coming out door
     {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_MACH_BIKE);
     }
-    else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ACRO_BIKE && FollowerNPCCanBike() && GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) != FNPC_DOOR_NEEDS_TO_EXIT) //Coming out door
+    else if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_ACRO_BIKE && FollowerNPCCanBike() && GetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR) != FNPC_DOOR_NEEDS_TO_EXIT) //Coming out door
     {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_ACRO_BIKE);
     }

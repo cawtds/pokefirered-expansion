@@ -20,12 +20,12 @@
 
 static EWRAM_DATA bool32 sCancelDisabled = FALSE;
 static EWRAM_DATA u8 sPSATaskId = 0;
-static EWRAM_DATA struct PokemonSpecialAnim * sPSAWork = NULL;
+static EWRAM_DATA struct PokemonSpecialAnim *sPSAWork = NULL;
 
 static struct PokemonSpecialAnim *AllocPSA(u8 slotId, enum Item itemId, MainCallback callback);
-static void SetUpUseItemAnim_Normal(struct PokemonSpecialAnim * ptr);
-static void SetUpUseItemAnim_ForgetMoveAndLearnTMorHM(struct PokemonSpecialAnim * ptr);
-static void SetUpUseItemAnim_CantEvolve(struct PokemonSpecialAnim * ptr);
+static void SetUpUseItemAnim_Normal(struct PokemonSpecialAnim *ptr);
+static void SetUpUseItemAnim_ForgetMoveAndLearnTMorHM(struct PokemonSpecialAnim *ptr);
+static void SetUpUseItemAnim_CantEvolve(struct PokemonSpecialAnim *ptr);
 static void Task_UseItem_Normal(u8 taskId);
 static void Task_ForgetMove(u8 taskId);
 static void Task_EvoStone_CantEvolve(u8 taskId);
@@ -46,7 +46,7 @@ void StartUseItemAnim_Normal(u8 slotId, enum Item itemId, MainCallback callback)
 
 void StartUseItemAnim_ForgetMoveAndLearnTMorHM(u8 slotId, enum Item itemId, enum Move moveId, MainCallback callback)
 {
-    struct PokemonSpecialAnim * ptr = AllocPSA(slotId, itemId, callback);
+    struct PokemonSpecialAnim *ptr = AllocPSA(slotId, itemId, callback);
     if (ptr == NULL)
         SetMainCallback2(callback);
     else
@@ -58,7 +58,7 @@ void StartUseItemAnim_ForgetMoveAndLearnTMorHM(u8 slotId, enum Item itemId, enum
 
 void StartUseItemAnim_CantEvolve(u8 slotId, enum Item itemId, MainCallback callback)
 {
-    struct PokemonSpecialAnim * ptr = AllocPSA(slotId, itemId, callback);
+    struct PokemonSpecialAnim *ptr = AllocPSA(slotId, itemId, callback);
     if (ptr == NULL)
         SetMainCallback2(callback);
     else
@@ -119,12 +119,12 @@ static void CB2_PSA(void)
 
 static void SetUseItemAnimCallback(u8 taskId, TaskFunc func)
 {
-    struct PokemonSpecialAnim * ptr = (void *)GetWordTaskArg(taskId, 0);
+    struct PokemonSpecialAnim *ptr = (void *)GetWordTaskArg(taskId, 0);
     ptr->state = 0;
     gTasks[taskId].func = func;
 }
 
-static void SetUpUseItemAnim_Normal(struct PokemonSpecialAnim * ptr)
+static void SetUpUseItemAnim_Normal(struct PokemonSpecialAnim *ptr)
 {
     u8 taskId;
     switch (ptr->animType)
@@ -148,7 +148,7 @@ static void SetUpUseItemAnim_Normal(struct PokemonSpecialAnim * ptr)
     sPSATaskId = taskId;
 }
 
-static void SetUpUseItemAnim_ForgetMoveAndLearnTMorHM(struct PokemonSpecialAnim * ptr)
+static void SetUpUseItemAnim_ForgetMoveAndLearnTMorHM(struct PokemonSpecialAnim *ptr)
 {
     u8 taskId = CreateTask(Task_ForgetMove, 0);
     SetWordTaskArg(taskId, 0, (uintptr_t)ptr);
@@ -157,7 +157,7 @@ static void SetUpUseItemAnim_ForgetMoveAndLearnTMorHM(struct PokemonSpecialAnim 
     ptr->cancelDisabled = FALSE;
 }
 
-static void SetUpUseItemAnim_CantEvolve(struct PokemonSpecialAnim * ptr)
+static void SetUpUseItemAnim_CantEvolve(struct PokemonSpecialAnim *ptr)
 {
     u8 taskId = CreateTask(Task_EvoStone_CantEvolve, 0);
     SetWordTaskArg(taskId, 0, (uintptr_t)ptr);
@@ -167,7 +167,7 @@ static void SetUpUseItemAnim_CantEvolve(struct PokemonSpecialAnim * ptr)
 
 static void Task_UseItem_Normal(u8 taskId)
 {
-    struct PokemonSpecialAnim * ptr = (void *)GetWordTaskArg(taskId, 0);
+    struct PokemonSpecialAnim *ptr = (void *)GetWordTaskArg(taskId, 0);
     if (!ptr->cancelDisabled && JOY_HELD(A_BUTTON | B_BUTTON))
     {
         PSA_UseItem_CleanUpForCancel();
@@ -282,7 +282,7 @@ static void Task_UseItem_Normal(u8 taskId)
 
 static void Task_ForgetMove(u8 taskId)
 {
-    struct PokemonSpecialAnim * ptr = (void *)GetWordTaskArg(taskId, 0);
+    struct PokemonSpecialAnim *ptr = (void *)GetWordTaskArg(taskId, 0);
     u8 r4;
 
     switch (ptr->state)
@@ -386,7 +386,7 @@ static void Task_ForgetMove(u8 taskId)
 
 static void Task_EvoStone_CantEvolve(u8 taskId)
 {
-    struct PokemonSpecialAnim * ptr = (void *)GetWordTaskArg(taskId, 0);
+    struct PokemonSpecialAnim *ptr = (void *)GetWordTaskArg(taskId, 0);
 
     if (!ptr->cancelDisabled && JOY_HELD(B_BUTTON))
     {
@@ -463,7 +463,7 @@ static void Task_EvoStone_CantEvolve(u8 taskId)
 
 static void Task_UseTM_NoForget(u8 taskId)
 {
-    struct PokemonSpecialAnim * ptr = (void *)GetWordTaskArg(taskId, 0);
+    struct PokemonSpecialAnim *ptr = (void *)GetWordTaskArg(taskId, 0);
 
     if (JOY_NEW(B_BUTTON))
     {
@@ -506,7 +506,7 @@ static void Task_UseTM_NoForget(u8 taskId)
 
 static void Task_MachineSet(u8 taskId)
 {
-    struct PokemonSpecialAnim * ptr = (void *)GetWordTaskArg(taskId, 0);
+    struct PokemonSpecialAnim *ptr = (void *)GetWordTaskArg(taskId, 0);
 
     if (!ptr->cancelDisabled && JOY_NEW(B_BUTTON))
     {
@@ -583,7 +583,7 @@ static void Task_MachineSet(u8 taskId)
 
 static void Task_CleanUp(u8 taskId)
 {
-    struct PokemonSpecialAnim * ptr = (void *)GetWordTaskArg(taskId, 0);
+    struct PokemonSpecialAnim *ptr = (void *)GetWordTaskArg(taskId, 0);
 
     switch (ptr->state)
     {
@@ -643,18 +643,18 @@ static u8 GetClosenessFromFriendship(u16 friendship)
         return 3;
 }
 
-struct PokemonSpecialAnim * GetPSAStruct(void)
+struct PokemonSpecialAnim *GetPSAStruct(void)
 {
     return (void *)GetWordTaskArg(sPSATaskId, 0);
 }
 
-struct Pokemon * PSA_GetPokemon(void)
+struct Pokemon *PSA_GetPokemon(void)
 {
     sPSAWork = GetPSAStruct();
     return &sPSAWork->pokemon;
 }
 
-struct PokemonSpecialAnimScene * PSA_GetSceneWork(void)
+struct PokemonSpecialAnimScene *PSA_GetSceneWork(void)
 {
     return &GetPSAStruct()->sceneResources;
 }
@@ -699,7 +699,7 @@ u32 PSA_GetMonPersonality(void)
     return GetPSAStruct()->personality;
 }
 
-void GetMonLevelUpWindowStats(struct Pokemon * pokemon, u16 *data)
+void GetMonLevelUpWindowStats(struct Pokemon *pokemon, u16 *data)
 {
     data[0] = GetMonData(pokemon, MON_DATA_MAX_HP);
     data[1] = GetMonData(pokemon, MON_DATA_ATK);

@@ -72,9 +72,9 @@ struct UnionRoomChat
     u8 sendMessageBuffer[0x28];
 };
 
-static EWRAM_DATA struct UnionRoomChat * sWork = NULL;
+static EWRAM_DATA struct UnionRoomChat *sWork = NULL;
 
-static void InitChatWork(struct UnionRoomChat * unionRoomChat);
+static void InitChatWork(struct UnionRoomChat *unionRoomChat);
 static void CB2_LoadInterface(void);
 static void VBlankCB_UnionRoomChatMain(void);
 static void CB2_UnionRoomChatMain(void);
@@ -330,7 +330,7 @@ void EnterUnionRoomChat(void)
     SetMainCallback2(CB2_LoadInterface);
 }
 
-static void InitChatWork(struct UnionRoomChat * unionRoomChat)
+static void InitChatWork(struct UnionRoomChat *unionRoomChat)
 {
 #if FREE_UNION_ROOM_CHAT == FALSE
     int i;

@@ -309,13 +309,13 @@ static void Task_Seagallop_2(u8 taskId)
 
 static void Task_Seagallop_3(void)
 {
-    const s8 * warpInfo;
+    const s8 *warpInfo;
 
     if (gSpecialVar_0x8006 >= ARRAY_COUNT(sSeag))
         gSpecialVar_0x8006 = 0;
 
     warpInfo = sSeag[gSpecialVar_0x8006];
-    SetWarpDestination(warpInfo[0], warpInfo[1], -1, warpInfo[2], warpInfo[3]);
+    SetWarpDestination(warpInfo[0], warpInfo[1], WARP_ID_NONE, warpInfo[2], warpInfo[3]);
     PlayRainStoppingSoundEffect();
     PlaySE(SE_EXIT);
     gFieldCallback = FieldCB_DefaultWarpExit;

@@ -181,16 +181,16 @@ static void VBlankCB_Intro(void);
 static void Intro_ResetGpuRegs(void);
 static void StartIntroSequence(void);
 static void Task_CallIntroCallback(u8 taskId);
-static void SetIntroCB(struct IntroSequenceData * ptr, IntroCallback cb);
-static void IntroCB_Init(struct IntroSequenceData * ptr);
+static void SetIntroCB(struct IntroSequenceData *ptr, IntroCallback cb);
+static void IntroCB_Init(struct IntroSequenceData *ptr);
 static void LoadFightSceneSpriteGraphics(void);
-static void IntroCB_ExitToTitleScreen(struct IntroSequenceData * ptr);
+static void IntroCB_ExitToTitleScreen(struct IntroSequenceData *ptr);
 
 // GF scene
-static void IntroCB_GF_OpenWindow(struct IntroSequenceData * ptr);
-static void IntroCB_GF_Star(struct IntroSequenceData * ptr);
-static void IntroCB_GF_RevealName(struct IntroSequenceData * ptr);
-static void IntroCB_GF_RevealLogo(struct IntroSequenceData * ptr);
+static void IntroCB_GF_OpenWindow(struct IntroSequenceData *ptr);
+static void IntroCB_GF_Star(struct IntroSequenceData *ptr);
+static void IntroCB_GF_RevealName(struct IntroSequenceData *ptr);
+static void IntroCB_GF_RevealLogo(struct IntroSequenceData *ptr);
 static void GFScene_LoadGfxCreateStar(void);
 static void GFScene_StartNameSparklesSmall(void);
 static void GFScene_StartNameSparklesBig(void);
@@ -204,41 +204,41 @@ static void SpriteCB_SparklesSmall_Name(struct Sprite *sprite);
 static void SpriteCB_SparklesBig(struct Sprite *sprite);
 
 // Scene 1
-static void IntroCB_Scene1(struct IntroSequenceData * ptr);
+static void IntroCB_Scene1(struct IntroSequenceData *ptr);
 static void Scene1_Task_AnimateGrass(u8 taskId);
 static void Scene1_StartGrassScrolling(void);
 static void Scene1_Task_BgZoom(u8 taskId);
 
 // Scene 2
-static void IntroCB_Scene2(struct IntroSequenceData * ptr);
+static void IntroCB_Scene2(struct IntroSequenceData *ptr);
 static void Scene2_Task_PanForest(u8 taskId);
 static void Scene2_Task_PanMons(u8 taskId);
-static void Scene2_CreateMonSprites(struct IntroSequenceData * ptr);
-static void Scene2_DestroyMonSprites(struct IntroSequenceData * ptr);
+static void Scene2_CreateMonSprites(struct IntroSequenceData *ptr);
+static void Scene2_DestroyMonSprites(struct IntroSequenceData *ptr);
 
 // Scene 3
-static void IntroCB_Scene3_Entrance(struct IntroSequenceData * ptr);
-static void IntroCB_Scene3_Fight(struct IntroSequenceData * ptr);
+static void IntroCB_Scene3_Entrance(struct IntroSequenceData *ptr);
+static void IntroCB_Scene3_Fight(struct IntroSequenceData *ptr);
 static void Scene3_StartBgScroll(void);
 static void Scene3_Task_GengarBounce(u8 taskId);
-static void Scene3_CreateGrassSprite(struct IntroSequenceData * ptr);
-static void Scene3_CreateGengarSprite(struct IntroSequenceData * ptr);
-static void Scene3_StartNidorinoCry(struct IntroSequenceData * ptr);
+static void Scene3_CreateGrassSprite(struct IntroSequenceData *ptr);
+static void Scene3_CreateGengarSprite(struct IntroSequenceData *ptr);
+static void Scene3_StartNidorinoCry(struct IntroSequenceData *ptr);
 static void Scene3_StartNidorinoHop(struct Sprite *sprite, u16 time, s16 targetX, u8 heightShift);
-static void Scene3_StartGengarAttack(struct IntroSequenceData * ptr);
+static void Scene3_StartGengarAttack(struct IntroSequenceData *ptr);
 static void Scene3_Task_GengarAttack(u8 taskId);
-static void Scene3_NidorinoZoom(struct IntroSequenceData * ptr);
-static void Scene3_GengarZoom(struct IntroSequenceData * ptr);
+static void Scene3_NidorinoZoom(struct IntroSequenceData *ptr);
+static void Scene3_GengarZoom(struct IntroSequenceData *ptr);
 static void Scene3_CreateGengarSwipeSprites(void);
 static void Scene3_Task_GengarEnter(u8 taskId);
-static void Scene3_CreateNidorinoSprite(struct IntroSequenceData * ptr);
+static void Scene3_CreateNidorinoSprite(struct IntroSequenceData *ptr);
 static void Scene3_StartNidorinoEntrance(struct Sprite *sprite, s16 xStart, s16 xEnd, u16 speed);
 static void Scene3_SpriteCB_NidorinoEnter(struct Sprite *sprite);
-static bool32 Scene3_IsNidorinoEntering(struct IntroSequenceData * ptr);
-static void Scene3_StartNidorinoRecoil(struct IntroSequenceData * ptr);
-static bool8 Scene3_NidorinoAnimIsRunning(struct IntroSequenceData * ptr);
+static bool32 Scene3_IsNidorinoEntering(struct IntroSequenceData *ptr);
+static void Scene3_StartNidorinoRecoil(struct IntroSequenceData *ptr);
+static bool8 Scene3_NidorinoAnimIsRunning(struct IntroSequenceData *ptr);
 static void CreateNidorinoRecoilDustSprites(s16 x, s16 y, s16 seed);
-static void Scene3_StartNidorinoAttack(struct IntroSequenceData * ptr);
+static void Scene3_StartNidorinoAttack(struct IntroSequenceData *ptr);
 static void SpriteCB_Grass(struct Sprite *sprite);
 static void SpriteCB_GengarSwipe(struct Sprite *sprite);
 static void SpriteCB_RecoilDust(struct Sprite *sprite);
@@ -1089,13 +1089,13 @@ static void Intro_ResetGpuRegs(void)
 
 static void StartIntroSequence(void)
 {
-    struct IntroSequenceData * ptr = Alloc(sizeof(*ptr));
+    struct IntroSequenceData *ptr = Alloc(sizeof(*ptr));
     SetIntroCB(ptr, IntroCB_Init);
     ptr->taskId = CreateTask(Task_CallIntroCallback, 3);
     SetWordTaskArg(ptr->taskId, 0, (uintptr_t)ptr);
 }
 
-static void SetIntroCB(struct IntroSequenceData * ptr, IntroCallback cb)
+static void SetIntroCB(struct IntroSequenceData *ptr, IntroCallback cb)
 {
     ptr->callback = cb;
     ptr->state = 0;
@@ -1103,7 +1103,7 @@ static void SetIntroCB(struct IntroSequenceData * ptr, IntroCallback cb)
 
 static void Task_CallIntroCallback(u8 taskId)
 {
-    struct IntroSequenceData * ptr = (void *)GetWordTaskArg(taskId, 0);
+    struct IntroSequenceData *ptr = (void *)GetWordTaskArg(taskId, 0);
 
     // End intro early if player presses A/Start/Select
     if (JOY_NEW(A_BUTTON | START_BUTTON | SELECT_BUTTON) && ptr->callback != IntroCB_ExitToTitleScreen)
@@ -1112,7 +1112,7 @@ static void Task_CallIntroCallback(u8 taskId)
     ptr->callback(ptr);
 }
 
-static void IntroCB_Init(struct IntroSequenceData * this)
+static void IntroCB_Init(struct IntroSequenceData *this)
 {
     switch (this->state)
     {
@@ -1134,7 +1134,7 @@ static void IntroCB_Init(struct IntroSequenceData * this)
     }
 }
 
-static void IntroCB_GF_OpenWindow(struct IntroSequenceData * this)
+static void IntroCB_GF_OpenWindow(struct IntroSequenceData *this)
 {
     switch (this->state)
     {
@@ -1164,7 +1164,7 @@ static void IntroCB_GF_OpenWindow(struct IntroSequenceData * this)
     }
 }
 
-static void IntroCB_GF_Star(struct IntroSequenceData * this)
+static void IntroCB_GF_Star(struct IntroSequenceData *this)
 {
     switch (this->state)
     {
@@ -1190,7 +1190,7 @@ static void IntroCB_GF_Star(struct IntroSequenceData * this)
     }
 }
 
-static void IntroCB_GF_RevealName(struct IntroSequenceData * this)
+static void IntroCB_GF_RevealName(struct IntroSequenceData *this)
 {
     switch (this->state)
     {
@@ -1227,7 +1227,7 @@ static void IntroCB_GF_RevealName(struct IntroSequenceData * this)
     }
 }
 
-static void IntroCB_GF_RevealLogo(struct IntroSequenceData * this)
+static void IntroCB_GF_RevealLogo(struct IntroSequenceData *this)
 {
     switch (this->state)
     {
@@ -1292,7 +1292,7 @@ static void IntroCB_GF_RevealLogo(struct IntroSequenceData * this)
     }
 }
 
-static void IntroCB_Scene1(struct IntroSequenceData * this)
+static void IntroCB_Scene1(struct IntroSequenceData *this)
 {
     switch (this->state)
     {
@@ -1374,7 +1374,7 @@ static void IntroCB_Scene1(struct IntroSequenceData * this)
 
 static void Scene1_Task_AnimateGrass(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     // Each of the 3 frames of the bg grass animation is separated vertically on the tilemap.
     // The conditional below changes the frame by setting the y coordinate of the bg.
@@ -1414,7 +1414,7 @@ static void Scene1_StartGrassScrolling(void)
 // Same as the grass animation above, this achieved by separating frames vertically on the bg tilemap.
 static void Scene1_Task_BgZoom(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     if (++tTimer > 3)
     {
@@ -1428,7 +1428,7 @@ static void Scene1_Task_BgZoom(u8 taskId)
 #undef tTimer
 #undef tFrame
 
-static void IntroCB_Scene2(struct IntroSequenceData * this)
+static void IntroCB_Scene2(struct IntroSequenceData *this)
 {
     switch (this->state)
     {
@@ -1528,7 +1528,7 @@ static void Scene2_Task_PanMons(u8 taskId)
 }
 
 // Create the Gengar/Nidorino sprites for the wide shot in scene 2
-static void Scene2_CreateMonSprites(struct IntroSequenceData * this)
+static void Scene2_CreateMonSprites(struct IntroSequenceData *this)
 {
     u8 spriteId;
 
@@ -1544,7 +1544,7 @@ static void Scene2_CreateMonSprites(struct IntroSequenceData * this)
         this->scene2GengarSprite = &gSprites[spriteId];
 }
 
-static void Scene2_DestroyMonSprites(struct IntroSequenceData * this)
+static void Scene2_DestroyMonSprites(struct IntroSequenceData *this)
 {
     if (this->scene2GengarSprite != NULL)
         DestroySprite(this->scene2GengarSprite);
@@ -1553,7 +1553,7 @@ static void Scene2_DestroyMonSprites(struct IntroSequenceData * this)
 }
 
 // Set up the scene 3 graphics, then start the scrolling to get Gengar and Nidorino in their fight positions
-static void IntroCB_Scene3_Entrance(struct IntroSequenceData * this)
+static void IntroCB_Scene3_Entrance(struct IntroSequenceData *this)
 {
     switch (this->state)
     {
@@ -1644,7 +1644,7 @@ static void Scene3_SlowBgScroll(void)
 // Gengar has an "idle" animation where it bounces a little
 static void Scene3_Task_GengarBounce(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     if (!tPaused)
     {
         if (++tTimer >= 30)
@@ -1679,7 +1679,7 @@ static bool8 Scene3_IsGengarMidBounce(void)
 #undef tState
 
 // The small clump of grass that passes by in the foreground during the fight
-static void Scene3_CreateGrassSprite(struct IntroSequenceData * this)
+static void Scene3_CreateGrassSprite(struct IntroSequenceData *this)
 {
     u8 spriteId = CreateSprite(&sSpriteTemplate_Grass, 296, 112, 7);
     if (spriteId != MAX_SPRITES)
@@ -1697,7 +1697,7 @@ static void Scene3_CreateGrassSprite(struct IntroSequenceData * this)
 
 static void SpriteCB_Grass(struct Sprite *sprite)
 {
-    s16 * data = sprite->data;
+    s16 *data = sprite->data;
 
     switch (sState)
     {
@@ -1732,7 +1732,7 @@ static void SpriteCB_Grass(struct Sprite *sprite)
 #undef sBaseX
 #undef sVeloc
 
-static void IntroCB_Scene3_Fight(struct IntroSequenceData * this)
+static void IntroCB_Scene3_Fight(struct IntroSequenceData *this)
 {
     switch (this->state)
     {
@@ -1870,7 +1870,7 @@ static void Scene3_CalcCenterToCornerVec(struct Sprite *sprite)
     CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
 }
 
-static void Scene3_CreateGengarSprite(struct IntroSequenceData * this)
+static void Scene3_CreateGengarSprite(struct IntroSequenceData *this)
 {
     int i;
 
@@ -1891,7 +1891,7 @@ static void Scene3_CreateGengarSprite(struct IntroSequenceData * this)
     }
 }
 
-static void Scene3_NidorinoZoom(struct IntroSequenceData * this)
+static void Scene3_NidorinoZoom(struct IntroSequenceData *this)
 {
     this->scene3NidorinoSprite->x += this->scene3NidorinoSprite->x2;
     this->scene3NidorinoSprite->y += this->scene3NidorinoSprite->y2;
@@ -1904,7 +1904,7 @@ static void SpriteCB_Idle(struct Sprite *sprite)
 {
 }
 
-static void Scene3_GengarZoom(struct IntroSequenceData * this)
+static void Scene3_GengarZoom(struct IntroSequenceData *this)
 {
     int i;
 
@@ -1916,7 +1916,7 @@ static void Scene3_GengarZoom(struct IntroSequenceData * this)
     }
 }
 
-static void IntroCB_ExitToTitleScreen(struct IntroSequenceData * this)
+static void IntroCB_ExitToTitleScreen(struct IntroSequenceData *this)
 {
     switch (this->state)
     {
@@ -2030,7 +2030,7 @@ static void GFScene_StartNameSparklesSmall(void)
 
 static void GFScene_Task_NameSparklesSmall(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     u8 i;
     u8 spriteId;
 
@@ -2073,7 +2073,7 @@ static void GFScene_StartNameSparklesBig(void)
 
 static void GFScene_Task_NameSparklesBig(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     u8 i;
 
     if (tTimer == 0)
@@ -2116,7 +2116,7 @@ static void GFScene_CreatePresentsSprite(void)
 #define tMultY  data[8]
 #define tMultX  data[9]
 
-static void Scene3_StartGengarAttack(struct IntroSequenceData * this)
+static void Scene3_StartGengarAttack(struct IntroSequenceData *this)
 {
     u8 taskId;
     this->gengarAttackLanded = FALSE;
@@ -2136,7 +2136,7 @@ static void Scene3_ApplyGengarAnim(int frame, int xSub, int ySub, int xBase)
 
 static void Scene3_Task_GengarAttack(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     s32 xSub, ySub;
     s32 sinIdx;
     switch (tState)
@@ -2242,7 +2242,7 @@ static void SpriteCB_GengarSwipe(struct Sprite *sprite)
 // Scroll Gengar into position for the fight
 static void Scene3_Task_GengarEnter(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     static EWRAM_DATA u32 sGengarScroll = 0;
 
     switch (tState)
@@ -2372,7 +2372,7 @@ static void SpriteCB_SparklesBig(struct Sprite *sprite)
         DestroySprite(sprite);
 }
 
-static void Scene3_CreateNidorinoSprite(struct IntroSequenceData * this)
+static void Scene3_CreateNidorinoSprite(struct IntroSequenceData *this)
 {
     u8 spriteId = CreateSprite(&sSpriteTemplate_Scene3_Nidorino, 0, 0, 9);
     this->scene3NidorinoSprite = &gSprites[spriteId];
@@ -2414,7 +2414,7 @@ static void Scene3_SpriteCB_NidorinoEnter(struct Sprite *sprite)
     }
 }
 
-static bool32 Scene3_IsNidorinoEntering(struct IntroSequenceData * ptr)
+static bool32 Scene3_IsNidorinoEntering(struct IntroSequenceData *ptr)
 {
     return ptr->scene3NidorinoSprite->callback == Scene3_SpriteCB_NidorinoEnter ? TRUE : FALSE;
 }
@@ -2429,7 +2429,7 @@ static bool32 Scene3_IsNidorinoEntering(struct IntroSequenceData * ptr)
 #define sStateTimer  data[1]
 #define sBounceTimer data[2]
 
-static void Scene3_StartNidorinoCry(struct IntroSequenceData * ptr)
+static void Scene3_StartNidorinoCry(struct IntroSequenceData *ptr)
 {
     StartSpriteAnim(ptr->scene3NidorinoSprite, ANIM_NIDORINO_CROUCH);
     ptr->scene3NidorinoSprite->sState = 0;
@@ -2485,7 +2485,7 @@ static void SpriteCB_NidorinoCry(struct Sprite *sprite)
 #define sRandSeed      data[6]
 #define sSpeedX        data[7]
 
-static void Scene3_StartNidorinoRecoil(struct IntroSequenceData * ptr)
+static void Scene3_StartNidorinoRecoil(struct IntroSequenceData *ptr)
 {
     sNidorinoRecoilReturnTime = 16;
     sNidorinoJumpMult = 3;
@@ -2569,7 +2569,7 @@ static void SpriteCB_NidorinoRecoil(struct Sprite *sprite)
 #undef sRandSeed
 #undef sSpeedX
 
-static bool8 Scene3_NidorinoAnimIsRunning(struct IntroSequenceData * ptr)
+static bool8 Scene3_NidorinoAnimIsRunning(struct IntroSequenceData *ptr)
 {
     return ptr->scene3NidorinoSprite->callback == SpriteCallbackDummy ? FALSE : TRUE;
 }
@@ -2603,7 +2603,7 @@ static void CreateNidorinoRecoilDustSprites(s16 x, s16 y, s16 seed)
 
 static void SpriteCB_RecoilDust(struct Sprite *sprite)
 {
-    s16 * data = sprite->data;
+    s16 *data = sprite->data;
 
     switch (sprite->sState)
     {
@@ -2724,7 +2724,7 @@ static void SpriteCB_NidorinoHop(struct Sprite *sprite)
 #define sShakeTimer data[2]
 #define sSpeed      data[7]
 
-static void Scene3_StartNidorinoAttack(struct IntroSequenceData * ptr)
+static void Scene3_StartNidorinoAttack(struct IntroSequenceData *ptr)
 {
     ptr->scene3NidorinoSprite->sState = 0;
     ptr->scene3NidorinoSprite->sTimer = 0;

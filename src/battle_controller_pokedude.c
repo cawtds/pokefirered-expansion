@@ -1043,7 +1043,7 @@ static void PokedudeSimulateInputChooseMove(enum BattlerId battler)
 static bool8 HandlePokedudeVoiceoverEtc(enum BattlerId battler)
 {
     const struct PokedudeTextScriptHeader *header_p = sPokedudeTextScripts[gBattleStruct->pdScriptNum];
-    const u16 * bstringid_p = (const u16 *)&gBattleResources->bufferA[battler][2];
+    const u16 *bstringid_p = (const u16 *)&gBattleResources->bufferA[battler][2];
 
     if (gBattleResources->bufferA[battler][0] != header_p[gBattleStruct->pdMessageNo].btlcmd)
         return FALSE;

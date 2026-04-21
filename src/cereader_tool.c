@@ -19,7 +19,7 @@ static u8 GetTrainerHillUnkVal(void)
 #endif //FREE_TRAINER_TOWER
 }
 
-static bool32 ValidateTrainerTowerTrainer(struct TrainerTowerFloor * floor)
+static bool32 ValidateTrainerTowerTrainer(struct TrainerTowerFloor *floor)
 {
     if (floor->floorIdx < 1 || floor->floorIdx > MAX_TRAINER_TOWER_FLOORS)
         return FALSE;
@@ -30,7 +30,7 @@ static bool32 ValidateTrainerTowerTrainer(struct TrainerTowerFloor * floor)
     return TRUE;
 }
 
-bool32 ValidateTrainerTowerData(struct EReaderTrainerTowerSet * ttdata)
+bool32 ValidateTrainerTowerData(struct EReaderTrainerTowerSet *ttdata)
 {
     u32 numFloors = ttdata->numFloors;
     s32 i;
@@ -46,7 +46,7 @@ bool32 ValidateTrainerTowerData(struct EReaderTrainerTowerSet * ttdata)
     return TRUE;
 }
 
-static bool32 CEReaderTool_SaveTrainerTower_r(struct EReaderTrainerTowerSet * ttdata, u8 * buffer)
+static bool32 CEReaderTool_SaveTrainerTower_r(struct EReaderTrainerTowerSet *ttdata, u8 *buffer)
 {
     AGB_ASSERT_EX(ttdata->dummy == 0, ABSPATH("cereader_tool.c"), 198);
     AGB_ASSERT_EX(ttdata->id == 0, ABSPATH("cereader_tool.c"), 199)
@@ -63,15 +63,15 @@ static bool32 CEReaderTool_SaveTrainerTower_r(struct EReaderTrainerTowerSet * tt
     return TRUE;
 }
 
-bool32 CEReaderTool_SaveTrainerTower(struct EReaderTrainerTowerSet * ttdata)
+bool32 CEReaderTool_SaveTrainerTower(struct EReaderTrainerTowerSet *ttdata)
 {
-    u8 * buffer = AllocZeroed(SECTOR_SIZE);
+    u8 *buffer = AllocZeroed(SECTOR_SIZE);
     bool32 result = CEReaderTool_SaveTrainerTower_r(ttdata, buffer);
     Free(buffer);
     return result;
 }
 
-static bool32 CEReaderTool_LoadTrainerTower_r(struct EReaderTrainerTowerSet * ttdata, void *buffer)
+static bool32 CEReaderTool_LoadTrainerTower_r(struct EReaderTrainerTowerSet *ttdata, void *buffer)
 {
     if (TryReadSpecialSaveSector(SECTOR_ID_TRAINER_TOWER_1, buffer) != 1)
         return FALSE;
@@ -86,7 +86,7 @@ static bool32 CEReaderTool_LoadTrainerTower_r(struct EReaderTrainerTowerSet * tt
     return TRUE;
 }
 
-bool32 CEReaderTool_LoadTrainerTower(struct EReaderTrainerTowerSet * ttdata)
+bool32 CEReaderTool_LoadTrainerTower(struct EReaderTrainerTowerSet *ttdata)
 {
     void *buffer = AllocZeroed(SECTOR_SIZE);
     bool32 success = CEReaderTool_LoadTrainerTower_r(ttdata, buffer);

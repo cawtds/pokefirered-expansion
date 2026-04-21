@@ -1,7 +1,7 @@
 #ifndef GUARD_BIKE_H
 #define GUARD_BIKE_H
 
-// TODO: Do the constants make sense in FRLG? 
+// TODO: Do the constants make sense in FRLG?
 
 // Player speeds
 enum
@@ -13,7 +13,8 @@ enum
     PLAYER_SPEED_FASTEST,
 };
 
-enum {
+enum BikeTransitionId
+{
     BIKE_TRANS_FACE_DIRECTION,
     BIKE_TRANS_TURNING,
     BIKE_TRANS_MOVE,
@@ -39,15 +40,14 @@ enum
     ACRO_STATE_TURN_JUMP,
 };
 
-void BikeClearState(u32 directionHistory, u32 abStartSelectHistory);
-bool8 IsBikingDisallowedByPlayer(void);
-void GetOnOffBike(u8 flags);
-s16 GetPlayerSpeed(void);
-bool8 RS_IsRunningDisallowed(u8 r0);
-void MovePlayerOnBike(u8 direction, u16 newKeys, u16 heldKeys);
 bool32 IsRunningDisallowed(u8 metatileBehavior);
+bool32 IsBikingDisallowedByPlayer(void);
+bool32 IsPlayerNotUsingAcroBikeOnBumpySlope(void);
+s16 GetPlayerSpeed(void);
 void Bike_HandleBumpySlopeJump(void);
 void Bike_UpdateBikeCounterSpeed(u8 counter);
-bool8 IsPlayerNotUsingAcroBikeOnBumpySlope(void);
+void BikeClearState(void);
+void GetOnOffBike(enum AvatarState transitionState);
+void MovePlayerOnBike(enum Direction direction, u16 newKeys, u16 heldKeys);
 
 #endif //GUARD_BIKE_H

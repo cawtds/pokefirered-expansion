@@ -428,7 +428,7 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
         ClearWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_MAP);
         RemoveWindow(windowId);
-        palette_bg_faded_fill_black();
+        FillPalBufferBlack();
         FadeInFromBlack();
         gTasks[taskId].tState++;
         break;
@@ -454,7 +454,7 @@ void FieldCB_RushInjuredPokemonToCenter(void)
     u8 taskId;
 
     LockPlayerFieldControls();
-    palette_bg_faded_fill_black();
+    FillPalBufferBlack();
     taskId = CreateTask(Task_RushInjuredPokemonToCenter, 10);
     gTasks[taskId].tState = 0;
 }

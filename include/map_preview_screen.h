@@ -54,7 +54,7 @@ void MapPreview_SetFlag(u16 a0);
 u16 MapPreview_GetDuration(u8 id);
 bool32 MapHasPreviewScreen(u8 mapsec, u8 type);
 bool32 ForestMapPreviewScreenIsRunning(void);
-const struct MapPreviewScreen * GetDungeonMapPreviewScreenInfo(u8 mapsec);
+const struct MapPreviewScreen *GetDungeonMapPreviewScreenInfo(u8 mapsec);
 void MapPreview_InitBgs(void);
 void MapPreview_LoadGfx(u8 mapsec);
 bool32 MapPreview_IsGfxLoadFinished(void);

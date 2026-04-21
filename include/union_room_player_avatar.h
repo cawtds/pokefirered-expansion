@@ -3,7 +3,7 @@
 
 #include "union_room.h"
 
-u8 InitUnionRoomPlayerObjects(struct UnionRoomObject * players);
+u8 InitUnionRoomPlayerObjects(struct UnionRoomObject *players);
 void DestroyUnionRoomPlayerObjects(void);
 void CreateUnionRoomPlayerSprites(u8 *spriteIds, s32 leaderId);
 void DestroyUnionRoomPlayerSprites(u8 *spriteIds);

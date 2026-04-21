@@ -135,7 +135,7 @@ static void DestroyPocketSwitchArrowPair(void);
 static void Task_BagMenu_HandleInput(u8 taskId);
 static void PrintItemDescription(s32);
 static void BagMenu_PrintCursorAtPos(u8 y, u8 colorIdx);
-static void BagMenu_Print(u8 windowId, u8 fontId, const u8 * str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx);
+static void BagMenu_Print(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx);
 static void Task_CloseBagMenu(u8 taskId);
 static u8 AddItemMessageWindow(u8);
 static void RemoveItemMessageWindow(u8);
@@ -1664,7 +1664,7 @@ static void OpenContextMenu(u8 taskId)
                     gBagMenu->contextMenuItemsBuffer[1] = ACTION_REGISTER;
                 if (gSpecialVar_ItemId == ITEM_TM_CASE || gSpecialVar_ItemId == ITEM_BERRY_POUCH)
                     gBagMenu->contextMenuItemsBuffer[0] = ACTION_OPEN;
-                else if (gSpecialVar_ItemId == ITEM_BICYCLE && TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE | PLAYER_AVATAR_FLAG_MACH_BIKE))
+                else if (gSpecialVar_ItemId == ITEM_BICYCLE && IsPlayerBiking())
                     gBagMenu->contextMenuItemsBuffer[0] = ACTION_WALK;
                 else
                     gBagMenu->contextMenuItemsBuffer[0] = ACTION_USE;
@@ -2687,7 +2687,7 @@ static void LoadBagMenuTextWindows(void)
     ScheduleBgCopyTilemapToVram(0);
 }
 
-static void BagMenu_Print(u8 windowId, u8 fontId, const u8 * str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx)
+static void BagMenu_Print(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx)
 {
     AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sFontColorTable[colorIdx], speed, str);
 }

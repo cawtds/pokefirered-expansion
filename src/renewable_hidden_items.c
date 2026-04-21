@@ -539,9 +539,9 @@ void SetAllRenewableItemFlags(void)
 
     for (i = 0; i < ARRAY_COUNT(sRenewableHiddenItems); i++)
     {
-        const u8 * rare = sRenewableHiddenItems[i].rare;
-        const u8 * uncommon = sRenewableHiddenItems[i].uncommon;
-        const u8 * common = sRenewableHiddenItems[i].common;
+        const u8 *rare = sRenewableHiddenItems[i].rare;
+        const u8 *uncommon = sRenewableHiddenItems[i].uncommon;
+        const u8 *common = sRenewableHiddenItems[i].common;
         for (j = 0; j < MAX_HIDDEN_ITEMS_PER_GROUP; j++)
         {
             if (rare[j] != NO_ITEM)
@@ -587,7 +587,7 @@ void TryRegenerateRenewableHiddenItems(void)
 static void SampleRenewableItemFlags(void)
 {
     u8 i, j;
-    const u8 * flags;
+    const u8 *flags;
     u16 rval;
 
     for (i = 0; i < ARRAY_COUNT(sRenewableHiddenItems); i++)

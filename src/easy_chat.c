@@ -25,7 +25,7 @@ struct Unk203A120
     u16 totalWords;
 }; /*size = 0x3BA4*/
 
-static EWRAM_DATA struct Unk203A120 * sEasyChatSelectionData = NULL;
+static EWRAM_DATA struct Unk203A120 *sEasyChatSelectionData = NULL;
 
 static bool8 EC_IsNationalPokedexEnabled(void);
 static u16 GetRandomECPokemon(void);
@@ -557,7 +557,7 @@ static u16 GetUnlockedWordsInECGroup(u16 groupId)
     u16 i;
     u16 totalWords;
     const u16 *list;
-    const struct EasyChatWordInfo * wordInfo;
+    const struct EasyChatWordInfo *wordInfo;
     u16 numWords = sEasyChatGroups[groupId].numWords;
 
     if (groupId == EC_GROUP_POKEMON_2 || groupId == EC_GROUP_POKEMON

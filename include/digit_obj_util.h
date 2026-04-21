@@ -13,10 +13,10 @@ struct DigitObjUtilTemplate
     s16 y;
     union
     {
-        const struct SpriteSheet * uncompressed;
-        const struct CompressedSpriteSheet * compressed;
+        const struct SpriteSheet *uncompressed;
+        const struct CompressedSpriteSheet *compressed;
     } spriteSheet;
-    const struct SpritePalette * spritePal;
+    const struct SpritePalette *spritePal;
 };
 
 extern const u16 gMinigameDigits_Pal[];

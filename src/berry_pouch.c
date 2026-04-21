@@ -68,8 +68,8 @@ enum
 static EWRAM_DATA struct BerryPouchStruct_203F36C *sResources = NULL;
 static EWRAM_DATA struct BerryPouchStruct_203F370 sStaticCnt = {};
 static EWRAM_DATA struct ListMenuItem *sListMenuItems = NULL;
-static EWRAM_DATA u8 * sListMenuStrbuf = NULL;
-static EWRAM_DATA const u8 * sContextMenuOptions = NULL;
+static EWRAM_DATA u8 *sListMenuStrbuf = NULL;
+static EWRAM_DATA const u8 *sContextMenuOptions = NULL;
 static EWRAM_DATA u8 sContextMenuNumOptions = 0;
 static ALIGNED(4) EWRAM_DATA u8 sVariableWindowIds[14] = {};
 static ALIGNED(4) EWRAM_DATA u8 sBerryPouchSpriteId = 0;
@@ -82,7 +82,7 @@ static void BerryPouchInitBgs(void);
 static bool8 BerryPouchLoadGfx(void);
 static bool8 AllocateListMenuBuffers(void);
 static void SetUpListMenuTemplate(void);
-static void GetBerryNameAndIndexForMenu(u8 * dest, enum Item itemId);
+static void GetBerryNameAndIndexForMenu(u8 *dest, enum Item itemId);
 static void BerryPouchMoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list);
 static void BerryPouchItemPrintFunc(u8 windowId, u32 itemId, u8 y);
 static void BerryPouchSetArrowCursorAt(u8 y, u8 colorIdx);
@@ -121,7 +121,7 @@ static void Task_SellYes(u8 taskId);
 static void Task_SellBerries_PlaySfxAndRemoveBerries(u8 taskId);
 static void Task_SellBerries_WaitButton(u8 taskId);
 static void BerryPouchInitWindows(void);
-static void BerryPouchPrint(u8 windowId, u8 fontId, const u8 * str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx);
+static void BerryPouchPrint(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx);
 static u8 GetOrCreateVariableWindow(u8 winIdx);
 static void DestroyVariableWindow(u8 winIdx);
 static void TryDestroyVariableWindow(u8 winIdx);
@@ -708,7 +708,7 @@ static void SetUpListMenuTemplate(void)
     gMultiuseListMenuTemplate.scrollMultiple = 0;
 }
 
-static void GetBerryNameAndIndexForMenu(u8 * dest, enum Item itemId)
+static void GetBerryNameAndIndexForMenu(u8 *dest, enum Item itemId)
 {
     StringCopy(gStringVar4, gText_FontSmall);
     StringAppend(gStringVar4, gText_NumberClear01);
@@ -721,7 +721,7 @@ static void GetBerryNameAndIndexForMenu(u8 * dest, enum Item itemId)
     StringCopy(dest, gStringVar4);
 }
 
-static void CopySelectedListMenuItemName(s16 itemIdx, u8 * dest)
+static void CopySelectedListMenuItemName(s16 itemIdx, u8 *dest)
 {
     StringCopy(dest, &sListMenuStrbuf[itemIdx * 27]);
 }
@@ -811,7 +811,7 @@ static void BerryPouchSetArrowCursorAt(u8 y, u8 colorIdx)
 
 static void PrintSelectedBerryDescription(s32 itemIdx)
 {
-    const u8 * str;
+    const u8 *str;
     if (itemIdx != sResources->listMenuNumItems)
         str = GetItemDescription(GetBagItemId(POCKET_BERRIES, itemIdx));
     else
@@ -966,7 +966,7 @@ void BerryPouch_SetExitCallback(void (*callback)(void))
     sResources->exitCallback = callback;
 }
 
-void InitTossQuantitySelectUI(u8 taskId, const u8 * str)
+void InitTossQuantitySelectUI(u8 taskId, const u8 *str)
 {
     s16 *data = gTasks[taskId].data;
     u8 windowId = GetOrCreateVariableWindow(8);
@@ -1173,7 +1173,7 @@ static void Task_BerryPouch_Use(u8 taskId)
 
 static void Task_BerryPouch_Toss(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     ClearWindowTilemap(GetVariableWindowId(sContextMenuNumOptions + 9));
     ClearWindowTilemap(GetVariableWindowId(6));
     DestroyVariableWindow(sContextMenuNumOptions + 9);
@@ -1192,7 +1192,7 @@ static void Task_BerryPouch_Toss(u8 taskId)
 
 static void Task_AskTossMultiple(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     ConvertIntToDecimalStringN(gStringVar2, tItemCount, STR_CONV_MODE_LEFT_ALIGN, MAX_ITEM_DIGITS);
     StringExpandPlaceholders(gStringVar4, gText_ConfirmTossItems);
@@ -1249,7 +1249,7 @@ static void Task_Toss_SelectMultiple(u8 taskId)
 
 static void Task_TossYes(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     DestroyVariableWindow(7);
     CopySelectedListMenuItemName(tListPosition, gStringVar1);
     ConvertIntToDecimalStringN(gStringVar2, tItemCount, STR_CONV_MODE_LEFT_ALIGN, MAX_ITEM_DIGITS);
@@ -1359,7 +1359,7 @@ static void Task_ContextMenu_FromPokemonPC(u8 taskId)
 
 static void Task_ContextMenu_Sell(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     if (GetItemPrice(gSpecialVar_ItemId) == 0)
     {
         CopyItemName(gSpecialVar_ItemId, gStringVar1);
@@ -1393,7 +1393,7 @@ static void Task_ContextMenu_Sell(u8 taskId)
 
 static void Task_AskSellMultiple(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     ConvertIntToDecimalStringN(gStringVar3, GetItemSellPrice(gSpecialVar_ItemId) * tItemCount, STR_CONV_MODE_LEFT_ALIGN, 6);
     StringExpandPlaceholders(gStringVar4, gText_ICanPayThisMuch_WouldThatBeOkay);
@@ -1439,7 +1439,7 @@ static void SellMultiple_UpdateSellPriceDisplay(s32 price)
 
 static void Task_Sell_SelectMultiple(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     if (AdjustQuantityAccordingToDPadInput(&tItemCount, tQuantity) == TRUE)
     {
@@ -1473,7 +1473,7 @@ static void Task_Sell_SelectMultiple(u8 taskId)
 
 static void Task_SellYes(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     PutWindowTilemap(0);
     ScheduleBgCopyTilemapToVram(0);
     CopyItemName(gSpecialVar_ItemId, gStringVar2);
@@ -1529,7 +1529,7 @@ static void BerryPouchInitWindows(void)
         sVariableWindowIds[i] = 0xFF;
 }
 
-static void BerryPouchPrint(u8 windowId, u8 fontId, const u8 * str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx)
+static void BerryPouchPrint(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx)
 {
     AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sTextColors[colorIdx], speed, str);
 }
@@ -1578,7 +1578,7 @@ static u8 GetVariableWindowId(u8 winIdx)
     return sVariableWindowIds[winIdx];
 }
 
-void DisplayItemMessageInBerryPouch(u8 taskId, u8 fontId, const u8 * str, TaskFunc followUpFunc)
+void DisplayItemMessageInBerryPouch(u8 taskId, u8 fontId, const u8 *str, TaskFunc followUpFunc)
 {
     if (sVariableWindowIds[5] == 0xFF)
         sVariableWindowIds[5] = AddWindow(&sWindowTemplates_Variable[5]);

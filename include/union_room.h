@@ -54,9 +54,9 @@ struct RfuIncomingPlayerList
 
 struct WirelessLink_Leader
 {
-    struct RfuPlayerList * playerList;
-    struct RfuIncomingPlayerList * incomingPlayerList;
-    struct RfuPlayerList * playerListBackup;
+    struct RfuPlayerList *playerList;
+    struct RfuIncomingPlayerList *incomingPlayerList;
+    struct RfuPlayerList *playerListBackup;
     u8 state;
     u8 textState;
     u8 delayTimerAfterOk;
@@ -75,8 +75,8 @@ struct WirelessLink_Leader
 
 struct WirelessLink_Group
 {
-    struct RfuPlayerList * playerList;
-    struct RfuIncomingPlayerList * incomingPlayerList;
+    struct RfuPlayerList *playerList;
+    struct RfuIncomingPlayerList *incomingPlayerList;
     u8 state;
     u8 textState;
     u8 delayTimerAfterOk; // unused
@@ -103,10 +103,10 @@ struct UnionRoomObject
 
 struct WirelessLink_URoom
 {
-    struct RfuPlayerList * playerList;
-    struct RfuIncomingPlayerList * incomingChildList;
-    struct RfuPlayerList * spawnPlayer;
-    struct RfuIncomingPlayerList * incomingParentList;
+    struct RfuPlayerList *playerList;
+    struct RfuIncomingPlayerList *incomingChildList;
+    struct RfuPlayerList *spawnPlayer;
+    struct RfuIncomingPlayerList *incomingParentList;
     u16 unknown; // Never read
     u16 unreadPlayerId;
     u8 state;

@@ -820,7 +820,7 @@ static bool8 AllocPartyMenuBgGfx(void)
     switch (sPartyMenuInternal->data[0])
     {
     case 0:
-        sPartyBgGfxTilemap = malloc_and_decompress(gPartyMenuBg_Gfx, &sizeout);
+        sPartyBgGfxTilemap = AllocAndDecompress(gPartyMenuBg_Gfx, &sizeout);
         LoadBgTiles(1, sPartyBgGfxTilemap, sizeout, 0);
         ++sPartyMenuInternal->data[0];
         break;
@@ -4512,7 +4512,7 @@ bool32 FieldMove_SetUpSurf(void)
 
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     if (MetatileBehavior_IsFastWater(MapGridGetMetatileBehaviorAt(x, y)) != TRUE
-     && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING)
+     && !TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING)
      && IsPlayerFacingSurfableFishableWater() == TRUE)
     {
         gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
@@ -4526,7 +4526,7 @@ static void DisplayCantUseSurfMessage(void)
 {
     s16 x, y;
 
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING))
     {
         DisplayPartyMenuStdMessage(PARTY_MSG_ALREADY_SURFING);
     }

@@ -42,9 +42,9 @@ struct PokemonSpecialAnim
     /*0x00a8*/ struct PokemonSpecialAnimScene sceneResources;
 }; // size=0x28dc
 
-struct PokemonSpecialAnim * GetPSAStruct(void);
-struct Pokemon * PSA_GetPokemon(void);
-struct PokemonSpecialAnimScene * PSA_GetSceneWork(void);
+struct PokemonSpecialAnim *GetPSAStruct(void);
+struct Pokemon *PSA_GetPokemon(void);
+struct PokemonSpecialAnimScene *PSA_GetSceneWork(void);
 enum Item PSA_GetItemId(void);
 u8 *PSA_GetNameOfMoveForgotten(void);
 u8 *PSA_GetNameOfMoveToTeach(void);
@@ -54,7 +54,7 @@ u8 PSA_GetAnimType(void);
 enum Species PSA_GetMonSpecies(void);
 u32 PSA_GetMonPersonality(void);
 
-void InitPokemonSpecialAnimScene(struct PokemonSpecialAnimScene * buffer, u16 animType);
+void InitPokemonSpecialAnimScene(struct PokemonSpecialAnimScene *buffer, u16 animType);
 bool8 PokemonSpecialAnimSceneInitIsNotFinished(void);
 void PSA_FreeWindowBuffers(void);
 void PSA_ShowMessageWindow(void);

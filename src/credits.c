@@ -167,16 +167,16 @@ struct CreditsScrcmd
 
 struct CreditsTextHeader
 {
-    const u8 * title;
-    const u8 * names;
+    const u8 *title;
+    const u8 *names;
     bool8 unused;
 };
 
 struct CompressedGraphicsHeader
 {
-    const u8 * tiles;
-    const u8 * map;
-    const u16 * palette;
+    const u8 *tiles;
+    const u8 *map;
+    const u16 *palette;
 };
 
 struct CreditsTaskData
@@ -190,7 +190,7 @@ struct CreditsTaskData
     u16 groundPalTag;
 };
 
-static EWRAM_DATA struct CreditsResources * sCreditsMgr = NULL;
+static EWRAM_DATA struct CreditsResources *sCreditsMgr = NULL;
 EWRAM_DATA bool8 gHasHallOfFameRecords = FALSE;
 
 static void CB2_Credits(void);
@@ -1368,7 +1368,7 @@ static bool32 DoCopyrightOrTheEndGfxScene(void)
 
 static void Task_MovePlayerAndGroundSprites(u8 taskId)
 {
-    struct CreditsTaskData * data = (void *)gTasks[taskId].data;
+    struct CreditsTaskData *data = (void *)gTasks[taskId].data;
     switch (data->spriteMoveCmd)
     {
     case 0:
@@ -1412,7 +1412,7 @@ static void DestroyPlayerOrRivalSprite(void)
 {
     if (sCreditsMgr->taskId != TASK_NONE)
     {
-        struct CreditsTaskData * data = (void *)gTasks[sCreditsMgr->taskId].data;
+        struct CreditsTaskData *data = (void *)gTasks[sCreditsMgr->taskId].data;
         FreeSpriteTilesByTag(data->characterTilesTag);
         DestroySprite(&gSprites[data->characterSpriteId]);
         FreeSpriteTilesByTag(data->groundTilesTag);
@@ -1425,7 +1425,7 @@ static void DestroyPlayerOrRivalSprite(void)
 static void LoadPlayerOrRivalSprite(u8 whichScene)
 {
     u8 taskId;
-    struct CreditsTaskData * data;
+    struct CreditsTaskData *data;
     s32 x, y;
     struct SpriteTemplate sprTemplate;
     struct CompressedSpriteSheet sprSheet;

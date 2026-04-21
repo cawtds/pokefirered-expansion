@@ -77,14 +77,14 @@ struct MysteryGiftClient
     u32 cmdidx;
     void *sendBuffer;
     void *recvBuffer;
-    struct MysteryGiftClientCmd * script;
+    struct MysteryGiftClientCmd *script;
     void *msg;
     struct MysteryGiftLink link;
     ALIGNED(4) u8 bufferScript[MG_LINK_BUFFER_SIZE];
 };
 
 void MysteryGiftClient_Create(void);
-u32 MysteryGiftClient_Run(u16 * endVal);
+u32 MysteryGiftClient_Run(u16 *endVal);
 void MysteryGiftClient_AdvanceState(void);
 void * MysteryGiftClient_GetMsg(void);
 void MysteryGiftClient_SetParam(u32 value);

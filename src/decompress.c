@@ -206,7 +206,7 @@ static inline u32 DoLoadCompressedSpriteSheet(const struct CompressedSpriteSheet
 
 u32 LoadCompressedSpriteSheet(const struct CompressedSpriteSheet *src)
 {
-    void *buffer = malloc_and_decompress(src->data, NULL);
+    void *buffer = AllocAndDecompress(src->data, NULL);
     u32 ret = DoLoadCompressedSpriteSheet(src, buffer);
     Free(buffer);
 
@@ -230,7 +230,7 @@ u32 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s
     if (IsCompressedData(template->images->data))
     {
         size = GetDecompressedDataSize(template->images->data);
-        void *buffer = malloc_and_decompress(template->images->data, NULL);
+        void *buffer = AllocAndDecompress(template->images->data, NULL);
         myImage.data = buffer;
         myImage.size = size + offset;
         myTemplate.images = &myImage;
@@ -624,7 +624,7 @@ ARM_FUNC __attribute__((flatten, noinline, no_reorder)) __attribute__((optimize(
     u32 currBits = *data++;
     u32 currSymbol = 0;
     u32 bitIndex = sBitIndex;
-    u32 * resultVec_32 = (u32*)(resultVec); // Since we're doing 2 symbols at one time we store as word which is faster than storing two halfwords.
+    u32 *resultVec_32 = (u32*)(resultVec); // Since we're doing 2 symbols at one time we store as word which is faster than storing two halfwords.
 
     do
     {

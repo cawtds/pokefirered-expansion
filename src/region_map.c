@@ -163,7 +163,7 @@ struct DungeonMapPreview
 {
     u16 tiles[7200];
     u16 tilemap[640];
-    const struct MapPreviewScreen * mapPreviewInfo;
+    const struct MapPreviewScreen *mapPreviewInfo;
     TaskFunc savedTask;
     u8 mainState;
     u8 drawState;
@@ -198,7 +198,7 @@ struct MapEdge
 
 struct MapOpenCloseAnim
 {
-    struct MapEdge * mapEdges[6];
+    struct MapEdge *mapEdges[6];
     u16 tiles[0x400];
     u16 tilemap[600];
     TaskFunc exitTask;
@@ -280,15 +280,15 @@ struct FlyMap
     bool8 selectedDestination;
 };
 
-static EWRAM_DATA struct RegionMap * sRegionMap = NULL;
-static EWRAM_DATA struct SwitchMapMenu * sSwitchMapMenu = NULL;
-static EWRAM_DATA struct DungeonMapPreview * sDungeonMapPreview = NULL;
-static EWRAM_DATA struct MapOpenCloseAnim * sMapOpenCloseAnim = NULL;
-static EWRAM_DATA struct MapCursor * sMapCursor = NULL;
-static EWRAM_DATA struct PlayerIcon * sPlayerIcon = NULL;
-static EWRAM_DATA struct MapIcons * sMapIcons = NULL;
-static EWRAM_DATA struct RegionMapGpuRegs * sRegionMapGpuRegs[3] = {};
-static EWRAM_DATA struct FlyMap * sFlyMap = NULL;
+static EWRAM_DATA struct RegionMap *sRegionMap = NULL;
+static EWRAM_DATA struct SwitchMapMenu *sSwitchMapMenu = NULL;
+static EWRAM_DATA struct DungeonMapPreview *sDungeonMapPreview = NULL;
+static EWRAM_DATA struct MapOpenCloseAnim *sMapOpenCloseAnim = NULL;
+static EWRAM_DATA struct MapCursor *sMapCursor = NULL;
+static EWRAM_DATA struct PlayerIcon *sPlayerIcon = NULL;
+static EWRAM_DATA struct MapIcons *sMapIcons = NULL;
+static EWRAM_DATA struct RegionMapGpuRegs *sRegionMapGpuRegs[3] = {};
+static EWRAM_DATA struct FlyMap *sFlyMap = NULL;
 
 static void InitRegionMapType(void);
 static void CB2_OpenRegionMap(void);
@@ -2118,7 +2118,7 @@ static void FreeDungeonMapPreview(u8 taskId)
     FREE_IF_NOT_NULL(sDungeonMapPreview);
 }
 
-static void CopyMapPreviewTilemapToBgTilemapBuffer(u8 bgId, const u16 * tilemap)
+static void CopyMapPreviewTilemapToBgTilemapBuffer(u8 bgId, const u16 *tilemap)
 {
     CopyToBgTilemapBufferRect(2, tilemap, 0, 0, 32, 20);
 }
@@ -3118,8 +3118,8 @@ static void GetPlayerPositionOnRegionMap(void)
     u16 x;
     u16 y;
 
-    const struct MapHeader * mapHeader;
-    struct WarpData * warp;
+    const struct MapHeader *mapHeader;
+    struct WarpData *warp;
 
     switch (GetMapTypeByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
     {
@@ -4044,7 +4044,7 @@ static void SetFlyWarpDestination(u16 mapsec)
     }
     else
     {
-        SetWarpDestinationToMapWarp(sMapFlyDestinations[idx][0], sMapFlyDestinations[idx][1], -1);
+        SetWarpDestinationToMapWarp(sMapFlyDestinations[idx][0], sMapFlyDestinations[idx][1], WARP_ID_NONE);
     }
     ReturnToFieldFromFlyMapSelect();
 }

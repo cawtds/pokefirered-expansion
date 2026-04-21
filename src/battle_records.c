@@ -28,7 +28,7 @@ static void Task_ExitBattleRecords(u8 taskId);
 static void RemoveBattleRecordsWindow(u8 windowId);
 
 EWRAM_DATA u8 gRecordsWindowId = 0;
-EWRAM_DATA static u16 * sTilemapBuffer = NULL;
+EWRAM_DATA static u16 *sTilemapBuffer = NULL;
 
 static const u8 sString_BattleRecords_PlayersBattleResults[] = _("{PLAYER}'s BATTLE RESULTS");
 static const u8 sString_BattleRecords_TotalRecord[] = _("TOTAL RECORD W:{STR_VAR_1} L:{STR_VAR_2} D:{STR_VAR_3}");
@@ -124,7 +124,7 @@ static s32 FindLinkBattleRecord(struct LinkBattleRecords *records, const u8 *nam
     return LINK_B_RECORDS_COUNT;
 }
 
-static void SortLinkBattleRecords(struct LinkBattleRecords * records)
+static void SortLinkBattleRecords(struct LinkBattleRecords *records)
 {
     struct LinkBattleRecord tmp;
     s32 i;
@@ -144,7 +144,7 @@ static void SortLinkBattleRecords(struct LinkBattleRecords * records)
     }
 }
 
-static void UpdateLinkBattleRecord(struct LinkBattleRecord * record, s32 outcome)
+static void UpdateLinkBattleRecord(struct LinkBattleRecord *record, s32 outcome)
 {
     switch (outcome)
     {
@@ -168,7 +168,7 @@ static void UpdateLinkBattleRecord(struct LinkBattleRecord * record, s32 outcome
 
 static void UpdateLinkBattleGameStats(s32 outcome)
 {
-    u8 statId;
+    enum GameStat statId;
 
     switch (outcome)
     {
@@ -193,7 +193,7 @@ static void UpdateLinkBattleRecords(struct LinkBattleRecords *records, const u8 
 {
     u8 namebuf[PLAYER_NAME_LENGTH + 1];
     s32 i;
-    struct LinkBattleRecord * record;
+    struct LinkBattleRecord *record;
 
     if (language == LANGUAGE_JAPANESE)
     {
@@ -279,7 +279,7 @@ static void PrintLinkBattleWinsLossesDraws(struct LinkBattleRecords *records)
     s32 i;
     s32 j;
     bool32 foundEnd;
-    u8 * strvar;
+    u8 *strvar;
 
     if (nwins > 9999)
         nwins = 9999;
@@ -311,7 +311,7 @@ static void PrintLinkBattleWinsLossesDraws(struct LinkBattleRecords *records)
     AddTextPrinterParameterized4(0, FONT_NORMAL, 12, 24, 0, 2, sTextColor, 0, gStringVar4);
 }
 
-static void PrintLinkBattleRecord(struct LinkBattleRecord * record, u8 y)
+static void PrintLinkBattleRecord(struct LinkBattleRecord *record, u8 y)
 {
     u8 i = 0;
     s32 x;

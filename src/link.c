@@ -394,7 +394,7 @@ static void ProcessRecvCmds(u8 unused)
         {
         case LINKCMD_SEND_LINK_TYPE:
         {
-            struct LinkPlayerBlock * block;
+            struct LinkPlayerBlock *block;
 
             InitLocalLinkPlayer();
             block = &gLocalLinkPlayerBlock;
@@ -415,7 +415,7 @@ static void ProcessRecvCmds(u8 unused)
             break;
         case LINKCMD_INIT_BLOCK:
         {
-            struct BlockTransfer * blockRecv;
+            struct BlockTransfer *blockRecv;
 
             blockRecv = &sBlockRecv[i];
             blockRecv->pos = 0;
@@ -443,8 +443,8 @@ static void ProcessRecvCmds(u8 unused)
             {
                 if (gRemoteLinkPlayersNotReceived[i] == TRUE)
                 {
-                    struct LinkPlayerBlock * block;
-                    struct LinkPlayer * linkPlayer;
+                    struct LinkPlayerBlock *block;
+                    struct LinkPlayer *linkPlayer;
 
                     block = (struct LinkPlayerBlock *)&gBlockRecvBuffer[i];
                     linkPlayer = &gLinkPlayers[i];
@@ -1258,7 +1258,7 @@ bool8 HasLinkErrorOccurred(void)
 
 void LocalLinkPlayerToBlock(void)
 {
-    struct LinkPlayerBlock * block;
+    struct LinkPlayerBlock *block;
 
     InitLocalLinkPlayer();
     block = &gLocalLinkPlayerBlock;
@@ -1349,7 +1349,7 @@ bool32 IsLinkRecvQueueAtOverworldMax(void)
     return FALSE;
 }
 
-void ConvertLinkPlayerName(struct LinkPlayer * player)
+void ConvertLinkPlayerName(struct LinkPlayer *player)
 {
     player->progressFlagsCopy = player->progressFlags; // ? Perhaps relocating for a longer name field
     ConvertInternationalString(player->name, player->language);

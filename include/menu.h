@@ -49,10 +49,10 @@ struct MenuAction
 extern EWRAM_DATA u8 gPopupTaskId;
 
 // menu2
-void AddTextPrinterParameterized3(u8 windowId, u8 fontId, u8 x, u8 y, const u8 * color, s8 speed, const u8 * str);
+void AddTextPrinterParameterized3(u8 windowId, u8 fontId, u8 x, u8 y, const u8 *color, s8 speed, const u8 *str);
 void AddTextPrinterParameterized4(u8 windowId, u8 fontId, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, const u8 *color, s8 speed, const u8 *str);
 void AddTextPrinterParameterized5(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16), u8 letterSpacing, u8 lineSpacing);
-void PrintPlayerNameOnWindow(u8 windowId, const u8 * src, u16 x, u16 y);
+void PrintPlayerNameOnWindow(u8 windowId, const u8 *src, u16 x, u16 y);
 void StartBlendTask(u8 eva_start, u8 evb_start, u8 eva_end, u8 evb_end, u8 ev_step, u8 priority);
 bool8 IsBlendTaskActive(void);
 u8 Menu2_GetMonPosAttribute(enum Species species, u32 personality, u8 attributeId);
@@ -130,7 +130,7 @@ void LoadMessageBoxAndFrameGfx(u8 windowId, bool8 copyToVram);
 void SetStandardWindowBorderStyle(u8 windowId, bool8 copyToVram);
 void ResetBgPositions(void);
 void DisplayItemMessageOnField(u8 taskId, u8 fontId, const u8 *src, TaskFunc callback);
-void *malloc_and_decompress(const void *src, u32 * size);
+void *AllocAndDecompress(const void *src, u32 *size);
 u8 GetStartMenuWindowId(void);
 u8 AddStartMenuWindow(u8 height);
 void RemoveStartMenuWindow(void);

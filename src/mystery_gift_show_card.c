@@ -31,7 +31,7 @@ struct WonderCardData
 {
     /*0000*/ struct WonderCard card;
     /*014c*/ struct WonderCardMetadata cardMetadata;
-    /*0170*/ const struct WonderGraphics * gfx;
+    /*0170*/ const struct WonderGraphics *gfx;
     /*0174*/ u8 enterExitState;
     /*0175*/ u8 recordIdx;
     /*0176*/ u16 windowIds[WIN_COUNT];
@@ -47,7 +47,7 @@ struct WonderCardData
     /*045C*/ u8 bgTilemapBuffer[0x1000];
 };
 
-static EWRAM_DATA struct WonderCardData * sWonderCardData = NULL;
+static EWRAM_DATA struct WonderCardData *sWonderCardData = NULL;
 
 static void BufferCardText(void);
 static void DrawCardWindow(u8 whichWindow);
@@ -160,7 +160,7 @@ static const struct WonderGraphics sCardGraphics[NUM_WONDER_BGS] = {
     {.titleTextPal = 1, .bodyTextPal = 0, .footerTextPal = 0, .stampShadowPal = 7, .tiles = sCard7Gfx, .map = sCard7Map, .pal = sCard7Pal}
 };
 
-bool32 WonderCard_Init(struct WonderCard * card, struct WonderCardMetadata * metadata)
+bool32 WonderCard_Init(struct WonderCard *card, struct WonderCardMetadata *metadata)
 {
     if (card == NULL || metadata == NULL)
         return FALSE;

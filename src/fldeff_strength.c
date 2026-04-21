@@ -13,7 +13,7 @@ static void ShowMonCB_UseStrength(void);
 
 bool32 FieldMove_SetUpStrength(void)
 {
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) || CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_PUSHABLE_BOULDER) != TRUE)
+    if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING) || CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_PUSHABLE_BOULDER) != TRUE)
     {
         return FALSE;
     }

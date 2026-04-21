@@ -129,7 +129,7 @@ void ChangeGimmickTriggerSprite(u32 spriteId, u32 animId)
 
 void CreateGimmickTriggerSprite(enum BattlerId battler)
 {
-    const struct GimmickInfo * gimmick = &gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]];
+    const struct GimmickInfo *gimmick = &gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]];
 
     // Exit if there shouldn't be a sprite produced.
     if (!IsOnPlayerSide(battler)

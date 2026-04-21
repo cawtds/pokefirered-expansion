@@ -624,7 +624,7 @@ static void Task_MoveToBagYesNoMenuHandleInput(u8 taskId)
 
 static void Task_TryPutMailInBag_DestroyMsgIfSuccessful(u8 taskId)
 {
-    struct Mail * mail = &SELECTED_MAIL;
+    struct Mail *mail = &SELECTED_MAIL;
     if (!AddBagItem(mail->itemId, 1))
     {
         DisplayItemMessageOnField(taskId, FONT_NORMAL, sText_BagIsFull, Task_PlayerPcExitMailSubmenu);

@@ -529,7 +529,7 @@ static void SetUpTrainerTowerDataStruct(void)
     }
     else
     {
-        struct TrainerTowerState * ttstate_p = sTrainerTowerState;
+        struct TrainerTowerState *ttstate_p = sTrainerTowerState;
         const struct EReaderTrainerTowerSetSubstruct *header_p = &gTrainerTowerLocalHeader;
 
         memcpy(&ttstate_p->data, header_p, sizeof(struct EReaderTrainerTowerSetSubstruct));

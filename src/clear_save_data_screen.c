@@ -20,7 +20,7 @@ struct ClearSaveDataStruct {
 static const u8 sText_ClearAllSaveData[] = _("Clear all save data areas?");
 static const u8 sText_ClearingData[] = _("Clearing data‥\nPlease wait.");
 
-static EWRAM_DATA struct ClearSaveDataStruct * sClearSaveDataState = NULL;
+static EWRAM_DATA struct ClearSaveDataStruct *sClearSaveDataState = NULL;
 
 static void Task_DrawClearSaveDataScreen(u8 taskId);
 static void Task_HandleYesNoMenu(u8 taskId);

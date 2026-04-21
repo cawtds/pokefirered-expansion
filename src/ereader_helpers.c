@@ -9,7 +9,7 @@ struct SendRecvMgr
     u8 xferState;          // EREADER_XFER_*
     u8 checksumResult;     // EREADER_CHECKSUM_*
     u8 cancellationReason; // EREADER_CANCEL_*
-    u32 * dataptr;         // Payload source or destination
+    u32 *dataptr;         // Payload source or destination
     int cursor;            // Index of the next word
     int size;              // Last word index
     u32 checksum;          // Validation checksum

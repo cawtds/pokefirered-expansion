@@ -71,7 +71,7 @@
 static EWRAM_DATA u8 sTutorMoveAndElevatorWindowId = 0;
 static EWRAM_DATA u16 sElevatorScroll = 0;
 static EWRAM_DATA u16 sElevatorCursorPos = 0;
-static EWRAM_DATA struct ListMenuItem * sListMenuItems = NULL;
+static EWRAM_DATA struct ListMenuItem *sListMenuItems = NULL;
 static EWRAM_DATA u8 sScrollableMultichoice_ItemSpriteId = 0;
 static EWRAM_DATA u8 sBattlePointsWindowId = 0;
 static EWRAM_DATA u8 sFrontierExchangeCorner_ItemIconWindowId = 0;
@@ -90,11 +90,11 @@ static void Task_EndScreenShake(u8 taskId);
 static enum Species SampleResortGorgeousMon(void);
 static u16 SampleResortGorgeousReward(void);
 static void Task_ElevatorShake(u8 taskId);
-static void AnimateElevatorWindowView(u16 nfloors, bool8 direction);
+static void AnimateElevatorWindowView(u16 floorNum, enum Direction direction);
 static void Task_AnimateElevatorWindowView(u8 taskId);
 static void Task_CreateScriptListMenu(u8 taskId);
 static void InitScrollableMultichoice(void);
-static void ScrollableMultichoice_MoveCursor(s32 nothing, bool8 is, struct ListMenu * used);
+static void ScrollableMultichoice_MoveCursor(s32 nothing, bool8 is, struct ListMenu *used);
 static void ScrollableMultichoice_ProcessInput(u8 taskId);
 static void CloseScrollableMultichoice(u8 taskId);
 static void Task_SuspendListMenu(u8 taskId);
@@ -289,8 +289,9 @@ void Special_ViewWallClock(void)
 
 void ForcePlayerOntoBike(void)
 {
-    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
-        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_MACH_BIKE);
+    if (gPlayerAvatar.playerState == PLAYER_AVATAR_STATE_NORMAL)
+        SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_MACH_BIKE);
+
     Overworld_SetSavedMusic(MUS_CYCLING);
     Overworld_ChangeMusicTo(MUS_CYCLING);
 }
@@ -302,9 +303,9 @@ void ResetCyclingRoadChallengeData(void)
 
 u8 GetPlayerAvatarBike(void)
 {
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE))
+    if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_ACRO_BIKE))
         return 1;
-    else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE))
+    else if (TestPlayerAvatarState(PLAYER_AVATAR_STATE_MACH_BIKE))
         return 2;
     else
         return 0;
@@ -365,7 +366,7 @@ u16 GetWeekCount(void)
 
 u8 GetLeadMonFriendship(void)
 {
-    struct Pokemon * pokemon = &gPlayerParty[GetLeadMonIndex()];
+    struct Pokemon *pokemon = &gPlayerParty[GetLeadMonIndex()];
     if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) == 255)
         return 6;
     else if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) >= 200)
@@ -390,7 +391,7 @@ void FieldShowRegionMap(void)
 bool8 PlayerHasGrassPokemonInParty(void)
 {
     u8 i;
-    struct Pokemon * pokemon;
+    struct Pokemon *pokemon;
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
@@ -496,7 +497,7 @@ static void PcTurnOnUpdateMetatileId(bool16 flickerOff)
     u16 metatileId = GetPcAnimationMetatileId();
     s8 deltaX = 0;
     s8 deltaY = 0;
-    u8 direction = GetPlayerFacingDirection();
+    enum Direction direction = GetPlayerFacingDirection();
 
     switch (direction)
     {
@@ -512,6 +513,8 @@ static void PcTurnOnUpdateMetatileId(bool16 flickerOff)
         deltaX = 1;
         deltaY = -1;
         break;
+    default:
+        break;
     }
 
     MapGridSetMetatileIdAt(gSaveBlock1Ptr->pos.x + deltaX + MAP_OFFSET, gSaveBlock1Ptr->pos.y + deltaY + MAP_OFFSET, metatileId | MAPGRID_COLLISION_MASK);
@@ -520,9 +523,8 @@ static void PcTurnOnUpdateMetatileId(bool16 flickerOff)
 void AnimatePcTurnOff()
 {
     u16 metatileId;
-    s8 deltaX = 0;
-    s8 deltaY = 0;
-    u8 direction = GetPlayerFacingDirection();
+    s8 deltaX, deltaY;
+    enum Direction direction = GetPlayerFacingDirection();
 
     if (IsPlayerInFrontOfPC() == FALSE)
         return;
@@ -542,6 +544,11 @@ void AnimatePcTurnOff()
     case DIR_EAST:
         deltaX = 1;
         deltaY = -1;
+        break;
+    case DIR_SOUTH:
+    default:
+        deltaX = 0;
+        deltaY = 0;
         break;
     }
 
@@ -732,7 +739,7 @@ u8 GetLeadMonIndex(void)
 {
     u8 partyCount = CalculatePlayerPartyCount();
     u8 i;
-    struct Pokemon * pokemon;
+    struct Pokemon *pokemon;
     for (i = 0; i < partyCount; i++)
     {
         pokemon = &gPlayerParty[i];
@@ -1327,7 +1334,7 @@ void CloseElevatorCurrentFloorWindow(void)
     RemoveWindow(sTutorMoveAndElevatorWindowId);
 }
 
-static void AnimateElevatorWindowView(u16 nfloors, u8 direction)
+static void AnimateElevatorWindowView(u16 floorNum, enum Direction direction)
 {
     u8 taskId;
     if (FuncIsActiveTask(Task_AnimateElevatorWindowView) != TRUE)
@@ -1336,7 +1343,7 @@ static void AnimateElevatorWindowView(u16 nfloors, u8 direction)
         gTasks[taskId].data[0] = 0;
         gTasks[taskId].data[1] = 0;
         gTasks[taskId].data[2] = direction;
-        gTasks[taskId].data[3] = sElevatorWindowAnimDuration[nfloors];
+        gTasks[taskId].data[3] = sElevatorWindowAnimDuration[floorNum];
     }
 }
 
@@ -1570,7 +1577,7 @@ static void InitScrollableMultichoice(void)
     gScrollableMultichoice_ListMenuTemplate.cursorKind = 0;
 }
 
-static void ScrollableMultichoice_MoveCursor(s32 nothing, bool8 is, struct ListMenu * used)
+static void ScrollableMultichoice_MoveCursor(s32 nothing, bool8 is, struct ListMenu *used)
 {
     u8 taskId;
     struct Task *task;
@@ -1715,7 +1722,7 @@ static void Task_ListMenuRemoveScrollIndicatorArrowPair(u8 taskId)
 
 void ForcePlayerToStartSurfing(void)
 {
-    SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_SURFING);
+    SetPlayerAvatarTransitionState(PLAYER_AVATAR_STATE_SURFING);
 }
 
 static const enum Species sStarterSpecies[] = {
@@ -1806,7 +1813,7 @@ u8 ContextNpcGetTextColor(void)
 
 static bool8 HasMonBeenRenamed(u8 idx)
 {
-    struct Pokemon * pokemon = &gPlayerParty[idx];
+    struct Pokemon *pokemon = &gPlayerParty[idx];
     u8 language;
     GetMonData(pokemon, MON_DATA_NICKNAME, gStringVar1);
     language = GetMonData(pokemon, MON_DATA_LANGUAGE, &language);
@@ -1843,7 +1850,7 @@ size_t CountDigits(s32 value)
 
 bool8 NameRaterWasNicknameChanged(void)
 {
-    struct Pokemon * pokemon = &gPlayerParty[gSpecialVar_0x8004];
+    struct Pokemon *pokemon = &gPlayerParty[gSpecialVar_0x8004];
     GetMonData(pokemon, MON_DATA_NICKNAME, gStringVar1);
     if (StringCompare(gStringVar3, gStringVar1) == 0)
         return FALSE;
@@ -1853,7 +1860,7 @@ bool8 NameRaterWasNicknameChanged(void)
 
 void ChangeBoxPokemonNickname(void)
 {
-    struct BoxPokemon * pokemon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
+    struct BoxPokemon *pokemon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
     enum Species species;
     u8 gender;
     u32 personality;

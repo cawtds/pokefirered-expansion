@@ -54,11 +54,11 @@ struct FameCheckerData
     u8 pickModeOverCancel:1;
 };
 
-static EWRAM_DATA u16 * sBg3TilemapBuffer = NULL;
-static EWRAM_DATA u16 * sBg1TilemapBuffer = NULL;
-static EWRAM_DATA u16 * sBg2TilemapBuffer = NULL;
-static EWRAM_DATA struct FameCheckerData * sFameCheckerData = NULL;
-static EWRAM_DATA struct ListMenuItem * sListMenuItems = NULL;
+static EWRAM_DATA u16 *sBg3TilemapBuffer = NULL;
+static EWRAM_DATA u16 *sBg1TilemapBuffer = NULL;
+static EWRAM_DATA u16 *sBg2TilemapBuffer = NULL;
+static EWRAM_DATA struct FameCheckerData *sFameCheckerData = NULL;
+static EWRAM_DATA struct ListMenuItem *sListMenuItems = NULL;
 static EWRAM_DATA s32 sLastMenuIdx = 0;
 
 COMMON_DATA struct ListMenuTemplate gFameChecker_ListMenuTemplate = {0};
@@ -106,7 +106,7 @@ static void UpdateIconDescriptionBoxOff(void);
 static void FC_CreateListMenu(void);
 static void SpriteCB_FCSpinningPokeball(struct Sprite *sprite);
 static void InitListMenuTemplate(void);
-static void FC_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu * list);
+static void FC_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list);
 static void Task_SwitchToPickMode(u8 taskId);
 static void PrintCancelDescription(void);
 static void FC_DoMoveCursor(s32 itemIndex, bool8 onInit);
@@ -744,7 +744,7 @@ static void Task_TopMenuHandleInput(u8 taskId)
     u16 cursorPos;
     u8 i;
     struct Task *task = &gTasks[taskId];
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     if (FindTaskIdByFunc(Task_FCOpenOrCloseInfoBox) == 0xFF)
     {
         RunTextPrinters();
@@ -1091,7 +1091,7 @@ static u8 AdjustGiovanniIndexIfBeatenInGym(u8 a0)
 static void PrintUIHelp(u8 state)
 {
     s32 width;
-    const u8 * src = sFameCheckerText_MainScreenUI;
+    const u8 *src = sFameCheckerText_MainScreenUI;
     if (state != 0)
     {
         src = sFameCheckerText_FlavorTextUI;
@@ -1395,7 +1395,7 @@ static u8 CreatePersonPicSprite(u8 fcPersonIdx)
 
 static void DestroyPersonPicSprite(u8 taskId, u16 who)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     u16 who_copy = who;
     if (who == sFameCheckerData->numUnlockedPersons - 1)
         who_copy = who - 1;

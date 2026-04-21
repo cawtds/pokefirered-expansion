@@ -114,7 +114,7 @@ void DoSSAnneDepartureCutscene(void)
 
 static void Task_SSAnneInit(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     if (--data[0] == 0)
     {
@@ -127,9 +127,9 @@ static void Task_SSAnneInit(u8 taskId)
 
 static void Task_SSAnneRun(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     u8 objectEventId;
-    struct ObjectEvent * boatObject;
+    struct ObjectEvent *boatObject;
     s16 x;
 
     data[1]++;
@@ -155,7 +155,7 @@ static void Task_SSAnneRun(u8 taskId)
 
 static void Task_SSAnneFinish(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     if (++data[3] == 40)
     {
@@ -170,7 +170,7 @@ static void Task_SSAnneFinish(u8 taskId)
 static void CreateWakeBehindBoat(void)
 {
     u8 objectEventId;
-    struct ObjectEvent * boatObject;
+    struct ObjectEvent *boatObject;
     u16 x;
     u8 spriteId;
 
@@ -184,7 +184,7 @@ static void CreateWakeBehindBoat(void)
 static void WakeSpriteCallback(struct Sprite *sprite)
 {
     u8 objectEventId;
-    struct ObjectEvent * boatObject;
+    struct ObjectEvent *boatObject;
     u16 x;
 
     TryGetObjectEventIdByLocalIdAndMap(1, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objectEventId);
@@ -201,7 +201,7 @@ static void WakeSpriteCallback(struct Sprite *sprite)
 static void CreateSmokeSprite(void)
 {
     u8 objectEventId;
-    struct ObjectEvent * boatObject;
+    struct ObjectEvent *boatObject;
     u16 x;
 
     TryGetObjectEventIdByLocalIdAndMap(1, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objectEventId);

@@ -49,10 +49,10 @@ struct ItemPcStaticResources
     u8 initialized;
 };
 
-static EWRAM_DATA struct ItemPcResources * sStateDataPtr = NULL;
-static EWRAM_DATA u8 * sBg1TilemapBuffer = NULL;
-static EWRAM_DATA struct ListMenuItem * sListMenuItems = NULL;
-static EWRAM_DATA u8 * sUnusedStringAllocation = NULL;
+static EWRAM_DATA struct ItemPcResources *sStateDataPtr = NULL;
+static EWRAM_DATA u8 *sBg1TilemapBuffer = NULL;
+static EWRAM_DATA struct ListMenuItem *sListMenuItems = NULL;
+static EWRAM_DATA u8 *sUnusedStringAllocation = NULL;
 static EWRAM_DATA struct ItemPcStaticResources sListMenuState = {};
 static EWRAM_DATA u8 sSubmenuWindowIds[3] = {};
 
@@ -64,7 +64,7 @@ static bool8 ItemPc_InitBgs(void);
 static bool8 ItemPc_LoadGraphics(void);
 static bool8 ItemPc_AllocateResourcesForListMenu(void);
 static void ItemPc_BuildListMenuTemplate(void);
-static void ItemPc_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu * list);
+static void ItemPc_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list);
 static void ItemPc_ItemPrintFunc(u8 windowId, u32 itemId, u8 y);
 static void ItemPc_PrintOrRemoveCursorAt(u8 y, u8 state);
 static void ItemPc_PrintWithdrawItem(void);
@@ -96,11 +96,11 @@ static void ItemPc_CB2_ReturnFromPartyMenu(void);
 static void gTask_ItemPcWaitButtonAndExitSubmenu(u8 taskId);
 static void Task_ItemPcCancel(u8 taskId);
 static void ItemPc_InitWindows(void);
-static void ItemPc_AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 * str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx);
+static void ItemPc_AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx);
 static void ItemPc_SetBorderStyleOnWindow(u8 windowId);
 static u8 ItemPc_GetOrCreateSubwindow(u8 idx);
 static void ItemPc_DestroySubwindow(u8 idx);
-static void ItemPc_PrintOnWindow5WithContinueTask(u8 taskId, const u8 * str, TaskFunc taskFunc);
+static void ItemPc_PrintOnWindow5WithContinueTask(u8 taskId, const u8 *str, TaskFunc taskFunc);
 
 static const u8 sText_WithdrewQuantItem[] = _("Withdrew {STR_VAR_2}\n{STR_VAR_1}(s).");
 static const u8 sText_WithdrawItem[] = _("WITHDRAW\nITEM");
@@ -469,7 +469,7 @@ static bool8 ItemPc_LoadGraphics(void)
     return FALSE;
 }
 
-#define try_alloc(ptr__, size) ({ \
+#define TRY_ALLOC(ptr__, size) ({ \
     void ** ptr = (void **)&(ptr__);             \
     *ptr = Alloc(size);                 \
     if (*ptr == NULL)                   \
@@ -482,8 +482,8 @@ static bool8 ItemPc_LoadGraphics(void)
 
 static bool8 ItemPc_AllocateResourcesForListMenu(void)
 {
-    try_alloc(sListMenuItems, sizeof(struct ListMenuItem) * (PC_ITEMS_COUNT + 1));
-    try_alloc(sUnusedStringAllocation, 14 * (PC_ITEMS_COUNT + 1));
+    TRY_ALLOC(sListMenuItems, sizeof(struct ListMenuItem) * (PC_ITEMS_COUNT + 1));
+    TRY_ALLOC(sUnusedStringAllocation, 14 * (PC_ITEMS_COUNT + 1));
     return TRUE;
 }
 
@@ -555,7 +555,7 @@ static void RemovePcItemIconSprite(enum Item item, u8 iconSlot)
 static void ItemPc_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list)
 {
     enum Item itemId;
-    const u8 * desc;
+    const u8 *desc;
     if (onInit != TRUE)
         PlaySE(SE_SELECT);
 
@@ -657,7 +657,7 @@ static void ItemPc_SetCursorPosition(void)
     }
 }
 
-#define try_free(ptr) ({        \
+#define TRY_FREE(ptr) ({        \
     void ** ptr__ = (void **)&(ptr);   \
     if (*ptr__ != NULL)                \
         Free(*ptr__);                  \
@@ -665,10 +665,10 @@ static void ItemPc_SetCursorPosition(void)
 
 static void ItemPc_FreeResources(void)
 {
-    try_free(sStateDataPtr);
-    try_free(sBg1TilemapBuffer);
-    try_free(sListMenuItems);
-    try_free(sUnusedStringAllocation);
+    TRY_FREE(sStateDataPtr);
+    TRY_FREE(sBg1TilemapBuffer);
+    TRY_FREE(sListMenuItems);
+    TRY_FREE(sUnusedStringAllocation);
     FreeAllWindowBuffers();
 }
 
@@ -688,7 +688,7 @@ static void Task_ItemPcTurnOff1(u8 taskId)
 
 static void Task_ItemPcTurnOff2(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     if (!gPaletteFade.active && !IsPCScreenEffectRunning_TurnOff())
     {
@@ -759,7 +759,7 @@ void ItemPc_SetInitializedFlag(bool8 flag)
 
 static void Task_ItemPcMain(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     u16 scroll;
     u16 row;
     s32 input;
@@ -814,7 +814,7 @@ static void ItemStorage_UpdateSwapLinePos(u8 y)
 
 static void ItemStorage_StartItemSwap(u8 taskId, s16 pos)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     ListMenuSetTemplateField(data[0], LISTFIELD_CURSORKIND, 1);
     data[1] = pos;
@@ -831,7 +831,7 @@ static void ItemStorage_StartItemSwap(u8 taskId, s16 pos)
 
 static void ItemStorage_ProcessItemSwapInput(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     ListMenu_ProcessInput(data[0]);
     ListMenuGetScrollAndRow(data[0], &sListMenuState.scroll, &sListMenuState.row);
@@ -852,7 +852,7 @@ static void ItemStorage_ProcessItemSwapInput(u8 taskId)
 
 static void ItemPc_InsertItemIntoNewSlot(u8 taskId, u32 pos)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     if (data[1] == pos || data[1] == pos - 1)
         ItemPc_MoveItemModeCancel(taskId, pos);
     else
@@ -870,7 +870,7 @@ static void ItemPc_InsertItemIntoNewSlot(u8 taskId, u32 pos)
 
 static void ItemPc_MoveItemModeCancel(u8 taskId, u32 pos)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     DestroyListMenuTask(data[0], &sListMenuState.scroll, &sListMenuState.row);
     if (data[1] < pos)
@@ -883,7 +883,7 @@ static void ItemPc_MoveItemModeCancel(u8 taskId, u32 pos)
 
 static void Task_ItemPcSubmenuInit(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     u8 windowId;
 
     ItemPc_SetBorderStyleOnWindow(4);
@@ -939,7 +939,7 @@ static void Task_ItemPcWithdraw(u8 taskId)
 
 static void ItemPc_DoWithdraw(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     enum Item itemId = ItemPc_GetItemIdBySlotId(data[1]);
     u8 windowId;
 
@@ -962,7 +962,7 @@ static void ItemPc_DoWithdraw(u8 taskId)
 
 static void Task_ItemPcWaitButtonAndFinishWithdrawMultiple(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     if (JOY_NEW(A_BUTTON) || JOY_NEW(B_BUTTON))
     {
@@ -984,7 +984,7 @@ static void Task_ItemPcWaitButtonWithdrawMultipleFailed(u8 taskId)
 
 static void Task_ItemPcCleanUpWithdraw(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     ItemPc_DestroySubwindow(2);
     PutWindowTilemap(1);
@@ -1132,7 +1132,7 @@ static void ItemPc_InitWindows(void)
         sSubmenuWindowIds[i] = 0xFF;
 }
 
-static void ItemPc_AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 * str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx)
+static void ItemPc_AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 letterSpacing, u8 lineSpacing, u8 speed, u8 colorIdx)
 {
     AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sTextColors[colorIdx], speed, str);
 }
@@ -1161,7 +1161,7 @@ static void ItemPc_DestroySubwindow(u8 idx)
     sSubmenuWindowIds[idx] = 0xFF;
 }
 
-static void ItemPc_PrintOnWindow5WithContinueTask(u8 taskId, const u8 * str, TaskFunc taskFunc)
+static void ItemPc_PrintOnWindow5WithContinueTask(u8 taskId, const u8 *str, TaskFunc taskFunc)
 {
     DisplayMessageAndContinueTask(taskId, 5, 0x3AC, 0x0B, FONT_NORMAL, GetPlayerTextSpeedDelay(), str, taskFunc);
     ScheduleBgCopyTilemapToVram(0);

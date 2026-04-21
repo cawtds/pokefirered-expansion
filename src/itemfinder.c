@@ -27,7 +27,7 @@ static void Task_ItemfinderUnderfootPrintMessage(u8 taskId);
 static void Task_ItemfinderUnderfootDigUpItem(u8 taskId);
 static void DestroyArrowAndStarTiles(void);
 static void LoadArrowAndStarTiles(void);
-static void CreateArrowSprite(u8 animNum, u8 direction);
+static void CreateArrowSprite(u8 animNum, enum Direction direction);
 static void SpriteCallback_Arrow(struct Sprite *sprite);
 static void SpriteCallback_DestroyArrow(struct Sprite *sprite);
 static u8 CreateStarSprite(void);
@@ -137,7 +137,7 @@ void ItemUseOnFieldCB_Itemfinder(u8 taskId)
 
     if (I_ORAS_DOWSING_FLAG != 0)
     {
-        if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_UNDERWATER))
+        if (!TestPlayerAvatarState(PLAYER_AVATAR_STATE_SURFING) && !TestPlayerAvatarState(PLAYER_AVATAR_STATE_UNDERWATER))
             gTasks[taskId].func = Task_UseORASDowsingMachine;
         else
             DisplayItemMessageOnField(taskId, FONT_NORMAL, gText_OakForbidsUseOfItemHere, Task_NoResponse_CleanUp);
@@ -175,7 +175,7 @@ static void Task_NoResponse_CleanUp(u8 taskId)
 static void Task_ItemfinderResponseSoundsAndAnims(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    u8 direction;
+    enum Direction direction;
     if (tDingTimer % 25 == 0)
     {
         direction = GetPlayerDirectionTowardsHiddenItem(tItemX, tItemY);
@@ -306,10 +306,10 @@ static void SetNormalHiddenItem(u8 taskId)
     }
 }
 
-static bool8 HiddenItemAtPos(const struct MapEvents * events, s16 x, s16 y)
+static bool8 HiddenItemAtPos(const struct MapEvents *events, s16 x, s16 y)
 {
     u8 bgEventCount = events->bgEventCount;
-    const struct BgEvent * bgEvents = events->bgEvents;
+    const struct BgEvent *bgEvents = events->bgEvents;
     u16 eventFlag;
     int i;
 
@@ -331,9 +331,9 @@ static bool8 HiddenItemAtPos(const struct MapEvents * events, s16 x, s16 y)
     return FALSE;
 }
 
-static bool8 HiddenItemInConnectedMapAtPos(const struct MapConnection * connection, s32 x, s32 y)
+static bool8 HiddenItemInConnectedMapAtPos(const struct MapConnection *connection, s32 x, s32 y)
 {
-    const struct MapHeader * mapHeader;
+    const struct MapHeader *mapHeader;
     u16 localX, localY;
     u32 localOffset;
     s32 localLength;
@@ -394,7 +394,7 @@ static void FindHiddenItemsInConnectedMaps(u8 taskId)
                 || var2 > curY
                 || curY >= height)
             {
-                const struct MapConnection * conn = GetMapConnectionAtPos(curX, curY);
+                const struct MapConnection *conn = GetMapConnectionAtPos(curX, curY);
                 if (conn != NULL && HiddenItemInConnectedMapAtPos(conn, curX, curY) == TRUE)
                     RegisterHiddenItemRelativeCoordsIfCloser(taskId, curX - x, curY - y);
             }
@@ -453,7 +453,7 @@ static void RegisterHiddenItemRelativeCoordsIfCloser(u8 taskId, s16 dx, s16 dy)
     }
 }
 
-u8 GetPlayerDirectionTowardsHiddenItem(s16 itemX, s16 itemY)
+enum Direction GetPlayerDirectionTowardsHiddenItem(s16 itemX, s16 itemY)
 {
     s16 abX, abY;
 
@@ -554,7 +554,7 @@ static void DestroyArrowAndStarTiles(void)
     FreeSpriteTilesByTag(ARROW_TILE_TAG);
 }
 
-static void CreateArrowSprite(u8 animNum, u8 direction)
+static void CreateArrowSprite(u8 animNum, enum Direction direction)
 {
     u8 spriteId = CreateSprite(&sSpriteTemplate_ArrowAndStar, 120, 76, 0);
     gSprites[spriteId].oam.paletteNum = 0;
@@ -590,6 +590,8 @@ static void CreateArrowSprite(u8 animNum, u8 direction)
             gSprites[spriteId].spDeltaY = 100;
             StartSpriteAffineAnim(&gSprites[spriteId], 1);
             break;
+        default:
+            break;
         }
         break;
     case DIR_SOUTH:
@@ -610,6 +612,8 @@ static void CreateArrowSprite(u8 animNum, u8 direction)
     case DIR_EAST:
         gSprites[spriteId].spDeltaX = -100;
         gSprites[spriteId].spDeltaY = 0;
+        break;
+    default:
         break;
     }
 }

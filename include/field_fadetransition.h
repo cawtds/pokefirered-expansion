@@ -14,7 +14,7 @@ void WarpFadeInScreen(void);
 void FieldCB_ContinueScriptUnionRoom(void);
 
 bool32 FieldFadeTransitionBackgroundEffectIsFinished(void);
-void palette_bg_faded_fill_black(void);
+void FillPalBufferBlack(void);
 void FieldCB_ReturnToFieldWirelessLink(void);
 void FieldCB_ReturnToFieldCableLink(void);
 bool8 FieldCB_ReturnToFieldOpenStartMenu(void);

@@ -194,7 +194,7 @@ void SetBagItemsPointers(void)
     gBagPockets[POCKET_BERRIES].id = POCKET_BERRIES;
 }
 
-u8 *CopyItemName(enum Item itemId, u8 * dest)
+u8 *CopyItemName(enum Item itemId, u8 *dest)
 {
     return StringCopy(dest, GetItemName(itemId));
 }

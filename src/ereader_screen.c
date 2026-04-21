@@ -156,7 +156,7 @@ enum {
     RECV_TIMEOUT,
 };
 
-static u32 TryReceiveCard(u8 * state, u16 * timer)
+static u32 TryReceiveCard(u8 *state, u16 *timer)
 {
     if ((*state == RECV_STATE_EXCHANGE
       || *state == RECV_STATE_START_DISCONNECT
@@ -257,7 +257,7 @@ static void ResetTimer(u16 *timer)
     *timer = 0;
 }
 
-static bool32 UpdateTimer(u16 * timer, u16 time)
+static bool32 UpdateTimer(u16 *timer, u16 time)
 {
     if (++(*timer) > time)
     {
