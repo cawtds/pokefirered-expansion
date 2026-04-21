@@ -168,7 +168,7 @@ static void UpdateLinkBattleRecord(struct LinkBattleRecord * record, s32 outcome
 
 static void UpdateLinkBattleGameStats(s32 outcome)
 {
-    u8 statId;
+    enum GameStat statId;
 
     switch (outcome)
     {

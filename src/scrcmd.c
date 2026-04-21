@@ -778,7 +778,7 @@ bool8 ScrCmd_checkflag(struct ScriptContext * ctx)
 
 bool8 ScrCmd_incrementgamestat(struct ScriptContext * ctx)
 {
-    u32 statId = ScriptReadByte(ctx);
+    enum GameStat statId = ScriptReadByte(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
 

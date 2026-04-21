@@ -419,7 +419,7 @@ void ResetGameStats(void)
     }
 }
 
-void IncrementGameStat(u8 statId)
+void IncrementGameStat(enum GameStat statId)
 {
     u32 statVal;
     if (statId >= NUM_USED_GAME_STATS)
@@ -432,7 +432,7 @@ void IncrementGameStat(u8 statId)
     SetGameStat(statId, statVal);
 }
 
-u32 GetGameStat(u8 statId)
+u32 GetGameStat(enum GameStat statId)
 {
     if (statId >= NUM_USED_GAME_STATS)
         return 0;
@@ -440,7 +440,7 @@ u32 GetGameStat(u8 statId)
         return gSaveBlock1Ptr->gameStats[statId];
 }
 
-void SetGameStat(u8 statId, u32 statVal)
+void SetGameStat(enum GameStat statId, u32 statVal)
 {
     if (statId >= NUM_USED_GAME_STATS)
         return;
