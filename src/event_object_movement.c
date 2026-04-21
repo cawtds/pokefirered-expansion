@@ -5024,7 +5024,7 @@ static bool8 MovementType_WalkSequence_Step0(struct ObjectEvent *objectEvent, st
 
 bool8 MoveNextDirectionInSequence(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 *route)
 {
-    u8 collision;
+    enum Collision collision;
     u8 movementActionId;
 
     if (objectEvent->directionSequenceIndex == 3 && objectEvent->initialCoords.x == objectEvent->currentCoords.x && objectEvent->initialCoords.y == objectEvent->currentCoords.y)
@@ -5047,6 +5047,7 @@ bool8 MoveNextDirectionInSequence(struct ObjectEvent *objectEvent, struct Sprite
     ObjectEventSetSingleMovement(objectEvent, sprite, movementActionId);
     objectEvent->singleMovementActive = TRUE;
     sprite->data[1] = 2;
+
     return TRUE;
 }
 
@@ -5918,7 +5919,7 @@ bool8 FollowablePlayerMovement_GoSpeed4(struct ObjectEvent *objectEvent, struct 
 
 bool8 FollowablePlayerMovement_Jump(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
 {
-    u32 direction;
+    enum Direction direction;
     s16 x;
     s16 y;
 
@@ -6713,12 +6714,11 @@ static void GetObjectEventMovingCameraOffset(s16 *x, s16 *y)
     }
 }
 
-void ObjectEventMoveDestCoords(struct ObjectEvent *objectEvent, u32 direction, s16 *x, s16 *y)
+void ObjectEventMoveDestCoords(struct ObjectEvent *objectEvent, enum Direction direction, s16 *x, s16 *y)
 {
-    u8 newDirn = direction;
     *x = objectEvent->currentCoords.x;
     *y = objectEvent->currentCoords.y;
-    MoveCoords(newDirn, x, y);
+    MoveCoords(direction, x, y);
 }
 
 bool8 ObjectEventIsMovementOverridden(struct ObjectEvent *objectEvent)
@@ -6896,7 +6896,7 @@ void QL_UpdateObjectEventCurrentMovement(struct ObjectEvent *objectEvent, struct
 }
 
 #define dirn_to_anim(name, table)\
-u8 name(u32 idx)\
+u8 name(enum Direction idx)\
 {\
     enum Direction direction;\
     u8 animIds[sizeof(table)];\
@@ -7987,7 +7987,7 @@ static void ObjectEventSetPokeballGfx(struct ObjectEvent *objEvent)
 
 static bool8 MovementAction_ExitPokeball_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    u32 direction = gObjectEvents[gPlayerAvatar.objectEventId].facingDirection;
+    enum Direction direction = gObjectEvents[gPlayerAvatar.objectEventId].facingDirection;
     u16 graphicsId = objectEvent->graphicsId;
 
     SetObjectEventCoords(objectEvent, gObjectEvents[gPlayerAvatar.objectEventId].previousCoords.x, gObjectEvents[gPlayerAvatar.objectEventId].previousCoords.y);
@@ -8097,7 +8097,7 @@ static bool8 MovementAction_ExitPokeball_Step1(struct ObjectEvent *objectEvent, 
 
 static bool8 MovementAction_EnterPokeball_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    u32 direction = objectEvent->facingDirection;
+    enum Direction direction = objectEvent->facingDirection;
     StartSpriteAnimInDirection(objectEvent, sprite, direction, GetMoveDirectionFasterAnimNum(direction));
     sprite->sDuration = 16;
     // If mon's right-facing sprite is h-flipped, we need to use a different affine anim

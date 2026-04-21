@@ -107,7 +107,7 @@ bool32 IsOverworldLinkActive(void);
 
 void ClearLinkPlayerObjectEvents(void);
 const struct MapHeader *const Overworld_GetMapHeaderByGroupAndId(u16, u16);
-void ObjectEventMoveDestCoords(struct ObjectEvent *, u32, s16 *, s16 *);
+void ObjectEventMoveDestCoords(struct ObjectEvent *objectEvent, enum Direction direction, s16 *x, s16 *y);
 void CB2_ReturnToField(void);
 void CB2_ReturnToFieldContinueScriptPlayMapMusic(void);
 void WarpIntoMap(void);

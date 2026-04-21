@@ -283,7 +283,7 @@ static bool8 ForcedMovement_None(void)
 static u8 DoForcedMovement(enum Direction direction, MovementAction movementAction)
 {
     struct PlayerAvatar *playerAvatar = &gPlayerAvatar;
-    u8 collision;
+    enum Collision collision;
 
     // Check for sideways stairs onto ice movement.
     switch (direction)
@@ -503,7 +503,7 @@ static void PlayerNotOnBikeTurningInPlace(enum Direction direction, u16 heldKeys
 
 static void PlayerNotOnBikeMoving(enum Direction direction, u16 heldKeys)
 {
-    u8 collision = CheckForPlayerAvatarCollision(direction);
+    enum Collision collision = CheckForPlayerAvatarCollision(direction);
 
     if (collision != COLLISION_NONE)
     {

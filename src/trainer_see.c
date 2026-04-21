@@ -357,8 +357,7 @@ static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 ap
 {
     s16 x, y;
     u8 rangeX, rangeY;
-    u8 i;
-    u8 collision;
+    enum Collision collision;
 
     if (approachDistance == 0)
         return 0;
@@ -366,10 +365,10 @@ static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 ap
     x = trainerObj->currentCoords.x;
     y = trainerObj->currentCoords.y;
 
-    for (i = 0; i <= approachDistance - 1; i++, MoveCoords(direction, &x, &y))
+    for (u32 i = 0; i <= approachDistance - 1; i++, MoveCoords(direction, &x, &y))
     {
-        collision = GetCollisionFlagsAtCoords(trainerObj, x, y, direction);
-        if (collision != 0 && (collision & ~(1 << (COLLISION_OUTSIDE_RANGE - 1))))
+        u8 collisionFlags = GetCollisionFlagsAtCoords(trainerObj, x, y, direction);
+        if (collisionFlags != 0 && (collisionFlags & ~(1 << (COLLISION_OUTSIDE_RANGE - 1))))
             return 0;
     }
 

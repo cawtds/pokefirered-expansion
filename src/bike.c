@@ -401,13 +401,13 @@ void Bike_HandleBumpySlopeJump(void)
 // its possible that at some point Game Freak intended for the acro bike to have more complex tricks: but only the acro jump combinations can be seen in the final ROM.
 struct BikeHistoryInputInfo
 {
-    u32 dirHistoryMatch; // the direction you need to press
+    enum Direction dirHistoryMatch; // the direction you need to press
     u32 abStartSelectHistoryMatch; // the button you need to press
     u32 dirHistoryMask; // mask applied so that way only the recent nybble (the recent input) is checked
     u32 abStartSelectHistoryMask; // mask applied so that way only the recent nybble (the recent input) is checked
     const u8 *dirTimerHistoryList; // list of timers to check for direction before the button+dir combination can be verified.
     const u8 *abStartSelectHistoryList; // list of timers to check for buttons before the button+dir combination can be verified.
-    u32 direction; // direction to jump
+    enum Direction direction; // direction to jump
 };
 
 // this is a list of timers to compare against later, terminated with 0. the only timer being compared against is 4 frames in this list.
