@@ -1638,6 +1638,11 @@ static void ResetActions(u8 kind, struct QuestLogAction *actions, u16 size)
         case DIR_WEST:
             sCurSceneActions[gQuestLogCurActionIdx].data.a.movementActionId = MOVEMENT_ACTION_FACE_LEFT;
             break;
+        case DIR_SOUTHWEST:
+        case DIR_SOUTHEAST:
+        case DIR_NORTHWEST:
+        case DIR_NORTHEAST:
+            break;
         }
         sLastQuestLogCursor = 0;
         gQuestLogCurActionIdx++;

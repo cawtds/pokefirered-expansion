@@ -18,7 +18,7 @@ struct FieldInput
     bool8 input_field_1_1:1;
     bool8 input_field_1_2:1;
     bool8 input_field_1_3:1;
-    u8 dpadDirection;
+    enum Direction dpadDirection;
 };
 
 extern struct FieldInput gFieldInputRecord;
@@ -29,8 +29,8 @@ int SetCableClubWarp(void);
 void HandleBoulderFallThroughHole(struct ObjectEvent *);
 void GetInFrontOfPlayerPosition(struct MapPosition * position);
 bool8 TryDoDiveWarp(struct MapPosition * pos, u16 behavior);
-bool8 IsDirectionalStairWarpMetatileBehavior(u16 metatileBehavior, u8 playerDirection);
-const u8 *GetInteractedLinkPlayerScript(struct MapPosition *position, u8 metatileBehavior, u8 direction);
+bool8 IsDirectionalStairWarpMetatileBehavior(u16 metatileBehavior, enum Direction playerDirection);
+const u8 *GetInteractedLinkPlayerScript(struct MapPosition *position, u8 metatileBehavior, enum Direction direction);
 const u8 *GetCoordEventScriptAtMapPosition(struct MapPosition *position);
 void FieldClearPlayerInput(struct FieldInput *input);
 int ProcessPlayerFieldInput(struct FieldInput *input);

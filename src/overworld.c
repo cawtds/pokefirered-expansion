@@ -99,7 +99,7 @@ typedef u16 (*KeyInterCB)(u32 key);
 struct InitialPlayerAvatarState
 {
     enum AvatarState transitionState;
-    u8 direction;
+    enum Direction direction;
     bool8 hasDirectionSet;
 };
 
@@ -154,7 +154,7 @@ static u8 CountBadgesForOverworldWhiteOutLossCalculation(void);
 static void Overworld_ResetStateAfterWhitingOut(void);
 static void SetWhiteoutWarpDestination(void);
 static enum AvatarState GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, u16 metatileBehavior, u8 mapType);
-static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, enum AvatarState transitionState, u16 metatileBehavior, u8 mapType);
+static enum Direction GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, enum AvatarState transitionState, u16 metatileBehavior, u8 mapType);
 static u16 GetCenterScreenMetatileBehavior(void);
 static void SetDefaultFlashLevel(void);
 static void Overworld_TryMapConnectionMusicTransition(void);
@@ -984,7 +984,7 @@ bool8 MetatileBehavior_IsSurfableInSeafoamIslands(u16 metatileBehavior)
     return FALSE;
 }
 
-static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, enum AvatarState transitionState, u16 metatileBehavior, u8 mapType)
+static enum Direction GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, enum AvatarState transitionState, u16 metatileBehavior, u8 mapType)
 {
     if (FlagGet(FLAG_SYS_CRUISE_MODE) && mapType == MAP_TYPE_OCEAN_ROUTE)
         return DIR_EAST;

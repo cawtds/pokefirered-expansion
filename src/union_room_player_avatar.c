@@ -25,7 +25,7 @@ static EWRAM_DATA u32 sUnionObjRefreshTimer = 0;
 
 static u8 CreateTask_AnimateUnionRoomPlayers(void);
 static u32 IsUnionRoomPlayerInvisible(u32 leaderId, u32 member);
-static void SetUnionRoomObjectFacingDirection(s32 member, s32 leaderId, u8 direction);
+static void SetUnionRoomObjectFacingDirection(s32 member, s32 leaderId, enum Direction direction);
 
 // + 2 is just to match, those elements are empty and never read
 // Graphics ids should correspond with the classes in gUnionRoomFacilityClasses
@@ -52,7 +52,8 @@ static const u8 sUnionRoomObjGfxIds[GENDER_COUNT][NUM_UNION_ROOM_CLASSES + 2] = 
     }
 };
 
-static const s16 sUnionRoomPlayerCoords[MAX_UNION_ROOM_LEADERS][2] = {
+static const s16 sUnionRoomPlayerCoords[MAX_UNION_ROOM_LEADERS][2] =
+{
     { 4,  6},
     {13,  8},
     {10,  6},
@@ -67,7 +68,8 @@ static const s16 sUnionRoomPlayerCoords[MAX_UNION_ROOM_LEADERS][2] = {
 // leader will be at one of the positions above and each member in the group
 // will be at one of the offsets from that position below. The leader will
 // be at the first offset (0,0), as they're at the center.
-static const s8 sUnionRoomGroupOffsets[][2] = {
+static const s8 sUnionRoomGroupOffsets[][2] =
+{
     { 0,  0}, // Center
     { 1,  0}, // Left
     { 0, -1}, // Top
@@ -75,7 +77,8 @@ static const s8 sUnionRoomGroupOffsets[][2] = {
     { 0,  1}  // Bottom
 };
 
-static const u8 sOppositeFacingDirection[] = {
+static const enum Direction sOppositeFacingDirection[] =
+{
     [DIR_NONE]  = DIR_NONE,
     [DIR_SOUTH] = DIR_NORTH,
     [DIR_NORTH] = DIR_SOUTH,
@@ -85,7 +88,8 @@ static const u8 sOppositeFacingDirection[] = {
 
 // Compare to sUnionRoomGroupOffsets, the direction each group member
 // needs to be facing in order to face the group leader in the center.
-static const u8 sMemberFacingDirections[] = {
+static const enum Direction sMemberFacingDirections[] =
+{
     DIR_SOUTH, // Leader, but never read
     DIR_WEST,
     DIR_SOUTH,
@@ -444,7 +448,7 @@ void MakeGroupAssemblyAreasPassable(void)
     }
 }
 
-static u8 GetNewFacingDirectionForUnionRoomPlayer(u32 memberId, u32 leaderId, struct RfuGameData * gameData)
+static enum Direction GetNewFacingDirectionForUnionRoomPlayer(u32 memberId, u32 leaderId, struct RfuGameData *gameData)
 {
     if (memberId != 0) // If not leader
         return sMemberFacingDirections[memberId];
@@ -604,7 +608,7 @@ bool32 TryInteractWithUnionRoomMember(struct RfuPlayerList *list, s16 *memberIdP
     return FALSE;
 }
 
-static void SetUnionRoomObjectFacingDirection(s32 memberId, s32 leaderId, u8 direction)
+static void SetUnionRoomObjectFacingDirection(s32 memberId, s32 leaderId, enum Direction direction)
 {
     TurnVirtualObject(MAX_RFU_PLAYERS * leaderId - UR_SPRITE_START_ID + memberId, direction);
 }

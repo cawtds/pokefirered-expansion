@@ -29,7 +29,7 @@ static u8 GetTrainerApproachDistanceSouth(struct ObjectEvent * trainerObj, s16 r
 static u8 GetTrainerApproachDistanceNorth(struct ObjectEvent * trainerObj, s16 range, s16 x, s16 y);
 static u8 GetTrainerApproachDistanceWest(struct ObjectEvent * trainerObj, s16 range, s16 x, s16 y);
 static u8 GetTrainerApproachDistanceEast(struct ObjectEvent * trainerObj, s16 range, s16 x, s16 y);
-static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent * trainerObj, u8 approachDistance, u8 facingDirection);
+static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 approachDistance, enum Direction direction);
 static void InitTrainerApproachTask(struct ObjectEvent *trainerObj, u8 range);
 static void Task_RunTrainerSeeFuncList(u8 taskId);
 static bool32 TrainerSeeFunc_Idle(u8 taskId, struct Task *task, struct ObjectEvent * trainerObj);
@@ -353,7 +353,7 @@ static u8 GetTrainerApproachDistanceEast(struct ObjectEvent *trainerObj, s16 ran
         return 0;
 }
 
-static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 approachDistance, u8 direction)
+static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 approachDistance, enum Direction direction)
 {
     s16 x, y;
     u8 rangeX, rangeY;
