@@ -268,8 +268,8 @@ struct ObjectEvent
     /*0x0C*/ struct Coords16 initialCoords;
     /*0x10*/ struct Coords16 currentCoords;
     /*0x14*/ struct Coords16 previousCoords;
-    /*0x18*/ enum Direction facingDirection:4; // current direction?
-             enum Direction movementDirection:4;
+    /*0x18*/ u16 facingDirection:4; // current direction?
+             u16 movementDirection:4;
              struct __attribute__((packed))
              {
                 u8 rangeX:4;
