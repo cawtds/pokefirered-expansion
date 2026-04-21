@@ -1963,7 +1963,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
     u8 monsCount;
     if (battleTypeFlags & BATTLE_TYPE_TRAINER && !(battleTypeFlags & (BATTLE_TYPE_FRONTIER
                                                                         | BATTLE_TYPE_EREADER_TRAINER
-                                                                        | BATTLE_TYPE_TRAINER_HILL)))
+                                                                        | BATTLE_TYPE_TRAINER_TOWER)))
     {
         if (firstTrainer == TRUE)
             ZeroEnemyPartyMons();
@@ -4414,7 +4414,7 @@ static void HandleTurnActionSelectionState(void)
                 }
 
                 if (gBattleTypeFlags & BATTLE_TYPE_TRAINER
-                    && gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL)
+                    && gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_TOWER)
                     && gBattleResources->bufferB[battler][1] == B_ACTION_RUN)
                 {
                     gSelectionBattleScripts[battler] = BattleScript_AskIfWantsToForfeitMatch;
@@ -5515,7 +5515,7 @@ static void HandleEndTurn_RanFromBattle(void)
         gBattleOutcome = B_OUTCOME_FORFEITED;
         gSaveBlock2Ptr->frontier.disableRecordBattle = TRUE;
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER)
     {
         gBattlescriptCurrInstr = BattleScript_PrintPlayerForfeited;
         gBattleOutcome = B_OUTCOME_FORFEITED;
@@ -5592,7 +5592,7 @@ static void HandleEndTurn_FinishBattle(void)
         if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK
                                   | BATTLE_TYPE_EREADER_TRAINER
                                   | BATTLE_TYPE_RECORDED_LINK
-                                  | BATTLE_TYPE_TRAINER_HILL
+                                  | BATTLE_TYPE_TRAINER_TOWER
                                   | BATTLE_TYPE_FRONTIER)))
         {
             for (enum BattleSide side = 0; side < NUM_BATTLE_SIDES; side++)

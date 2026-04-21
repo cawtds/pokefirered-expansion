@@ -740,7 +740,7 @@ void SetWarpDestinationToFixedHoleWarp(s16 x, s16 y)
     if (IsDummyWarp(&sFixedHoleWarp) == TRUE)
         sWarpDestination = gLastUsedWarp;
     else
-        SetWarpDestination(sFixedHoleWarp.mapGroup, sFixedHoleWarp.mapNum, -1, x, y);
+        SetWarpDestination(sFixedHoleWarp.mapGroup, sFixedHoleWarp.mapNum, WARP_ID_NONE, x, y);
 }
 
 static void SetWarpDestinationToContinueGameWarp(void)
@@ -752,7 +752,7 @@ void SetContinueGameWarpToHealLocation(u8 healLocationId)
 {
     const struct HealLocation *warp = GetHealLocation(healLocationId);
     if (warp)
-        SetWarpData(&gSaveBlock1Ptr->continueGameWarp, warp->mapGroup, warp->mapNum, -1, warp->x, warp->y);
+        SetWarpData(&gSaveBlock1Ptr->continueGameWarp, warp->mapGroup, warp->mapNum, WARP_ID_NONE, warp->x, warp->y);
 }
 
 void SetContinueGameWarpToDynamicWarp(int unused)
@@ -782,7 +782,7 @@ static bool8 SetDiveWarp(u8 dir, u16 x, u16 y)
 
     if (connection != NULL)
     {
-        SetWarpDestination(connection->mapGroup, connection->mapNum, -1, x, y);
+        SetWarpDestination(connection->mapGroup, connection->mapNum, WARP_ID_NONE, x, y);
     }
     else
     {
@@ -808,7 +808,7 @@ bool8 SetDiveWarpDive(u16 x, u16 y)
 
 void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
 {
-    SetWarpDestination(mapGroup, mapNum, -1, -1, -1);
+    SetWarpDestination(mapGroup, mapNum, WARP_ID_NONE, -1, -1);
     Overworld_TryMapConnectionMusicTransition();
     ApplyCurrentWarp();
     LoadCurrentMapData();
