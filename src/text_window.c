@@ -143,7 +143,7 @@ void DrawTextBorderInner(u8 windowId, u16 tileNum, u8 palNum)
     FillBgTilemapBufferRect(bgLayer, tileNum + 8, tilemapLeft + width - 1,  tilemapTop + height - 1,    1,          1,          palNum);
 }
 
-void rbox_fill_rectangle(u8 windowId)
+void ClearWindow(u8 windowId)
 {
     u8 bgLayer = GetWindowAttribute(windowId, WINDOW_BG);
     u16 tilemapLeft = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT);

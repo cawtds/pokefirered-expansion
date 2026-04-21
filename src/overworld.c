@@ -1483,7 +1483,7 @@ static void DoCB1_Overworld(u16 newKeys, u16 heldKeys)
         }
         else
         {
-            player_step(fieldInput.dpadDirection, newKeys, heldKeys);
+            PlayerStep(fieldInput.dpadDirection, newKeys, heldKeys);
         }
     }
     // If stop running but keep holding B -> fix follower frame.

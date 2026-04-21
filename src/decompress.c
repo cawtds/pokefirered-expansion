@@ -206,7 +206,7 @@ static inline u32 DoLoadCompressedSpriteSheet(const struct CompressedSpriteSheet
 
 u32 LoadCompressedSpriteSheet(const struct CompressedSpriteSheet *src)
 {
-    void *buffer = malloc_and_decompress(src->data, NULL);
+    void *buffer = AllocAndDecompress(src->data, NULL);
     u32 ret = DoLoadCompressedSpriteSheet(src, buffer);
     Free(buffer);
 
@@ -230,7 +230,7 @@ u32 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s
     if (IsCompressedData(template->images->data))
     {
         size = GetDecompressedDataSize(template->images->data);
-        void *buffer = malloc_and_decompress(template->images->data, NULL);
+        void *buffer = AllocAndDecompress(template->images->data, NULL);
         myImage.data = buffer;
         myImage.size = size + offset;
         myTemplate.images = &myImage;

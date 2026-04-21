@@ -593,7 +593,7 @@ void AddTextPrinterToWindow1(const u8 *str)
 
 static void ClearTextWindow(void)
 {
-    rbox_fill_rectangle(1);
+    ClearWindow(1);
     ClearWindowTilemap(1);
     CopyWindowToVram(1, COPYWIN_MAP);
 }
@@ -715,7 +715,7 @@ s8 DoMysteryGiftYesNo(u8 * textState, u16 * windowId, bool8 yesNoBoxPlacement, c
         if (input == MENU_B_PRESSED || input == 0 || input == 1)
         {
             *textState = 0;
-            rbox_fill_rectangle(*windowId);
+            ClearWindow(*windowId);
             ClearWindowTilemap(*windowId);
             CopyWindowToVram(*windowId, COPYWIN_MAP);
             RemoveWindow(*windowId);
@@ -724,7 +724,7 @@ s8 DoMysteryGiftYesNo(u8 * textState, u16 * windowId, bool8 yesNoBoxPlacement, c
         break;
     case 0xFF:
         *textState = 0;
-        rbox_fill_rectangle(*windowId);
+        ClearWindow(*windowId);
         ClearWindowTilemap(*windowId);
         CopyWindowToVram(*windowId, COPYWIN_MAP);
         RemoveWindow(*windowId);
@@ -775,7 +775,7 @@ static s32 HandleMysteryGiftListMenu(u8 * textState, u16 * windowId, bool32 cann
         if (input != LIST_NOTHING_CHOSEN)
         {
             *textState = 0;
-            rbox_fill_rectangle(*windowId);
+            ClearWindow(*windowId);
             ClearWindowTilemap(*windowId);
             CopyWindowToVram(*windowId, COPYWIN_MAP);
             RemoveWindow(*windowId);
@@ -784,7 +784,7 @@ static s32 HandleMysteryGiftListMenu(u8 * textState, u16 * windowId, bool32 cann
         break;
     case 0xFF:
         *textState = 0;
-        rbox_fill_rectangle(*windowId);
+        ClearWindow(*windowId);
         ClearWindowTilemap(*windowId);
         CopyWindowToVram(*windowId, COPYWIN_MAP);
         RemoveWindow(*windowId);

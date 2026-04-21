@@ -38,7 +38,7 @@ EWRAM_DATA struct PlayerAvatar gPlayerAvatar = {};
 static u8 ObjectEventCB2_NoMovement2(struct ObjectEvent * object, struct Sprite *sprite);
 static bool8 TryUpdatePlayerSpinDirection(void);
 static bool8 TryInterruptObjectEventSpecialAnim(struct ObjectEvent * playerObjEvent, enum Direction direction);
-static void npc_clear_strange_bits(struct ObjectEvent * playerObjEvent);
+static void NpcClearStrangeBits(struct ObjectEvent * playerObjEvent);
 static void MovePlayerAvatarUsingKeypadInput(enum Direction direction, u16 newKeys, u16 heldKeys);
 static void PlayerAllowForcedMovementIfMovingSameDirection(void);
 static bool8 ForcedMovement_None(void);
@@ -117,7 +117,7 @@ static u8 ObjectEventCB2_NoMovement2(struct ObjectEvent * object, struct Sprite 
     return 0;
 }
 
-void player_step(enum Direction direction, u16 newKeys, u16 heldKeys)
+void PlayerStep(enum Direction direction, u16 newKeys, u16 heldKeys)
 {
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
 
@@ -126,7 +126,7 @@ void player_step(enum Direction direction, u16 newKeys, u16 heldKeys)
     {
         if (!TryInterruptObjectEventSpecialAnim(playerObjEvent, direction))
         {
-            npc_clear_strange_bits(playerObjEvent);
+            NpcClearStrangeBits(playerObjEvent);
             DoPlayerAvatarTransition();
             if (!TryDoMetatileBehaviorForcedMovement())
             {
@@ -167,7 +167,7 @@ static bool8 TryInterruptObjectEventSpecialAnim(struct ObjectEvent *playerObjEve
     return FALSE;
 }
 
-static void npc_clear_strange_bits(struct ObjectEvent *objEvent)
+static void NpcClearStrangeBits(struct ObjectEvent *objEvent)
 {
     objEvent->inanimate = FALSE;
     objEvent->disableAnim = FALSE;
@@ -1042,7 +1042,7 @@ void PlayerGetDestCoords(s16 *x, s16 *y)
     *y = gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.y;
 }
 
-u8 player_get_pos_including_state_based_drift(s16 *x, s16 *y)
+void GetPlayerPosWithDrift(s16 *x, s16 *y)
 {
     struct ObjectEvent *object = &gObjectEvents[gPlayerAvatar.objectEventId];
 
@@ -1056,25 +1056,24 @@ u8 player_get_pos_including_state_based_drift(s16 *x, s16 *y)
         case MOVEMENT_ACTION_WALK_NORMAL_DOWN:
         case MOVEMENT_ACTION_PLAYER_RUN_DOWN:
             (*y)++;
-            return TRUE;
+            return;
         case MOVEMENT_ACTION_WALK_NORMAL_UP:
         case MOVEMENT_ACTION_PLAYER_RUN_UP:
             (*y)--;
-            return TRUE;
+            return;
         case MOVEMENT_ACTION_WALK_NORMAL_LEFT:
         case MOVEMENT_ACTION_PLAYER_RUN_LEFT:
             (*x)--;
-            return TRUE;
+            return;
         case MOVEMENT_ACTION_WALK_NORMAL_RIGHT:
         case MOVEMENT_ACTION_PLAYER_RUN_RIGHT:
             (*x)++;
-            return TRUE;
+            return;
         }
     }
 
     *x = -1;
     *y = -1;
-    return FALSE;
 }
 
 bool32 IsPlayerBiking(void)
@@ -1129,7 +1128,7 @@ void StopPlayerAvatar(void)
 {
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
 
-    npc_clear_strange_bits(playerObjEvent);
+    NpcClearStrangeBits(playerObjEvent);
     SetObjectEventDirection(playerObjEvent, playerObjEvent->facingDirection);
     if (IsPlayerBiking())
     {

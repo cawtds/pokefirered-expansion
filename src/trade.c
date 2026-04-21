@@ -1024,7 +1024,7 @@ static void CB2_CreateTradeMenu(void)
         sTradeMenu->cursorSpriteId = CreateSprite(&sSpriteTemplate_Cursor, sTradeMonSpriteCoords[0][0] * 8 + 32, sTradeMonSpriteCoords[0][1] * 8, 2);
         sTradeMenu->cursorPosition = 0;
         gMain.state++;
-        rbox_fill_rectangle(0);
+        ClearWindow(0);
         break;
     case 14:
         ComputePartyTradeableFlags(TRADE_PLAYER);
@@ -1634,7 +1634,7 @@ static void Follower_ReadLinkBuffer(u8 mpId, u8 status)
             break;
         case LINKCMD_SET_MONS_TO_TRADE:
             sTradeMenu->partnerCursorPosition = gBlockRecvBuffer[0][1] + PARTY_SIZE;
-            rbox_fill_rectangle(0);
+            ClearWindow(0);
             SetSelectedMon(sTradeMenu->cursorPosition);
             SetSelectedMon(sTradeMenu->partnerCursorPosition);
             sTradeMenu->callbackId = CB_PRINT_IS_THIS_OKAY;
@@ -2046,7 +2046,7 @@ static void CB_SetSelectedMons(void)
 {
     if (GetMultiplayerId() == 0)
     {
-        rbox_fill_rectangle(0);
+        ClearWindow(0);
         SetSelectedMon(sTradeMenu->cursorPosition);
         SetSelectedMon(sTradeMenu->partnerCursorPosition);
     }
@@ -2081,13 +2081,13 @@ static void CB_HandleTradeCanceled(void)
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-        rbox_fill_rectangle(0);
-        rbox_fill_rectangle(1);
+        ClearWindow(0);
+        ClearWindow(1);
 
         for (i = 0; i < 4; i++)
         {
             FillWindowPixelBuffer(i + 14, PIXEL_FILL(0));
-            rbox_fill_rectangle(i + 14);
+            ClearWindow(i + 14);
         }
 
         RedrawPartyWindow(TRADE_PLAYER);
@@ -2467,7 +2467,7 @@ static void ShowTradePartyMonIcons(u8 whichParty)
 
 static void PrintTradePartnerPartyNicknames(void)
 {
-    rbox_fill_rectangle(1);
+    ClearWindow(1);
     PrintPartyNicknames(1);
 }
 

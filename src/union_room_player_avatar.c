@@ -277,7 +277,7 @@ static bool32 AnimateUnionRoomPlayerSpawn(s8 * state, u32 leaderId, struct Union
         PlayerGetDestCoords(&x, &y);
         if (IsUnionRoomPlayerAt(leaderId, 0, x, y) == TRUE)
             break;
-        player_get_pos_including_state_based_drift(&x, &y);
+        GetPlayerPosWithDrift(&x, &y);
         if (IsUnionRoomPlayerAt(leaderId, 0, x, y) == TRUE)
             break;
         SetUnionRoomPlayerGfx(leaderId, object->gfxId);
@@ -492,7 +492,7 @@ static void AssembleGroup(u32 leaderId, struct RfuGameData * gameData)
     s32 i;
 
     PlayerGetDestCoords(&x, &y);
-    player_get_pos_including_state_based_drift(&x2, &y2);
+    GetPlayerPosWithDrift(&x2, &y2);
     if (IsVirtualObjectInvisible(UR_PLAYER_SPRITE_ID(leaderId, 0) - UR_SPRITE_START_ID) == TRUE)
     {
         if (IsUnionRoomPlayerAt(leaderId, 0, x, y) == TRUE || IsUnionRoomPlayerAt(leaderId, 0, x2, y2) == TRUE)

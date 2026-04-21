@@ -144,7 +144,7 @@ static void Task_MapNamePopup(u8 taskId)
     case 6:
         if (task->tWindowExists && !task->tWindowCleared)
         {
-            rbox_fill_rectangle(task->tWindowId);
+            ClearWindow(task->tWindowId);
             CopyWindowToVram(task->tWindowId, COPYWIN_MAP);
             task->tWindowCleared = TRUE;
         }

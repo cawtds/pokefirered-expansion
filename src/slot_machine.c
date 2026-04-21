@@ -2349,7 +2349,7 @@ static void Slot_PrintOnWindow0(const u8 * str)
 
 static void Slot_ClearWindow0(void)
 {
-    rbox_fill_rectangle(0);
+    ClearWindow(0);
 }
 
 static void SetLineStatesByBet(u16 * bgTilemapBuffer)

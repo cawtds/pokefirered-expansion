@@ -3255,7 +3255,7 @@ static void ClearMessageWindow(void)
 {
     if (sPokemonJumpGfx->msgWindowId != WINDOW_NONE)
     {
-        rbox_fill_rectangle(sPokemonJumpGfx->msgWindowId);
+        ClearWindow(sPokemonJumpGfx->msgWindowId);
         CopyWindowToVram(sPokemonJumpGfx->msgWindowId, COPYWIN_MAP);
         sPokemonJumpGfx->msgWindowState = 0;
     }
@@ -4362,7 +4362,7 @@ static void Task_ShowPokemonJumpRecords(u8 taskId)
     case 2:
         if (JOY_NEW(A_BUTTON | B_BUTTON))
         {
-            rbox_fill_rectangle(tWindowId);
+            ClearWindow(tWindowId);
             CopyWindowToVram(tWindowId, COPYWIN_MAP);
             tState++;
         }

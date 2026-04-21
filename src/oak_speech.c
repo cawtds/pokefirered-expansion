@@ -957,7 +957,7 @@ static void Task_PikachuIntro_LoadPage1(u8 taskId)
         PlayBGM(MUS_NEW_GAME_INTRO);
         HofPCTopBar_Clear();
         HofPCTopBar_Print(gText_ABUTTONNext, 0, 1);
-        sOakSpeechResources->pikachuIntroTilemap = malloc_and_decompress(sPikachuIntro_Background_Tilemap, &size);
+        sOakSpeechResources->pikachuIntroTilemap = AllocAndDecompress(sPikachuIntro_Background_Tilemap, &size);
         CopyToBgTilemapBufferRect(1, sOakSpeechResources->pikachuIntroTilemap, 0, 2, 30, 19);
         CopyBgTilemapBufferToVram(1);
         Free(sOakSpeechResources->pikachuIntroTilemap);
@@ -1111,7 +1111,7 @@ static void Task_OakSpeech_Init(u8 taskId)
     }
     else
     {
-        sOakSpeechResources->oakSpeechBackgroundTiles = malloc_and_decompress(sOakSpeech_Background_Tiles, &size);
+        sOakSpeechResources->oakSpeechBackgroundTiles = AllocAndDecompress(sOakSpeech_Background_Tiles, &size);
         LoadBgTiles(1, sOakSpeechResources->oakSpeechBackgroundTiles, size, 0);
         CopyToBgTilemapBuffer(1, sOakSpeech_Background_Tilemap, 0, 0);
         CopyBgTilemapBufferToVram(1);

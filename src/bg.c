@@ -914,7 +914,7 @@ void CopyToBgTilemapBuffer(u32 bg, const void *src, u32 mode, u32 destOffset)
 
 void DecompressAndCopyToBgTilemapBuffer(u32 bg, const u32 *src, u32 mode, u32 destOffset)
 {
-    void *buffer = malloc_and_decompress(src, NULL);
+    void *buffer = AllocAndDecompress(src, NULL);
 
     CopyToBgTilemapBuffer(bg, buffer, mode, destOffset);
     Free(buffer);

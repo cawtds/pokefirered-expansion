@@ -22,7 +22,7 @@ enum Collision CheckForObjectEventCollision(struct ObjectEvent *objectEvent, s16
 u8 GetPlayerAvatarObjectId(void);
 enum Direction GetPlayerFacingDirection(void);
 enum Direction GetPlayerMovementDirection(void);
-u8 player_get_pos_including_state_based_drift(s16 *x, s16 *y);
+void GetPlayerPosWithDrift(s16 *x, s16 *y);
 u8 PlayerGetCopyableMovement(void);
 u8 PlayerGetElevation(void);
 void ClearPlayerAvatarInfo(void);
@@ -31,7 +31,7 @@ void GetXYCoordsOneStepInFrontOfPlayer(s16 *xPtr, s16 *yPtr);
 void InitPlayerAvatar(s16 x, s16 y, enum Direction direction, enum Gender gender);
 void MovementType_Player(struct Sprite *sprite);
 void MovePlayerNotOnBike(enum Direction direction, u16 heldKeys);
-void player_step(enum Direction direction, u16 newKeys, u16 heldKeys);
+void PlayerStep(enum Direction direction, u16 newKeys, u16 heldKeys);
 void PlayerFaceDirection(enum Direction direction);
 void PlayerFaceDirectionFast(enum Direction direction);
 void PlayerFreeze(void);

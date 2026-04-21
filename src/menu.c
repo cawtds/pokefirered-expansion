@@ -1141,7 +1141,7 @@ void *DecompressAndCopyTileDataToVram(u8 bgId, const void *src, u32 size, u16 of
 
     if (sTempTileDataBufferCursor < ARRAY_COUNT(sTempTileDataBuffers))
     {
-        void *ptr = malloc_and_decompress(src, &sizeOut);
+        void *ptr = AllocAndDecompress(src, &sizeOut);
         if (!size)
             size = sizeOut;
         if (ptr)
@@ -1158,7 +1158,7 @@ void DecompressAndLoadBgGfxUsingHeap(u8 bgId, const void *src, u32 size, u16 off
 {
     u32 sizeOut;
 
-    void *ptr = malloc_and_decompress(src, &sizeOut);
+    void *ptr = AllocAndDecompress(src, &sizeOut);
     if (!size)
         size = sizeOut;
     if (ptr)
@@ -1173,7 +1173,7 @@ void DecompressAndLoadBgGfxUsingHeap2(u8 bgId, const void *src, u32 size, u16 of
 {
     u32 sizeOut;
 
-    void *ptr = malloc_and_decompress(src, &sizeOut);
+    void *ptr = AllocAndDecompress(src, &sizeOut);
     if (sizeOut > size)
         sizeOut = size;
     if (ptr)
@@ -1193,7 +1193,7 @@ static void TaskFreeBufAfterCopyingTileDataToVram(u8 taskId)
     }
 }
 
-void *malloc_and_decompress(const void *src, u32 *size)
+void *AllocAndDecompress(const void *src, u32 *size)
 {
     void *ptr;
     u32 localSize = GetDecompressedDataSize(src);

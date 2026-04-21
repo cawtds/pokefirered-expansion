@@ -472,7 +472,7 @@ static bool8 ItemPc_LoadGraphics(void)
     return FALSE;
 }
 
-#define try_alloc(ptr__, size) ({ \
+#define TRY_ALLOC(ptr__, size) ({ \
     void ** ptr = (void **)&(ptr__);             \
     *ptr = Alloc(size);                 \
     if (*ptr == NULL)                   \
@@ -485,8 +485,8 @@ static bool8 ItemPc_LoadGraphics(void)
 
 static bool8 ItemPc_AllocateResourcesForListMenu(void)
 {
-    try_alloc(sListMenuItems, sizeof(struct ListMenuItem) * (PC_ITEMS_COUNT + 1));
-    try_alloc(sUnusedStringAllocation, 14 * (PC_ITEMS_COUNT + 1));
+    TRY_ALLOC(sListMenuItems, sizeof(struct ListMenuItem) * (PC_ITEMS_COUNT + 1));
+    TRY_ALLOC(sUnusedStringAllocation, 14 * (PC_ITEMS_COUNT + 1));
     return TRUE;
 }
 
@@ -660,7 +660,7 @@ static void ItemPc_SetCursorPosition(void)
     }
 }
 
-#define try_free(ptr) ({        \
+#define TRY_FREE(ptr) ({        \
     void ** ptr__ = (void **)&(ptr);   \
     if (*ptr__ != NULL)                \
         Free(*ptr__);                  \
@@ -668,10 +668,10 @@ static void ItemPc_SetCursorPosition(void)
 
 static void ItemPc_FreeResources(void)
 {
-    try_free(sStateDataPtr);
-    try_free(sBg1TilemapBuffer);
-    try_free(sListMenuItems);
-    try_free(sUnusedStringAllocation);
+    TRY_FREE(sStateDataPtr);
+    TRY_FREE(sBg1TilemapBuffer);
+    TRY_FREE(sListMenuItems);
+    TRY_FREE(sUnusedStringAllocation);
     FreeAllWindowBuffers();
 }
 

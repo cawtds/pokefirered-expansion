@@ -3280,7 +3280,7 @@ static void DrawPlayerNameWindows(struct BerryCrushGame * game)
 static void CopyPlayerNameWindowGfxToBg(struct BerryCrushGame * game)
 {
     u8 i = 0;
-    u8 *windowGfx = malloc_and_decompress(gBerryCrush_TextWindows_Tilemap, NULL);;
+    u8 *windowGfx = AllocAndDecompress(gBerryCrush_TextWindows_Tilemap, NULL);;
 
     for (i = 0; i < game->playerCount; ++i)
     {

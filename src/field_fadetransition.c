@@ -44,12 +44,12 @@ static void Task_ExitStairs(u8 taskId);
 static void ExitStairsMovement(s16 *speedX, s16 *speedY, s16 *offsetX, s16 *offsetY, s16 *timer);
 static bool8 WaitStairExitMovementFinished(s16 *speedX, s16 *speedY, s16 *offsetX, s16 *offsetY, s16 *timer);
 
-void palette_bg_faded_fill_white(void)
+void FillPalBufferWhite(void)
 {
     CpuFastFill16(RGB_WHITE, gPlttBufferFaded, PLTT_SIZE);
 }
 
-void palette_bg_faded_fill_black(void)
+void FillPalBufferBlack(void)
 {
     CpuFastFill16(RGB_BLACK, gPlttBufferFaded, PLTT_SIZE);
 }
@@ -59,14 +59,14 @@ void WarpFadeInScreen(void)
     switch (MapTransitionIsExit(GetLastUsedWarpMapType(), GetCurrentMapType()))
     {
     case FALSE:
-        palette_bg_faded_fill_black();
+        FillPalBufferBlack();
         FadeScreen(FADE_FROM_BLACK, 0);
-        palette_bg_faded_fill_black();
+        FillPalBufferBlack();
         break;
     case TRUE:
-        palette_bg_faded_fill_white();
+        FillPalBufferWhite();
         FadeScreen(FADE_FROM_WHITE, 0);
-        palette_bg_faded_fill_white();
+        FillPalBufferWhite();
         break;
     }
 }
@@ -76,26 +76,26 @@ static void WarpFadeInScreenWithDelay(void)
     switch (MapTransitionIsExit(GetLastUsedWarpMapType(), GetCurrentMapType()))
     {
     case FALSE:
-        palette_bg_faded_fill_black();
+        FillPalBufferBlack();
         // delay changed from 3 to 4
         // fixes DNS palette issue
         // e.g. fat man in pallet town
         FadeScreen(FADE_FROM_BLACK, 4);
-        palette_bg_faded_fill_black();
+        FillPalBufferBlack();
         break;
     case TRUE:
-        palette_bg_faded_fill_white();
+        FillPalBufferWhite();
         FadeScreen(FADE_FROM_WHITE, 3);
-        palette_bg_faded_fill_white();
+        FillPalBufferWhite();
         break;
     }
 }
 
 void FadeInFromBlack(void)
 {
-    palette_bg_faded_fill_black();
+    FillPalBufferBlack();
     FadeScreen(FADE_FROM_BLACK, 0);
-    palette_bg_faded_fill_black();
+    FillPalBufferBlack();
 }
 
 void WarpFadeOutScreen(void)
@@ -190,7 +190,7 @@ void FieldCB_ReturnToFieldCableLink(void)
 {
     LockPlayerFieldControls();
     Overworld_PlaySpecialMapMusic();
-    palette_bg_faded_fill_black();
+    FillPalBufferBlack();
     CreateTask(Task_ReturnToFieldCableLink, 10);
 }
 
@@ -225,7 +225,7 @@ void FieldCB_ReturnToFieldWirelessLink(void)
 {
     LockPlayerFieldControls();
     Overworld_PlaySpecialMapMusic();
-    palette_bg_faded_fill_black();
+    FillPalBufferBlack();
     CreateTask(Task_ReturnToFieldRecordMixing, 10);
 }
 
@@ -243,10 +243,10 @@ static void SetUpWarpExitTask(bool8 playerNotMoving)
         switch (MapTransitionIsExit(GetLastUsedWarpMapType(), GetCurrentMapType()))
         {
         case FALSE:
-            palette_bg_faded_fill_black();
+            FillPalBufferBlack();
             break;
         case TRUE:
-            palette_bg_faded_fill_white();
+            FillPalBufferWhite();
             break;
         }
     }
