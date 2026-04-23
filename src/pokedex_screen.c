@@ -1582,12 +1582,11 @@ static u16 DexScreen_CountMonsInOrderedList(u8 orderIdx)
         {
             enum Species species = NationalPokedexNumToSpecies(natDex);
 
-            seen = DexScreen_GetSetPokedexFlag(natDex, FLAG_GET_SEEN, FALSE);
-            caught = DexScreen_GetSetPokedexFlag(natDex, FLAG_GET_CAUGHT, FALSE);
-
             if (!IsSpeciesEnabled(species))
                 continue;
 
+            seen = DexScreen_GetSetPokedexFlag(natDex, FLAG_GET_SEEN, FALSE);
+            caught = DexScreen_GetSetPokedexFlag(natDex, FLAG_GET_CAUGHT, FALSE);
             if (seen)
             {
                 sPokedexScreenData->listItems[i].name = gSpeciesInfo[species].speciesName;
