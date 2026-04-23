@@ -1,11 +1,12 @@
 #include "global.h"
+#include "event_data.h"
 #include "field_camera.h"
-#include "task.h"
 #include "fieldmap.h"
 #include "metatile_behavior.h"
+#include "task.h"
 #include "tilesets.h"
-#include "constants/songs.h"
 #include "constants/metatile_labels.h"
+#include "constants/songs.h"
 
 enum DoorSoundType
 {
@@ -38,8 +39,9 @@ struct DoorGraphics
     const u8 *paletteNums;
 };
 
+static bool8 ShouldUseMultiCorridorDoor(void);
 static void DrawClosedDoorTiles(const struct DoorGraphics *gfx, int x, int y);
-static void CopyDoorTilesToVram(const u8 *tiles);
+static void CopyDoorTilesToVram(const u8 *tiles, enum DoorSizeType size);
 static void DrawCurrentDoorAnimFrame(const struct DoorGraphics *gfx, int x, int y, const u8 *paletteNums);
 static void BuildDoorTiles(u16 *tiles, u16 tileNum, const u8 *paletteNums);
 static bool32 AnimateDoorFrame(const struct DoorGraphics *gfx, const struct DoorAnimFrame *frames, s16 *data);
@@ -239,20 +241,20 @@ static const struct DoorAnimFrame sDoorAnimFrames_CloseLarge[] = {
 
 static const struct DoorAnimFrame sBigDoorOpenAnimFrames[] =
 {
-    {4, -1},
+    {4, CLOSED_DOOR_TILES_OFFSET},
     {4, 0},
-    {4, 0x200},
-    {4, 0x400},
-    {0, 0},
+    {4, 16 * TILE_SIZE_4BPP},
+    {4, 32 * TILE_SIZE_4BPP},
+    {},
 };
 
 static const struct DoorAnimFrame sBigDoorCloseAnimFrames[] =
 {
-    {4, 0x400},
-    {4, 0x200},
+    {4, 32 * TILE_SIZE_4BPP},
+    {4, 16 * TILE_SIZE_4BPP},
     {4, 0},
-    {4, -1},
-    {0, 0},
+    {4, CLOSED_DOOR_TILES_OFFSET},
+    {},
 };
 
 static const u8 sDoorAnimPalettes_General[] = {2, 2, 2, 2, 2, 2, 2, 2};
@@ -365,22 +367,38 @@ static const struct DoorGraphics sDoorGraphics[] = {
 static void DrawDoor(const struct DoorGraphics *gfx, const struct DoorAnimFrame *frames, int x, int y)
 {
     if (frames->tileOffset == CLOSED_DOOR_TILES_OFFSET)
+    {
         DrawClosedDoorTiles(gfx, x, y);
+        if (ShouldUseMultiCorridorDoor())
+            DrawClosedDoorTiles(gfx, gSpecialVar_0x8004 + MAP_OFFSET, gSpecialVar_0x8005 + MAP_OFFSET);
+    }
     else
     {
-        CopyDoorTilesToVram(&gfx->tiles[frames->tileOffset]);
+        CopyDoorTilesToVram(&gfx->tiles[frames->tileOffset], gfx->size);
         DrawCurrentDoorAnimFrame(gfx, x, y, gfx->paletteNums);
+        if (ShouldUseMultiCorridorDoor())
+            DrawCurrentDoorAnimFrame(gfx, gSpecialVar_0x8004 + MAP_OFFSET, gSpecialVar_0x8005 + MAP_OFFSET, gfx->paletteNums);
     }
 }
 
 static void DrawClosedDoorTiles(const struct DoorGraphics *gfx, int x, int y)
 {
-    if (gfx->size == DOOR_SIZE_1x1)
-        CurrentMapDrawMetatileAt(x, y);
-    else
+    switch (gfx->size)
     {
-        CurrentMapDrawMetatileAt(x, y);
-        CurrentMapDrawMetatileAt(x, y - 1);
+        case DOOR_SIZE_1x1:
+            CurrentMapDrawMetatileAt(x, y);
+            break;
+        case DOOR_SIZE_1x2:
+            CurrentMapDrawMetatileAt(x, y);
+            CurrentMapDrawMetatileAt(x, y - 1);
+            break;
+        case DOOR_SIZE_2x2:
+            CurrentMapDrawMetatileAt(x, y - 1);
+            CurrentMapDrawMetatileAt(x, y);
+
+            CurrentMapDrawMetatileAt(x + 1, y - 1);
+            CurrentMapDrawMetatileAt(x + 1, y);
+            break;
     }
 }
 
@@ -388,27 +406,54 @@ static void DrawClosedDoorTiles(const struct DoorGraphics *gfx, int x, int y)
 //       not already part of any given tileset. This means that if there are any
 //       pre-existing tiles in this copied region that are visible when the door
 //       animation is played, they will be overwritten.
-#define DOOR_TILE_START (NUM_TILES_TOTAL - 8)
+#define DOOR_TILE_START       (NUM_TILES_TOTAL - 8)
+#define DOOR_TILE_START_SIZE2 (NUM_TILES_TOTAL - 16)
 
-static void CopyDoorTilesToVram(const u8 *tiles)
+static void CopyDoorTilesToVram(const u8 *tiles, enum DoorSizeType size)
 {
-    CpuFastCopy(tiles, (void *)(VRAM + TILE_OFFSET_4BPP(DOOR_TILE_START)), 8 * TILE_SIZE_4BPP);
+    if (size == DOOR_SIZE_2x2)
+        CpuFastCopy(tiles, (void *)(VRAM + TILE_OFFSET_4BPP(DOOR_TILE_START_SIZE2)), 16 * TILE_SIZE_4BPP);
+    else
+        CpuFastCopy(tiles, (void *)(VRAM + TILE_OFFSET_4BPP(DOOR_TILE_START)), 8 * TILE_SIZE_4BPP);
 }
 
 static void DrawCurrentDoorAnimFrame(const struct DoorGraphics *gfx, int x, int y, const u8 *paletteNums)
 {
-    u16 tiles[8];
-    if (gfx->size == DOOR_SIZE_1x1)
-        BuildDoorTiles(tiles, DOOR_TILE_START, paletteNums);
+    u16 tiles[24];
 
-    else
+    switch (gfx->size)
     {
+    case DOOR_SIZE_1x1:
         BuildDoorTiles(tiles, DOOR_TILE_START, paletteNums);
-        DrawDoorMetatileAt(x, y - 1, tiles);
-        BuildDoorTiles(tiles, DOOR_TILE_START + 4, &paletteNums[4]);
-    }
+        DrawDoorMetatileAt(x, y, tiles);
+        break;
+    case DOOR_SIZE_1x2:
+        // Top metatile
+        BuildDoorTiles(&tiles[0], DOOR_TILE_START + 0, &paletteNums[0]);
+        DrawDoorMetatileAt(x, y - 1, &tiles[0]);
 
-    DrawDoorMetatileAt(x, y, tiles);
+        // Bottom metatile
+        BuildDoorTiles(&tiles[0], DOOR_TILE_START + 4, &paletteNums[4]);
+        DrawDoorMetatileAt(x, y, &tiles[0]);
+        break;
+    case DOOR_SIZE_2x2:
+        // Top left metatile
+        BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 0, &paletteNums[0]);
+        DrawDoorMetatileAt(x, y - 1, &tiles[8]);
+
+        // Bottom left metatile
+        BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 4, &paletteNums[4]);
+        DrawDoorMetatileAt(x, y, &tiles[8]);
+
+        // Top right metatile
+        BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 8, &paletteNums[0]);
+        DrawDoorMetatileAt(x + 1, y - 1, &tiles[8]);
+
+        // Bottom right metatile
+        BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 12, &paletteNums[4]);
+        DrawDoorMetatileAt(x + 1, y, &tiles[8]);
+        break;
+    }
 }
 
 static void BuildDoorTiles(u16 *tiles, u16 tileNum, const u8 *paletteNums)
@@ -632,4 +677,18 @@ static enum DoorSoundType GetDoorSoundType(const struct DoorGraphics *gfx, int x
     if (gfx == NULL)
         return DOOR_SOUND_NONE;
     return gfx->sound;
+}
+
+// Opens the Battle Tower multi partner's door in sync with the player's door
+static bool8 ShouldUseMultiCorridorDoor(void)
+{
+    if (FlagGet(FLAG_ENABLE_MULTI_CORRIDOR_DOOR))
+    {
+        if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR)
+            && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR))
+        {
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
