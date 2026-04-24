@@ -3367,9 +3367,7 @@ u8 DexScreen_DrawMonAreaPage(void)
 
     // Show size comparison
     ResetAllPicSprites();
-    palSlot = IndexOfSpritePaletteTag(TAG_SILHOUETTE);
-    if (palSlot == 0xFF)
-        palSlot = AllocSpritePalette(TAG_SILHOUETTE);
+    palSlot = AllocSpritePalette(TAG_SILHOUETTE);
 
     LoadPalette(sPalette_Silhouette, OBJ_PLTT_ID(palSlot), PLTT_SIZE_4BPP);
 
