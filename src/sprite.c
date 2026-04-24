@@ -1643,7 +1643,7 @@ u32 AllocSpritePalette(u16 tag)
 
     index = AllocSpritePaletteUnchecked(tag);
 
-    assertf(index != 0xFF, "Failed allocating sprite palette for tag: %u", tag)
+    assertf(index != 0xFF, "Failed allocating sprite palette for tag: %d", tag)
     {
         return 0xFF;
     }
