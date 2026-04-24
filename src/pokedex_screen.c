@@ -3805,8 +3805,6 @@ static void DestroyAllTypeIcons(void)
     if (!P_USE_TYPE_ICON_SPRITES)
         return;
 
-    DebugPrintfLevel(MGBA_LOG_ERROR, "destroy all");
-
     for (u32 i = 0; i < MAX_DEX_ITEMS_SHOWN; i++)
     {
         DestroyTypeIcon(&sPokedexScreenData->typeIconSpriteIds[i].icon1Id);
