@@ -639,8 +639,7 @@ enum __attribute__((packed)) Item
     ITEM_UTILITY_UMBRELLA = 513,
 
     // Berries
-    FIRST_BERRY_INDEX = 514,
-    ITEM_CHERI_BERRY = FIRST_BERRY_INDEX,
+    ITEM_CHERI_BERRY = 514,
     ITEM_CHESTO_BERRY = 515,
     ITEM_PECHA_BERRY = 516,
     ITEM_RAWST_BERRY = 517,
@@ -708,7 +707,6 @@ enum __attribute__((packed)) Item
     ITEM_KEE_BERRY = 579,
     ITEM_MARANGA_BERRY = 580,
     ITEM_ENIGMA_BERRY_E_READER = 581,
-    LAST_BERRY_INDEX =  ITEM_ENIGMA_BERRY_E_READER,
 
     // TMs/HMs
     ITEM_TM01 = 582,
