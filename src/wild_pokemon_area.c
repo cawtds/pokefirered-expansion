@@ -18,7 +18,7 @@ struct RoamerPair
 
 static u32 GetRoamerIndex(enum Species species);
 static s32 GetRoamerPokedexAreaMarkers(enum Species species, struct Subsprite *subsprites);
-static bool32 IsSpeciesOnMap(const struct WildPokemonHeader *data, u32 headerId, enum Species species);
+static bool32 IsSpeciesOnMap(const struct WildPokemonHeader *data, enum Species species, enum Season season, enum TimeOfDay timeOfDay);
 static bool32 IsSpeciesInEncounterTable(const struct WildPokemonInfo *pokemon, enum Species species, s32 count);
 static u16 GetMapSecIdFromWildMonHeader(const struct WildPokemonHeader *header);
 static bool32 FindDexAreaByMapSec(u16 mapSecId, const u16 (*lut)[2], s32 count, s32 *lutIdx_p, u16 *tableIdx_p);
@@ -160,10 +160,30 @@ static const struct RoamerPair sRoamerPairs[] = {
     { SPECIES_RAIKOU,  SPECIES_SQUIRTLE   }
 };
 
+static bool32 IsAnySpeciesFormOnAnyMapVariant(u32 headerId, const u16 *forms, enum Season season, enum TimeOfDay timeOfDay)
+{
+    for (u32 tableIdx = 0; forms[tableIdx] != FORM_SPECIES_END; tableIdx++)
+    {
+        enum Species form = forms[tableIdx];
+        for (enum WildPokemonArea area = 0; area <= WILD_AREA_FISHING; area++)
+        {
+            enum Season tempSeason = season;
+            enum TimeOfDay tempTimeOfDay = timeOfDay;
+
+            GetSeasonAndTimeOfDayForEncounters(headerId, area, &tempSeason, &tempTimeOfDay);
+            if (IsSpeciesOnMap(&gWildMonHeaders[headerId], form, tempSeason, tempTimeOfDay))
+                return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 // Scans for the given species and populates 'subsprites' with the area markers.
 // Returns the number of areas where the species was found.
-s32 GetSpeciesPokedexAreaMarkers(enum Species species, struct Subsprite *subsprites)
+s32 GetSpeciesPokedexAreaMarkers(enum Species species, struct Subsprite *subsprites, enum Season season, enum TimeOfDay timeOfDay)
 {
+    const u16 *forms = GetSpeciesFormTable(species);
+    const u16 fallbackFormTable[] = {species, FORM_SPECIES_END};
     s32 areaCount;
     s32 j;
     s32 mapSecId;
@@ -182,6 +202,10 @@ s32 GetSpeciesPokedexAreaMarkers(enum Species species, struct Subsprite *subspri
     alteringCaveNum = VarGet(VAR_ALTERING_CAVE_WILD_SET);
     if (alteringCaveNum >= NUM_ALTERING_CAVE_TABLES)
         alteringCaveNum = 0;
+
+    if (forms == NULL)
+        forms = fallbackFormTable;
+
     for (i = 0, areaCount = 0; gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED); i++)
     {
         mapSecId = GetMapSecIdFromWildMonHeader(&gWildMonHeaders[i]);
@@ -191,7 +215,8 @@ s32 GetSpeciesPokedexAreaMarkers(enum Species species, struct Subsprite *subspri
             if (alteringCaveNum != alteringCaveCount - 1)
                 continue;
         }
-        if (IsSpeciesOnMap(&gWildMonHeaders[i], i, species))
+
+        if (IsAnySpeciesFormOnAnyMapVariant(i, forms, season, timeOfDay))
         {
             // Search for all dex areas associated with this MAPSEC.
             // In the vanilla game each MAPSEC only has at most one DEX_AREA.
@@ -258,11 +283,8 @@ static s32 GetRoamerPokedexAreaMarkers(enum Species species, struct Subsprite *s
     return 0;
 }
 
-static bool32 IsSpeciesOnMap(const struct WildPokemonHeader *data, u32 headerId, enum Species species)
+static bool32 IsSpeciesOnMap(const struct WildPokemonHeader *data, enum Species species, enum Season season, enum TimeOfDay timeOfDay)
 {
-    enum Season season;
-    enum TimeOfDay timeOfDay;
-    GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_LAND, &season, &timeOfDay);
     if (IsSpeciesInEncounterTable(data->encounterTypes[season][timeOfDay].landMonsInfo, species, LAND_WILD_COUNT))
         return TRUE;
     if (IsSpeciesInEncounterTable(data->encounterTypes[season][timeOfDay].waterMonsInfo, species, WATER_WILD_COUNT))
