@@ -1,30 +1,375 @@
 {
     "shops": [
         {
-            "id": "SHOP_ID_VIRIDIAN_CITY",
+            "id": "SHOP_ID_VIRIDIAN_CITY_MART",
             "stages": [
                 {
-                    "isUnlockedFunc": "NULL",
                     "items": [
-                        "ITEM_POTION"
-                    ]
-                },
-                {
-                    "isUnlockedFunc": "IsSecondShopUnlocked",
-                    "items": [
+                        "ITEM_POKE_BALL",
                         "ITEM_POTION",
-                        "ITEM_HYPER_POTION"
+                        "ITEM_ANTIDOTE",
+                        "ITEM_PARALYZE_HEAL"
                     ]
                 }
             ]
         },
         {
-            "id": "SHOP_ID_PEWTER_CITY",
+            "id": "SHOP_ID_PEWTER_CITY_MART",
             "stages": [
                 {
-                    "isUnlockedFunc": "NULL",
                     "items": [
-                        "ITEM_HYPER_POTION"
+	                    "ITEM_POKE_BALL",
+	                    "ITEM_POTION",
+	                    "ITEM_ANTIDOTE",
+	                    "ITEM_PARALYZE_HEAL",
+	                    "ITEM_AWAKENING",
+	                    "ITEM_BURN_HEAL",
+	                    "ITEM_ESCAPE_ROPE",
+	                    "ITEM_REPEL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_CERULEAN_CITY_MART",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_POKE_BALL",
+                        "ITEM_SUPER_POTION",
+                        "ITEM_POTION",
+                        "ITEM_ANTIDOTE",
+                        "ITEM_PARALYZE_HEAL",
+                        "ITEM_AWAKENING",
+                        "ITEM_BURN_HEAL",
+                        "ITEM_ESCAPE_ROPE",
+                        "ITEM_REPEL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_VERMILION_CITY_MART",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_POKE_BALL",
+                        "ITEM_SUPER_POTION",
+                        "ITEM_ANTIDOTE",
+                        "ITEM_PARALYZE_HEAL",
+                        "ITEM_AWAKENING",
+                        "ITEM_ICE_HEAL",
+                        "ITEM_REPEL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_LAVENDER_TOWN_MART",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_GREAT_BALL",
+                        "ITEM_SUPER_POTION",
+                        "ITEM_REVIVE",
+                        "ITEM_ANTIDOTE",
+                        "ITEM_PARALYZE_HEAL",
+                        "ITEM_BURN_HEAL",
+                        "ITEM_ICE_HEAL",
+                        "ITEM_ESCAPE_ROPE",
+                        "ITEM_SUPER_REPEL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_CELADON_CITY_DEPARTMENT_STORE_2F_ITEMS",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_GREAT_BALL",
+                        "ITEM_SUPER_POTION",
+                        "ITEM_REVIVE",
+                        "ITEM_ANTIDOTE",
+                        "ITEM_PARALYZE_HEAL",
+                        "ITEM_AWAKENING",
+                        "ITEM_BURN_HEAL",
+                        "ITEM_ICE_HEAL",
+                        "ITEM_SUPER_REPEL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_CELADON_CITY_DEPARTMENT_STORE_2F_TMS",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_TM05",
+                        "ITEM_TM15",
+                        "ITEM_TM28",
+                        "ITEM_TM31",
+                        "ITEM_TM43",
+                        "ITEM_TM45"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_CELADON_CITY_DEPARTMENT_STORE_4F_ITEMS",
+            "stages": [
+                {
+                    "items": [
+	                    "ITEM_POKE_DOLL",
+	                    "ITEM_RETRO_MAIL",
+	                    "ITEM_FIRE_STONE",
+	                    "ITEM_THUNDER_STONE",
+	                    "ITEM_WATER_STONE",
+	                    "ITEM_LEAF_STONE"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_CELADON_CITY_DEPARTMENT_STORE_5F_XITEMS",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_X_ATTACK",
+                        "ITEM_X_DEFEND",
+                        "ITEM_X_SPEED",
+                        "ITEM_X_SPECIAL",
+                        "ITEM_X_ACCURACY",
+                        "ITEM_GUARD_SPEC",
+                        "ITEM_DIRE_HIT"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_CELADON_CITY_DEPARTMENT_STORE_5F_VITAMINS",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_HP_UP",
+                        "ITEM_PROTEIN",
+                        "ITEM_IRON",
+                        "ITEM_CALCIUM",
+                        "ITEM_ZINC",
+                        "ITEM_CARBOS"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_FUCHSIA_CITY_MART",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_ULTRA_BALL",
+                        "ITEM_GREAT_BALL",
+                        "ITEM_SUPER_POTION",
+                        "ITEM_REVIVE",
+                        "ITEM_FULL_HEAL",
+                        "ITEM_MAX_REPEL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_SAFFRON_CITY_MART",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_GREAT_BALL",
+                        "ITEM_HYPER_POTION",
+                        "ITEM_REVIVE",
+                        "ITEM_FULL_HEAL",
+                        "ITEM_ESCAPE_ROPE",
+                        "ITEM_MAX_REPEL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_CINNABAR_ISLAND_MART",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_ULTRA_BALL",
+                        "ITEM_GREAT_BALL",
+                        "ITEM_HYPER_POTION",
+                        "ITEM_REVIVE",
+                        "ITEM_FULL_HEAL",
+                        "ITEM_ESCAPE_ROPE",
+                        "ITEM_MAX_REPEL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_INDIGO_PLATEAU_POKEMON_CENTER_1F",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_ULTRA_BALL",
+                        "ITEM_GREAT_BALL",
+                        "ITEM_FULL_RESTORE",
+                        "ITEM_MAX_POTION",
+                        "ITEM_REVIVE",
+                        "ITEM_FULL_HEAL",
+                        "ITEM_MAX_REPEL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_TWO_ISLAND_MART",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_GREAT_BALL",
+                        "ITEM_FRESH_WATER"
+                    ]
+                },
+                {
+                    "isUnlockedFunc": "IsTwoIslandMartExpanded1",
+                    "items": [
+                        "ITEM_ULTRA_BALL",
+                        "ITEM_GREAT_BALL",
+                        "ITEM_SODA_POP",
+                        "ITEM_FRESH_WATER"
+                    ]
+                },
+                {
+                    "isUnlockedFunc": "IsTwoIslandMartExpanded2",
+                    "items": [
+                        "ITEM_ULTRA_BALL",
+                        "ITEM_GREAT_BALL",
+                        "ITEM_LEMONADE",
+                        "ITEM_SODA_POP",
+                        "ITEM_FRESH_WATER",
+                        "ITEM_MOOMOO_MILK"
+                    ]
+                },
+                {
+                    "isUnlockedFunc": "IsTwoIslandMartExpanded3",
+                    "items": [
+                        "ITEM_ULTRA_BALL",
+                        "ITEM_REPEAT_BALL",
+                        "ITEM_TIMER_BALL",
+                        "ITEM_LEMONADE",
+                        "ITEM_SODA_POP",
+                        "ITEM_FRESH_WATER",
+                        "ITEM_MOOMOO_MILK",
+                        "ITEM_LAVA_COOKIE"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_THREE_ISLAND_MART",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_ULTRA_BALL",
+                        "ITEM_HYPER_POTION",
+                        "ITEM_REVIVE",
+                        "ITEM_FULL_HEAL",
+                        "ITEM_ESCAPE_ROPE",
+                        "ITEM_MAX_REPEL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_FOUR_ISLAND_MART",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_ULTRA_BALL",
+                        "ITEM_FULL_RESTORE",
+                        "ITEM_MAX_POTION",
+                        "ITEM_REVIVE",
+                        "ITEM_ICE_HEAL",
+                        "ITEM_FULL_HEAL",
+                        "ITEM_ESCAPE_ROPE",
+                        "ITEM_MAX_REPEL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_SIX_ISLAND_MART",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_ULTRA_BALL",
+                        "ITEM_FULL_RESTORE",
+                        "ITEM_MAX_POTION",
+                        "ITEM_REVIVE",
+                        "ITEM_FULL_HEAL",
+                        "ITEM_ESCAPE_ROPE",
+                        "ITEM_MAX_REPEL",
+                        "ITEM_DREAM_MAIL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_SEVEN_ISLAND_MART",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_ULTRA_BALL",
+                        "ITEM_GREAT_BALL",
+                        "ITEM_FULL_RESTORE",
+                        "ITEM_MAX_POTION",
+                        "ITEM_HYPER_POTION",
+                        "ITEM_REVIVE",
+                        "ITEM_FULL_HEAL",
+                        "ITEM_ESCAPE_ROPE",
+                        "ITEM_MAX_REPEL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_TRAINER_TOWER_LOBBY_MART",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_ULTRA_BALL",
+                        "ITEM_GREAT_BALL",
+                        "ITEM_FULL_RESTORE",
+                        "ITEM_MAX_POTION",
+                        "ITEM_HYPER_POTION",
+                        "ITEM_REVIVE",
+                        "ITEM_FULL_HEAL",
+                        "ITEM_ESCAPE_ROPE",
+                        "ITEM_MAX_REPEL"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_BATTLE_FRONTIER_MART",
+            "stages": [
+                {
+                    "items": [
+                        "ITEM_ULTRA_BALL",
+                        "ITEM_HYPER_POTION",
+                        "ITEM_MAX_POTION",
+                        "ITEM_FULL_RESTORE",
+                        "ITEM_FULL_HEAL",
+                        "ITEM_REVIVE",
+                        "ITEM_MAX_REPEL",
+                        "ITEM_PROTEIN",
+                        "ITEM_CALCIUM",
+                        "ITEM_IRON",
+                        "ITEM_ZINC",
+                        "ITEM_CARBOS",
+                        "ITEM_HP_UP"
                     ]
                 }
             ]

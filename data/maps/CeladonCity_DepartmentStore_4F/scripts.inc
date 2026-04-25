@@ -19,19 +19,7 @@ CeladonCity_DepartmentStore_4F_EventScript_Clerk::
 	faceplayer
 	message Text_MayIHelpYou
 	waitmessage
-	pokemart CeladonCity_DepartmentStore_4F_Items
+	pokemart_by_id SHOP_ID_CELADON_CITY_DEPARTMENT_STORE_4F_ITEMS
 	msgbox Text_PleaseComeAgain
-	release
-	end
-
-	.align 2
-CeladonCity_DepartmentStore_4F_Items::
-	.2byte ITEM_POKE_DOLL
-	.2byte ITEM_RETRO_MAIL
-	.2byte ITEM_FIRE_STONE
-	.2byte ITEM_THUNDER_STONE
-	.2byte ITEM_WATER_STONE
-	.2byte ITEM_LEAF_STONE
-	.2byte ITEM_NONE
 	release
 	end

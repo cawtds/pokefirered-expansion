@@ -83,13 +83,6 @@ struct ShopInfo
     const enum Item *items;
 };
 
-bool32 IsSecondShopUnlocked(void)
-{
-    return FlagGet(FLAG_0x020);
-};
-
-#include "data/shops.h"
-
 static const u8 sText_ShopBuy[] = _("BUY");
 static const u8 sText_ShopSell[] = _("SELL");
 static const u8 sText_ShopQuit[] = _("SEE YA!");
@@ -116,6 +109,9 @@ static EWRAM_DATA u8 (*sShopMenuItemStrings)[ITEM_NAME_LENGTH + 2] = {0};
 EWRAM_DATA struct QuestLogEvent_Shop sHistory[2] = {0};
 
 //Function Declarations
+static bool32 IsTwoIslandMartExpanded1(void);
+static bool32 IsTwoIslandMartExpanded2(void);
+static bool32 IsTwoIslandMartExpanded3(void);
 static u8 CreateShopMenu(u8 martType);
 static u8 GetMartTypeFromItemList(u32 a0);
 static void SetShopItemsForSale(const u16 *items);
@@ -387,6 +383,8 @@ static const u8 sShopBuyMenuTextColors[][3] =
     {0, 2, 3},
     {0, 3, 2}
 };
+
+#include "data/shops.h"
 
 // Functions
 static u8 CreateShopMenu(u8 martType)
@@ -1437,8 +1435,10 @@ static const enum Item *GetShopItems(enum ShopId shopId)
     {
         const struct ShopInfo *shopInfo = shopStages[i];
 
-        if (shopInfo->isUnlockedFunc == NULL || shopInfo->isUnlockedFunc())
-            latestItems = shopInfo->items;
+        if (shopInfo->isUnlockedFunc != NULL && !shopInfo->isUnlockedFunc())
+            break;
+
+        latestItems = shopInfo->items;
     }
 
     return latestItems;
@@ -1455,3 +1455,17 @@ void CreatePokemartMenuById(enum ShopId shopId)
     sHistory[1].mapSec = gMapHeader.regionMapSectionId;
 }
 
+static bool32 IsTwoIslandMartExpanded1(void)
+{
+    return VarGet(VAR_MAP_SCENE_TWO_ISLAND) > 1;
+}
+
+static bool32 IsTwoIslandMartExpanded2(void)
+{
+    return VarGet(VAR_MAP_SCENE_TWO_ISLAND) > 2;
+}
+
+static bool32 IsTwoIslandMartExpanded3(void)
+{
+    return VarGet(VAR_MAP_SCENE_TWO_ISLAND) > 3;
+}

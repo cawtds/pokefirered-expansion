@@ -7,27 +7,8 @@ BattleFrontier_Mart_EventScript_Clerk::
 	faceplayer
 	message Text_MayIHelpYou
 	waitmessage
-	pokemart BattleFrontier_Mart_Pokemart
+	pokemart_by_id SHOP_ID_BATTLE_FRONTIER_MART
 	msgbox Text_PleaseComeAgain
-	release
-	end
-
-	.align 2
-BattleFrontier_Mart_Pokemart:
-	.2byte ITEM_ULTRA_BALL
-	.2byte ITEM_HYPER_POTION
-	.2byte ITEM_MAX_POTION
-	.2byte ITEM_FULL_RESTORE
-	.2byte ITEM_FULL_HEAL
-	.2byte ITEM_REVIVE
-	.2byte ITEM_MAX_REPEL
-	.2byte ITEM_PROTEIN
-	.2byte ITEM_CALCIUM
-	.2byte ITEM_IRON
-	.2byte ITEM_ZINC
-	.2byte ITEM_CARBOS
-	.2byte ITEM_HP_UP
-	.2byte ITEM_NONE
 	release
 	end
 

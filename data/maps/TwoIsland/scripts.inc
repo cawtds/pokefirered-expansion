@@ -72,7 +72,7 @@ TwoIsland_EventScript_ClerkShopExpanded3::
 	setflag FLAG_TWO_ISLAND_SHOP_EXPANDED_3
 	message TwoIsland_Text_BringingItemsFromDistantLands
 	waitmessage
-	goto TwoIsland_EventScript_ShopExpanded3
+	goto TwoIsland_EventScript_ShowShop
 	end
 
 TwoIsland_EventScript_ClerkShopExpanded2::
@@ -80,7 +80,7 @@ TwoIsland_EventScript_ClerkShopExpanded2::
 	setflag FLAG_TWO_ISLAND_SHOP_EXPANDED_2
 	message TwoIsland_Text_HopeYouGiveItYourBest
 	waitmessage
-	goto TwoIsland_EventScript_ShopExpanded2
+	goto TwoIsland_EventScript_ShowShop
 	end
 
 TwoIsland_EventScript_ClerkShopExpanded1::
@@ -88,7 +88,7 @@ TwoIsland_EventScript_ClerkShopExpanded1::
 	setflag FLAG_TWO_ISLAND_SHOP_EXPANDED_1
 	message TwoIsland_Text_AddedMerchandiseForLostelle
 	waitmessage
-	goto TwoIsland_EventScript_ShopExpanded1
+	goto TwoIsland_EventScript_ShowShop
 	end
 
 TwoIsland_EventScript_ClerkShopInitial::
@@ -96,83 +96,15 @@ TwoIsland_EventScript_ClerkShopInitial::
 	setflag FLAG_TWO_ISLAND_SHOP_INTRODUCED
 	message TwoIsland_Text_WelcomeToShopMerchandiseLimited
 	waitmessage
-	goto TwoIsland_EventScript_ShopInitial
+	goto TwoIsland_EventScript_ShowShop
 	end
 
 TwoIsland_EventScript_ClerkShopSkipIntro::
 	message Text_MayIHelpYou
 	waitmessage
-	goto_if_eq VAR_MAP_SCENE_TWO_ISLAND, 4, TwoIsland_EventScript_ShopExpanded3
-	goto_if_eq VAR_MAP_SCENE_TWO_ISLAND, 3, TwoIsland_EventScript_ShopExpanded2
-	goto_if_eq VAR_MAP_SCENE_TWO_ISLAND, 2, TwoIsland_EventScript_ShopExpanded1
-	goto TwoIsland_EventScript_ShopInitial
-	end
-
-TwoIsland_EventScript_ShopInitial::
-	pokemart TwoIsland_Items_ShopInitial
+TwoIsland_EventScript_ShowShop::
+	pokemart_by_id SHOP_ID_TWO_ISLAND_MART
 	msgbox Text_PleaseComeAgain
-	release
-	end
-
-	.align 2
-TwoIsland_Items_ShopInitial::
-	.2byte ITEM_GREAT_BALL
-	.2byte ITEM_FRESH_WATER
-	.2byte ITEM_NONE
-	release
-	end
-
-TwoIsland_EventScript_ShopExpanded1::
-	pokemart TwoIsland_Items_ShopExpanded1
-	msgbox Text_PleaseComeAgain
-	release
-	end
-
-	.align 2
-TwoIsland_Items_ShopExpanded1::
-	.2byte ITEM_ULTRA_BALL
-	.2byte ITEM_GREAT_BALL
-	.2byte ITEM_SODA_POP
-	.2byte ITEM_FRESH_WATER
-	.2byte ITEM_NONE
-	release
-	end
-
-TwoIsland_EventScript_ShopExpanded2::
-	pokemart TwoIsland_Items_ShopExpanded2
-	msgbox Text_PleaseComeAgain
-	release
-	end
-
-	.align 2
-TwoIsland_Items_ShopExpanded2::
-	.2byte ITEM_ULTRA_BALL
-	.2byte ITEM_GREAT_BALL
-	.2byte ITEM_LEMONADE
-	.2byte ITEM_SODA_POP
-	.2byte ITEM_FRESH_WATER
-	.2byte ITEM_MOOMOO_MILK
-	.2byte ITEM_NONE
-	release
-	end
-
-TwoIsland_EventScript_ShopExpanded3::
-	pokemart TwoIsland_Items_ShopExpanded3
-	msgbox Text_PleaseComeAgain
-	release
-	end
-
-	.align 2
-TwoIsland_Items_ShopExpanded3::
-	.2byte ITEM_ULTRA_BALL
-	.2byte ITEM_REPEAT_BALL
-	.2byte ITEM_TIMER_BALL
-	.2byte ITEM_LEMONADE
-	.2byte ITEM_SODA_POP
-	.2byte ITEM_FRESH_WATER
-	.2byte ITEM_MOOMOO_MILK
-	.2byte ITEM_LAVA_COOKIE
-	.2byte ITEM_NONE
 	release
 	end
 

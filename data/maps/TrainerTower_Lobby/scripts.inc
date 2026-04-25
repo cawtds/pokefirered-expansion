@@ -120,23 +120,8 @@ TrainerTower_Lobby_EventScript_MartClerk::
 	faceplayer
 	message Text_MayIHelpYou
 	waitmessage
-	pokemart TrainerTower_Lobby_Mart_Items
+	pokemart_by_id SHOP_ID_TRAINER_TOWER_LOBBY_MART
 	msgbox Text_PleaseComeAgain
-	release
-	end
-
-	.align 2
-TrainerTower_Lobby_Mart_Items::
-	.2byte ITEM_ULTRA_BALL
-	.2byte ITEM_GREAT_BALL
-	.2byte ITEM_FULL_RESTORE
-	.2byte ITEM_MAX_POTION
-	.2byte ITEM_HYPER_POTION
-	.2byte ITEM_REVIVE
-	.2byte ITEM_FULL_HEAL
-	.2byte ITEM_ESCAPE_ROPE
-	.2byte ITEM_MAX_REPEL
-	.2byte ITEM_NONE
 	release
 	end
 
