@@ -290,14 +290,14 @@ void ItemUseOutOfBattle_Bike(u8 taskId)
      || MetatileBehavior_IsHorizontalRail(behavior) == TRUE
      || MetatileBehavior_IsIsolatedVerticalRail(behavior) == TRUE
      || MetatileBehavior_IsIsolatedHorizontalRail(behavior) == TRUE)
-        DisplayItemMessageInCurrentContext(taskId, gTasks[taskId].data[3], FONT_NORMAL, sText_CantDismountBike);
+        DisplayItemMessageInCurrentContext(taskId, gTasks[taskId].tUsingRegisteredKeyItem, FONT_NORMAL, sText_CantDismountBike);
     else if (Overworld_IsBikingAllowed() == TRUE && !IsBikingDisallowedByPlayer() && FollowerNPCCanBike())
     {
         sItemUseOnFieldCB = ItemUseOnFieldCB_Bicycle;
         SetUpItemUseOnFieldCallback(taskId);
     }
     else
-        PrintNotTheTimeToUseThat(taskId, gTasks[taskId].data[3]);
+        PrintNotTheTimeToUseThat(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
 }
 
 static void ItemUseOnFieldCB_Bicycle(u8 taskId)
@@ -320,7 +320,7 @@ void ItemUseOutOfBattle_Rod(u8 taskId)
         SetUpItemUseOnFieldCallback(taskId);
     }
     else
-        PrintNotTheTimeToUseThat(taskId, gTasks[taskId].data[3]);
+        PrintNotTheTimeToUseThat(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
 }
 
 void ItemUseOutOfBattle_FormChange(u8 taskId)
@@ -438,14 +438,12 @@ static void Task_AccessPokemonBoxLink(u8 taskId)
     DestroyTask(taskId);
 }
 
-#define tIsFieldUse data[3]
-
 void ItemUseOutOfBattle_CoinCase(u8 taskId)
 {
     ConvertIntToDecimalStringN(gStringVar1, GetCoins(), STR_CONV_MODE_LEFT_ALIGN, 4);
     StringExpandPlaceholders(gStringVar4, sText_CoinCase);
     ItemUse_SetQuestLogEvent(QL_EVENT_USED_ITEM, NULL, gSpecialVar_ItemId, 0xFFFF);
-    if (gTasks[taskId].tIsFieldUse == FALSE)
+    if (gTasks[taskId].tUsingRegisteredKeyItem == FALSE)
         DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
     else
         DisplayItemMessageOnField(taskId, FONT_NORMAL, gStringVar4, Task_ItemUse_CloseMessageBoxAndReturnToField);
@@ -462,7 +460,7 @@ void ItemUseOutOfBattle_PowderJar(u8 taskId)
     ConvertIntToDecimalStringN(gStringVar1, GetBerryPowder(), STR_CONV_MODE_LEFT_ALIGN, 5);
     StringExpandPlaceholders(gStringVar4, sText_PowderQty);
     ItemUse_SetQuestLogEvent(QL_EVENT_USED_ITEM, NULL, gSpecialVar_ItemId, 0xFFFF);
-    if (gTasks[taskId].tIsFieldUse == FALSE)
+    if (gTasks[taskId].tUsingRegisteredKeyItem == FALSE)
         DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
     else
         DisplayItemMessageOnField(taskId, FONT_NORMAL, gStringVar4, Task_ItemUse_CloseMessageBoxAndReturnToField);
@@ -528,14 +526,14 @@ void ItemUseOutOfBattle_PokeFlute(u8 taskId)
     if (wokeSomeoneUp)
     {
         ItemUse_SetQuestLogEvent(QL_EVENT_USED_ITEM, NULL, gSpecialVar_ItemId, 0xFFFF);
-        if (gTasks[taskId].tIsFieldUse == FALSE)
+        if (gTasks[taskId].tUsingRegisteredKeyItem == FALSE)
             DisplayItemMessage(taskId, FONT_NORMAL, sText_PlayedPokeFlute, Task_PlayPokeFlute);
         else
             DisplayItemMessageOnField(taskId, FONT_NORMAL, sText_PlayedPokeFlute, Task_PlayPokeFlute);
     }
     else
     {
-        if (gTasks[taskId].tIsFieldUse == FALSE)
+        if (gTasks[taskId].tUsingRegisteredKeyItem == FALSE)
             DisplayItemMessage(taskId, FONT_NORMAL, sText_PlayedPokeFluteCatchy, CloseItemMessage);
         else
             DisplayItemMessageOnField(taskId, FONT_NORMAL, sText_PlayedPokeFluteCatchy, Task_ItemUse_CloseMessageBoxAndReturnToField);
@@ -552,7 +550,7 @@ static void Task_DisplayPokeFluteMessage(u8 taskId)
 {
     if (WaitFanfare(FALSE))
     {
-        if (gTasks[taskId].tIsFieldUse == FALSE)
+        if (gTasks[taskId].tUsingRegisteredKeyItem == FALSE)
             DisplayItemMessage(taskId, FONT_NORMAL, sText_PokeFluteAwakenedMon, CloseItemMessage);
         else
             DisplayItemMessageOnField(taskId, FONT_NORMAL, sText_PokeFluteAwakenedMon, Task_ItemUse_CloseMessageBoxAndReturnToField);
@@ -561,7 +559,7 @@ static void Task_DisplayPokeFluteMessage(u8 taskId)
 
 void ItemUseOutOfBattle_TmCase(u8 taskId)
 {
-    if (gTasks[taskId].tIsFieldUse == FALSE)
+    if (gTasks[taskId].tUsingRegisteredKeyItem == FALSE)
     {
         ItemMenu_SetExitCallback(InitTMCaseFromBag);
         Task_FadeAndCloseBagMenu(taskId);
@@ -576,7 +574,7 @@ void ItemUseOutOfBattle_TmCase(u8 taskId)
 
 void ItemUseOutOfBattle_BerryPouch(u8 taskId)
 {
-    if (gTasks[taskId].tIsFieldUse == FALSE)
+    if (gTasks[taskId].tUsingRegisteredKeyItem == FALSE)
     {
         ItemMenu_SetExitCallback(InitBerryPouchFromBag);
         Task_FadeAndCloseBagMenu(taskId);
@@ -592,7 +590,7 @@ void ItemUseOutOfBattle_BerryPouch(u8 taskId)
 void ItemUseOutOfBattle_TeachyTv(u8 taskId)
 {
     ItemUse_SetQuestLogEvent(QL_EVENT_USED_ITEM, NULL, gSpecialVar_ItemId, 0xFFFF);
-    if (gTasks[taskId].tIsFieldUse == FALSE)
+    if (gTasks[taskId].tUsingRegisteredKeyItem == FALSE)
     {
         ItemMenu_SetExitCallback(InitTeachyTvFromBag);
         Task_FadeAndCloseBagMenu(taskId);
@@ -607,7 +605,7 @@ void ItemUseOutOfBattle_TeachyTv(u8 taskId)
 
 void ItemUseOutOfBattle_TownMap(u8 taskId)
 {
-    if (gTasks[taskId].tIsFieldUse == FALSE)
+    if (gTasks[taskId].tUsingRegisteredKeyItem == FALSE)
     {
         ItemMenu_SetExitCallback(UseTownMapFromBag);
         Task_FadeAndCloseBagMenu(taskId);
@@ -623,7 +621,7 @@ void ItemUseOutOfBattle_TownMap(u8 taskId)
 void ItemUseOutOfBattle_FameChecker(u8 taskId)
 {
     ItemUse_SetQuestLogEvent(QL_EVENT_USED_ITEM, NULL, gSpecialVar_ItemId, 0xFFFF);
-    if (gTasks[taskId].tIsFieldUse == FALSE)
+    if (gTasks[taskId].tUsingRegisteredKeyItem == FALSE)
     {
         ItemMenu_SetExitCallback(UseFameCheckerFromBag);
         Task_FadeAndCloseBagMenu(taskId);
@@ -635,8 +633,6 @@ void ItemUseOutOfBattle_FameChecker(u8 taskId)
         gTasks[taskId].func = Task_UseFameCheckerFromField;
     }
 }
-
-#undef tIsFieldUse
 
 static void DoSetUpItemUseCallback(u8 taskId)
 {
@@ -907,7 +903,7 @@ void ItemUseOutOfBattle_EscapeRope(u8 taskId)
         SetUpItemUseOnFieldCallback(taskId);
     }
     else
-        PrintNotTheTimeToUseThat(taskId, gTasks[taskId].data[3]);
+        PrintNotTheTimeToUseThat(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
 }
 
 static void ItemUseOnFieldCB_EscapeRope(u8 taskId)
@@ -971,7 +967,7 @@ void ItemUseOutOfBattle_VsSeeker(u8 taskId)
        || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_THREE_ISLAND_BERRY_FOREST)
        || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SIX_ISLAND_PATTERN_BUSH))))
     {
-        PrintNotTheTimeToUseThat(taskId, gTasks[taskId].data[3]);
+        PrintNotTheTimeToUseThat(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
     }
     else
     {
@@ -1293,7 +1289,7 @@ void ItemUseOutOfBattle_CannotUse(u8 taskId)
         DisplayItemMessageInBerryPouch(taskId, FONT_MALE, gStringVar4, Task_BerryPouch_DestroyDialogueWindowAndRefreshListMenu);
     }
     else
-        PrintNotTheTimeToUseThat(taskId, gTasks[taskId].data[3]);
+        PrintNotTheTimeToUseThat(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
 }
 
 void ItemUse_SetQuestLogEvent(u8 eventId, struct Pokemon *pokemon, enum Item itemId, u16 param)
