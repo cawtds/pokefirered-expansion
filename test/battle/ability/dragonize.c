@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Dragonize doesn't affect Natural Gift's type")
     PARAMETRIZE { ability = ABILITY_DRAGONIZE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        ASSUME(gNaturalGiftTable[BERRY_ID_ORAN].type == TYPE_POISON);
+        ASSUME(gBerries[BERRY_ID_ORAN].naturalGiftType == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
         PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ability); Item(ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_BELDUM);

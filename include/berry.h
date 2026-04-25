@@ -1,31 +1,30 @@
 #ifndef GUARD_BERRY_H
 #define GUARD_BERRY_H
 
-void SetEnigmaBerry(u8 *src);
+bool32 BerryTreeGrow(struct BerryTree *tree);
 bool32 IsEnigmaBerryValid(void);
-const struct BerryInfo *GetBerryInfo(enum BerryId berry);
-struct BerryTree *GetBerryTreeInfo(u8 id);
+bool32 IsPlayerFacingEmptyBerryTreePatch(void);
 bool32 ObjectEventInteractionWaterBerryTree(void);
-bool8 IsPlayerFacingEmptyBerryTreePatch(void);
-bool8 TryToWaterBerryTree(void);
-void ClearBerryTrees(void);
-void BerryTreeTimeUpdate(s32 minutes);
-void PlantBerryTree(u8 id, enum BerryId berry, u8 stage, bool8 allowGrowth);
-void RemoveBerryTree(u8 id);
-u8 GetBerryTypeByBerryTreeId(u8 id);
-u8 GetStageByBerryTreeId(u8);
-void GetBerryNameByBerryType(u8 berry, u8 *string);
-void ResetBerryTreeSparkleFlag(u8 id);
+bool32 PlayerHasBerries(void);
+bool32 TryToWaterBerryTree(void);
+const struct BerryInfo *GetBerryInfo(enum BerryId berry);
+enum BerryId GetBerryTypeByBerryTreeId(enum BerryTreeId berryTreeId);
+struct BerryTree *GetBerryTreeInfo(enum BerryTreeId berryTreeId);
+u8 GetStageByBerryTreeId(enum BerryTreeId berryTreeId);
 void Bag_ChooseBerry(void);
 void Bag_ChooseMulch(void);
-void ObjectEventInteractionGetBerryTreeData(void);
-void ObjectEventInteractionPlantBerryTree(void);
-void ObjectEventInteractionPickBerryTree(void);
-void ObjectEventInteractionRemoveBerryTree(void);
+void BerryTreeTimeUpdate(s32 minutes);
+void ClearBerryTrees(void);
+void GetBerryNameByBerryType(enum BerryId berry, u8 *string);
 void ObjectEventInteractionApplyMulch(void);
-bool8 PlayerHasBerries(void);
+void ObjectEventInteractionGetBerryTreeData(void);
+void ObjectEventInteractionPickBerryTree(void);
+void ObjectEventInteractionPlantBerryTree(void);
+void ObjectEventInteractionRemoveBerryTree(void);
+void PlantBerryTree(enum BerryTreeId berryTreeId, enum BerryId berry, u8 stage, bool8 allowGrowth);
+void RemoveBerryTree(enum BerryTreeId berryTreeId);
 void SetBerryTreesSeen(void);
-bool32 BerryTreeGrow(struct BerryTree *tree);
+void SetEnigmaBerry(u8 *src);
 
 extern const struct Berry gBerries[];
 

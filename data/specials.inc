@@ -24,6 +24,11 @@ gSpecials::
 	def_special PlayerHasMulch
 	def_special Bag_ChooseMulch
 	def_special CanWaterBerryPlot
+	def_special ObjectEventInteractionApplyMulch
+	def_special ObjectEventInteractionPullBerryWeed
+	def_special ObjectEventInteractionClearBerryPests
+	def_special ObjectEventInteractionBerryHasWeed
+	def_special ObjectEventInteractionBerryHasPests
 	def_special ObjectEventInteractionWaterBerryTree
 	def_special PlayerHasBerries
 	def_special TryBattleLinkup

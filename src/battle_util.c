@@ -6045,77 +6045,6 @@ static const u8 sSpeedDiffPowerTable[] = {40, 60, 80, 120, 150};
 static const u8 sHeatCrashPowerTable[] = {40, 40, 60, 80, 100, 120};
 static const u8 sTrumpCardPowerTable[] = {200, 80, 60, 50, 40};
 
-const struct TypePower gNaturalGiftTable[] =
-{
-    [BERRY_ID_CHERI] = {TYPE_FIRE, 80},
-    [BERRY_ID_CHESTO] = {TYPE_WATER, 80},
-    [BERRY_ID_PECHA] = {TYPE_ELECTRIC, 80},
-    [BERRY_ID_RAWST] = {TYPE_GRASS, 80},
-    [BERRY_ID_ASPEAR] = {TYPE_ICE, 80},
-    [BERRY_ID_LEPPA] = {TYPE_FIGHTING, 80},
-    [BERRY_ID_ORAN] = {TYPE_POISON, 80},
-    [BERRY_ID_PERSIM] = {TYPE_GROUND, 80},
-    [BERRY_ID_LUM] = {TYPE_FLYING, 80},
-    [BERRY_ID_SITRUS] = {TYPE_PSYCHIC, 80},
-    [BERRY_ID_FIGY] = {TYPE_BUG, 80},
-    [BERRY_ID_WIKI] = {TYPE_ROCK, 80},
-    [BERRY_ID_MAGO] = {TYPE_GHOST, 80},
-    [BERRY_ID_AGUAV] = {TYPE_DRAGON, 80},
-    [BERRY_ID_IAPAPA] = {TYPE_DARK, 80},
-    [BERRY_ID_RAZZ] = {TYPE_STEEL, 80},
-    [BERRY_ID_OCCA] = {TYPE_FIRE, 80},
-    [BERRY_ID_PASSHO] = {TYPE_WATER, 80},
-    [BERRY_ID_WACAN] = {TYPE_ELECTRIC, 80},
-    [BERRY_ID_RINDO] = {TYPE_GRASS, 80},
-    [BERRY_ID_YACHE] = {TYPE_ICE, 80},
-    [BERRY_ID_CHOPLE] = {TYPE_FIGHTING, 80},
-    [BERRY_ID_KEBIA] = {TYPE_POISON, 80},
-    [BERRY_ID_SHUCA] = {TYPE_GROUND, 80},
-    [BERRY_ID_COBA] = {TYPE_FLYING, 80},
-    [BERRY_ID_PAYAPA] = {TYPE_PSYCHIC, 80},
-    [BERRY_ID_TANGA] = {TYPE_BUG, 80},
-    [BERRY_ID_CHARTI] = {TYPE_ROCK, 80},
-    [BERRY_ID_KASIB] = {TYPE_GHOST, 80},
-    [BERRY_ID_HABAN] = {TYPE_DRAGON, 80},
-    [BERRY_ID_COLBUR] = {TYPE_DARK, 80},
-    [BERRY_ID_BABIRI] = {TYPE_STEEL, 80},
-    [BERRY_ID_CHILAN] = {TYPE_NORMAL, 80},
-    [BERRY_ID_ROSELI] = {TYPE_FAIRY, 80},
-    [BERRY_ID_BLUK] = {TYPE_FIRE, 90},
-    [BERRY_ID_NANAB] = {TYPE_WATER, 90},
-    [BERRY_ID_WEPEAR] = {TYPE_ELECTRIC, 90},
-    [BERRY_ID_PINAP] = {TYPE_GRASS, 90},
-    [BERRY_ID_POMEG] = {TYPE_ICE, 90},
-    [BERRY_ID_KELPSY] = {TYPE_FIGHTING, 90},
-    [BERRY_ID_QUALOT] = {TYPE_POISON, 90},
-    [BERRY_ID_HONDEW] = {TYPE_GROUND, 90},
-    [BERRY_ID_GREPA] = {TYPE_FLYING, 90},
-    [BERRY_ID_TAMATO] = {TYPE_PSYCHIC, 90},
-    [BERRY_ID_CORNN] = {TYPE_BUG, 90},
-    [BERRY_ID_MAGOST] = {TYPE_ROCK, 90},
-    [BERRY_ID_RABUTA] = {TYPE_GHOST, 90},
-    [BERRY_ID_NOMEL] = {TYPE_DRAGON, 90},
-    [BERRY_ID_SPELON] = {TYPE_DARK, 90},
-    [BERRY_ID_PAMTRE] = {TYPE_STEEL, 90},
-    [BERRY_ID_WATMEL] = {TYPE_FIRE, 100},
-    [BERRY_ID_DURIN] = {TYPE_WATER, 100},
-    [BERRY_ID_BELUE] = {TYPE_ELECTRIC, 100},
-    [BERRY_ID_LIECHI] = {TYPE_GRASS, 100},
-    [BERRY_ID_GANLON] = {TYPE_ICE, 100},
-    [BERRY_ID_SALAC] = {TYPE_FIGHTING, 100},
-    [BERRY_ID_PETAYA] = {TYPE_POISON, 100},
-    [BERRY_ID_APICOT] = {TYPE_GROUND, 100},
-    [BERRY_ID_LANSAT] = {TYPE_FLYING, 100},
-    [BERRY_ID_STARF] = {TYPE_PSYCHIC, 100},
-    [BERRY_ID_ENIGMA] = {TYPE_BUG, 100},
-    [BERRY_ID_MICLE] = {TYPE_ROCK, 100},
-    [BERRY_ID_CUSTAP] = {TYPE_GHOST, 100},
-    [BERRY_ID_JABOCA] = {TYPE_DRAGON, 100},
-    [BERRY_ID_ROWAP] = {TYPE_DARK, 100},
-    [BERRY_ID_KEE] = {TYPE_FAIRY, 100},
-    [BERRY_ID_MARANGA] = {TYPE_DARK, 100},
-};
-
 static inline u32 CalcRolloutBasePower(enum BattlerId battlerAtk, u32 basePower)
 {
     u32 i;
@@ -6265,7 +6194,7 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
             basePower *= 2;
         break;
     case EFFECT_NATURAL_GIFT:
-        basePower = gNaturalGiftTable[ItemIdToBerryType(gBattleMons[battlerAtk].item)].power;
+        basePower = gBerries[ItemIdToBerryType(gBattleMons[battlerAtk].item)].naturalGiftPower;
         break;
     case EFFECT_DOUBLE_POWER_ON_ARG_STATUS:
         // Comatose targets treated as if asleep
