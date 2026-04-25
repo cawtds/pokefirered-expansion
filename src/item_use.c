@@ -328,7 +328,6 @@ void ItemUseOutOfBattle_FormChange(u8 taskId)
     if (!gTasks[taskId].tUsingRegisteredKeyItem)
     {
         gItemUseCB = ItemUseCB_FormChange;
-        gTasks[taskId].data[0] = FALSE;
         SetUpItemUseOnFieldCallback(taskId);
     }
     else
@@ -343,7 +342,6 @@ void ItemUseOutOfBattle_FormChange_ConsumedOnUse(u8 taskId)
     if (!gTasks[taskId].tUsingRegisteredKeyItem)
     {
         gItemUseCB = ItemUseCB_FormChange_ConsumedOnUse;
-        gTasks[taskId].data[0] = TRUE;
         SetUpItemUseOnFieldCallback(taskId);
     }
     else
@@ -358,7 +356,6 @@ void ItemUseOutOfBattle_RotomCatalog(u8 taskId)
     if (!gTasks[taskId].tUsingRegisteredKeyItem)
     {
         gItemUseCB = ItemUseCB_RotomCatalog;
-        gTasks[taskId].data[0] = TRUE;
         SetUpItemUseOnFieldCallback(taskId);
     }
     else
@@ -373,7 +370,6 @@ void ItemUseOutOfBattle_ZygardeCube(u8 taskId)
     if (!gTasks[taskId].tUsingRegisteredKeyItem)
     {
         gItemUseCB = ItemUseCB_ZygardeCube;
-        gTasks[taskId].data[0] = TRUE;
         SetUpItemUseOnFieldCallback(taskId);
     }
     else
@@ -386,7 +382,6 @@ void ItemUseOutOfBattle_ZygardeCube(u8 taskId)
 void ItemUseOutOfBattle_Fusion(u8 taskId)
 {
     gItemUseCB = ItemUseCB_Fusion;
-    gTasks[taskId].data[0] = FALSE;
     SetUpItemUseCallback(taskId);
 }
 
@@ -923,7 +918,6 @@ static void ItemUseOnFieldCB_EscapeRope(u8 taskId)
 
     CopyItemName(gSpecialVar_ItemId, gStringVar2);
     StringExpandPlaceholders(gStringVar4, gText_PlayerUsedVar2);
-    gTasks[taskId].data[0] = 0;
     DisplayItemMessageOnField(taskId, FONT_NORMAL, gStringVar4, Task_UseDigEscapeRopeOnField);
 }
 
@@ -1282,7 +1276,6 @@ static void ItemUseOnFieldCB_Honey(u8 taskId)
     RemoveBagItem(gSpecialVar_ItemId, 1);
     CopyItemName(gSpecialVar_ItemId, gStringVar2);
     StringExpandPlaceholders(gStringVar4, gText_PlayerUsedVar2);
-    gTasks[taskId].data[0] = 0;
     DisplayItemMessageOnField(taskId, FONT_NORMAL, gStringVar4, Task_UseHoneyOnField);
 }
 
