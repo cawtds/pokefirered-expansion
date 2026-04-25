@@ -3161,25 +3161,10 @@ static bool32 ResetVineGfx(void)
     return TRUE;
 }
 
-static const u8 sPluralTxt[] = _("IES");
-
 static void PrintPrizeMessage(enum Item itemId, u16 quantity)
 {
-    CopyItemName(itemId, sPokemonJumpGfx->itemName);
+    CopyItemNameHandlePlural(itemId, sPokemonJumpGfx->itemName, quantity);
     ConvertIntToDecimalStringN(sPokemonJumpGfx->itemQuantityStr, quantity, STR_CONV_MODE_LEFT_ALIGN, 1);
-    if (itemId >= FIRST_BERRY_INDEX && itemId < LAST_BERRY_INDEX)
-    {
-        if (quantity > 1)
-        {
-            int endi = StringLength(sPokemonJumpGfx->itemName);
-            if (endi != 0)
-            {
-                endi--;
-                endi[sPokemonJumpGfx->itemName] = EOS;
-                StringAppend(sPokemonJumpGfx->itemName, sPluralTxt);
-            }
-        }
-    }
     DynamicPlaceholderTextUtil_Reset();
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, sPokemonJumpGfx->itemName);
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, sPokemonJumpGfx->itemQuantityStr);

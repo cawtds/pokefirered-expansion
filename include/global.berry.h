@@ -2,7 +2,6 @@
 #define GUARD_GLOBAL_BERRY_H
 
 #define BERRY_NAME_LENGTH 6
-#define BERRY_NAME_COUNT 7
 #define BERRY_ITEM_EFFECT_COUNT 18
 
 struct Berry
