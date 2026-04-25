@@ -1026,12 +1026,18 @@ void StartBerryCrush(MainCallback callback)
 
 static void GetBerryFromBag(void)
 {
-    if (gSpecialVar_ItemId < FIRST_BERRY_INDEX || gSpecialVar_ItemId > LAST_BERRY_INDEX + 1)
-        gSpecialVar_ItemId = FIRST_BERRY_INDEX;
+    enum BerryId berryId = ItemIdToBerryType(gSpecialVar_ItemId);
+    if (berryId == BERRY_ID_NONE)
+    {
+        berryId = 1;
+        gSpecialVar_ItemId = BerryTypeToItemId(berryId);
+    }
     else
+    {
         RemoveBagItem(gSpecialVar_ItemId, 1);
+    }
 
-    sGame->players[sGame->localId].berryId = gSpecialVar_ItemId - FIRST_BERRY_INDEX;
+    sGame->players[sGame->localId].berryId = berryId;
     sGame->nextCmd = CMD_FADE;
     sGame->afterPalFadeCmd = CMD_WAIT_BERRIES;
     SetPaletteFadeArgs(sGame->commandParams, FALSE, PALETTES_ALL, 0, 16, 0, RGB_BLACK);
@@ -1400,10 +1406,10 @@ static u32 Cmd_WaitForOthersToPickBerries(struct BerryCrushGame *game, u8 *args)
         for (i = 0; i < game->playerCount; ++i)
         {
             game->players[i].berryId = gBlockRecvBuffer[i][0];
-            if (game->players[i].berryId > LAST_BERRY_INDEX + 1)
+            if (game->players[i].berryId > NUM_BERRIES)
                 game->players[i].berryId = 0;
-            game->targetAPresses += gBerryCrush_BerryData[game->players[i].berryId].difficulty;
-            game->powder += gBerryCrush_BerryData[game->players[i].berryId].powder;
+            game->targetAPresses += gBerries[game->players[i].berryId].berryCrushDifficulty;
+            game->powder += gBerries[game->players[i].berryId].berryCrushPowder;
         }
         game->cmdTimer = 0;
         ResetBlockReceivedFlags();
@@ -2704,7 +2710,7 @@ static void CreateBerrySprites(struct BerryCrushGame *game, struct BerryCrushGam
             &sSpriteTemplate_PlayerBerry,
             sPlayerBerrySpriteTags[i],
             sPlayerBerrySpriteTags[i],
-            game->players[i].berryId + FIRST_BERRY_INDEX);
+            BerryTypeToItemId(game->players[i].berryId));
         spritesManager->berrySprites[i] = &gSprites[spriteId];
         spritesManager->berrySprites[i]->oam.priority = 3;
         spritesManager->berrySprites[i]->affineAnimPaused = TRUE;
@@ -2958,9 +2964,9 @@ static void PrintResultsText(struct BerryCrushGame *game, u8 command, u8 x, u8 y
             linkPlayerId = i;
             linkIdToPrint = i;
             j = game->players[i].berryId;
-            if (j >= LAST_BERRY_INDEX - FIRST_BERRY_INDEX + 2)
-                j = 0;
-            StringCopy(gStringVar1, gBerries[j].name);
+            if (j > NUM_BERRIES)
+                j = 1;
+            StringCopy(gStringVar1, GetBerryInfo(j)->name);
             StringExpandPlaceholders(gStringVar4, sBCRankingHeaders[command]);
             AddTextPrinterParameterized3(game->gfx.resultsWindowId, FONT_NORMAL, x - GetStringWidth(FONT_NORMAL, gStringVar4, -1) - 4, y + 14 * i, sBerryCrushTextColorTable[COLORID_GRAY], 0, gStringVar4);
             break;

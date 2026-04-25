@@ -1599,8 +1599,11 @@ bool8 ScrCmd_lockall(struct ScriptContext *ctx)
     }
     else
     {
+        struct ObjectEvent *followerObj = GetFollowerObject();
         FreezeObjects_WaitForPlayer();
         SetupNativeScript(ctx, IsFreezePlayerFinished);
+        if (FlagGet(FLAG_SAFE_FOLLOWER_MOVEMENT) && followerObj) // Unfreeze follower object (conditionally)
+            UnfreezeObjectEvent(followerObj);
         return TRUE;
     }
 }
@@ -2088,9 +2091,6 @@ bool8 ScrCmd_bufferitemname(struct ScriptContext *ctx)
     return FALSE;
 }
 
-static const u8 sText_S[] = _("S");
-static const u8 sText_IES[] = _("IES");
-
 bool8 ScrCmd_bufferitemnameplural(struct ScriptContext *ctx)
 {
     u8 stringVarIndex = ScriptReadByte(ctx);
@@ -2099,20 +2099,7 @@ bool8 ScrCmd_bufferitemnameplural(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    CopyItemName(itemId, sScriptStringVars[stringVarIndex]);
-    if (itemId == ITEM_POKE_BALL && quantity >= 2)
-        StringAppend(sScriptStringVars[stringVarIndex], sText_S);
-    else if (itemId >= FIRST_BERRY_INDEX && itemId < LAST_BERRY_INDEX && quantity >= 2)
-    {
-        u16 strlength = StringLength(sScriptStringVars[stringVarIndex]);
-        if (strlength != 0)
-        {
-            u8 *endptr = sScriptStringVars[stringVarIndex] + strlength;
-            endptr[-1] = EOS;
-            StringAppend(sScriptStringVars[stringVarIndex], sText_IES);
-        }
-    }
-
+    CopyItemNameHandlePlural(itemId, sScriptStringVars[stringVarIndex], quantity);
     return FALSE;
 }
 

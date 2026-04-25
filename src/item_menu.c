@@ -1979,15 +1979,12 @@ static void ItemMenu_UseInBattle(u8 taskId)
     PutWindowTilemap(WIN_DESCRIPTION);
     CopyWindowToVram(WIN_ITEM_LIST, COPYWIN_MAP);
 
-    if (type == ITEM_USE_BAG_MENU) {
+    if (type == ITEM_USE_BAG_MENU || (type == ITEM_USE_BATTLER && !IsDoubleBattle()))
         ItemUseInBattle_BagMenu(taskId);
-    }
-    else if (type == ITEM_USE_PARTY_MENU) {
+    else if (type == ITEM_USE_PARTY_MENU || (type == ITEM_USE_BATTLER && IsDoubleBattle()))
         ItemUseInBattle_PartyMenu(taskId);
-    }
-    else if (type == ITEM_USE_PARTY_MENU_MOVES) {
+    else if (type == ITEM_USE_PARTY_MENU_MOVES)
         ItemUseInBattle_PartyMenuChooseMove(taskId);
-    }
 }
 
 static void Task_ItemContext_GiveToParty(u8 taskId)

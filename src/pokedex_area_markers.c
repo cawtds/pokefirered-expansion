@@ -6,6 +6,7 @@
 #include "palette.h"
 #include "pokedex_area_markers.h"
 #include "pokedex.h"
+#include "rtc.h"
 #include "task.h"
 #include "wild_pokemon_area.h"
 
@@ -191,7 +192,7 @@ static void Task_ShowAreaMarkers(u8 taskId)
     gSprites[data->spriteId].invisible = FALSE;
 }
 
-u8 CreatePokedexAreaMarkers(enum Species species, u16 tilesTag, u8 palIdx, u8 y)
+u8 CreatePokedexAreaMarkers(enum Species species, u16 tilesTag, u8 palIdx, u8 y, enum Season season, enum TimeOfDay timeOfDay)
 {
     struct SpriteTemplate spriteTemplate;
     struct CompressedSpriteSheet spriteSheet;
@@ -215,7 +216,7 @@ u8 CreatePokedexAreaMarkers(enum Species species, u16 tilesTag, u8 palIdx, u8 y)
     subsprites = Alloc(120 * sizeof(struct Subsprite));
     data->buffer = subsprites;
     data->subsprites.subsprites = subsprites;
-    data->subsprites.subspriteCount = GetSpeciesPokedexAreaMarkers(species, subsprites);
+    data->subsprites.subspriteCount = GetSpeciesPokedexAreaMarkers(species, subsprites, season, timeOfDay);
 
     SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_OBJWIN_ON);
     SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG1 | BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_BG0 | BLDCNT_TGT2_BG1 | BLDCNT_TGT2_BG2 | BLDCNT_TGT2_BG3 | BLDCNT_TGT2_BD);
@@ -243,12 +244,19 @@ u8 CreatePokedexAreaMarkers(enum Species species, u16 tilesTag, u8 palIdx, u8 y)
     return taskId;
 }
 
-void DestroyPokedexAreaMarkers(u8 taskId)
+void DestroyPokedexAreaMarkerSprites(u8 taskId)
 {
     struct PAM_TaskData *data = (void *)gTasks[taskId].data;
     FreeSpriteTilesByTag(data->tilesTag);
     DestroySprite(&gSprites[data->spriteId]);
     Free(data->buffer);
+
+    DestroyTask(taskId);
+}
+
+void DestroyPokedexAreaMarkers(u8 taskId)
+{
+    DestroyPokedexAreaMarkerSprites(taskId);
     SetGpuReg(REG_OFFSET_BLDCNT, 0);
     SetGpuReg(REG_OFFSET_BLDALPHA, 0);
     SetGpuReg(REG_OFFSET_BLDY, 0);
@@ -260,7 +268,6 @@ void DestroyPokedexAreaMarkers(u8 taskId)
     FillBgTilemapBufferRect_Palette0(1, 0x000, 0, 0, 30, 20);
     CopyBgTilemapBufferToVram(1);
     ShowBg(1);
-    DestroyTask(taskId);
 }
 
 void GetAreaMarkerSubsprite(s32 i, s32 dexArea, struct Subsprite *subsprites)

@@ -1,5 +1,5 @@
 EventScript_ResetAllBerries::
-	@ setberrytree BERRY_TREE_XXX_ORAN,  ITEM_TO_BERRY(ITEM_ORAN_BERRY),  BERRY_STAGE_BERRIES
+	@ setberrytree BERRY_TREE_XXX_ORAN,  BERRY_ID_ORAN,  BERRY_STAGE_BERRIES
 	return
 
 EventScript_ResetAllMapFlags::

@@ -658,7 +658,12 @@ static bool8 TryStartCoordEventScript(struct MapPosition *position)
 
     if (script == NULL)
         return FALSE;
-    ScriptContext_SetupScript(script);
+
+    struct ScriptContext ctx;
+    if (!RunScriptImmediatelyUntilEffect(SCREFF_V1 | SCREFF_HARDWARE, script, &ctx))
+        return FALSE;
+
+    ScriptContext_ContinueScript(&ctx);
     return TRUE;
 }
 

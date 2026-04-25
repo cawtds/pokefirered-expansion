@@ -617,7 +617,7 @@ static const union AnimCmd *const sAnims_DeoxysRockFragment[] =
 static const struct SpriteTemplate sSpriteTemplate_DeoxysRockFragment =
 {
     .tileTag = TAG_NONE,
-    .paletteTag = 4371,
+    .paletteTag = OBJ_EVENT_PAL_TAG_METEORITE,
     .oam = &sOamData_8x8,
     .anims = sAnims_DeoxysRockFragment,
     .images = sImages_DeoxysRockFragment,

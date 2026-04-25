@@ -19,6 +19,7 @@
 #include "follower_helper.h"
 #include "follower_npc.h"
 #include "gpu_regs.h"
+#include "graphics.h"
 #include "malloc.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
@@ -179,7 +180,7 @@ static void MovementType_RaiseHandAndSwim(struct Sprite *);
 static void MovementType_WanderAroundSlower(struct Sprite *);
 static void MovementType_FollowPlayer(struct Sprite *);
 
-static const struct SpriteFrameImage sPicTable_PechaBerryTree[];
+extern const struct SpriteFrameImage sPicTable_PechaBerryTree[];
 
 enum {
     JUMP_DISTANCE_IN_PLACE,
@@ -721,7 +722,6 @@ static const u16 *const gObjectPaletteTagSets[] = {
     sObjectPaletteTags3,
 };
 
-#include "data/object_events/berry_tree_graphics_tables.h"
 #include "data/field_effects/field_effect_objects.h"
 
 static const s16 gMovementDelaysMedium[] = {32, 64,  96, 128};
@@ -3055,10 +3055,10 @@ static void SetBerryTreeGraphicsById(struct ObjectEvent *objectEvent, u8 berryId
     const u16 graphicsId = gBerryTreeObjectEventGraphicsIdTable[berryStage];
     const struct ObjectEventGraphicsInfo *graphicsInfo = GetObjectEventGraphicsInfo(graphicsId);
     struct Sprite *sprite = &gSprites[objectEvent->spriteId];
-    UpdateSpritePalette(&sObjectEventSpritePalettes[gBerryTreePaletteSlotTablePointers[berryId][berryStage]-2], sprite);
+    UpdateSpritePalette(&sObjectEventSpritePalettes[gBerries[berryId].berryTreePaletteSlotTable[berryStage]-2], sprite);
     sprite->oam.shape = graphicsInfo->oam->shape;
     sprite->oam.size = graphicsInfo->oam->size;
-    sprite->images = gBerryTreePicTablePointers[berryId];
+    sprite->images = gBerries[berryId].berryTreePicTable;
     sprite->anims = graphicsInfo->anims;
     sprite->subspriteTables = graphicsInfo->subspriteTables;
     objectEvent->inanimate = graphicsInfo->inanimate;
@@ -3075,7 +3075,7 @@ static void SetBerryTreeGraphicsById(struct ObjectEvent *objectEvent, u8 berryId
 static void SetBerryTreeGraphics(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     u8 berryStage;
-    u8 berryId;
+    enum BerryId berryId;
 
     objectEvent->invisible = TRUE;
     sprite->invisible = TRUE;
@@ -3084,10 +3084,10 @@ static void SetBerryTreeGraphics(struct ObjectEvent *objectEvent, struct Sprite 
     {
         objectEvent->invisible = FALSE;
         sprite->invisible = FALSE;
-        berryId = GetBerryTypeByBerryTreeId(objectEvent->trainerRange_berryTreeId) - 1;
+        berryId = GetBerryTypeByBerryTreeId(objectEvent->trainerRange_berryTreeId);
         berryStage--;
-        if (berryId > ITEM_TO_BERRY(LAST_BERRY_INDEX))
-            berryId = 0;
+        if (berryId > NUM_BERRIES)
+            berryId = BERRY_ID_NONE;
 
         SetBerryTreeGraphicsById(objectEvent, berryId, berryStage);
         StartSpriteAnim(sprite, berryStage);
@@ -3590,13 +3590,13 @@ u16 GetBoulderRevealFlagByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 }
 
 // Unused
-u8 GetObjectTrainerTypeByObjectEventId(u8 objectEventId)
+u8 UNUSED GetObjectTrainerTypeByObjectEventId(u8 objectEventId)
 {
     return gObjectEvents[objectEventId].trainerType;
 }
 
 // Unused
-u8 GetObjectEventBerryTreeIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
+u8 UNUSED GetObjectEventBerryTreeIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 {
     u8 objectEventId;
 
@@ -3606,8 +3606,7 @@ u8 GetObjectEventBerryTreeIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
     return gObjectEvents[objectEventId].trainerRange_berryTreeId;
 }
 
-// Unused
-u8 GetObjectEventBerryTreeId(u8 objectEventId)
+enum BerryTreeId GetObjectEventBerryTreeId(u8 objectEventId)
 {
     return gObjectEvents[objectEventId].trainerRange_berryTreeId;
 }

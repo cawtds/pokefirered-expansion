@@ -664,7 +664,7 @@ static bool8 BerryPouchLoadGfx(void)
 
 static bool8 AllocateListMenuBuffers(void)
 {
-    sListMenuItems = Alloc((LAST_BERRY_INDEX - FIRST_BERRY_INDEX) * sizeof(struct ListMenuItem));
+    sListMenuItems = Alloc(NUM_BERRIES * sizeof(struct ListMenuItem));
     if (sListMenuItems == NULL)
         return FALSE;
     sListMenuStrbuf = Alloc(sResources->listMenuNumItems * 27);
@@ -712,7 +712,7 @@ static void GetBerryNameAndIndexForMenu(u8 *dest, enum Item itemId)
 {
     StringCopy(gStringVar4, gText_FontSmall);
     StringAppend(gStringVar4, gText_NumberClear01);
-    ConvertIntToDecimalStringN(gStringVar1, itemId - FIRST_BERRY_INDEX + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
+    ConvertIntToDecimalStringN(gStringVar1, ItemIdToBerryType(itemId), STR_CONV_MODE_LEADING_ZEROS, 2);
     StringAppend(gStringVar4, gStringVar1);
     CopyItemName(itemId, gStringVar1);
     StringAppend(gStringVar4, sText_Space);

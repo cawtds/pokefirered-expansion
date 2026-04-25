@@ -2488,8 +2488,10 @@ static void Task_DoDeoxysTriangleInteraction(u8 taskId)
 static void MoveDeoxysObject(u8 num)
 {
     u8 mapObjId;
-    LoadPalette(sDeoxysObjectPals[num], OBJ_PLTT_ID(10), PLTT_SIZEOF(4));
-    UpdateSpritePaletteWithWeather(10, FALSE);
+    u32 palIndex = IndexOfSpritePaletteTag(OBJ_EVENT_PAL_TAG_METEORITE);
+
+    LoadPalette(sDeoxysObjectPals[num], OBJ_PLTT_ID(palIndex), PLTT_SIZEOF(4));
+    UpdateSpritePaletteWithWeather(palIndex, FALSE);
     TryGetObjectEventIdByLocalIdAndMap(LOCALID_BIRTH_ISLAND_EXTERIOR_ROCK, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &mapObjId);
     if (num == 0)
         PlaySE(SE_M_CONFUSE_RAY);
@@ -2534,7 +2536,9 @@ void IncrementBirthIslandRockStepCount(void)
 void SetDeoxysTrianglePalette(void)
 {
     u8 num = VarGet(VAR_DEOXYS_INTERACTION_NUM);
-    LoadPalette(sDeoxysObjectPals[num], OBJ_PLTT_ID(10), PLTT_SIZEOF(4));
+    u32 palIndex = AllocSpritePalette(OBJ_EVENT_PAL_TAG_METEORITE);
+
+    LoadPalette(sDeoxysObjectPals[num], OBJ_PLTT_ID(palIndex), PLTT_SIZEOF(4));
 }
 
 bool8 IsBadEggInParty(void)

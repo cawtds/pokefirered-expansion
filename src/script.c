@@ -341,6 +341,16 @@ void ScriptContext_SetupScript(const u8 *ptr)
     sGlobalScriptContextStatus = CONTEXT_RUNNING;
 }
 
+// Moves a script from a local context to the global context and enables it.
+void ScriptContext_ContinueScript(struct ScriptContext *ctx)
+{
+    sGlobalScriptContext = *ctx;
+    LockPlayerFieldControls();
+    if (OW_FOLLOWERS_SCRIPT_MOVEMENT)
+        FlagSet(FLAG_SAFE_FOLLOWER_MOVEMENT);
+    sGlobalScriptContextStatus = CONTEXT_RUNNING;
+}
+
 // Puts the script into waiting mode; usually called from a wait* script command.
 void ScriptContext_Stop(void)
 {
