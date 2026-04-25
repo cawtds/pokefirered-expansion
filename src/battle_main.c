@@ -705,10 +705,10 @@ static void SetPlayerBerryDataInBattleStruct(void)
     }
     else
     {
-        const struct Berry *berryData = GetBerryInfo(ItemIdToBerryType(ITEM_ENIGMA_BERRY_E_READER));
+        const struct BerryInfo *berryInfo = GetBerryInfo(BERRY_ID_ENIGMA_E_READER);
 
         for (i = 0; i < BERRY_NAME_LENGTH; i++)
-            battleBerry->name[i] = berryData->name[i];
+            battleBerry->name[i] = berryInfo->name[i];
         battleBerry->name[i] = EOS;
 
         for (i = 0; i < BERRY_ITEM_EFFECT_COUNT; i++)
@@ -750,12 +750,12 @@ static void SetAllPlayersBerryData(void)
         }
         else
         {
-            const struct Berry *berryData = GetBerryInfo(ItemIdToBerryType(ITEM_ENIGMA_BERRY_E_READER));
+            const struct BerryInfo *berryInfo = GetBerryInfo(BERRY_ID_ENIGMA_E_READER);
 
             for (i = 0; i < BERRY_NAME_LENGTH; i++)
             {
-                gEnigmaBerries[0].name[i] = berryData->name[i];
-                gEnigmaBerries[2].name[i] = berryData->name[i];
+                gEnigmaBerries[0].name[i] = berryInfo->name[i];
+                gEnigmaBerries[2].name[i] = berryInfo->name[i];
             }
             gEnigmaBerries[0].name[i] = EOS;
             gEnigmaBerries[2].name[i] = EOS;
@@ -6006,7 +6006,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
         break;
     case EFFECT_NATURAL_GIFT:
         if (GetItemPocket(heldItem) == POCKET_BERRIES)
-            return gNaturalGiftTable[ITEM_TO_BERRY(heldItem)].type;
+            return gBerries[ItemIdToBerryType(heldItem)].naturalGiftType;
         else
             return moveType;
     case EFFECT_TERRAIN_PULSE:

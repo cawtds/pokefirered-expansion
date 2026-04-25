@@ -6342,4 +6342,6 @@ extern const u16 gFrontierPassMedalsGold_Pal[];
 extern const u16 gFrontierPassMedalsSilver_Pal[];
 extern const u16 gFrontierPassMapCursor_Pal[];
 
+extern const u8 gBerryTreeObjectEventGraphicsIdTable[];
+
 #endif //GUARD_GRAPHICS_H

@@ -278,19 +278,15 @@ bool32 CheckBagHasItem(enum Item itemId, u16 count)
 
 bool32 HasAtLeastOneBerry(void)
 {
-    enum Item itemId;
-    bool8 exists;
-
-    exists = CheckBagHasItem(ITEM_BERRY_POUCH, 1);
-    if (!exists)
+    if (!CheckBagHasItem(ITEM_BERRY_POUCH, 1))
     {
         gSpecialVar_Result = FALSE;
         return FALSE;
     }
-    for (itemId = FIRST_BERRY_INDEX; itemId <= LAST_BERRY_INDEX; itemId++)
+
+    for (enum BerryId berryId = 1; berryId < NUM_BERRIES; berryId++)
     {
-        exists = CheckBagHasItem(itemId, 1);
-        if (exists)
+        if (CheckBagHasItem(BerryTypeToItemId(berryId), 1))
         {
             gSpecialVar_Result = TRUE;
             return TRUE;

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "berry.h"
 #include "test/battle.h"
 
 ASSUMPTIONS
@@ -103,7 +104,7 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect Natural Gift's type")
     PARAMETRIZE { ability = ABILITY_GALVANIZE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_ORAN_BERRY)].type == TYPE_POISON);
+        ASSUME(gBerries[BERRY_ID_ORAN].naturalGiftType == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
         PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ability); Item(ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_BELDUM);

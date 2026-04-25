@@ -188,6 +188,7 @@ const struct ObjectEventGraphicsInfo *GetObjectEventGraphicsInfo(u16 graphicsId)
 const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(enum Species species, bool32 shiny, bool32 female);
 const struct ObjectEventTemplate *GetObjectEventTemplateByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup);
 const u8 *GetObjectEventScriptPointerByObjectEventId(u8 objectEventId);
+enum BerryTreeId GetObjectEventBerryTreeId(u8 objectEventId);
 enum Collision GetCollisionAtCoords(struct ObjectEvent *, s16, s16, enum Direction direction);
 enum Collision GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, enum Direction dir, u8 currentBehavior, u8 nextBehavior, enum Collision collision);
 enum Direction GetOppositeDirection(enum Direction direction);
@@ -234,7 +235,6 @@ u8 GetJumpSpecialMovementAction(enum Direction direction);
 u8 GetJumpSpecialWithEffectMovementAction(enum Direction direction);
 u8 GetLedgeJumpDirection(s16 x, s16 y, enum Direction direction);
 u8 GetMoveDirectionAnimNum(enum Direction direction);
-u8 GetObjectEventBerryTreeId(u8 objectEventId);
 u8 GetObjectEventIdByLocalId(u8);
 u8 GetObjectEventIdByLocalIdAndMap(u8, u8, u8);
 u8 GetObjectEventIdByPosition(u16 x, u16 y, u8 elevation);

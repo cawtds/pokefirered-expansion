@@ -1,3 +1,53 @@
+
+// berry trees
+const u32 gObjectEventPic_BerryTreeDirtPile[] = INCBIN_U32("graphics/object_events/pics/berry_trees/dirt_pile.4bpp");
+const u32 gObjectEventPic_BerryTreeSprout[] = INCBIN_U32("graphics/object_events/pics/berry_trees/sprout.4bpp");
+const u32 gObjectEventPic_CheriBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/cheri.4bpp");
+const u32 gObjectEventPic_ChestoBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/chesto.4bpp");
+const u32 gObjectEventPic_PechaBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/pecha.4bpp");
+const u32 gObjectEventPic_RawstBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/rawst.4bpp");
+const u32 gObjectEventPic_AspearBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/aspear.4bpp");
+const u32 gObjectEventPic_LeppaBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/leppa.4bpp");
+const u32 gObjectEventPic_OranBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/oran.4bpp");
+const u32 gObjectEventPic_PersimBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/persim.4bpp");
+const u32 gObjectEventPic_LumBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/lum.4bpp");
+const u32 gObjectEventPic_SitrusBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/sitrus.4bpp");
+const u32 gObjectEventPic_FigyBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/figy.4bpp");
+const u32 gObjectEventPic_WikiBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/wiki.4bpp");
+const u32 gObjectEventPic_MagoBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/mago.4bpp");
+const u32 gObjectEventPic_AguavBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/aguav.4bpp");
+const u32 gObjectEventPic_IapapaBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/iapapa.4bpp");
+const u32 gObjectEventPic_RazzBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/razz.4bpp");
+const u32 gObjectEventPic_WepearBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/wepear.4bpp");
+const u32 gObjectEventPic_PomegBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/pomeg.4bpp");
+const u32 gObjectEventPic_KelpsyBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/kelpsy.4bpp");
+const u32 gObjectEventPic_HondewBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/hondew.4bpp");
+const u32 gObjectEventPic_GrepaBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/grepa.4bpp");
+const u32 gObjectEventPic_TamatoBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/tamato.4bpp");
+const u32 gObjectEventPic_CornnBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/cornn.4bpp");
+const u32 gObjectEventPic_RabutaBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/rabuta.4bpp");
+const u32 gObjectEventPic_NomelBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/nomel.4bpp");
+const u32 gObjectEventPic_SpelonBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/spelon.4bpp");
+const u32 gObjectEventPic_PamtreBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/pamtre.4bpp");
+const u32 gObjectEventPic_DurinBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/durin.4bpp");
+const u32 gObjectEventPic_OccaBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/occa.4bpp");
+const u32 gObjectEventPic_YacheBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/yache.4bpp");
+const u32 gObjectEventPic_ChopleBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/chople.4bpp");
+const u32 gObjectEventPic_KebiaBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/kebia.4bpp");
+const u32 gObjectEventPic_ShucaBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/shuca.4bpp");
+const u32 gObjectEventPic_PayapaBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/payapa.4bpp");
+const u32 gObjectEventPic_TangaBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/tanga.4bpp");
+const u32 gObjectEventPic_KasibBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/kasib.4bpp");
+const u32 gObjectEventPic_HabanBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/haban.4bpp");
+const u32 gObjectEventPic_ColburBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/colbur.4bpp");
+const u32 gObjectEventPic_RoseliBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/roseli.4bpp");
+const u32 gObjectEventPic_LiechiBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/liechi.4bpp");
+const u32 gObjectEventPic_LansatBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/lansat.4bpp");
+const u32 gObjectEventPic_MicleBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/micle.4bpp");
+const u32 gObjectEventPic_CustapBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/custap.4bpp");
+const u32 gObjectEventPic_JabocaBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/jaboca.4bpp");
+const u32 gObjectEventPic_RowapBerryTree[] = INCBIN_U32("graphics/object_events/pics/berry_trees/rowap.4bpp");
+
 static const struct SpriteFrameImage sPicTable_CheriBerryTree[] = {
     overworld_frame(gObjectEventPic_BerryTreeDirtPile, 2, 2, 0),
     overworld_frame(gObjectEventPic_BerryTreeSprout, 2, 2, 0),
@@ -26,7 +76,7 @@ static const struct SpriteFrameImage sPicTable_ChestoBerryTree[] = {
 
 const u8 gBerryTreePaletteSlotTable_Chesto[] = {3, 4, 2, 2, 2, 2, 2};
 
-static const struct SpriteFrameImage sPicTable_PechaBerryTree[] = {
+const struct SpriteFrameImage sPicTable_PechaBerryTree[] = {
     overworld_frame(gObjectEventPic_BerryTreeDirtPile, 2, 2, 0),
     overworld_frame(gObjectEventPic_BerryTreeSprout, 2, 2, 0),
     overworld_frame(gObjectEventPic_BerryTreeSprout, 2, 2, 1),
@@ -628,149 +678,24 @@ const struct SpriteFrameImage sPicTable_RowapBerryTree[] = {
 
 const u8 gBerryTreePaletteSlotTable_Rowap[] = {3, 4, 5, 5, 5, 5, 5};
 
-const u8 gDeadBerryTreeObjectEventGraphicsIdTable[] = {OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES, OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES, OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES, OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES, OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES, OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES, OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES};
-
-const u8 gBerryTreeObjectEventGraphicsIdTable[] = {OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES, OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES, OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES, OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES, OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES, OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES, OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES};
-
-const struct SpriteFrameImage *const gBerryTreePicTablePointers[] = {
-    [ITEM_CHERI_BERRY - FIRST_BERRY_INDEX]            = sPicTable_CheriBerryTree,
-    [ITEM_CHESTO_BERRY - FIRST_BERRY_INDEX]           = sPicTable_ChestoBerryTree,
-    [ITEM_PECHA_BERRY - FIRST_BERRY_INDEX]            = sPicTable_PechaBerryTree,
-    [ITEM_RAWST_BERRY - FIRST_BERRY_INDEX]            = sPicTable_RawstBerryTree,
-    [ITEM_ASPEAR_BERRY - FIRST_BERRY_INDEX]           = sPicTable_AspearBerryTree,
-    [ITEM_LEPPA_BERRY - FIRST_BERRY_INDEX]            = sPicTable_LeppaBerryTree,
-    [ITEM_ORAN_BERRY - FIRST_BERRY_INDEX]             = sPicTable_OranBerryTree,
-    [ITEM_PERSIM_BERRY - FIRST_BERRY_INDEX]           = sPicTable_PersimBerryTree,
-    [ITEM_LUM_BERRY - FIRST_BERRY_INDEX]              = sPicTable_LumBerryTree,
-    [ITEM_SITRUS_BERRY - FIRST_BERRY_INDEX]           = sPicTable_SitrusBerryTree,
-    [ITEM_FIGY_BERRY - FIRST_BERRY_INDEX]             = sPicTable_FigyBerryTree,
-    [ITEM_WIKI_BERRY - FIRST_BERRY_INDEX]             = sPicTable_WikiBerryTree,
-    [ITEM_MAGO_BERRY - FIRST_BERRY_INDEX]             = sPicTable_MagoBerryTree,
-    [ITEM_AGUAV_BERRY - FIRST_BERRY_INDEX]            = sPicTable_AguavBerryTree,
-    [ITEM_IAPAPA_BERRY - FIRST_BERRY_INDEX]           = sPicTable_IapapaBerryTree,
-    [ITEM_RAZZ_BERRY - FIRST_BERRY_INDEX]             = sPicTable_RazzBerryTree,
-    [ITEM_BLUK_BERRY - FIRST_BERRY_INDEX]             = sPicTable_RazzBerryTree,
-    [ITEM_NANAB_BERRY - FIRST_BERRY_INDEX]            = sPicTable_MagoBerryTree,
-    [ITEM_WEPEAR_BERRY - FIRST_BERRY_INDEX]           = sPicTable_WepearBerryTree,
-    [ITEM_PINAP_BERRY - FIRST_BERRY_INDEX]            = sPicTable_IapapaBerryTree,
-    [ITEM_POMEG_BERRY - FIRST_BERRY_INDEX]            = sPicTable_PomegBerryTree,
-    [ITEM_KELPSY_BERRY - FIRST_BERRY_INDEX]           = sPicTable_KelpsyBerryTree,
-    [ITEM_QUALOT_BERRY - FIRST_BERRY_INDEX]           = sPicTable_WepearBerryTree,
-    [ITEM_HONDEW_BERRY - FIRST_BERRY_INDEX]           = sPicTable_HondewBerryTree,
-    [ITEM_GREPA_BERRY - FIRST_BERRY_INDEX]            = sPicTable_GrepaBerryTree,
-    [ITEM_TAMATO_BERRY - FIRST_BERRY_INDEX]           = sPicTable_TamatoBerryTree,
-    [ITEM_CORNN_BERRY - FIRST_BERRY_INDEX]            = sPicTable_CornnBerryTree,
-    [ITEM_MAGOST_BERRY - FIRST_BERRY_INDEX]           = sPicTable_PomegBerryTree,
-    [ITEM_RABUTA_BERRY - FIRST_BERRY_INDEX]           = sPicTable_RabutaBerryTree,
-    [ITEM_NOMEL_BERRY - FIRST_BERRY_INDEX]            = sPicTable_NomelBerryTree,
-    [ITEM_SPELON_BERRY - FIRST_BERRY_INDEX]           = sPicTable_SpelonBerryTree,
-    [ITEM_PAMTRE_BERRY - FIRST_BERRY_INDEX]           = sPicTable_PamtreBerryTree,
-    [ITEM_WATMEL_BERRY - FIRST_BERRY_INDEX]           = sPicTable_RabutaBerryTree,
-    [ITEM_DURIN_BERRY - FIRST_BERRY_INDEX]            = sPicTable_DurinBerryTree,
-    [ITEM_BELUE_BERRY - FIRST_BERRY_INDEX]            = sPicTable_HondewBerryTree,
-    [ITEM_CHILAN_BERRY - FIRST_BERRY_INDEX]           = sPicTable_GrepaBerryTree,
-    [ITEM_OCCA_BERRY - FIRST_BERRY_INDEX]             = sPicTable_OccaBerryTree,
-    [ITEM_PASSHO_BERRY - FIRST_BERRY_INDEX]           = sPicTable_CornnBerryTree,
-    [ITEM_WACAN_BERRY - FIRST_BERRY_INDEX]            = sPicTable_RazzBerryTree,
-    [ITEM_RINDO_BERRY - FIRST_BERRY_INDEX]            = sPicTable_TamatoBerryTree,
-    [ITEM_YACHE_BERRY - FIRST_BERRY_INDEX]            = sPicTable_YacheBerryTree,
-    [ITEM_CHOPLE_BERRY - FIRST_BERRY_INDEX]           = sPicTable_ChopleBerryTree,
-    [ITEM_KEBIA_BERRY - FIRST_BERRY_INDEX]            = sPicTable_KebiaBerryTree,
-    [ITEM_SHUCA_BERRY - FIRST_BERRY_INDEX]            = sPicTable_ShucaBerryTree,
-    [ITEM_COBA_BERRY - FIRST_BERRY_INDEX]             = sPicTable_RawstBerryTree,
-    [ITEM_PAYAPA_BERRY - FIRST_BERRY_INDEX]           = sPicTable_PayapaBerryTree,
-    [ITEM_TANGA_BERRY - FIRST_BERRY_INDEX]            = sPicTable_TangaBerryTree,
-    [ITEM_CHARTI_BERRY - FIRST_BERRY_INDEX]           = sPicTable_LansatBerryTree,
-    [ITEM_KASIB_BERRY - FIRST_BERRY_INDEX]            = sPicTable_KasibBerryTree,
-    [ITEM_HABAN_BERRY - FIRST_BERRY_INDEX]            = sPicTable_HabanBerryTree,
-    [ITEM_COLBUR_BERRY - FIRST_BERRY_INDEX]           = sPicTable_ColburBerryTree,
-    [ITEM_BABIRI_BERRY - FIRST_BERRY_INDEX]           = sPicTable_LiechiBerryTree,
-    [ITEM_ROSELI_BERRY - FIRST_BERRY_INDEX]           = sPicTable_RoseliBerryTree,
-    [ITEM_LIECHI_BERRY - FIRST_BERRY_INDEX]           = sPicTable_LiechiBerryTree,
-    [ITEM_GANLON_BERRY - FIRST_BERRY_INDEX]           = sPicTable_HondewBerryTree,
-    [ITEM_SALAC_BERRY - FIRST_BERRY_INDEX]            = sPicTable_AguavBerryTree,
-    [ITEM_PETAYA_BERRY - FIRST_BERRY_INDEX]           = sPicTable_PomegBerryTree,
-    [ITEM_APICOT_BERRY - FIRST_BERRY_INDEX]           = sPicTable_GrepaBerryTree,
-    [ITEM_LANSAT_BERRY - FIRST_BERRY_INDEX]           = sPicTable_LansatBerryTree,
-    [ITEM_STARF_BERRY - FIRST_BERRY_INDEX]            = sPicTable_CornnBerryTree,
-    [ITEM_ENIGMA_BERRY - FIRST_BERRY_INDEX]           = sPicTable_DurinBerryTree,
-    [ITEM_MICLE_BERRY - FIRST_BERRY_INDEX]            = sPicTable_MicleBerryTree,
-    [ITEM_CUSTAP_BERRY - FIRST_BERRY_INDEX]           = sPicTable_CustapBerryTree,
-    [ITEM_JABOCA_BERRY - FIRST_BERRY_INDEX]           = sPicTable_JabocaBerryTree,
-    [ITEM_ROWAP_BERRY - FIRST_BERRY_INDEX]            = sPicTable_RowapBerryTree,
-    [ITEM_KEE_BERRY - FIRST_BERRY_INDEX]              = sPicTable_PechaBerryTree,
-    [ITEM_MARANGA_BERRY - FIRST_BERRY_INDEX]          = sPicTable_OccaBerryTree,
-    [ITEM_ENIGMA_BERRY_E_READER - FIRST_BERRY_INDEX]  = sPicTable_DurinBerryTree,
+const u8 gDeadBerryTreeObjectEventGraphicsIdTable[] =
+{
+    OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES,
+    OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES,
+    OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES,
+    OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES,
+    OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES,
+    OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES,
+    OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES
 };
 
-const u8 *const gBerryTreePaletteSlotTablePointers[] = {
-    [ITEM_CHERI_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Cheri,
-    [ITEM_CHESTO_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Chesto,
-    [ITEM_PECHA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Pecha,
-    [ITEM_RAWST_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Rawst,
-    [ITEM_ASPEAR_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Aspear,
-    [ITEM_LEPPA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Leppa,
-    [ITEM_ORAN_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Oran,
-    [ITEM_PERSIM_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Persim,
-    [ITEM_LUM_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Lum,
-    [ITEM_SITRUS_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Sitrus,
-    [ITEM_FIGY_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Figy,
-    [ITEM_WIKI_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Wiki,
-    [ITEM_MAGO_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Mago,
-    [ITEM_AGUAV_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Aguav,
-    [ITEM_IAPAPA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Iapapa,
-    [ITEM_RAZZ_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Razz,
-    [ITEM_BLUK_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Razz,
-    [ITEM_NANAB_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Mago,
-    [ITEM_WEPEAR_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Wepear,
-    [ITEM_PINAP_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Iapapa,
-    [ITEM_POMEG_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Pomeg,
-    [ITEM_KELPSY_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Kelpsy,
-    [ITEM_QUALOT_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Wepear,
-    [ITEM_HONDEW_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Hondew,
-    [ITEM_GREPA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Grepa,
-    [ITEM_TAMATO_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Tamato,
-    [ITEM_CORNN_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Cornn,
-    [ITEM_MAGOST_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Pomeg,
-    [ITEM_RABUTA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Rabuta,
-    [ITEM_NOMEL_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Nomel,
-    [ITEM_SPELON_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Spelon,
-    [ITEM_PAMTRE_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Pamtre,
-    [ITEM_WATMEL_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Rabuta,
-    [ITEM_DURIN_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Durin,
-    [ITEM_BELUE_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Hondew,
-    [ITEM_CHILAN_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Grepa,
-    [ITEM_OCCA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Occa,
-    [ITEM_PASSHO_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Cornn,
-    [ITEM_WACAN_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Razz,
-    [ITEM_RINDO_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Tamato,
-    [ITEM_YACHE_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Yache,
-    [ITEM_CHOPLE_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Chople,
-    [ITEM_KEBIA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Kebia,
-    [ITEM_SHUCA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Shuca,
-    [ITEM_COBA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Rawst,
-    [ITEM_PAYAPA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Payapa,
-    [ITEM_TANGA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Tanga,
-    [ITEM_CHARTI_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Lansat,
-    [ITEM_KASIB_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Kasib,
-    [ITEM_HABAN_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Haban,
-    [ITEM_COLBUR_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Colbur,
-    [ITEM_BABIRI_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Liechi,
-    [ITEM_ROSELI_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Roseli,
-    [ITEM_LIECHI_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Liechi,
-    [ITEM_GANLON_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Hondew,
-    [ITEM_SALAC_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Aguav,
-    [ITEM_PETAYA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Pomeg,
-    [ITEM_APICOT_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Grepa,
-    [ITEM_LANSAT_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Lansat,
-    [ITEM_STARF_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Cornn,
-    [ITEM_ENIGMA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Durin,
-    [ITEM_MICLE_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Micle,
-    [ITEM_CUSTAP_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Custap,
-    [ITEM_JABOCA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Jaboca,
-    [ITEM_ROWAP_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Rowap,
-    [ITEM_KEE_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Pecha,
-    [ITEM_MARANGA_BERRY - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Occa,
-    [ITEM_ENIGMA_BERRY_E_READER - FIRST_BERRY_INDEX] = gBerryTreePaletteSlotTable_Durin,
+const u8 gBerryTreeObjectEventGraphicsIdTable[] =
+{
+    OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES,
+    OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES,
+    OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES,
+    OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES,
+    OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES,
+    OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES,
+    OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES
 };
-

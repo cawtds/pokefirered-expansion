@@ -232,6 +232,36 @@ static inline enum Move GetTMHMMoveId(enum TMHMIndex index)
     return gTMHMItemMoveIds[index].moveId;
 }
 
+#define GET_BERRY_ID(_berry) case ITEM_##_berry##_BERRY: return BERRY_ID_##_berry;
+#define GET_BERRY_ITEM_ID(_berry) case BERRY_ID_##_berry: return ITEM_##_berry##_BERRY;
+
+static inline enum BerryId ItemIdToBerryType(enum Item itemId)
+{
+    switch (itemId)
+    {
+    FOREACH_BERRY(GET_BERRY_ID)
+    case ITEM_ENIGMA_BERRY_E_READER:
+        return BERRY_ID_ENIGMA_E_READER;
+    default:
+        return BERRY_ID_NONE;
+    }
+};
+
+static inline enum Item BerryTypeToItemId(enum BerryId berryId)
+{
+    switch (berryId)
+    {
+    FOREACH_BERRY(GET_BERRY_ITEM_ID)
+    case BERRY_ID_ENIGMA_E_READER:
+        return ITEM_ENIGMA_BERRY_E_READER;
+    default:
+        return ITEM_NONE;
+    }
+};
+
+#undef GET_BERRY_ID
+#undef GET_BERRY_ITEM_ID
+
 void BagPocket_SetSlotData(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot);
 struct ItemSlot BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos);
 
