@@ -27,6 +27,10 @@ static const u8 sText_AutumnName[] = _("Autumn");
 static const u8 sText_WinterName[] = _("Winter");
 static const u8 sText_AM[] = _("AM");
 static const u8 sText_PM[] = _("PM");
+static const u8 sText_Morning[] = _("Morning");
+static const u8 sText_Day[] = _("Day");
+static const u8 sText_Evening[] = _("Evening");
+static const u8 sText_Night[] = _("Night");
 
 
 static const struct SiiRtcInfo sRtcDummy = {0, MONTH_JAN, 1}; // 2000 Jan 1
@@ -595,5 +599,21 @@ u32 GetGen5TimeOfDayStart(enum TimeOfDay timeOfDay)
 void UpdateLoadedSeason()
 {
     gLoadedSeason = GetSeason();
+}
+
+const u8 *GetTimeOfDayName(enum TimeOfDay timeOfDay)
+{
+    switch (timeOfDay)
+    {
+    case TIME_MORNING:
+        return sText_Morning;
+    case TIME_DAY:
+    default:
+        return sText_Day;
+    case TIME_EVENING:
+        return sText_Evening;
+    case TIME_NIGHT:
+        return sText_Night;
+    }
 }
 

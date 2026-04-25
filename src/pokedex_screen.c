@@ -31,6 +31,7 @@
 #include "constants/songs.h"
 #include "constants/sound.h"
 
+#define POKEDEX_WINDOW_COUNT 16
 #define MAX_DEX_ITEMS_SHOWN 9
 #define TAG_AREA_MARKERS 2001
 #define TAG_SILHOUETTE 30000
@@ -79,7 +80,7 @@ struct PokedexScreenData
     u8 dexOrderId;
     struct ListMenuItem *listItems;
     u16 orderedDexCount;
-    u8 windowIds[0x10];
+    u8 windowIds[POKEDEX_WINDOW_COUNT];
     u16 dexSpecies;
     u16 *bgBufsMem;
     u8 scrollArrowsTaskId;
@@ -209,6 +210,9 @@ static const u8 sText_Cry[] = _("{START_BUTTON}CRY");
 static const u8 sText_NextDataCancel[] = _("{A_BUTTON}NEXT DATA {B_BUTTON}CANCEL");
 static const u8 sText_Next[] = _("{A_BUTTON}NEXT");
 static const u8 sText_CancelPreviousData[] = _("{A_BUTTON}CANCEL {B_BUTTON}PREVIOUS DATA");
+static const u8 sText_CancelPreviousDataSeason[] = _("{A_BUTTON}CANCEL {B_BUTTON}PREVIOUS DATA {DPAD_UPDOWN}SEASON");
+static const u8 sText_CancelPreviousDataTime[] = _("{A_BUTTON}CANCEL {B_BUTTON}PREVIOUS DATA {DPAD_LEFTRIGHT}TIME");
+static const u8 sText_CancelPreviousDataSeasonTime[] = _("{A_BUTTON}CANCEL {B_BUTTON}PREVIOUS DATA {DPAD_UPDOWN}SEASON {DPAD_LEFTRIGHT}TIME");
 static const u8 sText_Area[] = _("AREA");
 static const u8 sText_Size[] = _("SIZE");
 static const u8 sText_AreaUnknown[] = _("AREA UNKNOWN");
@@ -1058,6 +1062,9 @@ void DexScreen_LoadResources(void)
     taskId = CreateTask(Task_PokedexScreen, 0);
     sPokedexScreenData = Alloc(sizeof(struct PokedexScreenData));
     *sPokedexScreenData = sDexScreenDataInitialState;
+    for (u32 i = 0; i < POKEDEX_WINDOW_COUNT; i++)
+        sPokedexScreenData->windowIds[i] = WINDOW_NONE;
+    sPokedexScreenData->areaMarkersTaskId = TASK_NONE;
     sPokedexScreenData->taskId = taskId;
     sPokedexScreenData->listItems = Alloc(NATIONAL_DEX_COUNT * sizeof(struct ListMenuItem));
     sPokedexScreenData->numSeenNational = DexScreen_GetDexCount(FLAG_GET_SEEN, 1);
@@ -1776,19 +1783,70 @@ static void ItemPrintFunc_OrderedListMenu(u8 windowId, u32 itemId, u8 y)
     }
 }
 
-static void UpdateDexAreaPage(void)
+static const u8 sText_DashSplit[] = _(" - ");
+
+static void PrintTimeAndSeason(void)
 {
-    u32 kantoMapVoff = 4;
+    u8 windowWidth = 8 * sWindowTemplate_AreaMap_Area.width;
+    u8 buffer[30] = {EOS};
+    u8 xPos;
+    s32 strWidth;
+
+    if (!OW_SEASON_ENCOUNTERS && !OW_TIME_OF_DAY_ENCOUNTERS)
+        return;
+
+    if (OW_SEASON_ENCOUNTERS && OW_TIME_OF_DAY_ENCOUNTERS)
+    {
+        const u8 *seasonName = GetSeasonName(sPokedexScreenData->season);
+
+        StringCopy(buffer, seasonName);
+        StringAppend(buffer, sText_DashSplit);
+        strWidth = GetStringWidth(FONT_SMALL, buffer, 0) * 2 - 10;
+        StringAppend(buffer, GetTimeOfDayName(sPokedexScreenData->timeOfDay));
+    }
+    else if (OW_SEASON_ENCOUNTERS)
+    {
+        const u8 *seasonName = GetSeasonName(sPokedexScreenData->season);
+        strWidth = GetStringWidth(FONT_SMALL, seasonName, 0);
+        StringCopy(buffer, seasonName);
+    }
+    else
+    {
+        const u8 *timeOfDayName = GetTimeOfDayName(sPokedexScreenData->timeOfDay);
+        strWidth = GetStringWidth(FONT_SMALL, timeOfDayName, 0);
+        StringCopy(buffer, timeOfDayName);
+    }
+
+    assertf(strWidth <= windowWidth, "Text doesn't fit window");
+
+    xPos = strWidth > windowWidth ? 0 : (windowWidth - strWidth) / 2;
+
+    FillWindowPixelBuffer(sPokedexScreenData->windowIds[10], PIXEL_FILL(0));
+    DexScreen_AddTextPrinterParameterized(sPokedexScreenData->windowIds[10], FONT_SMALL, buffer, xPos, 2, 0);
+    PutWindowTilemap(sPokedexScreenData->windowIds[10]);
+    CopyWindowToVram(sPokedexScreenData->windowIds[10], COPYWIN_GFX);
+}
+
+static u32 GetKantoMapVOffset(void)
+{
     // If any of the postgame islands are unlocked, Kanto map needs to be flush with the
     // top of the screen.
+    u32 kantoMapVoff = 4;
     for (u32 i = 3; i < 7; i++)
         if ((sPokedexScreenData->unlockedSeviiAreas >> i) & 1)
             kantoMapVoff = 0;
 
+    return kantoMapVoff;
+}
+
+static void UpdateDexAreaPage(void)
+{
+    u32 kantoMapVoff;
+
+    kantoMapVoff = GetKantoMapVOffset();
     CopyToWindowPixelBuffer(sPokedexScreenData->windowIds[0], (void *)sTilemap_AreaMap_Kanto, 0, 0);
     SetWindowAttribute(sPokedexScreenData->windowIds[0], WINDOW_TILEMAP_TOP, GetWindowAttribute(sPokedexScreenData->windowIds[0], WINDOW_TILEMAP_TOP) + kantoMapVoff);
     PutWindowTilemap(sPokedexScreenData->windowIds[0]);
-    // CopyWindowToVram(sPokedexScreenData->windowIds[0], COPYWIN_FULL);
     for (u32 i = 0; i < 7; i++)
     {
         if ((sPokedexScreenData->unlockedSeviiAreas >> i) & 1)
@@ -1796,10 +1854,12 @@ static void UpdateDexAreaPage(void)
             CopyToWindowPixelBuffer(sPokedexScreenData->windowIds[i + 1], sAreaMapStructs_SeviiIslands[i].tiles, 0, 0);
             SetWindowAttribute(sPokedexScreenData->windowIds[i + 1], WINDOW_TILEMAP_TOP, GetWindowAttribute(sPokedexScreenData->windowIds[i + 1], WINDOW_TILEMAP_TOP) + kantoMapVoff);
             PutWindowTilemap(sPokedexScreenData->windowIds[i + 1]);
-            CopyWindowToVram(sPokedexScreenData->windowIds[i + 1], COPYWIN_FULL);
+            CopyWindowToVram(sPokedexScreenData->windowIds[i + 1], COPYWIN_GFX);
         }
     }
-    DestroyPokedexAreaMarkerSprites(sPokedexScreenData->areaMarkersTaskId);
+    if (sPokedexScreenData->areaMarkersTaskId != TASK_NONE)
+        DestroyPokedexAreaMarkerSprites(sPokedexScreenData->areaMarkersTaskId);
+
     sPokedexScreenData->areaMarkersTaskId = CreatePokedexAreaMarkers(sPokedexScreenData->dexSpecies, TAG_AREA_MARKERS, 3, kantoMapVoff * 8, sPokedexScreenData->season, sPokedexScreenData->timeOfDay);
     if (GetNumPokedexAreaMarkers(sPokedexScreenData->areaMarkersTaskId) == 0)
     {
@@ -1812,6 +1872,7 @@ static void UpdateDexAreaPage(void)
         DexScreen_AddTextPrinterParameterized(sPokedexScreenData->windowIds[0], FONT_SMALL, sText_AreaUnknown, (96 - strWidth) / 2, 29, 0);
     }
     CopyWindowToVram(sPokedexScreenData->windowIds[0], COPYWIN_GFX);
+    PrintTimeAndSeason();
 }
 
 static void Task_DexScreen_CategorySubmenu(u8 taskId)
@@ -2097,6 +2158,8 @@ static void Task_DexScreen_CategorySubmenu(u8 taskId)
         }
         else if (JOY_NEW(DPAD_UP))
         {
+            if (!OW_SEASON_ENCOUNTERS)
+                return;
             if (sPokedexScreenData->season == 0)
                 return;
 
@@ -2105,6 +2168,8 @@ static void Task_DexScreen_CategorySubmenu(u8 taskId)
         }
         else if (JOY_NEW(DPAD_DOWN))
         {
+            if (!OW_SEASON_ENCOUNTERS)
+                return;
             if (sPokedexScreenData->season == SEASON_COUNT - 1)
                 return;
 
@@ -2113,6 +2178,8 @@ static void Task_DexScreen_CategorySubmenu(u8 taskId)
         }
         else if (JOY_NEW(DPAD_LEFT))
         {
+            if (!OW_TIME_OF_DAY_ENCOUNTERS)
+                return;
             if (sPokedexScreenData->timeOfDay == 0)
                 return;
 
@@ -2121,6 +2188,8 @@ static void Task_DexScreen_CategorySubmenu(u8 taskId)
         }
         else if (JOY_NEW(DPAD_RIGHT))
         {
+            if (!OW_TIME_OF_DAY_ENCOUNTERS)
+                return;
             if (sPokedexScreenData->timeOfDay == TIMES_OF_DAY_COUNT - 1)
                 return;
 
@@ -2290,6 +2359,8 @@ static void Task_DexScreen_ShowMonPage(u8 taskId)
         }
         else if (JOY_NEW(DPAD_UP))
         {
+            if (!OW_SEASON_ENCOUNTERS)
+                return;
             if (sPokedexScreenData->season == 0)
                 return;
 
@@ -2298,6 +2369,8 @@ static void Task_DexScreen_ShowMonPage(u8 taskId)
         }
         else if (JOY_NEW(DPAD_DOWN))
         {
+            if (!OW_SEASON_ENCOUNTERS)
+                return;
             if (sPokedexScreenData->season == SEASON_COUNT - 1)
                 return;
 
@@ -2306,6 +2379,8 @@ static void Task_DexScreen_ShowMonPage(u8 taskId)
         }
         else if (JOY_NEW(DPAD_LEFT))
         {
+            if (!OW_TIME_OF_DAY_ENCOUNTERS)
+                return;
             if (sPokedexScreenData->timeOfDay == 0)
                 return;
 
@@ -2314,6 +2389,8 @@ static void Task_DexScreen_ShowMonPage(u8 taskId)
         }
         else if (JOY_NEW(DPAD_RIGHT))
         {
+            if (!OW_TIME_OF_DAY_ENCOUNTERS)
+                return;
             if (sPokedexScreenData->timeOfDay == TIMES_OF_DAY_COUNT - 1)
                 return;
 
@@ -3414,12 +3491,10 @@ u8 RemoveDexPageWindows(void)
 
 u8 DexScreen_DrawMonAreaPage(void)
 {
-    int i;
     u8 width, height;
     bool8 monIsCaught;
     s16 left, top;
     u16 species;
-    u16 kantoMapVoff;
     u32 palSlot;
     sPokedexScreenData->season = gLoadedSeason;
     sPokedexScreenData->timeOfDay = GetTimeOfDay();
@@ -3459,32 +3534,19 @@ u8 DexScreen_DrawMonAreaPage(void)
     FillBgTilemapBufferRect_Palette0(1, 0, 0, 0, 30, 20);
 
     sPokedexScreenData->unlockedSeviiAreas = GetUnlockedSeviiAreas();
-    kantoMapVoff = 4;
-    // If any of the postgame islands are unlocked, Kanto map needs to be flush with the
-    // top of the screen.
-    for (i = 3; i < 7; i++)
-        if ((sPokedexScreenData->unlockedSeviiAreas >> i) & 1)
-            kantoMapVoff = 0;
-
     sPokedexScreenData->windowIds[0] = AddWindow(&sWindowTemplate_AreaMap_Kanto);
-    CopyToWindowPixelBuffer(sPokedexScreenData->windowIds[0], (void *)sTilemap_AreaMap_Kanto, 0, 0);
-    SetWindowAttribute(sPokedexScreenData->windowIds[0], WINDOW_TILEMAP_TOP,
-                       GetWindowAttribute(sPokedexScreenData->windowIds[0], WINDOW_TILEMAP_TOP) + kantoMapVoff);
-    PutWindowTilemap(sPokedexScreenData->windowIds[0]);
-    for (i = 0; i < 7; i++)
-        if ((sPokedexScreenData->unlockedSeviiAreas >> i) & 1)
-        {
-            sPokedexScreenData->windowIds[i + 1] = AddWindow(sAreaMapStructs_SeviiIslands[i].window);
-            CopyToWindowPixelBuffer(sPokedexScreenData->windowIds[i + 1], sAreaMapStructs_SeviiIslands[i].tiles, 0, 0);
-            SetWindowAttribute(sPokedexScreenData->windowIds[i + 1], WINDOW_TILEMAP_TOP, GetWindowAttribute(sPokedexScreenData->windowIds[i + 1], WINDOW_TILEMAP_TOP) + kantoMapVoff);
-            PutWindowTilemap(sPokedexScreenData->windowIds[i + 1]);
-            CopyWindowToVram(sPokedexScreenData->windowIds[i + 1], COPYWIN_GFX);
-        }
     sPokedexScreenData->windowIds[8] = AddWindow(&sWindowTemplate_AreaMap_SpeciesName);
     sPokedexScreenData->windowIds[9] = AddWindow(&sWindowTemplate_AreaMap_Size);
     sPokedexScreenData->windowIds[10] = AddWindow(&sWindowTemplate_AreaMap_Area);
     sPokedexScreenData->windowIds[11] = AddWindow(&sWindowTemplate_AreaMap_MonIcon);
     sPokedexScreenData->windowIds[12] = AddWindow(&sWindowTemplate_AreaMap_MonTypes);
+    for (u32 i = 0; i < 7; i++)
+    {
+        if ((sPokedexScreenData->unlockedSeviiAreas >> i) & 1)
+            sPokedexScreenData->windowIds[i + 1] = AddWindow(sAreaMapStructs_SeviiIslands[i].window);
+    }
+
+    UpdateDexAreaPage();
 
     // Draw the mon icon
     FillWindowPixelBuffer(sPokedexScreenData->windowIds[11], PIXEL_FILL(0));
@@ -3503,25 +3565,16 @@ u8 DexScreen_DrawMonAreaPage(void)
     CopyWindowToVram(sPokedexScreenData->windowIds[9], COPYWIN_GFX);
 
     // Print "Area"
-    FillWindowPixelBuffer(sPokedexScreenData->windowIds[10], PIXEL_FILL(0));
+    if (!OW_SEASON_ENCOUNTERS && !OW_TIME_OF_DAY_ENCOUNTERS)
     {
         s32 strWidth = GetStringWidth(FONT_SMALL, sText_Area, 0);
+
+        FillWindowPixelBuffer(sPokedexScreenData->windowIds[10], PIXEL_FILL(0));
         DexScreen_AddTextPrinterParameterized(sPokedexScreenData->windowIds[10], FONT_SMALL, sText_Area, (sWindowTemplate_AreaMap_Area.width * 8 - strWidth) / 2, 4, 0);
+        SetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP, GetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP) + GetKantoMapVOffset());
+        PutWindowTilemap(sPokedexScreenData->windowIds[10]);
+        CopyWindowToVram(sPokedexScreenData->windowIds[10], COPYWIN_GFX);
     }
-    // SetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP, GetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP) + kantoMapVoff);
-    // PutWindowTilemap(sPokedexScreenData->windowIds[10]);
-    // CopyWindowToVram(sPokedexScreenData->windowIds[10], COPYWIN_GFX);
-
-    // Print Time/Season
-    {
-    // sPokedexScreenData->timeOfDay
-        const u8* seasonName = GetSeasonName(sPokedexScreenData->season);
-        DexScreen_AddTextPrinterParameterized(sPokedexScreenData->windowIds[10], FONT_SMALL, seasonName, 0, 4, 0);
-    }
-    SetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP, GetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP) + kantoMapVoff);
-    PutWindowTilemap(sPokedexScreenData->windowIds[10]);
-    CopyWindowToVram(sPokedexScreenData->windowIds[10], COPYWIN_GFX);
-
 
     // Print species name
     FillWindowPixelBuffer(sPokedexScreenData->windowIds[8], PIXEL_FILL(0));
@@ -3580,23 +3633,18 @@ u8 DexScreen_DrawMonAreaPage(void)
         sPokedexScreenData->windowIds[15] = WINDOW_NONE;
     }
 
-    // Create the area markers
-    sPokedexScreenData->areaMarkersTaskId = CreatePokedexAreaMarkers(species, TAG_AREA_MARKERS, 3, kantoMapVoff * 8, sPokedexScreenData->season, sPokedexScreenData->timeOfDay);
-    if (GetNumPokedexAreaMarkers(sPokedexScreenData->areaMarkersTaskId) == 0)
-    {
-        // No markers, display "Area Unknown"
-        BlitBitmapRectToWindow(sPokedexScreenData->windowIds[0], (void *)sBlitTiles_WideEllipse, 0, 0, 88, 16, 4, 28, 88, 16);
-        {
-            s32 strWidth = GetStringWidth(FONT_SMALL, sText_AreaUnknown, 0);
-            DexScreen_AddTextPrinterParameterized(sPokedexScreenData->windowIds[0], FONT_SMALL, sText_AreaUnknown, (96 - strWidth) / 2, 29, 0);
-        }
-    }
-    CopyWindowToVram(sPokedexScreenData->windowIds[0], COPYWIN_GFX);
-
     // Draw the control info
     FillWindowPixelBuffer(1, PIXEL_FILL(15));
     DexScreen_AddTextPrinterParameterized(1, FONT_SMALL, sText_Cry, 8, 2, 4);
-    DexScreen_PrintControlInfo(sText_CancelPreviousData);
+    if (OW_SEASON_ENCOUNTERS && OW_TIME_OF_DAY_ENCOUNTERS)
+        DexScreen_PrintControlInfo(sText_CancelPreviousDataSeasonTime);
+    else if (OW_SEASON_ENCOUNTERS)
+        DexScreen_PrintControlInfo(sText_CancelPreviousDataSeason);
+    else if (OW_TIME_OF_DAY_ENCOUNTERS)
+        DexScreen_PrintControlInfo(sText_CancelPreviousDataTime);
+    else
+        DexScreen_PrintControlInfo(sText_CancelPreviousData);
+
     PutWindowTilemap(1);
     CopyWindowToVram(1, COPYWIN_GFX);
 
@@ -3609,13 +3657,14 @@ u8 DexScreen_DestroyAreaScreenResources(void)
     int i;
 
     DestroyPokedexAreaMarkers(sPokedexScreenData->areaMarkersTaskId);
+    sPokedexScreenData->areaMarkersTaskId = TASK_NONE;
     HideAllMonTypeIcons();
 
     for (i = 0; i < 13; i++)
         DexScreen_RemoveWindow(&sPokedexScreenData->windowIds[i]);
-    if (sPokedexScreenData->windowIds[15] != 0xff)
+    if (sPokedexScreenData->windowIds[15] != WINDOW_NONE)
         FreeAndDestroyTrainerPicSprite(sPokedexScreenData->windowIds[15]);
-    if (sPokedexScreenData->windowIds[14] != 0xff)
+    if (sPokedexScreenData->windowIds[14] != WINDOW_NONE)
         FreeAndDestroyMonPicSprite(sPokedexScreenData->windowIds[14]);
     return 0;
 }
