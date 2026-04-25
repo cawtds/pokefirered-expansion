@@ -21,16 +21,16 @@ static u8 BerryTreeGetNumStagesWatered(struct BerryTree *tree);
 static u8 GetNumStagesWateredByBerryTreeId(u8 id);
 static u8 CalcBerryYieldInternal(u16 max, u16 min, u8 water);
 static u8 CalcBerryYield(struct BerryTree *tree);
-static u32 GetBerryTreeAge(u8 id, u8 stage);
+static u32 GetBerryTreeAge(enum BerryId berryId, u8 stage);
 static u8 GetBerryCountByBerryTreeId(u8 id);
-static u16 GetStageDurationByBerryType(u8);
-static u8 GetDrainRateByBerryType(u8);
-static u8 GetWaterBonusByBerryType(u8);
-static u8 GetWeedingBonusByBerryType(u8);
-static u8 GetPestsBonusByBerryType(u8);
+static u16 GetStageDurationByBerryType(enum BerryId berryId);
+static u8 GetDrainRateByBerryType(enum BerryId berryId);
+static u8 GetWaterBonusByBerryType(enum BerryId berryId);
+static u8 GetWeedingBonusByBerryType(enum BerryId berryId);
+static u8 GetPestsBonusByBerryType(enum BerryId berryId);
 static void SetTreeMutations(u8 id, u8 berry);
 static u8 GetTreeMutationValue(u8 id);
-static enum Species GetBerryPestSpecies(u8 berryId);
+static enum Species GetBerryPestSpecies(enum BerryId berryId);
 static void TryForWeeds(struct BerryTree *tree);
 static void TryForPests(struct BerryTree *tree);
 static void AddTreeBonus(struct BerryTree *tree, u8 bonus);
@@ -2569,7 +2569,7 @@ static u8 CalcBerryYield(struct BerryTree *tree)
     return result;
 }
 
-static u32 GetBerryTreeAge(u8 id, u8 stage)
+static u32 GetBerryTreeAge(enum BerryId berryId, u8 stage)
 {
     if (stage == BERRY_STAGE_TRUNK)
         stage = 5;
@@ -2577,7 +2577,7 @@ static u32 GetBerryTreeAge(u8 id, u8 stage)
         stage = 6;
     else if (stage > 0)
         stage -= 1;
-    return GetBerryInfo(id)->growthDuration * stage / (OW_BERRY_SIX_STAGES ? 6 : 4);
+    return GetBerryInfo(berryId)->growthDuration * stage / (OW_BERRY_SIX_STAGES ? 6 : 4);
 }
 
 static u8 GetBerryCountByBerryTreeId(u8 id)
@@ -2585,30 +2585,30 @@ static u8 GetBerryCountByBerryTreeId(u8 id)
     return gSaveBlock3Ptr->berryTrees[id].berryYield;
 }
 
-static u16 GetStageDurationByBerryType(u8 berry)
+static u16 GetStageDurationByBerryType(enum BerryId berryId)
 {
-    return GetBerryInfo(berry)->growthDuration * 60 / (OW_BERRY_SIX_STAGES ? 6 : 4);
+    return GetBerryInfo(berryId)->growthDuration * 60 / (OW_BERRY_SIX_STAGES ? 6 : 4);
 }
 
-static u8 GetDrainRateByBerryType(u8 berry)
+static u8 GetDrainRateByBerryType(enum BerryId berryId)
 {
-    return GetBerryInfo(berry)->drainRate;
+    return GetBerryInfo(berryId)->drainRate;
 }
 
-static u8 GetWaterBonusByBerryType(u8 berry)
+static u8 GetWaterBonusByBerryType(enum BerryId berryId)
 {
-    return GetBerryInfo(berry)->waterBonus;
+    return GetBerryInfo(berryId)->waterBonus;
 }
 
-static u8 GetWeedingBonusByBerryType(u8 berry)
+static u8 GetWeedingBonusByBerryType(enum BerryId berryId)
 {
-    u8 bonus = GetBerryInfo(berry)->weedsBonus;
+    u8 bonus = GetBerryInfo(berryId)->weedsBonus;
     return (bonus == 0) ? 1 : bonus * 5;
 }
 
-static u8 GetPestsBonusByBerryType(u8 berry)
+static u8 GetPestsBonusByBerryType(enum BerryId berryId)
 {
-    u8 bonus = GetBerryInfo(berry)->pestsBonus;
+    u8 bonus = GetBerryInfo(berryId)->pestsBonus;
     return (bonus == 0) ? 2 : bonus * 5;
 }
 
@@ -2811,7 +2811,7 @@ bool8 PlayerHasMulch(void)
 }
 
 #if OW_BERRY_MUTATIONS == TRUE
-static const u8 sBerryMutations[][3] = {
+static const enum BerryId sBerryMutations[][3] = {
     {BERRY_ID_IAPAPA, BERRY_ID_MAGO,   BERRY_ID_POMEG},
     {BERRY_ID_CHESTO, BERRY_ID_PERSIM, BERRY_ID_KELPSY},
     {BERRY_ID_ORAN,   BERRY_ID_PECHA,  BERRY_ID_QUALOT},
@@ -2829,7 +2829,7 @@ static const u8 sBerryMutations[][3] = {
     // Up to one more Mutation can be added here for a total of 15 (only 4 bits are allocated)
 };
 
-static u8 GetMutationOutcome(u8 berry1, u8 berry2)
+static u8 GetMutationOutcome(enum BerryId berry1, enum BerryId berry2)
 {
     u8 i;
     for (i = 0; i < ARRAY_COUNT(sBerryMutations); i++)
@@ -2841,7 +2841,7 @@ static u8 GetMutationOutcome(u8 berry1, u8 berry2)
     return 0;
 }
 
-static u8 TryForMutation(u8 berryTreeId, u8 berry)
+static u8 TryForMutation(u8 berryTreeId, enum BerryId berry)
 {
     u8 i, j, mulch;
     s16 x1, x2, y1, y2;
@@ -2925,7 +2925,7 @@ static void SetTreeMutations(u8 id, u8 berry)
 #endif
 }
 
-static enum Species GetBerryPestSpecies(u8 berryId)
+static enum Species GetBerryPestSpecies(enum BerryId berryId)
 {
 #if OW_BERRY_PESTS == TRUE
     const struct BerryInfo *berryInfo = GetBerryInfo(berryId);
