@@ -1,0 +1,33 @@
+{
+    "shops": [
+        {
+            "id": "SHOP_ID_VIRIDIAN_CITY",
+            "stages": [
+                {
+                    "isUnlockedFunc": "NULL",
+                    "items": [
+                        "ITEM_POTION"
+                    ]
+                },
+                {
+                    "isUnlockedFunc": "IsSecondShopUnlocked",
+                    "items": [
+                        "ITEM_POTION",
+                        "ITEM_HYPER_POTION"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "SHOP_ID_PEWTER_CITY",
+            "stages": [
+                {
+                    "isUnlockedFunc": "NULL",
+                    "items": [
+                        "ITEM_HYPER_POTION"
+                    ]
+                }
+            ]
+        }
+    ]
+}

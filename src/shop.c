@@ -2,6 +2,7 @@
 #include "bg.h"
 #include "data.h"
 #include "decompress.h"
+#include "event_data.h"
 #include "event_object_movement.h"
 #include "field_fadetransition.h"
 #include "field_player_avatar.h"
@@ -75,6 +76,19 @@ struct ShopData
     u16 unk18;
     u8 itemSpriteIds[2];
 };
+
+struct ShopInfo
+{
+    bool32 (*isUnlockedFunc)(void);
+    const enum Item *items;
+};
+
+bool32 IsSecondShopUnlocked(void)
+{
+    return FlagGet(FLAG_0x020);
+};
+
+#include "data/shops.h"
 
 static const u8 sText_ShopBuy[] = _("BUY");
 static const u8 sText_ShopSell[] = _("SELL");
@@ -1412,5 +1426,32 @@ void CreateDecorationShop2Menu(const u16 *itemsForSale)
     SetShopItemsForSale(itemsForSale);
     CreateShopMenu(MART_TYPE_DECOR2);
     SetShopMenuCallback(ScriptContext_Enable);
+}
+
+static const enum Item *GetShopItems(enum ShopId shopId)
+{
+    const struct ShopInfo *const *shopStages = sShopInfo[shopId];
+    const enum Item *latestItems = NULL;
+
+    for (u32 i = 0; shopStages[i] != NULL; i++)
+    {
+        const struct ShopInfo *shopInfo = shopStages[i];
+
+        if (shopInfo->isUnlockedFunc == NULL || shopInfo->isUnlockedFunc())
+            latestItems = shopInfo->items;
+    }
+
+    return latestItems;
+}
+
+void CreatePokemartMenuById(enum ShopId shopId)
+{
+    SetShopItemsForSale(GetShopItems(shopId));
+    CreateShopMenu(MART_TYPE_REGULAR);
+    SetShopMenuCallback(ScriptContext_Enable);
+    DebugFunc_PrintShopMenuHistoryBeforeClearMaybe();
+    memset(&sHistory, 0, sizeof(sHistory));
+    sHistory[0].mapSec = gMapHeader.regionMapSectionId;
+    sHistory[1].mapSec = gMapHeader.regionMapSectionId;
 }
 

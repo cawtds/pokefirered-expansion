@@ -1,5 +1,5 @@
 // jsonproc.cpp
-// jsonproc converts JSON data to an output file based on an Inja template. 
+// jsonproc converts JSON data to an output file based on an Inja template.
 // https://github.com/pantor/inja
 
 #include "jsonproc.h"
@@ -50,6 +50,15 @@ int main(int argc, char *argv[])
         int subtrahend = args.at(1)->get<int>();
 
         return minuend - subtrahend;
+    });
+
+    env.add_callback("addToVar", 2, [](Arguments& args) {
+        string key = args.at(0)->get<string>();
+        string old_val = get_custom_var(key);
+        int to_add = args.at(1)->get<long>();
+
+        set_custom_var(key, to_string(std::stoi(old_val) + to_add));
+        return "";
     });
 
     env.add_callback("setVar", 2, [=](Arguments& args) {

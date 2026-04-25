@@ -157,6 +157,7 @@ gScriptCmdTable::
 	script_cmd_table_entry SCR_OP_BUFFERSTDSTRING                ScrCmd_bufferstdstring,                requests_effects=1  @ 0x84
 	script_cmd_table_entry SCR_OP_BUFFERSTRING                   ScrCmd_bufferstring,                   requests_effects=1  @ 0x85
 	script_cmd_table_entry SCR_OP_POKEMART                       ScrCmd_pokemart,                       requests_effects=1  @ 0x86
+	script_cmd_table_entry SCR_OP_POKEMART_BY_ID                 ScrCmd_pokemart_by_id,                 requests_effects=1  @ 0x86
 	script_cmd_table_entry SCR_OP_POKEMARTDECORATION             ScrCmd_pokemartdecoration,             requests_effects=1  @ 0x87
 	script_cmd_table_entry SCR_OP_POKEMARTDECORATION2            ScrCmd_pokemartdecoration2,            requests_effects=1  @ 0x88
 	script_cmd_table_entry SCR_OP_PLAYSLOTMACHINE                ScrCmd_playslotmachine,                requests_effects=1  @ 0x89

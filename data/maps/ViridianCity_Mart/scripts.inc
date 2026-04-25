@@ -56,7 +56,7 @@ ViridianCity_Mart_EventScript_Clerk::
 	goto_if_questlog EventScript_ReleaseEnd
 	message Text_MayIHelpYou
 	waitmessage
-	pokemart ViridianCity_Mart_Items
+	pokemart_by_id SHOP_ID_VIRIDIAN_CITY
 	msgbox Text_PleaseComeAgain
 	release
 	end

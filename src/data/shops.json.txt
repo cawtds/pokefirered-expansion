@@ -1,0 +1,37 @@
+{{ doNotModifyHeader }}
+
+## for shop in shops
+{{ setVarInt("stage", 0) }}
+## for stage in shop.stages
+static const u16 sShopItems_{{ shop.id }}{{ getVar("stage") }}[] =
+{
+## for item in stage.items
+    {{ item }},
+## endfor
+};
+
+static const struct ShopInfo sShopInfoStage_{{ shop.id }}{{ getVar("stage") }} =
+{
+    .isUnlockedFunc = {% if existsIn(stage, "isUnlockedFunc") %} {{ stage.isUnlockedFunc }} {% else %} NULL {% endif %},
+    .items = sShopItems_{{ shop.id }}{{ getVar("stage") }},
+}; {{ addToVar("stage", 1) }}
+## endfor
+## endfor
+
+## for shop in shops
+{{ setVarInt("stage", 0) }}
+static const struct ShopInfo *const sShopStages_{{ shop.id }}[] =
+{
+## for stage in shop.stages
+    &sShopInfoStage_{{ shop.id }}{{ getVar("stage") }},{{ addToVar("stage", 1) }}
+## endfor
+    NULL,
+};
+## endfor
+
+static const struct ShopInfo *const *const sShopInfo[] =
+{
+## for shop in shops
+    [{{ shop.id }}] = sShopStages_{{ shop.id }},
+## endfor
+};
