@@ -2619,37 +2619,37 @@ bool8 CanWaterBerryPlot(void)
 
 void ObjectEventInteractionGetBerryTreeData(void)
 {
-    u8 id;
-    u8 berry;
+    enum BerryTreeId berryTreeId;
+    enum BerryId berryId;
     u8 localId;
     u8 group;
     u8 num;
 
-    id = GetObjectEventBerryTreeId(gSelectedObjectEvent);
-    berry = GetBerryTypeByBerryTreeId(id);
-    AllowBerryTreeGrowth(id);
+    berryTreeId = GetObjectEventBerryTreeId(gSelectedObjectEvent);
+    berryId = GetBerryTypeByBerryTreeId(berryTreeId);
+    AllowBerryTreeGrowth(berryTreeId);
     localId = gSpecialVar_LastTalked;
     num = gSaveBlock1Ptr->location.mapNum;
     group = gSaveBlock1Ptr->location.mapGroup;
     if (IsBerryTreeSparkling(localId, num, group))
         gSpecialVar_0x8004 = BERRY_STAGE_SPARKLING;
     else
-        gSpecialVar_0x8004 = GetStageByBerryTreeId(id);
-    gSpecialVar_0x8005 = GetNumStagesWateredByBerryTreeId(id);
-    gSpecialVar_0x8006 = GetBerryCountByBerryTreeId(id);
-    CopyItemNameHandlePlural(BerryTypeToItemId(berry), gStringVar1, gSpecialVar_0x8006);
+        gSpecialVar_0x8004 = GetStageByBerryTreeId(berryTreeId);
+    gSpecialVar_0x8005 = GetNumStagesWateredByBerryTreeId(berryTreeId);
+    gSpecialVar_0x8006 = GetBerryCountByBerryTreeId(berryTreeId);
+    CopyItemNameHandlePlural(BerryTypeToItemId(berryId), gStringVar1, gSpecialVar_0x8006);
 }
 
 void ObjectEventInteractionGetBerryName(void)
 {
-    u8 berryType = GetBerryTypeByBerryTreeId(GetObjectEventBerryTreeId(gSelectedObjectEvent));
-    GetBerryNameByBerryType(berryType, gStringVar1);
+    enum BerryId berryId = GetBerryTypeByBerryTreeId(GetObjectEventBerryTreeId(gSelectedObjectEvent));
+    GetBerryNameByBerryType(berryId, gStringVar1);
 }
 
 void ObjectEventInteractionGetBerryCountString(void)
 {
-    u8 treeId = GetObjectEventBerryTreeId(gSelectedObjectEvent);
-    u8 berry = GetBerryTypeByBerryTreeId(treeId);
+    enum BerryTreeId treeId = GetObjectEventBerryTreeId(gSelectedObjectEvent);
+    enum BerryId berry = GetBerryTypeByBerryTreeId(treeId);
     u8 count = GetBerryCountByBerryTreeId(treeId);
 
     // The strings for growing Berries all refer to a singular berry plant.
@@ -2696,19 +2696,19 @@ void ObjectEventInteractionApplyMulch(void)
 
 void ObjectEventInteractionPickBerryTree(void)
 {
-    u8 id = GetObjectEventBerryTreeId(gSelectedObjectEvent);
-    u8 berry = GetBerryTypeByBerryTreeId(id);
-    u8 mutation = GetTreeMutationValue(id);
+    enum BerryTreeId treeId = GetObjectEventBerryTreeId(gSelectedObjectEvent);
+    enum BerryId berry = GetBerryTypeByBerryTreeId(treeId);
+    u8 mutation = GetTreeMutationValue(treeId);
 
     if (!OW_BERRY_MUTATIONS || mutation == 0)
     {
-        gSpecialVar_0x8004 = AddBagItem(BerryTypeToItemId(berry), GetBerryCountByBerryTreeId(id));
+        gSpecialVar_0x8004 = AddBagItem(BerryTypeToItemId(berry), GetBerryCountByBerryTreeId(treeId));
         return;
     }
-    gSpecialVar_0x8004 = (CheckBagHasSpace(BerryTypeToItemId(berry), GetBerryCountByBerryTreeId(id)) && CheckBagHasSpace(BerryTypeToItemId(mutation), 1)) + 2;
+    gSpecialVar_0x8004 = (CheckBagHasSpace(BerryTypeToItemId(berry), GetBerryCountByBerryTreeId(treeId)) && CheckBagHasSpace(BerryTypeToItemId(mutation), 1)) + 2;
     if (gSpecialVar_0x8004 == 3)
     {
-        AddBagItem(BerryTypeToItemId(berry), GetBerryCountByBerryTreeId(id));
+        AddBagItem(BerryTypeToItemId(berry), GetBerryCountByBerryTreeId(treeId));
         AddBagItem(BerryTypeToItemId(mutation), 1);
     }
 }
@@ -2839,7 +2839,7 @@ static u8 GetMutationOutcome(enum BerryId berry1, enum BerryId berry2)
     return 0;
 }
 
-static u8 TryForMutation(u8 berryTreeId, enum BerryId berry)
+static u8 TryForMutation(enum BerryTreeId berryTreeId, enum BerryId berry)
 {
     u8 i, j, mulch;
     s16 x1, x2, y1, y2;
