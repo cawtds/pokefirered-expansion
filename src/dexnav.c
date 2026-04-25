@@ -1486,8 +1486,9 @@ static u8 DexNavGeneratePotential(u8 searchLevel)
 static u8 GetEncounterLevelFromMapData(enum Species species, enum EncounterType environment)
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
-    enum Season season;
-    enum TimeOfDay timeOfDay;
+    enum Season season = gLoadedSeason;
+    enum TimeOfDay timeOfDay = GetTimeOfDay();
+
     u8 min = MAX_LEVEL;
     u8 max = 0;
     u8 i;
@@ -1706,8 +1707,8 @@ static bool8 CapturedAllLandMons(u32 headerId)
 {
     enum Species species;
     u32 i, count = 0;
-    enum Season season;
-    enum TimeOfDay timeOfDay;
+    enum Season season = gLoadedSeason;
+    enum TimeOfDay timeOfDay = GetTimeOfDay();
     const struct WildPokemonInfo *landMonsInfo;
 
     GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_LAND, &season, &timeOfDay);
@@ -1743,8 +1744,8 @@ static bool8 CapturedAllWaterMons(u32 headerId)
 {
     u32 i, count = 0;
     enum Species species;
-    enum Season season;
-    enum TimeOfDay timeOfDay;
+    enum Season season = gLoadedSeason;
+    enum TimeOfDay timeOfDay = GetTimeOfDay();
     const struct WildPokemonInfo *waterMonsInfo;
 
     GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_WATER, &season, &timeOfDay);
@@ -1778,8 +1779,8 @@ static bool8 CapturedAllHiddenMons(u32 headerId)
 {
     u32 i, count = 0;
     enum Species species;
-    enum Season season;
-    enum TimeOfDay timeOfDay;
+    enum Season season = gLoadedSeason;
+    enum TimeOfDay timeOfDay = GetTimeOfDay();
     const struct WildPokemonInfo *hiddenMonsInfo;
 
     GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN, &season, &timeOfDay);
@@ -1922,13 +1923,19 @@ static void DexNavLoadEncounterData(void)
     u8 hiddenIndex = 0;
     enum Species species;
     u32 headerId = GetCurrentMapWildMonHeaderId();
-    enum Season season;
-    enum TimeOfDay timeOfDay;
+    enum Season seasonBackup = gLoadedSeason;
+    enum TimeOfDay timeOfDayBackup = GetTimeOfDay();
+    enum Season season = seasonBackup;
+    enum TimeOfDay timeOfDay = timeOfDayBackup;
 
     GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_LAND, &season, &timeOfDay);
     const struct WildPokemonInfo *landMonsInfo = gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].landMonsInfo;
+    season = seasonBackup;
+    timeOfDay = timeOfDayBackup;
     GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_WATER, &season, &timeOfDay);
     const struct WildPokemonInfo *waterMonsInfo = gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].waterMonsInfo;
+    season = seasonBackup;
+    timeOfDay = timeOfDayBackup;
     GetSeasonAndTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN, &season, &timeOfDay);
     const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[season][timeOfDay].hiddenMonsInfo;
 
@@ -2483,8 +2490,8 @@ bool32 TryFindHiddenPokemon(void)
         u8 index;
         enum Species species;
         enum EncounterType environment;
-        enum Season season;
-        enum TimeOfDay timeOfDay;
+        enum Season season = gLoadedSeason;
+        enum TimeOfDay timeOfDay = GetTimeOfDay();
         const struct WildPokemonInfo *hiddenMonsInfo;
         bool8 isHiddenMon = FALSE;
 

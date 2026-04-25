@@ -19,6 +19,7 @@
 #include "pokedex_screen.h"
 #include "pokedex.h"
 #include "pokemon_summary_screen.h"
+#include "rtc.h"
 #include "scanline_effect.h"
 #include "sound.h"
 #include "string_util.h"
@@ -94,6 +95,8 @@ struct PokedexScreenData
         u8 icon1Id;
         u8 icon2Id;
     } typeIconSpriteIds[MAX_DEX_ITEMS_SHOWN];
+    enum Season season;
+    enum TimeOfDay timeOfDay;
 };
 
 struct PokedexScreenWindowGfx
@@ -710,134 +713,199 @@ const struct WindowTemplate sWindowTemplate_DexEntry_FlavorText = {
     .baseBlock = 0x0250
 };
 
+#define AREA_MON_ICON_WIDTH 4
+#define AREA_MON_ICON_HEIGHT 4
+#define AREA_MON_ICON_SIZE (AREA_MON_ICON_WIDTH * AREA_MON_ICON_HEIGHT)
+#define AREA_MON_ICON_BASE_BLOCK 424
+
 const struct WindowTemplate sWindowTemplate_AreaMap_MonIcon = {
     .bg = 2,
     .tilemapLeft = 1,
     .tilemapTop = 2,
-    .width = 4,
-    .height = 4,
+    .width = AREA_MON_ICON_WIDTH,
+    .height = AREA_MON_ICON_HEIGHT,
     .paletteNum = 10,
-    .baseBlock = 0x01a8
+    .baseBlock = AREA_MON_ICON_BASE_BLOCK,
 };
+
+#define AREA_SPECIES_NAME_WIDTH 8
+#define AREA_SPECIES_NAME_HEIGHT 3
+#define AREA_SPECIES_NAME_SIZE (AREA_SPECIES_NAME_WIDTH * AREA_SPECIES_NAME_HEIGHT)
+#define AREA_SPECIES_NAME_BASE_BLOCK (AREA_MON_ICON_BASE_BLOCK + AREA_MON_ICON_SIZE)
 
 const struct WindowTemplate sWindowTemplate_AreaMap_SpeciesName = {
     .bg = 2,
     .tilemapLeft = 5,
     .tilemapTop = 2,
-    .width = 8,
-    .height = 3,
+    .width = AREA_SPECIES_NAME_WIDTH,
+    .height = AREA_SPECIES_NAME_HEIGHT,
     .paletteNum = 0,
-    .baseBlock = 0x01b8
+    .baseBlock = AREA_SPECIES_NAME_BASE_BLOCK,
 };
+
+#define AREA_SIZE_TEXT_WIDTH 10
+#define AREA_SIZE_TEXT_HEIGHT 2
+#define AREA_SIZE_TEXT_SIZE (AREA_SIZE_TEXT_WIDTH * AREA_SIZE_TEXT_HEIGHT)
+#define AREA_SIZE_TEXT_BASE_BLOCK (AREA_SPECIES_NAME_BASE_BLOCK + AREA_SPECIES_NAME_SIZE)
 
 const struct WindowTemplate sWindowTemplate_AreaMap_Size = {
     .bg = 2,
     .tilemapLeft = 2,
     .tilemapTop = 7,
-    .width = 10,
-    .height = 2,
+    .width = AREA_SIZE_TEXT_WIDTH,
+    .height = AREA_SIZE_TEXT_HEIGHT,
     .paletteNum = 0,
-    .baseBlock = 0x01d0
+    .baseBlock = AREA_SIZE_TEXT_BASE_BLOCK,
 };
+
+#define AREA_AREA_TEXT_WIDTH 10
+#define AREA_AREA_TEXT_HEIGHT 2
+#define AREA_AREA_TEXT_SIZE (AREA_AREA_TEXT_WIDTH * AREA_AREA_TEXT_HEIGHT)
+#define AREA_AREA_TEXT_BASE_BLOCK (AREA_SIZE_TEXT_BASE_BLOCK + AREA_SIZE_TEXT_SIZE)
 
 const struct WindowTemplate sWindowTemplate_AreaMap_Area = {
     .bg = 2,
     .tilemapLeft = 18,
     .tilemapTop = 2,
-    .width = 10,
-    .height = 2,
+    .width = AREA_AREA_TEXT_WIDTH,
+    .height = AREA_AREA_TEXT_HEIGHT,
     .paletteNum = 0,
-    .baseBlock = 0x01e4
+    .baseBlock = AREA_AREA_TEXT_BASE_BLOCK,
 };
+
+#define AREA_MON_TYPES_WIDTH 8
+#define AREA_MON_TYPES_HEIGHT 2
+#define AREA_MON_TYPES_SIZE (AREA_MON_TYPES_WIDTH * AREA_MON_TYPES_HEIGHT)
+#define AREA_MON_TYPES_BASE_BLOCK (AREA_AREA_TEXT_BASE_BLOCK + AREA_AREA_TEXT_SIZE)
 
 const struct WindowTemplate sWindowTemplate_AreaMap_MonTypes = {
     .bg = 2,
     .tilemapLeft = 5,
     .tilemapTop = 5,
-    .width = 8,
-    .height = 2,
+    .width = AREA_MON_TYPES_WIDTH,
+    .height = AREA_MON_TYPES_HEIGHT,
     .paletteNum = 11,
-    .baseBlock = 0x01f8
+    .baseBlock = AREA_MON_TYPES_BASE_BLOCK,
 };
+
+#define AREA_KANTO_WIDTH 12
+#define AREA_KANTO_HEIGHT 9
+#define AREA_KANTO_SIZE (AREA_KANTO_WIDTH * AREA_KANTO_HEIGHT)
+#define AREA_KANTO_BASE_BLOCK (AREA_MON_TYPES_BASE_BLOCK + AREA_MON_TYPES_SIZE)
 
 const struct WindowTemplate sWindowTemplate_AreaMap_Kanto = {
     .bg = 2,
     .tilemapLeft = 17,
     .tilemapTop = 4,
-    .width = 12,
-    .height = 9,
+    .width = AREA_KANTO_WIDTH,
+    .height = AREA_KANTO_HEIGHT,
     .paletteNum = 0,
-    .baseBlock = 0x0208
+    .baseBlock = AREA_KANTO_BASE_BLOCK,
 };
+
+#define AREA_ONE_ISLAND_WIDTH 4
+#define AREA_ONE_ISLAND_HEIGHT 3
+#define AREA_ONE_ISLAND_SIZE (AREA_ONE_ISLAND_WIDTH * AREA_ONE_ISLAND_HEIGHT)
+#define AREA_ONE_ISLAND_BASE_BLOCK (AREA_KANTO_BASE_BLOCK + AREA_KANTO_SIZE)
 
 static const struct WindowTemplate sWindowTemplate_AreaMap_OneIsland = {
     .bg = 2,
     .tilemapLeft = 13,
     .tilemapTop = 4,
-    .width = 4,
-    .height = 3,
+    .width = AREA_ONE_ISLAND_WIDTH,
+    .height = AREA_ONE_ISLAND_HEIGHT,
     .paletteNum = 0,
-    .baseBlock = 0x0274
+    .baseBlock = AREA_ONE_ISLAND_BASE_BLOCK,
 };
+
+#define AREA_TWO_ISLAND_WIDTH 4
+#define AREA_TWO_ISLAND_HEIGHT 3
+#define AREA_TWO_ISLAND_SIZE (AREA_TWO_ISLAND_WIDTH * AREA_TWO_ISLAND_HEIGHT)
+#define AREA_TWO_ISLAND_BASE_BLOCK (AREA_ONE_ISLAND_BASE_BLOCK + AREA_ONE_ISLAND_SIZE)
 
 static const struct WindowTemplate sWindowTemplate_AreaMap_TwoIsland = {
     .bg = 2,
     .tilemapLeft = 13,
     .tilemapTop = 7,
-    .width = 4,
-    .height = 3,
+    .width = AREA_TWO_ISLAND_WIDTH,
+    .height = AREA_TWO_ISLAND_HEIGHT,
     .paletteNum = 0,
-    .baseBlock = 0x0280
+    .baseBlock = AREA_TWO_ISLAND_BASE_BLOCK,
 };
+
+#define AREA_THREE_ISLAND_WIDTH 4
+#define AREA_THREE_ISLAND_HEIGHT 3
+#define AREA_THREE_ISLAND_SIZE (AREA_THREE_ISLAND_WIDTH * AREA_THREE_ISLAND_HEIGHT)
+#define AREA_THREE_ISLAND_BASE_BLOCK (AREA_TWO_ISLAND_BASE_BLOCK + AREA_TWO_ISLAND_SIZE)
 
 static const struct WindowTemplate sWindowTemplate_AreaMap_ThreeIsland = {
     .bg = 2,
     .tilemapLeft = 13,
     .tilemapTop = 10,
-    .width = 4,
-    .height = 3,
+    .width = AREA_THREE_ISLAND_WIDTH,
+    .height = AREA_THREE_ISLAND_HEIGHT,
     .paletteNum = 0,
-    .baseBlock = 0x028c
+    .baseBlock = AREA_THREE_ISLAND_BASE_BLOCK,
 };
+
+#define AREA_FOUR_ISLAND_WIDTH 4
+#define AREA_FOUR_ISLAND_HEIGHT 4
+#define AREA_FOUR_ISLAND_SIZE (AREA_FOUR_ISLAND_WIDTH * AREA_FOUR_ISLAND_HEIGHT)
+#define AREA_FOUR_ISLAND_BASE_BLOCK (AREA_THREE_ISLAND_BASE_BLOCK + AREA_THREE_ISLAND_SIZE)
 
 static const struct WindowTemplate sWindowTemplate_AreaMap_FourIsland = {
     .bg = 2,
     .tilemapLeft = 13,
     .tilemapTop = 13,
-    .width = 4,
-    .height = 4,
+    .width = AREA_FOUR_ISLAND_WIDTH,
+    .height = AREA_FOUR_ISLAND_HEIGHT,
     .paletteNum = 0,
-    .baseBlock = 0x0298
+    .baseBlock = AREA_FOUR_ISLAND_BASE_BLOCK,
 };
+
+#define AREA_FIVE_ISLAND_WIDTH 4
+#define AREA_FIVE_ISLAND_HEIGHT 4
+#define AREA_FIVE_ISLAND_SIZE (AREA_FIVE_ISLAND_WIDTH * AREA_FIVE_ISLAND_HEIGHT)
+#define AREA_FIVE_ISLAND_BASE_BLOCK (AREA_FOUR_ISLAND_BASE_BLOCK + AREA_FOUR_ISLAND_SIZE)
 
 static const struct WindowTemplate sWindowTemplate_AreaMap_FiveIsland = {
     .bg = 2,
     .tilemapLeft = 17,
     .tilemapTop = 13,
-    .width = 4,
-    .height = 4,
+    .width = AREA_FIVE_ISLAND_WIDTH,
+    .height = AREA_FIVE_ISLAND_HEIGHT,
     .paletteNum = 0,
-    .baseBlock = 0x02a8
+    .baseBlock = AREA_FIVE_ISLAND_BASE_BLOCK,
 };
+
+#define AREA_SIX_ISLAND_WIDTH 4
+#define AREA_SIX_ISLAND_HEIGHT 4
+#define AREA_SIX_ISLAND_SIZE (AREA_SIX_ISLAND_WIDTH * AREA_SIX_ISLAND_HEIGHT)
+#define AREA_SIX_ISLAND_BASE_BLOCK (AREA_FIVE_ISLAND_BASE_BLOCK + AREA_FIVE_ISLAND_SIZE)
 
 static const struct WindowTemplate sWindowTemplate_AreaMap_SixIsland = {
     .bg = 2,
     .tilemapLeft = 21,
     .tilemapTop = 13,
-    .width = 4,
-    .height = 4,
+    .width = AREA_SIX_ISLAND_WIDTH,
+    .height = AREA_SIX_ISLAND_HEIGHT,
     .paletteNum = 0,
-    .baseBlock = 0x02b8
+    .baseBlock = AREA_SIX_ISLAND_BASE_BLOCK,
 };
+
+#define AREA_SEVEN_ISLAND_WIDTH 4
+#define AREA_SEVEN_ISLAND_HEIGHT 4
+#define AREA_SEVEN_ISLAND_SIZE (AREA_SEVEN_ISLAND_WIDTH * AREA_SEVEN_ISLAND_HEIGHT)
+#define AREA_SEVEN_ISLAND_BASE_BLOCK (AREA_SIX_ISLAND_BASE_BLOCK + AREA_SIX_ISLAND_SIZE)
 
 static const struct WindowTemplate sWindowTemplate_AreaMap_SevenIsland = {
     .bg = 2,
     .tilemapLeft = 25,
     .tilemapTop = 13,
-    .width = 4,
-    .height = 4,
+    .width = AREA_SEVEN_ISLAND_WIDTH,
+    .height = AREA_SEVEN_ISLAND_HEIGHT,
     .paletteNum = 0,
-    .baseBlock = 0x02c8
+    .baseBlock = AREA_SEVEN_ISLAND_BASE_BLOCK,
 };
 
 struct {
@@ -996,6 +1064,8 @@ void DexScreen_LoadResources(void)
     sPokedexScreenData->numOwnedNational = DexScreen_GetDexCount(FLAG_GET_CAUGHT, 1);
     sPokedexScreenData->numSeenKanto = DexScreen_GetDexCount(FLAG_GET_SEEN, 0);
     sPokedexScreenData->numOwnedKanto = DexScreen_GetDexCount(FLAG_GET_CAUGHT, 0);
+    sPokedexScreenData->season = gLoadedSeason;
+    sPokedexScreenData->timeOfDay = GetTimeOfDay();
     for (u32 i = 0; i < MAX_DEX_ITEMS_SHOWN; i++)
     {
         sPokedexScreenData->typeIconSpriteIds[i].icon1Id = 0xFF;
@@ -1706,6 +1776,44 @@ static void ItemPrintFunc_OrderedListMenu(u8 windowId, u32 itemId, u8 y)
     }
 }
 
+static void UpdateDexAreaPage(void)
+{
+    u32 kantoMapVoff = 4;
+    // If any of the postgame islands are unlocked, Kanto map needs to be flush with the
+    // top of the screen.
+    for (u32 i = 3; i < 7; i++)
+        if ((sPokedexScreenData->unlockedSeviiAreas >> i) & 1)
+            kantoMapVoff = 0;
+
+    CopyToWindowPixelBuffer(sPokedexScreenData->windowIds[0], (void *)sTilemap_AreaMap_Kanto, 0, 0);
+    SetWindowAttribute(sPokedexScreenData->windowIds[0], WINDOW_TILEMAP_TOP, GetWindowAttribute(sPokedexScreenData->windowIds[0], WINDOW_TILEMAP_TOP) + kantoMapVoff);
+    PutWindowTilemap(sPokedexScreenData->windowIds[0]);
+    // CopyWindowToVram(sPokedexScreenData->windowIds[0], COPYWIN_FULL);
+    for (u32 i = 0; i < 7; i++)
+    {
+        if ((sPokedexScreenData->unlockedSeviiAreas >> i) & 1)
+        {
+            CopyToWindowPixelBuffer(sPokedexScreenData->windowIds[i + 1], sAreaMapStructs_SeviiIslands[i].tiles, 0, 0);
+            SetWindowAttribute(sPokedexScreenData->windowIds[i + 1], WINDOW_TILEMAP_TOP, GetWindowAttribute(sPokedexScreenData->windowIds[i + 1], WINDOW_TILEMAP_TOP) + kantoMapVoff);
+            PutWindowTilemap(sPokedexScreenData->windowIds[i + 1]);
+            CopyWindowToVram(sPokedexScreenData->windowIds[i + 1], COPYWIN_FULL);
+        }
+    }
+    DestroyPokedexAreaMarkerSprites(sPokedexScreenData->areaMarkersTaskId);
+    sPokedexScreenData->areaMarkersTaskId = CreatePokedexAreaMarkers(sPokedexScreenData->dexSpecies, TAG_AREA_MARKERS, 3, kantoMapVoff * 8, sPokedexScreenData->season, sPokedexScreenData->timeOfDay);
+    if (GetNumPokedexAreaMarkers(sPokedexScreenData->areaMarkersTaskId) == 0)
+    {
+        s32 strWidth;
+
+        // No markers, display "Area Unknown"
+        BlitBitmapRectToWindow(sPokedexScreenData->windowIds[0], (void *)sBlitTiles_WideEllipse, 0, 0, 88, 16, 4, 28, 88, 16);
+
+        strWidth = GetStringWidth(FONT_SMALL, sText_AreaUnknown, 0);
+        DexScreen_AddTextPrinterParameterized(sPokedexScreenData->windowIds[0], FONT_SMALL, sText_AreaUnknown, (96 - strWidth) / 2, 29, 0);
+    }
+    CopyWindowToVram(sPokedexScreenData->windowIds[0], COPYWIN_GFX);
+}
+
 static void Task_DexScreen_CategorySubmenu(u8 taskId)
 {
     int pageFlipCmd;
@@ -1987,6 +2095,38 @@ static void Task_DexScreen_CategorySubmenu(u8 taskId)
             CopyBgTilemapBufferToVram(0);
             sPokedexScreenData->state = 24;
         }
+        else if (JOY_NEW(DPAD_UP))
+        {
+            if (sPokedexScreenData->season == 0)
+                return;
+
+            sPokedexScreenData->season--;
+            UpdateDexAreaPage();
+        }
+        else if (JOY_NEW(DPAD_DOWN))
+        {
+            if (sPokedexScreenData->season == SEASON_COUNT - 1)
+                return;
+
+            sPokedexScreenData->season++;
+            UpdateDexAreaPage();
+        }
+        else if (JOY_NEW(DPAD_LEFT))
+        {
+            if (sPokedexScreenData->timeOfDay == 0)
+                return;
+
+            sPokedexScreenData->timeOfDay--;
+            UpdateDexAreaPage();
+        }
+        else if (JOY_NEW(DPAD_RIGHT))
+        {
+            if (sPokedexScreenData->timeOfDay == TIMES_OF_DAY_COUNT - 1)
+                return;
+
+            sPokedexScreenData->timeOfDay++;
+            UpdateDexAreaPage();
+        }
         else
         {
             DexScreen_InputHandler_StartToCry();
@@ -2147,6 +2287,38 @@ static void Task_DexScreen_ShowMonPage(u8 taskId)
             CopyBgTilemapBufferToVram(1);
             CopyBgTilemapBufferToVram(0);
             sPokedexScreenData->state = 10;
+        }
+        else if (JOY_NEW(DPAD_UP))
+        {
+            if (sPokedexScreenData->season == 0)
+                return;
+
+            sPokedexScreenData->season--;
+            UpdateDexAreaPage();
+        }
+        else if (JOY_NEW(DPAD_DOWN))
+        {
+            if (sPokedexScreenData->season == SEASON_COUNT - 1)
+                return;
+
+            sPokedexScreenData->season++;
+            UpdateDexAreaPage();
+        }
+        else if (JOY_NEW(DPAD_LEFT))
+        {
+            if (sPokedexScreenData->timeOfDay == 0)
+                return;
+
+            sPokedexScreenData->timeOfDay--;
+            UpdateDexAreaPage();
+        }
+        else if (JOY_NEW(DPAD_RIGHT))
+        {
+            if (sPokedexScreenData->timeOfDay == TIMES_OF_DAY_COUNT - 1)
+                return;
+
+            sPokedexScreenData->timeOfDay++;
+            UpdateDexAreaPage();
         }
         else
         {
@@ -3249,6 +3421,8 @@ u8 DexScreen_DrawMonAreaPage(void)
     u16 species;
     u16 kantoMapVoff;
     u32 palSlot;
+    sPokedexScreenData->season = gLoadedSeason;
+    sPokedexScreenData->timeOfDay = GetTimeOfDay();
 
     species = sPokedexScreenData->dexSpecies;
     monIsCaught = DexScreen_GetSetPokedexFlag(species, FLAG_GET_CAUGHT, TRUE);
@@ -3334,9 +3508,20 @@ u8 DexScreen_DrawMonAreaPage(void)
         s32 strWidth = GetStringWidth(FONT_SMALL, sText_Area, 0);
         DexScreen_AddTextPrinterParameterized(sPokedexScreenData->windowIds[10], FONT_SMALL, sText_Area, (sWindowTemplate_AreaMap_Area.width * 8 - strWidth) / 2, 4, 0);
     }
+    // SetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP, GetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP) + kantoMapVoff);
+    // PutWindowTilemap(sPokedexScreenData->windowIds[10]);
+    // CopyWindowToVram(sPokedexScreenData->windowIds[10], COPYWIN_GFX);
+
+    // Print Time/Season
+    {
+    // sPokedexScreenData->timeOfDay
+        const u8* seasonName = GetSeasonName(sPokedexScreenData->season);
+        DexScreen_AddTextPrinterParameterized(sPokedexScreenData->windowIds[10], FONT_SMALL, seasonName, 0, 4, 0);
+    }
     SetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP, GetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP) + kantoMapVoff);
     PutWindowTilemap(sPokedexScreenData->windowIds[10]);
     CopyWindowToVram(sPokedexScreenData->windowIds[10], COPYWIN_GFX);
+
 
     // Print species name
     FillWindowPixelBuffer(sPokedexScreenData->windowIds[8], PIXEL_FILL(0));
@@ -3344,6 +3529,7 @@ u8 DexScreen_DrawMonAreaPage(void)
     DexScreen_AddTextPrinterParameterized(sPokedexScreenData->windowIds[8], FONT_NORMAL, gSpeciesInfo[species].speciesName, 3, 12, 0);
     PutWindowTilemap(sPokedexScreenData->windowIds[8]);
     CopyWindowToVram(sPokedexScreenData->windowIds[8], COPYWIN_GFX);
+
 
     // Type icons
     FillWindowPixelBuffer(sPokedexScreenData->windowIds[12], PIXEL_FILL(0));
@@ -3390,12 +3576,12 @@ u8 DexScreen_DrawMonAreaPage(void)
     }
     else
     {
-        sPokedexScreenData->windowIds[14] = 0xff;
-        sPokedexScreenData->windowIds[15] = 0xff;
+        sPokedexScreenData->windowIds[14] = WINDOW_NONE;
+        sPokedexScreenData->windowIds[15] = WINDOW_NONE;
     }
 
     // Create the area markers
-    sPokedexScreenData->areaMarkersTaskId = CreatePokedexAreaMarkers(species, TAG_AREA_MARKERS, 3, kantoMapVoff * 8);
+    sPokedexScreenData->areaMarkersTaskId = CreatePokedexAreaMarkers(species, TAG_AREA_MARKERS, 3, kantoMapVoff * 8, sPokedexScreenData->season, sPokedexScreenData->timeOfDay);
     if (GetNumPokedexAreaMarkers(sPokedexScreenData->areaMarkersTaskId) == 0)
     {
         // No markers, display "Area Unknown"
