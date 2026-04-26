@@ -24,3 +24,7 @@ include/constants/heal_locations.h: $(DATA_SRC_SUBDIR)/heal_locations.json $(DAT
 AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/shops.h
 $(DATA_SRC_SUBDIR)/shops.h: $(DATA_SRC_SUBDIR)/shops.json $(DATA_SRC_SUBDIR)/shops.json.txt
 	$(JSONPROC) $^ $@
+
+AUTO_GEN_TARGETS += include/constants/shops.h
+include/constants/shops.h: $(DATA_SRC_SUBDIR)/shops.json $(DATA_SRC_SUBDIR)/shops.constants.json.txt
+	$(JSONPROC) $^ $@

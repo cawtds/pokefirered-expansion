@@ -73,6 +73,7 @@ src/data/map_group_count.h
 !/tools/mgba/mgba-rom-test.exe
 include/constants/heal_locations.h
 include/constants/script_commands.h
+include/constants/shops.h
 tools/trainerproc/trainerproc
 src/data/battle_partners.h
 src/data/pokemon/teachable_learnsets.h

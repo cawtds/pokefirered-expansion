@@ -1401,7 +1401,7 @@ static void RecordTransactionForQuestLog(void)
         SetQuestLogEvent(eventId + QL_EVENT_USED_POKEMART, (const u16 *)&sHistory[1]);
 }
 
-static const enum Item *GetShopItems(enum ShopId shopId)
+static const enum Item *GetShopItems(enum ShopID shopId)
 {
     const struct ShopInfo *const *shopStages = sShopInfo[shopId];
     const enum Item *latestItems = NULL;
@@ -1419,7 +1419,7 @@ static const enum Item *GetShopItems(enum ShopId shopId)
     return latestItems;
 }
 
-void CreatePokemartMenu(enum ShopId shopId)
+void CreatePokemartMenu(enum ShopID shopId)
 {
     SetShopItemsForSale(GetShopItems(shopId));
     CreateShopMenu(MART_TYPE_REGULAR);

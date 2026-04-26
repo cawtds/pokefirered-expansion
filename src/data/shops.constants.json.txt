@@ -1,0 +1,14 @@
+#ifndef GUARD_CONSTANTS_SHOPS_H
+#define GUARD_CONSTANTS_SHOPS_H
+
+{{ doNotModifyHeader }}
+
+enum ShopID
+{
+## for shop in shops
+    {{ shop.id }},
+## endfor
+    SHOP_ID_COUNT,
+};
+
+#endif // GUARD_CONSTANTS_SHOPS_H
