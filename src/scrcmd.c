@@ -2599,22 +2599,11 @@ bool8 ScrCmd_dowildbattle(struct ScriptContext *ctx)
 
 bool8 ScrCmd_pokemart(struct ScriptContext *ctx)
 {
-    const void *ptr = (void *)ScriptReadWord(ctx);
-
-    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
-
-    CreatePokemartMenu(ptr);
-    ScriptContext_Stop();
-    return TRUE;
-}
-
-bool8 ScrCmd_pokemart_by_id(struct ScriptContext *ctx)
-{
     enum ShopId shopId = ScriptReadByte(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
-    CreatePokemartMenuById(shopId);
+    CreatePokemartMenu(shopId);
     ScriptContext_Stop();
     return TRUE;
 }

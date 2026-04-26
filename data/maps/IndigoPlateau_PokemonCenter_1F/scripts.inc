@@ -44,7 +44,7 @@ IndigoPlateau_PokemonCenter_1F_EventScript_Clerk::
 	faceplayer
 	message Text_MayIHelpYou
 	waitmessage
-	pokemart_by_id SHOP_ID_INDIGO_PLATEAU_POKEMON_CENTER_1F
+	pokemart SHOP_ID_INDIGO_PLATEAU_POKEMON_CENTER_1F
 	msgbox Text_PleaseComeAgain
 	release
 	end

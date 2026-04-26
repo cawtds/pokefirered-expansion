@@ -1401,9 +1401,27 @@ static void RecordTransactionForQuestLog(void)
         SetQuestLogEvent(eventId + QL_EVENT_USED_POKEMART, (const u16 *)&sHistory[1]);
 }
 
-void CreatePokemartMenu(const u16 *itemsForSale)
+static const enum Item *GetShopItems(enum ShopId shopId)
 {
-    SetShopItemsForSale(itemsForSale);
+    const struct ShopInfo *const *shopStages = sShopInfo[shopId];
+    const enum Item *latestItems = NULL;
+
+    for (u32 i = 0; shopStages[i] != NULL; i++)
+    {
+        const struct ShopInfo *shopInfo = shopStages[i];
+
+        if (shopInfo->isUnlockedFunc != NULL && !shopInfo->isUnlockedFunc())
+            break;
+
+        latestItems = shopInfo->items;
+    }
+
+    return latestItems;
+}
+
+void CreatePokemartMenu(enum ShopId shopId)
+{
+    SetShopItemsForSale(GetShopItems(shopId));
     CreateShopMenu(MART_TYPE_REGULAR);
     SetShopMenuCallback(ScriptContext_Enable);
     DebugFunc_PrintShopMenuHistoryBeforeClearMaybe();
@@ -1424,35 +1442,6 @@ void CreateDecorationShop2Menu(const u16 *itemsForSale)
     SetShopItemsForSale(itemsForSale);
     CreateShopMenu(MART_TYPE_DECOR2);
     SetShopMenuCallback(ScriptContext_Enable);
-}
-
-static const enum Item *GetShopItems(enum ShopId shopId)
-{
-    const struct ShopInfo *const *shopStages = sShopInfo[shopId];
-    const enum Item *latestItems = NULL;
-
-    for (u32 i = 0; shopStages[i] != NULL; i++)
-    {
-        const struct ShopInfo *shopInfo = shopStages[i];
-
-        if (shopInfo->isUnlockedFunc != NULL && !shopInfo->isUnlockedFunc())
-            break;
-
-        latestItems = shopInfo->items;
-    }
-
-    return latestItems;
-}
-
-void CreatePokemartMenuById(enum ShopId shopId)
-{
-    SetShopItemsForSale(GetShopItems(shopId));
-    CreateShopMenu(MART_TYPE_REGULAR);
-    SetShopMenuCallback(ScriptContext_Enable);
-    DebugFunc_PrintShopMenuHistoryBeforeClearMaybe();
-    memset(&sHistory, 0, sizeof(sHistory));
-    sHistory[0].mapSec = gMapHeader.regionMapSectionId;
-    sHistory[1].mapSec = gMapHeader.regionMapSectionId;
 }
 
 static bool32 IsTwoIslandMartExpanded1(void)
