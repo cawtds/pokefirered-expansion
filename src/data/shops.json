@@ -240,7 +240,7 @@
             ]
         },
         {
-            "id": "SHOP_ID_TWO_ISLAND_MART",
+            "id": "SHOP_ID_TWO_ISLAND_SHOP",
             "stages": [
                 {
                     "items": [
@@ -341,7 +341,7 @@
             ]
         },
         {
-            "id": "SHOP_ID_TRAINER_TOWER_LOBBY_MART",
+            "id": "SHOP_ID_TRAINER_TOWER_LOBBY",
             "stages": [
                 {
                     "sharedItems": "SevenIsland"

@@ -103,7 +103,7 @@ TwoIsland_EventScript_ClerkShopSkipIntro::
 	message Text_MayIHelpYou
 	waitmessage
 TwoIsland_EventScript_ShowShop::
-	pokemart SHOP_ID_TWO_ISLAND_MART
+	pokemart SHOP_ID_TWO_ISLAND_SHOP
 	msgbox Text_PleaseComeAgain
 	release
 	end
