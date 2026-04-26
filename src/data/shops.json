@@ -1,4 +1,20 @@
 {
+    "shared_items": [
+        {
+            "label": "SevenIsland",
+            "items": [
+                "ITEM_ULTRA_BALL",
+                "ITEM_GREAT_BALL",
+                "ITEM_FULL_RESTORE",
+                "ITEM_MAX_POTION",
+                "ITEM_HYPER_POTION",
+                "ITEM_REVIVE",
+                "ITEM_FULL_HEAL",
+                "ITEM_ESCAPE_ROPE",
+                "ITEM_MAX_REPEL"
+            ]
+        }
+    ],
     "shops": [
         {
             "id": "SHOP_ID_VIRIDIAN_CITY_MART",
@@ -320,17 +336,7 @@
             "id": "SHOP_ID_SEVEN_ISLAND_MART",
             "stages": [
                 {
-                    "items": [
-                        "ITEM_ULTRA_BALL",
-                        "ITEM_GREAT_BALL",
-                        "ITEM_FULL_RESTORE",
-                        "ITEM_MAX_POTION",
-                        "ITEM_HYPER_POTION",
-                        "ITEM_REVIVE",
-                        "ITEM_FULL_HEAL",
-                        "ITEM_ESCAPE_ROPE",
-                        "ITEM_MAX_REPEL"
-                    ]
+                    "sharedItems": "SevenIsland"
                 }
             ]
         },
@@ -338,17 +344,7 @@
             "id": "SHOP_ID_TRAINER_TOWER_LOBBY_MART",
             "stages": [
                 {
-                    "items": [
-                        "ITEM_ULTRA_BALL",
-                        "ITEM_GREAT_BALL",
-                        "ITEM_FULL_RESTORE",
-                        "ITEM_MAX_POTION",
-                        "ITEM_HYPER_POTION",
-                        "ITEM_REVIVE",
-                        "ITEM_FULL_HEAL",
-                        "ITEM_ESCAPE_ROPE",
-                        "ITEM_MAX_REPEL"
-                    ]
+                    "sharedItems": "SevenIsland"
                 }
             ]
         },
