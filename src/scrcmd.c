@@ -94,7 +94,7 @@ COMMON_DATA u8 gSelectedObjectEvent = 0;
 // script.c.
 void *const gNullScriptPtr = NULL;
 
-static const u8 *gStdScripts[] =
+static const u8 *const gStdScripts[] =
 {
 
     [STD_OBTAIN_ITEM]       = Std_ObtainItem,

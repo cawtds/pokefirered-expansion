@@ -1,9 +1,6 @@
 #include "global.h"
-
 #include "gba/flash_internal.h"
-
 #include "malloc.h"
-
 #include "agb_flash.h"
 #include "berry_powder.h"
 #include "fake_rtc.h"
@@ -15,6 +12,7 @@
 #include "quest_log.h"
 #include "random.h"
 #include "save_location.h"
+#include "text.h"
 #include "trainer_tower.h"
 #include "constants/event_objects.h"
 
@@ -90,6 +88,7 @@ void MoveSaveBlocks_ResetHeap(void)
     struct SaveBlock1 *saveBlock1Copy;
     struct PokemonStorage *pokemonStorageCopy;
 
+    DeactivateAllTextPrinters();
     // save interrupt functions and turn them off
     vblankCB = gMain.vblankCallback;
     hblankCB = gMain.hblankCallback;

@@ -507,7 +507,7 @@ bool32 IsPageFlipInput(u8 direction)
     return FALSE;
 }
 
-static const u8 *sStatControlStrings[] =
+static const u8 *const sStatControlStrings[] =
 {
     [PSS_SKILL_PAGE_STATS] = sText_PokeSum_Controls_PageStats,
     [PSS_SKILL_PAGE_EVS] = sText_PokeSum_Controls_PageEVs,
@@ -2579,7 +2579,7 @@ static void PokeSum_DrawMoveTypeIcons(void)
         BlitMenuTypeIcon(sMonSummaryScreen->windowIds[5], sMonSummaryScreen->moveTypes[MAX_MON_MOVES], 3, GetMoveNamePrinterYpos(MAX_MON_MOVES));
 }
 
-static const u8 *sText_PageRename = COMPOUND_STRING("{DPAD_RIGHT}PAGE {A_BUTTON}RENAME");
+static const u8 *const sText_PageRename = COMPOUND_STRING("{DPAD_RIGHT}PAGE {A_BUTTON}RENAME");
 
 static void PrintControlsString(void)
 {

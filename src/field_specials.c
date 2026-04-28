@@ -261,7 +261,7 @@ static const u8 *const sScrollMultiLabels_BFItemVendor[] =
     gText_Exit
 };
 
-static const u8 *const *sListMenuLabels[] =
+static const u8 *const *const sListMenuLabels[] =
 {
     [SCROLL_MULTI_BADGES]                              = sScrollMultiLabels_Badges,
     [SCROLL_MULTI_SILPHCO_FLOORS]                      = sScrollMultiLabels_SilphCoFloors,
@@ -769,7 +769,7 @@ bool8 IsMonOTNameNotPlayers(void)
 
 void DoPicboxCancel(void)
 {
-    DeactivateSingleTextPrinter(0, WINDOW_TEXT_PRINTER);
+    DeactivateAllTextPrinters();
     PicboxCancel();
 }
 
