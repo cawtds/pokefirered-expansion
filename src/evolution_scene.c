@@ -26,10 +26,12 @@
 #include "task.h"
 #include "text_window.h"
 #include "trade_scene.h"
+#include "trade.h"
 #include "trig.h"
 #include "constants/battle_string_ids.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "constants/party_menu.h"
 #include "constants/pokemon.h"
 #include "constants/songs.h"
 
@@ -1388,7 +1390,11 @@ static void Task_TradeEvolutionScene(u8 taskId)
                 Free(GetBgTilemapBuffer(0));
                 FreeAllWindowBuffers();
 
-                ShowSelectMovePokemonSummaryScreen(gPlayerParty, gTasks[taskId].tPartyId, CB2_TradeEvolutionSceneLoadGraphics, gMoveToLearn);
+                if (gTasks[taskId].tPartyId == PC_MON_CHOSEN)
+                    ShowSelectMovePokemonSummaryScreen(gEnemyParty, TRADEMON_FROM_PC, CB2_TradeEvolutionSceneLoadGraphics, gMoveToLearn);
+                else
+                    ShowSelectMovePokemonSummaryScreen(gPlayerParty, gTasks[taskId].tPartyId, CB2_TradeEvolutionSceneLoadGraphics, gMoveToLearn);
+
                 gTasks[taskId].tLearnMoveState++;
             }
             break;

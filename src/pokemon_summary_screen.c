@@ -2196,9 +2196,7 @@ static void PrintMovesPage(void)
         if (sMonSummaryScreen->mode == PSS_MODE_SELECT_MOVE)
             PokeSum_PrintMoveName(MAX_MON_MOVES);
         else
-            AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], FONT_NORMAL,
-                                         3, GetMoveNamePrinterYpos(4),
-                                         sPrintMoveTextColors[MOVE_TEXT_COLOR_0], TEXT_SKIP_DRAW, gText_Cancel);
+            AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], FONT_NORMAL, 3, GetMoveNamePrinterYpos(4), sPrintMoveTextColors[MOVE_TEXT_COLOR_0], TEXT_SKIP_DRAW, gText_Cancel);
     }
 }
 
@@ -3516,16 +3514,16 @@ static void Task_InputHandler_SelectOrForgetMove(u8 taskId)
         }
         else if (JOY_NEW(DPAD_DOWN))
         {
-            if (sMoveSelectionCursorPos < 4)
+            if (sMoveSelectionCursorPos < MAX_MON_MOVES)
             {
-                u8 v0 = 4;
+                u8 selectionLimit = MAX_MON_MOVES;
 
                 sMonSummaryScreen->selectMoveInputHandlerState = 3;
 
                 if (sMonSummaryScreen->isSwappingMoves == TRUE)
-                    v0--;
+                    selectionLimit--;
 
-                for (i = sMoveSelectionCursorPos; i < v0; i++)
+                for (i = sMoveSelectionCursorPos; i < selectionLimit; i++)
                     if (sMonSummaryScreen->moveIds[i + 1] != 0)
                     {
                         PlaySE(SE_SELECT);
@@ -3541,7 +3539,7 @@ static void Task_InputHandler_SelectOrForgetMove(u8 taskId)
 
                 return;
             }
-            else if (sMoveSelectionCursorPos == 4)
+            else if (sMoveSelectionCursorPos == MAX_MON_MOVES)
             {
                 sMoveSelectionCursorPos = 0;
                 sMonSummaryScreen->selectMoveInputHandlerState = 3;
@@ -3551,7 +3549,7 @@ static void Task_InputHandler_SelectOrForgetMove(u8 taskId)
         }
         else if (JOY_NEW(A_BUTTON))
         {
-            if (PokeSum_CanForgetSelectedMove() == TRUE || sMoveSelectionCursorPos == 4)
+            if (PokeSum_CanForgetSelectedMove() == TRUE || sMoveSelectionCursorPos == MAX_MON_MOVES)
             {
                 PlaySE(SE_SELECT);
                 sMoveSwapCursorPos = sMoveSelectionCursorPos;
