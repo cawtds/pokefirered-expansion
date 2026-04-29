@@ -70,7 +70,7 @@ static enum Collision CheckForPlayerAvatarCollision(enum Direction direction);
 static bool8 CanStopSurfing(s16 x, s16 y, enum Direction direction);
 static bool8 ShouldJumpLedge(s16 x, s16 y, enum Direction direction);
 static bool8 TryPushBoulder(s16 x, s16 y, enum Direction direction);
-static void CheckAcroBikeCollision(s16 x, s16 y, u8 metatileBehavior, enum Collision *collision);
+static void CheckAcroBikeCollision(s16 x, s16 y, enum MetatileBehavior metatileBehavior, enum Collision *collision);
 static void DoPlayerAvatarTransition(void);
 static void PlayerAvatarTransition_Dummy(struct ObjectEvent *playerObject);
 static void PlayerAvatarTransition_Normal(struct ObjectEvent *playerObject);
@@ -615,7 +615,7 @@ static enum Collision CheckForPlayerAvatarCollision(enum Direction direction)
     return CheckForObjectEventCollision(playerObjEvent, x, y, direction, MapGridGetMetatileBehaviorAt(x, y));
 }
 
-enum Collision CheckForObjectEventCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction, u8 metatileBehavior)
+enum Collision CheckForObjectEventCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction, enum MetatileBehavior metatileBehavior)
 {
     enum Collision collision = GetCollisionAtCoords(objectEvent, x, y, direction);
     if (collision == COLLISION_ELEVATION_MISMATCH && CanStopSurfing(x, y, direction))
@@ -714,7 +714,7 @@ static const enum Collision sAcroBikeTrickCollisionTypes[] =
     COLLISION_HORIZONTAL_RAIL,
 };
 
-static void CheckAcroBikeCollision(s16 x, s16 y, u8 metatileBehavior, enum Collision *collision)
+static void CheckAcroBikeCollision(s16 x, s16 y, enum MetatileBehavior metatileBehavior, enum Collision *collision)
 {
     u8 i;
 

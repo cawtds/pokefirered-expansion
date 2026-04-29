@@ -640,7 +640,7 @@ enum BattleEnvironments BattleSetup_GetEnvironmentId(void)
 
 static enum TransitionType GetBattleTransitionTypeByMap(void)
 {
-    u16 tileBehavior;
+    enum MetatileBehavior tileBehavior;
     s16 x, y;
 
     PlayerGetDestCoords(&x, &y);

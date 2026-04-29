@@ -2,6 +2,7 @@
 #define GUARD_EVENT_OBJECT_MOVEMENT_H
 
 #include "constants/event_object_movement.h"
+#include "constants/metatile_behaviors.h"
 
 #if OW_BATTLE_ONLY_FORMS && !OW_POKEMON_OBJECT_EVENTS
 #error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OW_BATTLE_ONLY_FORMS to work."
@@ -162,13 +163,13 @@ extern const u8 gReflectionEffectPaletteMap[];
 bool32 IsFollowerVisible(void);
 bool32 IsVirtualObjectAnimating(u8 virtualObjId);
 bool32 IsVirtualObjectInvisible(u8 virtualObjId);
-bool8 FollowablePlayerMovement_GoSpeed1(struct ObjectEvent *, struct Sprite *, u8, bool8(u8));
-bool8 FollowablePlayerMovement_GoSpeed2(struct ObjectEvent *, struct Sprite *, u8, bool8(u8));
-bool8 FollowablePlayerMovement_GoSpeed4(struct ObjectEvent *, struct Sprite *, u8, bool8(u8));
-bool8 FollowablePlayerMovement_Idle(struct ObjectEvent *, struct Sprite *, u8, bool8(u8));
-bool8 FollowablePlayerMovement_JumpInPlace(struct ObjectEvent *, struct Sprite *, u8, bool8(u8));
-bool8 FollowablePlayerMovement_Slide(struct ObjectEvent *, struct Sprite *, u8, bool8(u8));
-bool8 FollowablePlayerMovement_Step(struct ObjectEvent *, struct Sprite *, u8, bool8(u8));
+bool8 FollowablePlayerMovement_GoSpeed1(struct ObjectEvent *, struct Sprite *, u8, bool32(enum MetatileBehavior metatileBehavior));
+bool8 FollowablePlayerMovement_GoSpeed2(struct ObjectEvent *, struct Sprite *, u8, bool32(enum MetatileBehavior metatileBehavior));
+bool8 FollowablePlayerMovement_GoSpeed4(struct ObjectEvent *, struct Sprite *, u8, bool32(enum MetatileBehavior metatileBehavior));
+bool8 FollowablePlayerMovement_Idle(struct ObjectEvent *, struct Sprite *, u8, bool32(enum MetatileBehavior metatileBehavior));
+bool8 FollowablePlayerMovement_JumpInPlace(struct ObjectEvent *, struct Sprite *, u8, bool32(enum MetatileBehavior metatileBehavior));
+bool8 FollowablePlayerMovement_Slide(struct ObjectEvent *, struct Sprite *, u8, bool32(enum MetatileBehavior metatileBehavior));
+bool8 FollowablePlayerMovement_Step(struct ObjectEvent *, struct Sprite *, u8, bool32(enum MetatileBehavior metatileBehavior));
 bool8 FreezeObjectEvent(struct ObjectEvent *);
 bool8 IsBerryTreeSparkling(u8 localId, u8 mapNum, u8 mapGroup);
 bool8 IsElevationMismatchAt(u8 elevation, s16 x, s16 y);

@@ -4,7 +4,6 @@
 #include "global.h"
 #include "constants/metatile_behaviors.h"
 
-bool32 MetatileBehavior_IsCyclingRoadPullDownTile(enum MetatileBehavior metatileBehavior);
 bool32 MetatileBehavior_GetBridgeType(enum MetatileBehavior metatileBehavior);
 bool32 MetatileBehavior_HasRipples(enum MetatileBehavior metatileBehavior);
 bool32 MetatileBehavior_IsAdvertisingPoster(enum MetatileBehavior metatileBehavior);
@@ -24,6 +23,7 @@ bool32 MetatileBehavior_IsCounter(enum MetatileBehavior metatileBehavior);
 bool32 MetatileBehavior_IsCrackedFloor(enum MetatileBehavior metatileBehavior);
 bool32 MetatileBehavior_IsCrackedIce(enum MetatileBehavior metatileBehavior);
 bool32 MetatileBehavior_IsCup(enum MetatileBehavior metatileBehavior);
+bool32 MetatileBehavior_IsCyclingRoadPullDownTile(enum MetatileBehavior metatileBehavior);
 bool32 MetatileBehavior_IsCyclingRoadPullDownTileGrass(enum MetatileBehavior metatileBehavior);
 bool32 MetatileBehavior_IsDeepSand(enum MetatileBehavior metatileBehavior);
 bool32 MetatileBehavior_IsDeepSouthWarp(enum MetatileBehavior metatileBehavior);

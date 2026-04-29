@@ -630,7 +630,7 @@ u8 (*const gMovementTypeFuncs_FollowPlayer[])(struct ObjectEvent *, struct Sprit
     MovementType_FollowPlayer_Moving,
 };
 
-bool8 (*const gFollowPlayerMovementFuncs[])(struct ObjectEvent *, struct Sprite *, u8, bool8(u8)) = {
+bool8 (*const gFollowPlayerMovementFuncs[])(struct ObjectEvent *, struct Sprite *, u8, bool32(enum MetatileBehavior metatileBehavior)) = {
     [COPY_MOVE_NONE] = FollowablePlayerMovement_Idle,
     [COPY_MOVE_FACE] = FollowablePlayerMovement_Idle,
     [COPY_MOVE_WALK] = FollowablePlayerMovement_Step,
