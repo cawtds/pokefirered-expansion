@@ -575,8 +575,8 @@ bool32 ObjectMovingOnRockStairs(struct ObjectEvent *objectEvent, enum Direction 
     y = objectEvent->currentCoords.y;
 
     // TODO followers on sideways stairs
-    if (IsFollowerVisible() && GetFollowerObject() != NULL && (objectEvent->isPlayer || objectEvent->localId == OBJ_EVENT_ID_FOLLOWER))
-        return FALSE;
+    // if (IsFollowerVisible() && GetFollowerObject() != NULL && (objectEvent->isPlayer || objectEvent->localId == OBJ_EVENT_ID_FOLLOWER))
+    //     return FALSE;
 
     switch (direction)
     {
