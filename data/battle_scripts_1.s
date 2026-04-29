@@ -32,7 +32,7 @@ BattleScript_TrainerTowerLost::
 	returnopponentmon2toball
 	waitstate
 BattleScript_TrainerTowerLostLostSkipMonRecall::
-	trainerslidein BS_ATTACKER
+	trainerslidein BS_OPPONENT1
 	waitstate
 	printstring STRINGID_TRAINER1WINTEXT
 	jumpifnotbattletype BATTLE_TYPE_DOUBLE, BattleScript_TrainerTowerLostLostSkipDouble
@@ -42,7 +42,7 @@ BattleScript_TrainerTowerLostLostSkipDouble::
 
 BattleScript_TrainerTowerTrainerBattleWon::
 	printstring STRINGID_PLAYERDEFEATEDTRAINER1
-	trainerslidein BS_ATTACKER
+	trainerslidein BS_OPPONENT1
 	waitstate
 	jumpifnotbattletype BATTLE_TYPE_TRAINER_TOWER, BattleScript_BattleTowerEtcTrainerBattleWonSkipText
 	printstring STRINGID_TRAINER1LOSETEXT
