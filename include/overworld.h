@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main.h"
+#include "constants/metatile_behaviors.h"
 
 #define LINK_KEY_CODE_NULL 0x00
 #define LINK_KEY_CODE_EMPTY 0x11
@@ -93,7 +94,7 @@ bool8 BGMusicStopped(void);
 bool8 GetSetItemObtained(enum Item item, enum ItemObtainFlags caseId);
 bool8 IsMapTypeIndoors(u8 mapType);
 bool8 IsMapTypeOutdoors(u8 mapType);
-bool8 MetatileBehavior_IsSurfableInSeafoamIslands(u16 metatileBehavior);
+bool8 MetatileBehavior_IsSurfableInSeafoamIslands(enum MetatileBehavior metatileBehavior);
 bool8 Overworld_MapTypeAllowsTeleportAndFly(u8 mapType);
 bool8 SetDiveWarpDive(u16 x, u16 y);
 bool8 SetDiveWarpEmerge(u16 x, u16 y);

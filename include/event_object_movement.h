@@ -191,7 +191,7 @@ const struct ObjectEventTemplate *GetObjectEventTemplateByLocalIdAndMap(u8 local
 const u8 *GetObjectEventScriptPointerByObjectEventId(u8 objectEventId);
 enum BerryTreeId GetObjectEventBerryTreeId(u8 objectEventId);
 enum Collision GetCollisionAtCoords(struct ObjectEvent *, s16, s16, enum Direction direction);
-enum Collision GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, enum Direction dir, u8 currentBehavior, u8 nextBehavior, enum Collision collision);
+enum Collision GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, enum Direction dir, enum MetatileBehavior currentBehavior, enum MetatileBehavior nextBehavior, enum Collision collision);
 enum Direction GetOppositeDirection(enum Direction direction);
 enum Species GetOverworldWeatherSpecies(enum Species species);
 struct ObjectEvent *GetFollowerObject(void);

@@ -201,7 +201,7 @@ void SetIcefallCaveCrackedIceMetatiles(void)
 static void IcefallCaveIcePerStepCallback(u8 taskId)
 {
     s16 x, y;
-    u8 tileBehavior;
+    enum MetatileBehavior tileBehavior;
     s16 *data = gTasks[taskId].data;
     switch (tState)
     {

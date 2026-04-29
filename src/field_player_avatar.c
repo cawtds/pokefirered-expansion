@@ -1003,7 +1003,7 @@ static bool32 (*const sArrowWarpMetatileBehaviorChecks[])(enum MetatileBehavior 
 static void PlayCollisionSoundIfNotFacingWarp(enum Direction direction)
 {
     s16 x, y;
-    u8 metatileBehavior = gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior;
+    enum MetatileBehavior metatileBehavior = gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior;
 
     if (!sArrowWarpMetatileBehaviorChecks[direction - 1](metatileBehavior))
     {

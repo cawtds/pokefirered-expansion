@@ -153,9 +153,9 @@ s16 gTimeUpdateCounter; // playTimeVBlanks will eventually overflow, so this is 
 static u8 CountBadgesForOverworldWhiteOutLossCalculation(void);
 static void Overworld_ResetStateAfterWhitingOut(void);
 static void SetWhiteoutWarpDestination(void);
-static enum AvatarState GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, u16 metatileBehavior, u8 mapType);
-static enum Direction GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, enum AvatarState transitionState, u16 metatileBehavior, u8 mapType);
-static u16 GetCenterScreenMetatileBehavior(void);
+static enum AvatarState GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, enum MetatileBehavior metatileBehavior, u8 mapType);
+static enum Direction GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, enum AvatarState transitionState, enum MetatileBehavior metatileBehavior, u8 mapType);
+static enum MetatileBehavior GetCenterScreenMetatileBehavior(void);
 static void SetDefaultFlashLevel(void);
 static void Overworld_TryMapConnectionMusicTransition(void);
 static void ChooseAmbientCrySpecies(void);
@@ -942,7 +942,7 @@ struct InitialPlayerAvatarState *GetInitialPlayerAvatarState(void)
 {
     struct InitialPlayerAvatarState playerStruct;
     u8 mapType = GetCurrentMapType();
-    u16 metatileBehavior = GetCenterScreenMetatileBehavior();
+    enum MetatileBehavior metatileBehavior = GetCenterScreenMetatileBehavior();
     enum AvatarState transitionState = GetAdjustedInitialTransitionFlags(&sInitialPlayerAvatarState, metatileBehavior, mapType);
 
     playerStruct.transitionState = transitionState;
@@ -952,7 +952,7 @@ struct InitialPlayerAvatarState *GetInitialPlayerAvatarState(void)
     return &sInitialPlayerAvatarState;
 }
 
-static enum AvatarState GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, u16 metatileBehavior, u8 mapType)
+static enum AvatarState GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, enum MetatileBehavior metatileBehavior, u8 mapType)
 {
     if (mapType != MAP_TYPE_INDOOR && FlagGet(FLAG_SYS_CRUISE_MODE))
         return PLAYER_AVATAR_STATE_NORMAL;
@@ -972,7 +972,7 @@ static enum AvatarState GetAdjustedInitialTransitionFlags(struct InitialPlayerAv
         return PLAYER_AVATAR_STATE_ACRO_BIKE;
 }
 
-bool8 MetatileBehavior_IsSurfableInSeafoamIslands(u16 metatileBehavior)
+bool8 MetatileBehavior_IsSurfableInSeafoamIslands(enum MetatileBehavior metatileBehavior)
 {
     if (MetatileBehavior_IsSurfable(metatileBehavior) != TRUE)
         return FALSE;
@@ -984,7 +984,7 @@ bool8 MetatileBehavior_IsSurfableInSeafoamIslands(u16 metatileBehavior)
     return FALSE;
 }
 
-static enum Direction GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, enum AvatarState transitionState, u16 metatileBehavior, u8 mapType)
+static enum Direction GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, enum AvatarState transitionState, enum MetatileBehavior metatileBehavior, u8 mapType)
 {
     if (FlagGet(FLAG_SYS_CRUISE_MODE) && mapType == MAP_TYPE_OCEAN_ROUTE)
         return DIR_EAST;
@@ -1015,7 +1015,7 @@ static enum Direction GetAdjustedInitialDirection(struct InitialPlayerAvatarStat
         return DIR_SOUTH;
 }
 
-static u16 GetCenterScreenMetatileBehavior(void)
+static enum MetatileBehavior GetCenterScreenMetatileBehavior(void)
 {
     return MapGridGetMetatileBehaviorAt(gSaveBlock1Ptr->pos.x + 7, gSaveBlock1Ptr->pos.y + 7);
 }

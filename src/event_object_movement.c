@@ -71,7 +71,7 @@ static void GetGroundEffectFlags_Ripple(struct ObjectEvent *, u32 *);
 static void GetGroundEffectFlags_Seaweed(struct ObjectEvent *, u32 *);
 static void GetGroundEffectFlags_JumpLanding(struct ObjectEvent *, u32 *);
 static u8 ObjectEventCheckForReflectiveSurface(struct ObjectEvent *);
-static u8 GetReflectionTypeByMetatileBehavior(u32);
+static u8 GetReflectionTypeByMetatileBehavior(enum MetatileBehavior metatileBehavior);
 static void InitObjectPriorityByElevation(struct Sprite *sprite, u8 elevation);
 static void ObjectEventUpdateSubpriority(struct ObjectEvent *, struct Sprite *);
 static void DoTracksGroundEffect_None(struct ObjectEvent *objEvent, struct Sprite *sprite, enum GroundEffect groundEffect);
@@ -6381,7 +6381,7 @@ static enum Collision GetCollisionInDirection(struct ObjectEvent *objectEvent, e
     return GetCollisionAtCoords(objectEvent, x, y, direction);
 }
 
-enum Collision GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, enum Direction dir, u8 currentBehavior, u8 nextBehavior, enum Collision collision)
+enum Collision GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, enum Direction dir, enum MetatileBehavior currentBehavior, enum MetatileBehavior nextBehavior, enum Collision collision)
 {
     if ((dir == DIR_SOUTH || dir == DIR_NORTH) && collision != COLLISION_NONE)
         return collision;
@@ -6473,8 +6473,8 @@ static bool8 ObjectEventOnRightSideStair(struct ObjectEvent *objectEvent, s16 x,
 
 enum Collision GetCollisionAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction dir)
 {
-    u8 currentBehavior = MapGridGetMetatileBehaviorAt(objectEvent->currentCoords.x, objectEvent->currentCoords.y);
-    u8 nextBehavior = MapGridGetMetatileBehaviorAt(x, y);
+    enum MetatileBehavior currentBehavior = MapGridGetMetatileBehaviorAt(objectEvent->currentCoords.x, objectEvent->currentCoords.y);
+    enum MetatileBehavior nextBehavior = MapGridGetMetatileBehaviorAt(x, y);
     enum Collision collision;
 
     #if OW_FLAG_NO_COLLISION != 0
@@ -10322,7 +10322,7 @@ static u8 ObjectEventCheckForReflectiveSurface(struct ObjectEvent *objEvent)
     s16 i;
     s16 j;
     u8 result;
-    u8 b;
+    enum MetatileBehavior b;
     s16 one;
 
 #define RETURN_REFLECTION_TYPE_AT(x, y)              \
@@ -10348,7 +10348,7 @@ static u8 ObjectEventCheckForReflectiveSurface(struct ObjectEvent *objEvent)
 #undef RETURN_REFLECTION_TYPE_AT
 }
 
-static u8 GetReflectionTypeByMetatileBehavior(u32 behavior)
+static u8 GetReflectionTypeByMetatileBehavior(enum MetatileBehavior behavior)
 {
     if (MetatileBehavior_IsIce(behavior))
         return 1;
@@ -10367,7 +10367,7 @@ u8 GetLedgeJumpDirection(s16 x, s16 y, enum Direction direction)
         [DIR_EAST - 1]  = MetatileBehavior_IsJumpEast,
     };
 
-    u8 behavior;
+    enum MetatileBehavior behavior;
     enum Direction index = direction;
 
     if (index == DIR_NONE)
