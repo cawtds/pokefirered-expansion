@@ -2,6 +2,7 @@
 #define GUARD_FIELD_CONTROL_AVATAR_H
 
 #include "global.h"
+#include "constants/metatile_behaviors.h"
 
 struct FieldInput
 {
@@ -23,20 +24,20 @@ struct FieldInput
 
 extern struct FieldInput gFieldInputRecord;
 
-void RestartWildEncounterImmunitySteps(void);
-void ClearPoisonStepCounter(void);
-int SetCableClubWarp(void);
-void HandleBoulderFallThroughHole(struct ObjectEvent *);
-void GetInFrontOfPlayerPosition(struct MapPosition *position);
-bool8 TryDoDiveWarp(struct MapPosition *pos, u16 behavior);
-bool8 IsDirectionalStairWarpMetatileBehavior(u16 metatileBehavior, enum Direction playerDirection);
-const u8 *GetInteractedLinkPlayerScript(struct MapPosition *position, u8 metatileBehavior, enum Direction direction);
+bool8 IsDirectionalStairWarpMetatileBehavior(enum MetatileBehavior metatileBehavior, enum Direction playerDirection);
+bool8 TryDoDiveWarp(struct MapPosition *pos, enum MetatileBehavior metatileBehavior);
 const u8 *GetCoordEventScriptAtMapPosition(struct MapPosition *position);
-void FieldClearPlayerInput(struct FieldInput *input);
-int ProcessPlayerFieldInput(struct FieldInput *input);
-void FieldInput_HandleCancelSignpost(struct FieldInput *input);
-void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys);
-void HandleBoulderActivateVictoryRoadSwitch(u16 x, u16 y);
+const u8 *GetInteractedLinkPlayerScript(struct MapPosition *position, enum MetatileBehavior metatileBehavior, enum Direction direction);
 const u8 *GetObjectEventScriptPointerPlayerFacing(void);
+int ProcessPlayerFieldInput(struct FieldInput *input);
+int SetCableClubWarp(void);
+void ClearPoisonStepCounter(void);
+void FieldClearPlayerInput(struct FieldInput *input);
+void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys);
+void FieldInput_HandleCancelSignpost(struct FieldInput *input);
+void GetInFrontOfPlayerPosition(struct MapPosition *position);
+void HandleBoulderActivateVictoryRoadSwitch(u16 x, u16 y);
+void HandleBoulderFallThroughHole(struct ObjectEvent *);
+void RestartWildEncounterImmunitySteps(void);
 
 #endif //GUARD_FIELD_CONTROL_AVATAR_H

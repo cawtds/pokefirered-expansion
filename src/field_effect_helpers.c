@@ -495,7 +495,7 @@ void UpdateTallGrassFieldEffect(struct Sprite *sprite)
 {
     u8 mapNum;
     u8 mapGroup;
-    u8 metatileBehavior;
+    enum MetatileBehavior metatileBehavior;
     u8 localId;
     u8 objectEventId;
     struct ObjectEvent *objectEvent;
@@ -518,17 +518,18 @@ void UpdateTallGrassFieldEffect(struct Sprite *sprite)
     }
     else
     {
+        u8 subpriority;
+
         objectEvent = &gObjectEvents[objectEventId];
         if ((objectEvent->currentCoords.x != sprite->data[1] || objectEvent->currentCoords.y != sprite->data[2]) && (objectEvent->previousCoords.x != sprite->data[1] || objectEvent->previousCoords.y != sprite->data[2]))
             sprite->data[7] = TRUE;
 
-        // This variable is misused.
-        metatileBehavior = 0;
+        subpriority = 0;
         if (sprite->animCmdIndex == 0)
-            metatileBehavior = 4;
+            subpriority = 4;
 
         UpdateObjectEventSpriteInvisibility(sprite, FALSE);
-        UpdateGrassFieldEffectSubpriority(sprite, sprite->data[0], metatileBehavior);
+        UpdateGrassFieldEffectSubpriority(sprite, sprite->data[0], subpriority);
     }
 }
 
@@ -634,7 +635,7 @@ void UpdateLongGrassFieldEffect(struct Sprite *sprite)
 {
     u8 mapNum;
     u8 mapGroup;
-    u8 metatileBehavior;
+    enum MetatileBehavior metatileBehavior;
     u8 localId;
     u8 objectEventId;
     struct ObjectEvent *objectEvent;

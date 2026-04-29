@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "constants/event_objects.h"
+#include "constants/metatile_behaviors.h"
 
 bool32 IsPlayerBiking(void);
 bool32 ObjectMovingOnRockStairs(struct ObjectEvent *objectEvent, enum Direction direction);
@@ -18,7 +19,7 @@ enum ObjectEventGfx GetPlayerAvatarGfxForState(enum AvatarState state);
 enum ObjectEventGfx GetPlayerAvatarGfxForGender(enum AvatarState state, enum Gender gender);
 enum ObjectEventGfx GetPlayerAvatarGfxForVersion(enum AvatarState state, enum Gender gender, enum GameVersion version);
 enum AvatarState GetPlayerAvatarState(void);
-enum Collision CheckForObjectEventCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction, u8 metatileBehavior);
+enum Collision CheckForObjectEventCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction, enum MetatileBehavior metatileBehavior);
 u8 GetPlayerAvatarObjectId(void);
 enum Direction GetPlayerFacingDirection(void);
 enum Direction GetPlayerMovementDirection(void);

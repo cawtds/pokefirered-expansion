@@ -122,15 +122,15 @@ static bool8 MovementType_WalkSequenceRightDownLeftUp_Step1(struct ObjectEvent *
 static bool8 MovementType_CopyPlayer_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_CopyPlayer_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_CopyPlayer_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite);
-static bool8 CopyablePlayerMovement_None(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8));
-static bool8 CopyablePlayerMovement_FaceDirection(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8));
-static bool8 CopyablePlayerMovement_GoSpeed0(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8));
-static bool8 CopyablePlayerMovement_GoSpeed1(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8));
-static bool8 CopyablePlayerMovement_GoSpeed2(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8));
-static bool8 CopyablePlayerMovement_Slide(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8));
-static bool8 cph_IM_DIFFERENT(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8));
-static bool8 CopyablePlayerMovement_GoSpeed4(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8));
-static bool8 CopyablePlayerMovement_Jump(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8));
+static bool32 CopyablePlayerMovement_None(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior));
+static bool32 CopyablePlayerMovement_FaceDirection(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior));
+static bool32 CopyablePlayerMovement_GoSpeed0(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior));
+static bool32 CopyablePlayerMovement_GoSpeed1(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior));
+static bool32 CopyablePlayerMovement_GoSpeed2(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior));
+static bool32 CopyablePlayerMovement_Slide(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior));
+static bool32 cph_IM_DIFFERENT(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior));
+static bool32 CopyablePlayerMovement_GoSpeed4(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior));
+static bool32 CopyablePlayerMovement_Jump(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior));
 static bool8 MovementType_CopyPlayer_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_CopyPlayerInGrass_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 static bool8 MovementType_CopyPlayer_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite);
@@ -563,7 +563,7 @@ u8 (*const gMovementTypeFuncs_CopyPlayer[])(struct ObjectEvent *, struct Sprite 
     MovementType_CopyPlayer_Step2,
 };
 
-bool8 (*const gCopyPlayerMovementFuncs[])(struct ObjectEvent *, struct Sprite *, u8, bool8(u8)) = {
+bool32 (*const gCopyPlayerMovementFuncs[])(struct ObjectEvent *, struct Sprite *, u8, bool32(enum MetatileBehavior metatileBehavior)) = {
     [COPY_MOVE_NONE]          = CopyablePlayerMovement_None,
     [COPY_MOVE_FACE]          = CopyablePlayerMovement_FaceDirection,
     [COPY_MOVE_WALK]          = CopyablePlayerMovement_GoSpeed0,
@@ -630,7 +630,7 @@ u8 (*const gMovementTypeFuncs_FollowPlayer[])(struct ObjectEvent *, struct Sprit
     MovementType_FollowPlayer_Moving,
 };
 
-bool8 (*const gFollowPlayerMovementFuncs[])(struct ObjectEvent *, struct Sprite *, u8, bool8(u8)) = {
+bool8 (*const gFollowPlayerMovementFuncs[])(struct ObjectEvent *, struct Sprite *, u8, bool32(enum MetatileBehavior metatileBehavior)) = {
     [COPY_MOVE_NONE] = FollowablePlayerMovement_Idle,
     [COPY_MOVE_FACE] = FollowablePlayerMovement_Idle,
     [COPY_MOVE_WALK] = FollowablePlayerMovement_Step,

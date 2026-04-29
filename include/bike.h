@@ -1,7 +1,7 @@
 #ifndef GUARD_BIKE_H
 #define GUARD_BIKE_H
 
-// TODO: Do the constants make sense in FRLG?
+#include "constants/metatile_behaviors.h"
 
 // Player speeds
 enum
@@ -40,9 +40,9 @@ enum
     ACRO_STATE_TURN_JUMP,
 };
 
-bool32 IsRunningDisallowed(u8 metatileBehavior);
 bool32 IsBikingDisallowedByPlayer(void);
 bool32 IsPlayerNotUsingAcroBikeOnBumpySlope(void);
+bool32 IsRunningDisallowed(enum MetatileBehavior metatileBehavior);
 s16 GetPlayerSpeed(void);
 void Bike_HandleBumpySlopeJump(void);
 void Bike_UpdateBikeCounterSpeed(u8 counter);

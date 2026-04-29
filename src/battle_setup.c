@@ -579,7 +579,7 @@ static void CB2_EndMarowakBattle(void)
 
 enum BattleEnvironments BattleSetup_GetEnvironmentId(void)
 {
-    u16 tileBehavior;
+    enum MetatileBehavior tileBehavior;
     s16 x, y;
 
     if (ShouldUseFishingEnvironmentInBattle())
@@ -640,7 +640,7 @@ enum BattleEnvironments BattleSetup_GetEnvironmentId(void)
 
 static enum TransitionType GetBattleTransitionTypeByMap(void)
 {
-    u16 tileBehavior;
+    enum MetatileBehavior tileBehavior;
     s16 x, y;
 
     PlayerGetDestCoords(&x, &y);

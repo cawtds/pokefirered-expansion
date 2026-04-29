@@ -703,7 +703,7 @@ static bool8 TryStartHiddenMonFieldEffect(enum EncounterType environment, u8 xSi
 
     if (DexNavPickTile(environment, xSize, ySize, smallScan))
     {
-        u8 metatileBehaviour = MapGridGetMetatileBehaviorAt(sDexNavSearchDataPtr->tileX, sDexNavSearchDataPtr->tileY);
+        enum MetatileBehavior metatileBehaviour = MapGridGetMetatileBehaviorAt(sDexNavSearchDataPtr->tileX, sDexNavSearchDataPtr->tileY);
 
         switch (environment)
         {
