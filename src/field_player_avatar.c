@@ -213,7 +213,7 @@ static bool8 TryUpdatePlayerSpinDirection(void)
 }
 
 static const struct {
-    bool8 (*check)(u8 metatileBehavior);
+    bool32 (*check)(enum MetatileBehavior metatileBehavior);
     bool8 (*apply)(void);
 } sForcedMovementFuncs[] = {
     {MetatileBehavior_IsTrickHouseSlipperyFloor, ForcedMovement_Slip},
@@ -696,7 +696,7 @@ static bool8 TryPushBoulder(s16 x, s16 y, enum Direction direction)
     }
 }
 
-static bool8 (*const sAcroBikeTrickMetatiles[])(u8) =
+static bool32 (*const sAcroBikeTrickMetatiles[])(enum MetatileBehavior metatileBehavior) =
 {
     MetatileBehavior_IsBumpySlope,
     MetatileBehavior_IsIsolatedVerticalRail,
@@ -993,7 +993,7 @@ static void PlayerApplyTileForcedMovement(u8 metatileBehavior)
     }
 }
 
-static bool8 (*const sArrowWarpMetatileBehaviorChecks[])(u8) = {
+static bool32 (*const sArrowWarpMetatileBehaviorChecks[])(enum MetatileBehavior metatileBehavior) = {
     MetatileBehavior_IsSouthArrowWarp,
     MetatileBehavior_IsNorthArrowWarp,
     MetatileBehavior_IsWestArrowWarp,
@@ -1375,7 +1375,7 @@ void SetPlayerAvatarWatering(enum Direction direction)
     StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], GetFaceDirectionAnimNum(direction));
 }
 
-static bool8 (*const sArrowWarpMetatileBehaviorChecks2[])(u8) = {
+static bool32 (*const sArrowWarpMetatileBehaviorChecks2[])(enum MetatileBehavior metatileBehavior) = {
     MetatileBehavior_IsSouthArrowWarp,
     MetatileBehavior_IsNorthArrowWarp,
     MetatileBehavior_IsWestArrowWarp,
