@@ -83,7 +83,7 @@ static bool8 PlayerAnimIsMultiFrameStationary(void);
 static bool8 PlayerAnimIsMultiFrameStationaryAndStateNotTurning(void);
 static void PlayCollisionSoundIfNotFacingWarp(enum Direction direction);
 static void PlayerGoSpin(enum Direction direction);
-static void PlayerApplyTileForcedMovement(u8 metatileBehavior);
+static void PlayerApplyTileForcedMovement(enum MetatileBehavior metatileBehavior);
 static void HandleWarpArrowSpriteHideShow(struct ObjectEvent *playerObjEvent);
 static void StartStrengthAnim(u8 objectEventId, enum Direction direction);
 static void Task_BumpBoulder(u8 taskId);
@@ -982,7 +982,7 @@ static void PlayerGoSpin(enum Direction direction)
     PlayerSetAnimId(GetSpinMovementAction(direction), 3);
 }
 
-static void PlayerApplyTileForcedMovement(u8 metatileBehavior)
+static void PlayerApplyTileForcedMovement(enum MetatileBehavior metatileBehavior)
 {
     int i;
 
@@ -1387,7 +1387,7 @@ static void HandleWarpArrowSpriteHideShow(struct ObjectEvent *objectEvent)
     s16 x;
     s16 y;
     enum Direction direction;
-    u8 metatileBehavior = objectEvent->currentMetatileBehavior;
+    enum MetatileBehavior metatileBehavior = objectEvent->currentMetatileBehavior;
 
     for (x = 0, direction = DIR_SOUTH; x < 4; x++, direction++)
     {

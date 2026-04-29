@@ -27,7 +27,7 @@ extern struct FieldInput gFieldInputRecord;
 bool8 IsDirectionalStairWarpMetatileBehavior(enum MetatileBehavior metatileBehavior, enum Direction playerDirection);
 bool8 TryDoDiveWarp(struct MapPosition *pos, enum MetatileBehavior metatileBehavior);
 const u8 *GetCoordEventScriptAtMapPosition(struct MapPosition *position);
-const u8 *GetInteractedLinkPlayerScript(struct MapPosition *position, u8 metatileBehavior, enum Direction direction);
+const u8 *GetInteractedLinkPlayerScript(struct MapPosition *position, enum MetatileBehavior metatileBehavior, enum Direction direction);
 const u8 *GetObjectEventScriptPointerPlayerFacing(void);
 int ProcessPlayerFieldInput(struct FieldInput *input);
 int SetCableClubWarp(void);

@@ -10,7 +10,7 @@
 #include "constants/map_types.h"
 #include "constants/songs.h"
 
-static bool32 CanBikeFaceDirectionOnRail(enum Direction direction, u8 metatileBehavior);
+static bool32 CanBikeFaceDirectionOnRail(enum Direction direction, enum MetatileBehavior metatileBehavior);
 static bool32 MetatileBehaviorForbidsBiking(enum MetatileBehavior metatileBehavior);
 static enum BikeTransitionId BikeInputHandler_Normal(enum Direction *, u16, u16);
 static enum BikeTransitionId BikeInputHandler_Slope(enum Direction *, u16, u16);
@@ -260,7 +260,7 @@ static enum Collision GetBikeCollisionAt(struct ObjectEvent *playerObjEvent, s16
     return collision;
 }
 
-bool32 IsRunningDisallowed(u8 metatileBehavior)
+bool32 IsRunningDisallowed(enum MetatileBehavior metatileBehavior)
 {
     if ((OW_RUNNING_INDOORS == GEN_3 && !gMapHeader.allowRunning) || MetatileBehaviorForbidsBiking(metatileBehavior) == TRUE)
         return TRUE;
@@ -279,7 +279,7 @@ static bool32 MetatileBehaviorForbidsBiking(enum MetatileBehavior metatileBehavi
     return TRUE;
 }
 
-static bool32 CanBikeFaceDirectionOnRail(enum Direction direction, u8 metatileBehavior)
+static bool32 CanBikeFaceDirectionOnRail(enum Direction direction, enum MetatileBehavior metatileBehavior)
 {
     if (direction == DIR_EAST || direction == DIR_WEST)
     {

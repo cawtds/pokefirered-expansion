@@ -69,7 +69,7 @@ static bool8 IsWarpMetatileBehavior(enum MetatileBehavior metatileBehavior);
 static void SetupWarp(struct MapHeader *mapHeader, s8 warpId, struct MapPosition *position);
 static bool8 IsArrowWarpMetatileBehavior(enum MetatileBehavior metatileBehavior, enum Direction direction);
 static s8 GetWarpEventAtMapPosition(struct MapHeader *mapHeader, struct MapPosition *mapPosition);
-static bool8 TryDoorWarp(struct MapPosition *position, u16 metatileBehavior, enum Direction direction);
+static bool8 TryDoorWarp(struct MapPosition *position, enum MetatileBehavior metatileBehavior, enum Direction direction);
 static s8 GetWarpEventAtPosition(struct MapHeader *mapHeader, u16 x, u16 y, u8 z);
 static const u8 *GetCoordEventScriptAtPosition(struct MapHeader *mapHeader, u16 x, u16 y, u8 z);
 static void UpdateFollowerStepCounter(void);
@@ -442,7 +442,7 @@ static const u8 *GetInteractionScript(struct MapPosition *position, enum Metatil
     return NULL;
 }
 
-const u8 *GetInteractedLinkPlayerScript(struct MapPosition *position, u8 metatileBehavior, enum Direction direction)
+const u8 *GetInteractedLinkPlayerScript(struct MapPosition *position, enum MetatileBehavior metatileBehavior, enum Direction direction)
 {
     u8 objectEventId;
     s32 i;
@@ -1091,7 +1091,7 @@ static void SetupWarp(struct MapHeader *unused, s8 warpEventId, struct MapPositi
     }
 }
 
-static bool8 TryDoorWarp(struct MapPosition *position, u16 metatileBehavior, enum Direction direction)
+static bool8 TryDoorWarp(struct MapPosition *position, enum MetatileBehavior metatileBehavior, enum Direction direction)
 {
     s8 warpEventId;
 
