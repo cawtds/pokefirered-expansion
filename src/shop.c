@@ -1187,7 +1187,7 @@ static void Task_BuyHowManyDialogueInit(u8 taskId)
     if (maxQuantity > MAX_BAG_ITEM_CAPACITY)
         sShopData.maxQuantity = MAX_BAG_ITEM_CAPACITY;
     else
-        sShopData.maxQuantity = (u8)maxQuantity;
+        sShopData.maxQuantity = maxQuantity;
 
     if (maxQuantity != 1)
         BuyQuantityAddScrollIndicatorArrows();
