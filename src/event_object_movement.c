@@ -70,7 +70,7 @@ static void GetGroundEffectFlags_Ripple(struct ObjectEvent *, u32 *);
 static void GetGroundEffectFlags_Seaweed(struct ObjectEvent *, u32 *);
 static void GetGroundEffectFlags_JumpLanding(struct ObjectEvent *, u32 *);
 static u8 ObjectEventCheckForReflectiveSurface(struct ObjectEvent *);
-static u8 GetReflectionTypeByMetatileBehavior(u32);
+static u8 GetReflectionTypeByMetatileBehavior(enum MetatileBehavior metatileBehavior);
 static void InitObjectPriorityByElevation(struct Sprite *sprite, u8 elevation);
 static void ObjectEventUpdateSubpriority(struct ObjectEvent *, struct Sprite *);
 static void DoTracksGroundEffect_None(struct ObjectEvent *objEvent, struct Sprite *sprite, enum GroundEffect groundEffect);
@@ -936,7 +936,7 @@ static const u8 sTrainerFacingDirectionMovementTypes[] =
     [DIR_NORTHEAST] = MOVEMENT_TYPE_FACE_UP,
 };
 
-bool8 (*const gOppositeDirectionBlockedMetatileFuncs[])(u8) =
+bool32 (*const gOppositeDirectionBlockedMetatileFuncs[])(enum MetatileBehavior metatileBehavior) =
 {
     [DIR_SOUTH - 1] = MetatileBehavior_IsSouthBlocked,
     [DIR_NORTH - 1] = MetatileBehavior_IsNorthBlocked,
@@ -944,7 +944,7 @@ bool8 (*const gOppositeDirectionBlockedMetatileFuncs[])(u8) =
     [DIR_EAST - 1]  = MetatileBehavior_IsEastBlocked,
 };
 
-bool8 (*const gDirectionBlockedMetatileFuncs[])(u8) =
+bool32 (*const gDirectionBlockedMetatileFuncs[])(enum MetatileBehavior metatileBehavior) =
 {
     [DIR_SOUTH - 1] = MetatileBehavior_IsNorthBlocked,
     [DIR_NORTH - 1] = MetatileBehavior_IsSouthBlocked,
@@ -2457,7 +2457,7 @@ static void ObjectEventEmote(struct ObjectEvent *objEvent, u8 emotion)
 }
 
 // Find and return direction of metatile behavior within distance
-static u32 FindMetatileBehaviorWithinRange(s32 x, s32 y, u32 mb, u8 distance)
+static u32 FindMetatileBehaviorWithinRange(s32 x, s32 y, enum MetatileBehavior mb, u8 distance)
 {
     s32 i;
 
@@ -2990,7 +2990,8 @@ static void ObjectEventSetGraphics(struct ObjectEvent *objectEvent, const struct
         UpdateSpritePalette(&sObjectEventSpritePalettes[i], sprite);
 
     // If gfx size changes, we need to reallocate tiles
-    if (OW_LARGE_OW_SUPPORT && !OW_GFX_COMPRESS && graphicsInfo->oam->size != sprite->oam.size)
+    if ((OW_LARGE_OW_SUPPORT && !OW_GFX_COMPRESS && graphicsInfo->oam->size != sprite->oam.size)
+     || (sprite->images->size != graphicsInfo->images->size))
         ReallocSpriteTiles(sprite, graphicsInfo->images->size);
 
     #if OW_GFX_COMPRESS
@@ -5394,12 +5395,12 @@ static bool8 MovementType_CopyPlayer_Step2(struct ObjectEvent *objectEvent, stru
     return FALSE;
 }
 
-static bool8 CopyablePlayerMovement_None(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+static bool32 CopyablePlayerMovement_None(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     return FALSE;
 }
 
-static bool8 CopyablePlayerMovement_FaceDirection(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+static bool32 CopyablePlayerMovement_FaceDirection(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, playerDirection)));
     objectEvent->singleMovementActive = TRUE;
@@ -5407,7 +5408,7 @@ static bool8 CopyablePlayerMovement_FaceDirection(struct ObjectEvent *objectEven
     return TRUE;
 }
 
-static bool8 CopyablePlayerMovement_GoSpeed0(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+static bool32 CopyablePlayerMovement_GoSpeed0(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
     s16 x;
@@ -5426,7 +5427,7 @@ static bool8 CopyablePlayerMovement_GoSpeed0(struct ObjectEvent *objectEvent, st
     return TRUE;
 }
 
-static bool8 CopyablePlayerMovement_GoSpeed1(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+static bool32 CopyablePlayerMovement_GoSpeed1(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
     s16 x;
@@ -5445,7 +5446,7 @@ static bool8 CopyablePlayerMovement_GoSpeed1(struct ObjectEvent *objectEvent, st
     return TRUE;
 }
 
-static bool8 CopyablePlayerMovement_GoSpeed2(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+static bool32 CopyablePlayerMovement_GoSpeed2(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
     s16 x;
@@ -5464,7 +5465,7 @@ static bool8 CopyablePlayerMovement_GoSpeed2(struct ObjectEvent *objectEvent, st
     return TRUE;
 }
 
-static bool8 CopyablePlayerMovement_Slide(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+static bool32 CopyablePlayerMovement_Slide(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
     s16 x;
@@ -5483,7 +5484,7 @@ static bool8 CopyablePlayerMovement_Slide(struct ObjectEvent *objectEvent, struc
     return TRUE;
 }
 
-static bool8 cph_IM_DIFFERENT(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+static bool32 cph_IM_DIFFERENT(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
 
@@ -5495,7 +5496,7 @@ static bool8 cph_IM_DIFFERENT(struct ObjectEvent *objectEvent, struct Sprite *sp
     return TRUE;
 }
 
-static bool8 CopyablePlayerMovement_GoSpeed4(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+static bool32 CopyablePlayerMovement_GoSpeed4(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
     s16 x;
@@ -5514,7 +5515,7 @@ static bool8 CopyablePlayerMovement_GoSpeed4(struct ObjectEvent *objectEvent, st
     return TRUE;
 }
 
-static bool8 CopyablePlayerMovement_Jump(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+static bool32 CopyablePlayerMovement_Jump(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
     s16 x;
@@ -5718,7 +5719,7 @@ static bool32 UpdateMonMoveInPlace(struct ObjectEvent *objectEvent, struct Sprit
     return FALSE;
 }
 
-bool8 FollowablePlayerMovement_Idle(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+bool8 FollowablePlayerMovement_Idle(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     if (UpdateMonMoveInPlace(objectEvent, sprite))
     {
@@ -5729,14 +5730,14 @@ bool8 FollowablePlayerMovement_Idle(struct ObjectEvent *objectEvent, struct Spri
     return FALSE;
 }
 
-bool8 FollowablePlayerMovement_Step(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+bool8 FollowablePlayerMovement_Step(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
     s16 x;
     s16 y;
     s16 targetX;
     s16 targetY;
-    // u32 playerAction = gObjectEvents[gPlayerAvatar.objectEventId].movementActionId;
+    u32 playerAction = gObjectEvents[gPlayerAvatar.objectEventId].movementActionId;
 
     targetX = gObjectEvents[gPlayerAvatar.objectEventId].previousCoords.x;
     targetY = gObjectEvents[gPlayerAvatar.objectEventId].previousCoords.y;
@@ -5792,13 +5793,13 @@ bool8 FollowablePlayerMovement_Step(struct ObjectEvent *objectEvent, struct Spri
         // InitJumpRegular will set the proper speed
         ObjectEventSetSingleMovement(objectEvent, sprite, GetJump2MovementAction(direction));
     }
-    /* else if (playerAction >= MOVEMENT_ACTION_WALK_STAIRS_DOWN && playerAction <= MOVEMENT_ACTION_WALK_SLOW_STAIRS_RIGHT)
+    else if (playerAction >= MOVEMENT_ACTION_WALK_SLOW_DOWN && playerAction <= MOVEMENT_ACTION_WALK_SLOW_RIGHT)
     {
         if (gPlayerAvatar.dashing) // on sideways stairs
             objectEvent->movementActionId = GetWalkNormalMovementAction(direction);
         else
-            ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkSlowStairsMovementAction(direction));
-    } */
+            ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkSlowMovementAction(direction));
+    }
     else if (PlayerGetCopyableMovement() == COPY_MOVE_JUMP2)
     {
         ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkSlowerMovementAction(direction));
@@ -5819,7 +5820,7 @@ bool8 FollowablePlayerMovement_Step(struct ObjectEvent *objectEvent, struct Spri
     return TRUE;
 }
 
-bool8 FollowablePlayerMovement_GoSpeed1(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+bool8 FollowablePlayerMovement_GoSpeed1(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
     u32 movementType = objectEvent->movementType;
@@ -5843,7 +5844,7 @@ bool8 FollowablePlayerMovement_GoSpeed1(struct ObjectEvent *objectEvent, struct 
     return TRUE;
 }
 
-bool8 FollowablePlayerMovement_GoSpeed2(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+bool8 FollowablePlayerMovement_GoSpeed2(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
     s16 x;
@@ -5860,7 +5861,7 @@ bool8 FollowablePlayerMovement_GoSpeed2(struct ObjectEvent *objectEvent, struct 
     return TRUE;
 }
 
-bool8 FollowablePlayerMovement_Slide(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+bool8 FollowablePlayerMovement_Slide(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
     s16 x;
@@ -5877,7 +5878,7 @@ bool8 FollowablePlayerMovement_Slide(struct ObjectEvent *objectEvent, struct Spr
     return TRUE;
 }
 
-bool8 FollowablePlayerMovement_JumpInPlace(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+bool8 FollowablePlayerMovement_JumpInPlace(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
 
@@ -5889,7 +5890,7 @@ bool8 FollowablePlayerMovement_JumpInPlace(struct ObjectEvent *objectEvent, stru
     return TRUE;
 }
 
-bool8 FollowablePlayerMovement_GoSpeed4(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+bool8 FollowablePlayerMovement_GoSpeed4(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
     s16 x;
@@ -5906,7 +5907,7 @@ bool8 FollowablePlayerMovement_GoSpeed4(struct ObjectEvent *objectEvent, struct 
     return TRUE;
 }
 
-bool8 FollowablePlayerMovement_Jump(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
+bool8 FollowablePlayerMovement_Jump(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool32 tileCallback(enum MetatileBehavior metatileBehavior))
 {
     enum Direction direction;
     s16 x;
@@ -6371,7 +6372,7 @@ static enum Collision GetCollisionInDirection(struct ObjectEvent *objectEvent, e
     return GetCollisionAtCoords(objectEvent, x, y, direction);
 }
 
-enum Collision GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, enum Direction dir, u8 currentBehavior, u8 nextBehavior, enum Collision collision)
+enum Collision GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, enum Direction dir, enum MetatileBehavior currentBehavior, enum MetatileBehavior nextBehavior, enum Collision collision)
 {
     if ((dir == DIR_SOUTH || dir == DIR_NORTH) && collision != COLLISION_NONE)
         return collision;
@@ -6463,8 +6464,8 @@ static bool8 ObjectEventOnRightSideStair(struct ObjectEvent *objectEvent, s16 x,
 
 enum Collision GetCollisionAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction dir)
 {
-    u8 currentBehavior = MapGridGetMetatileBehaviorAt(objectEvent->currentCoords.x, objectEvent->currentCoords.y);
-    u8 nextBehavior = MapGridGetMetatileBehaviorAt(x, y);
+    enum MetatileBehavior currentBehavior = MapGridGetMetatileBehaviorAt(objectEvent->currentCoords.x, objectEvent->currentCoords.y);
+    enum MetatileBehavior nextBehavior = MapGridGetMetatileBehaviorAt(x, y);
     enum Collision collision;
 
     #if OW_FLAG_NO_COLLISION != 0
@@ -10230,7 +10231,7 @@ static void GetGroundEffectFlags_Seaweed(struct ObjectEvent *objEvent, u32 *flag
 
 static void GetGroundEffectFlags_JumpLanding(struct ObjectEvent *objEvent, u32 *flags)
 {
-    typedef bool8 (*MetatileFunc)(u8);
+    typedef bool32 (*MetatileFunc)(enum MetatileBehavior metatileBehavior);
 
     static const MetatileFunc metatileFuncs[] = {
         MetatileBehavior_IsTallGrass,
@@ -10273,7 +10274,7 @@ static u8 ObjectEventCheckForReflectiveSurface(struct ObjectEvent *objEvent)
     s16 i;
     s16 j;
     u8 result;
-    u8 b;
+    enum MetatileBehavior b;
     s16 one;
 
 #define RETURN_REFLECTION_TYPE_AT(x, y)              \
@@ -10299,7 +10300,7 @@ static u8 ObjectEventCheckForReflectiveSurface(struct ObjectEvent *objEvent)
 #undef RETURN_REFLECTION_TYPE_AT
 }
 
-static u8 GetReflectionTypeByMetatileBehavior(u32 behavior)
+static u8 GetReflectionTypeByMetatileBehavior(enum MetatileBehavior behavior)
 {
     if (MetatileBehavior_IsIce(behavior))
         return 1;
@@ -10311,14 +10312,14 @@ static u8 GetReflectionTypeByMetatileBehavior(u32 behavior)
 
 u8 GetLedgeJumpDirection(s16 x, s16 y, enum Direction direction)
 {
-    static bool8 (*const ledgeBehaviorFuncs[])(u8) = {
+    static bool32 (*const ledgeBehaviorFuncs[])(enum MetatileBehavior metatileBehavior) = {
         [DIR_SOUTH - 1] = MetatileBehavior_IsJumpSouth,
         [DIR_NORTH - 1] = MetatileBehavior_IsJumpNorth,
         [DIR_WEST - 1]  = MetatileBehavior_IsJumpWest,
         [DIR_EAST - 1]  = MetatileBehavior_IsJumpEast,
     };
 
-    u8 behavior;
+    enum MetatileBehavior behavior;
     enum Direction index = direction;
 
     if (index == DIR_NONE)

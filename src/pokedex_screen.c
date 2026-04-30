@@ -3537,6 +3537,7 @@ u8 DexScreen_DrawMonAreaPage(void)
     sPokedexScreenData->windowIds[8] = AddWindow(&sWindowTemplate_AreaMap_SpeciesName);
     sPokedexScreenData->windowIds[9] = AddWindow(&sWindowTemplate_AreaMap_Size);
     sPokedexScreenData->windowIds[10] = AddWindow(&sWindowTemplate_AreaMap_Area);
+    SetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP, GetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP) + GetKantoMapVOffset());
     sPokedexScreenData->windowIds[11] = AddWindow(&sWindowTemplate_AreaMap_MonIcon);
     sPokedexScreenData->windowIds[12] = AddWindow(&sWindowTemplate_AreaMap_MonTypes);
     for (u32 i = 0; i < 7; i++)
@@ -3570,7 +3571,6 @@ u8 DexScreen_DrawMonAreaPage(void)
 
         FillWindowPixelBuffer(sPokedexScreenData->windowIds[10], PIXEL_FILL(0));
         DexScreen_AddTextPrinterParameterized(sPokedexScreenData->windowIds[10], FONT_SMALL, sText_Area, (sWindowTemplate_AreaMap_Area.width * 8 - strWidth) / 2, 4, 0);
-        SetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP, GetWindowAttribute(sPokedexScreenData->windowIds[10], WINDOW_TILEMAP_TOP) + GetKantoMapVOffset());
         PutWindowTilemap(sPokedexScreenData->windowIds[10]);
         CopyWindowToVram(sPokedexScreenData->windowIds[10], COPYWIN_GFX);
     }

@@ -18,23 +18,8 @@ CeladonCity_DepartmentStore_2F_EventScript_ClerkItems::
 	faceplayer
 	message Text_MayIHelpYou
 	waitmessage
-	pokemart CeladonCity_DepartmentStore_2F_Items
+	pokemart SHOP_ID_CELADON_CITY_DEPARTMENT_STORE_2F_ITEMS
 	msgbox Text_PleaseComeAgain
-	release
-	end
-
-	.align 2
-CeladonCity_DepartmentStore_2F_Items::
-	.2byte ITEM_GREAT_BALL
-	.2byte ITEM_SUPER_POTION
-	.2byte ITEM_REVIVE
-	.2byte ITEM_ANTIDOTE
-	.2byte ITEM_PARALYZE_HEAL
-	.2byte ITEM_AWAKENING
-	.2byte ITEM_BURN_HEAL
-	.2byte ITEM_ICE_HEAL
-	.2byte ITEM_SUPER_REPEL
-	.2byte ITEM_NONE
 	release
 	end
 
@@ -43,19 +28,7 @@ CeladonCity_DepartmentStore_2F_EventScript_ClerkTMs::
 	faceplayer
 	message Text_MayIHelpYou
 	waitmessage
-	pokemart CeladonCity_DepartmentStore_2F_TMs
+	pokemart SHOP_ID_CELADON_CITY_DEPARTMENT_STORE_2F_TMS
 	msgbox Text_PleaseComeAgain
-	release
-	end
-
-	.align 2
-CeladonCity_DepartmentStore_2F_TMs::
-	.2byte ITEM_TM05
-	.2byte ITEM_TM15
-	.2byte ITEM_TM28
-	.2byte ITEM_TM31
-	.2byte ITEM_TM43
-	.2byte ITEM_TM45
-	.2byte ITEM_NONE
 	release
 	end

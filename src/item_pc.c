@@ -540,7 +540,7 @@ static void AddPcItemIconSprite(enum Item item, u8 iconSlot)
     }
 }
 
-static void RemovePcItemIconSprite(enum Item item, u8 iconSlot)
+static void RemovePcItemIconSprite(u8 iconSlot)
 {
     u8 *spriteIdPtr = &sStateDataPtr->itemSpriteIds[iconSlot];
     if (*spriteIdPtr == SPRITE_NONE)
@@ -575,7 +575,7 @@ static void ItemPc_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *
             AddPcItemIconSprite(ITEMS_COUNT, sStateDataPtr->itemMenuIconSlot);
             desc = sText_ReturnToPC;
         }
-        RemovePcItemIconSprite(itemId, sStateDataPtr->itemMenuIconSlot ^ 1);
+        RemovePcItemIconSprite(sStateDataPtr->itemMenuIconSlot ^ 1);
         sStateDataPtr->itemMenuIconSlot ^= 1;
         FillWindowPixelBuffer(1, 0);
         ItemPc_AddTextPrinterParameterized(1, FONT_NORMAL, desc, 0, 3, 2, 0, 0, 3);

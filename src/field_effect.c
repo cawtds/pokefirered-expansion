@@ -1528,7 +1528,7 @@ void HideFollowerForFieldEffect(void)
     ObjectEventSetHeldMovement(followerObj, MOVEMENT_ACTION_ENTER_POKEBALL);
 }
 
-void StartEscalatorWarp(u8 metatileBehavior, u8 priority)
+void StartEscalatorWarp(enum MetatileBehavior metatileBehavior, u8 priority)
 {
     u8 taskId = CreateTask(Task_EscalatorWarpOut, priority);
     gTasks[taskId].tGoingUp = FALSE;
@@ -1706,7 +1706,7 @@ static bool32 EscalatorWarpIn_Init(struct Task *task)
 {
     struct ObjectEvent *objectEvent;
     s16 x, y;
-    u32 behavior;
+    enum MetatileBehavior behavior;
 
     CameraObjectFreeze();
     objectEvent = &gObjectEvents[gPlayerAvatar.objectEventId];

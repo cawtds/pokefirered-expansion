@@ -10,14 +10,14 @@
 #include "constants/map_types.h"
 #include "constants/songs.h"
 
-static bool32 CanBikeFaceDirectionOnRail(enum Direction direction, u8 metatileBehavior);
-static bool32 MetatileBehaviorForbidsBiking(u8 metatileBehavior);
+static bool32 CanBikeFaceDirectionOnRail(enum Direction direction, enum MetatileBehavior metatileBehavior);
+static bool32 MetatileBehaviorForbidsBiking(enum MetatileBehavior metatileBehavior);
 static enum BikeTransitionId BikeInputHandler_Normal(enum Direction *, u16, u16);
 static enum BikeTransitionId BikeInputHandler_Slope(enum Direction *, u16, u16);
 static enum BikeTransitionId BikeInputHandler_Turning(enum Direction *, u16, u16);
 static enum BikeTransitionId GetBikeTransitionId(enum Direction *, u16, u16);
 static enum Collision GetBikeCollision(enum Direction direction);
-static enum Collision GetBikeCollisionAt(struct ObjectEvent *playerObjEvent, s16 x, s16 y, enum Direction direction, u8 metatileBehavior);
+static enum Collision GetBikeCollisionAt(struct ObjectEvent *playerObjEvent, s16 x, s16 y, enum Direction direction, enum MetatileBehavior metatileBehavior);
 static void Bike_SetBikeStill(void);
 static void BikeTransition_FaceDirection(enum Direction direction);
 static void BikeTransition_TurnDirection(enum Direction direction);
@@ -236,7 +236,7 @@ static enum Collision GetBikeCollision(enum Direction direction)
 {
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
     s16 x, y;
-    u8 metatileBehavior;
+    enum MetatileBehavior metatileBehavior;
 
     x = playerObjEvent->currentCoords.x;
     y = playerObjEvent->currentCoords.y;
@@ -245,7 +245,7 @@ static enum Collision GetBikeCollision(enum Direction direction)
     return GetBikeCollisionAt(playerObjEvent, x, y, direction, metatileBehavior);
 }
 
-static enum Collision GetBikeCollisionAt(struct ObjectEvent *playerObjEvent, s16 x, s16 y, enum Direction direction, u8 metatileBehavior)
+static enum Collision GetBikeCollisionAt(struct ObjectEvent *playerObjEvent, s16 x, s16 y, enum Direction direction, enum MetatileBehavior metatileBehavior)
 {
     enum Collision collision = CheckForObjectEventCollision(playerObjEvent, x, y, direction, metatileBehavior);
 
@@ -260,7 +260,7 @@ static enum Collision GetBikeCollisionAt(struct ObjectEvent *playerObjEvent, s16
     return collision;
 }
 
-bool32 IsRunningDisallowed(u8 metatileBehavior)
+bool32 IsRunningDisallowed(enum MetatileBehavior metatileBehavior)
 {
     if ((OW_RUNNING_INDOORS == GEN_3 && !gMapHeader.allowRunning) || MetatileBehaviorForbidsBiking(metatileBehavior) == TRUE)
         return TRUE;
@@ -268,7 +268,7 @@ bool32 IsRunningDisallowed(u8 metatileBehavior)
     return FALSE;
 }
 
-static bool32 MetatileBehaviorForbidsBiking(u8 metatileBehavior)
+static bool32 MetatileBehaviorForbidsBiking(enum MetatileBehavior metatileBehavior)
 {
     if (MetatileBehavior_IsRunningDisallowed(metatileBehavior))
         return TRUE;
@@ -279,7 +279,7 @@ static bool32 MetatileBehaviorForbidsBiking(u8 metatileBehavior)
     return TRUE;
 }
 
-static bool32 CanBikeFaceDirectionOnRail(enum Direction direction, u8 metatileBehavior)
+static bool32 CanBikeFaceDirectionOnRail(enum Direction direction, enum MetatileBehavior metatileBehavior)
 {
     if (direction == DIR_EAST || direction == DIR_WEST)
     {
@@ -297,10 +297,11 @@ static bool32 CanBikeFaceDirectionOnRail(enum Direction direction, u8 metatileBe
 bool32 IsBikingDisallowedByPlayer(void)
 {
     s16 x, y;
-    u8 metatileBehavior;
 
     if (gPlayerAvatar.playerState != PLAYER_AVATAR_STATE_SURFING && gPlayerAvatar.playerState != PLAYER_AVATAR_STATE_UNDERWATER)
     {
+        enum MetatileBehavior metatileBehavior;
+
         PlayerGetDestCoords(&x, &y);
         metatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
         if (!MetatileBehaviorForbidsBiking(metatileBehavior))
@@ -381,7 +382,7 @@ s16 GetPlayerSpeed(void)
 void Bike_HandleBumpySlopeJump(void)
 {
     s16 x, y;
-    u8 tileBehavior;
+    enum MetatileBehavior tileBehavior;
 
     if (gPlayerAvatar.playerState != PLAYER_AVATAR_STATE_ACRO_BIKE)
         return;

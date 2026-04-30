@@ -67,7 +67,7 @@ static enum Collision CheckForPlayerAvatarCollision(enum Direction direction);
 static bool8 CanStopSurfing(s16 x, s16 y, enum Direction direction);
 static bool8 ShouldJumpLedge(s16 x, s16 y, enum Direction direction);
 static bool8 TryPushBoulder(s16 x, s16 y, enum Direction direction);
-static void CheckAcroBikeCollision(s16 x, s16 y, u8 metatileBehavior, enum Collision *collision);
+static void CheckAcroBikeCollision(s16 x, s16 y, enum MetatileBehavior metatileBehavior, enum Collision *collision);
 static void DoPlayerAvatarTransition(void);
 static void PlayerAvatarTransition_Dummy(struct ObjectEvent *playerObject);
 static void PlayerAvatarTransition_Normal(struct ObjectEvent *playerObject);
@@ -80,7 +80,7 @@ static bool8 PlayerAnimIsMultiFrameStationary(void);
 static bool8 PlayerAnimIsMultiFrameStationaryAndStateNotTurning(void);
 static void PlayCollisionSoundIfNotFacingWarp(enum Direction direction);
 static void PlayerGoSpin(enum Direction direction);
-static void PlayerApplyTileForcedMovement(u8 metatileBehavior);
+static void PlayerApplyTileForcedMovement(enum MetatileBehavior metatileBehavior);
 static void HandleWarpArrowSpriteHideShow(struct ObjectEvent *playerObjEvent);
 static void StartStrengthAnim(u8 objectEventId, enum Direction direction);
 static void Task_BumpBoulder(u8 taskId);
@@ -210,7 +210,7 @@ static bool8 TryUpdatePlayerSpinDirection(void)
 }
 
 static const struct {
-    bool8 (*check)(u8 metatileBehavior);
+    bool32 (*check)(enum MetatileBehavior metatileBehavior);
     bool8 (*apply)(void);
 } sForcedMovementFuncs[] = {
     {MetatileBehavior_IsTrickHouseSlipperyFloor, ForcedMovement_Slip},
@@ -572,8 +572,8 @@ bool32 ObjectMovingOnRockStairs(struct ObjectEvent *objectEvent, enum Direction 
     y = objectEvent->currentCoords.y;
 
     // TODO followers on sideways stairs
-    if (IsFollowerVisible() && GetFollowerObject() != NULL && (objectEvent->isPlayer || objectEvent->localId == OBJ_EVENT_ID_FOLLOWER))
-        return FALSE;
+    // if (IsFollowerVisible() && GetFollowerObject() != NULL && (objectEvent->isPlayer || objectEvent->localId == OBJ_EVENT_ID_FOLLOWER))
+    //     return FALSE;
 
     switch (direction)
     {
@@ -612,7 +612,7 @@ static enum Collision CheckForPlayerAvatarCollision(enum Direction direction)
     return CheckForObjectEventCollision(playerObjEvent, x, y, direction, MapGridGetMetatileBehaviorAt(x, y));
 }
 
-enum Collision CheckForObjectEventCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction, u8 metatileBehavior)
+enum Collision CheckForObjectEventCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction, enum MetatileBehavior metatileBehavior)
 {
     enum Collision collision = GetCollisionAtCoords(objectEvent, x, y, direction);
     if (collision == COLLISION_ELEVATION_MISMATCH && CanStopSurfing(x, y, direction))
@@ -684,7 +684,7 @@ static bool8 TryPushBoulder(s16 x, s16 y, enum Direction direction)
     }
 }
 
-static bool8 (*const sAcroBikeTrickMetatiles[])(u8) =
+static bool32 (*const sAcroBikeTrickMetatiles[])(enum MetatileBehavior metatileBehavior) =
 {
     MetatileBehavior_IsBumpySlope,
     MetatileBehavior_IsIsolatedVerticalRail,
@@ -702,7 +702,7 @@ static const enum Collision sAcroBikeTrickCollisionTypes[] =
     COLLISION_HORIZONTAL_RAIL,
 };
 
-static void CheckAcroBikeCollision(s16 x, s16 y, u8 metatileBehavior, enum Collision *collision)
+static void CheckAcroBikeCollision(s16 x, s16 y, enum MetatileBehavior metatileBehavior, enum Collision *collision)
 {
     u8 i;
 
@@ -972,7 +972,7 @@ static void PlayerGoSpin(enum Direction direction)
     PlayerSetAnimId(GetSpinMovementAction(direction), 3);
 }
 
-static void PlayerApplyTileForcedMovement(u8 metatileBehavior)
+static void PlayerApplyTileForcedMovement(enum MetatileBehavior metatileBehavior)
 {
     int i;
 
@@ -983,7 +983,7 @@ static void PlayerApplyTileForcedMovement(u8 metatileBehavior)
     }
 }
 
-static bool8 (*const sArrowWarpMetatileBehaviorChecks[])(u8) = {
+static bool32 (*const sArrowWarpMetatileBehaviorChecks[])(enum MetatileBehavior metatileBehavior) = {
     MetatileBehavior_IsSouthArrowWarp,
     MetatileBehavior_IsNorthArrowWarp,
     MetatileBehavior_IsWestArrowWarp,
@@ -993,7 +993,7 @@ static bool8 (*const sArrowWarpMetatileBehaviorChecks[])(u8) = {
 static void PlayCollisionSoundIfNotFacingWarp(enum Direction direction)
 {
     s16 x, y;
-    u8 metatileBehavior = gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior;
+    enum MetatileBehavior metatileBehavior = gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior;
 
     if (!sArrowWarpMetatileBehaviorChecks[direction - 1](metatileBehavior))
     {
@@ -1366,7 +1366,7 @@ void SetPlayerAvatarWatering(enum Direction direction)
     StartSpriteAnim(&gSprites[gPlayerAvatar.spriteId], GetFaceDirectionAnimNum(direction));
 }
 
-static bool8 (*const sArrowWarpMetatileBehaviorChecks2[])(u8) = {
+static bool32 (*const sArrowWarpMetatileBehaviorChecks2[])(enum MetatileBehavior metatileBehavior) = {
     MetatileBehavior_IsSouthArrowWarp,
     MetatileBehavior_IsNorthArrowWarp,
     MetatileBehavior_IsWestArrowWarp,
@@ -1378,7 +1378,7 @@ static void HandleWarpArrowSpriteHideShow(struct ObjectEvent *objectEvent)
     s16 x;
     s16 y;
     enum Direction direction;
-    u8 metatileBehavior = objectEvent->currentMetatileBehavior;
+    enum MetatileBehavior metatileBehavior = objectEvent->currentMetatileBehavior;
 
     for (x = 0, direction = DIR_SOUTH; x < 4; x++, direction++)
     {

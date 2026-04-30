@@ -1,0 +1,53 @@
+{{ doNotModifyHeader }}
+
+#define ITEM_TERMINATOR ITEM_NONE
+#define STAGE_TERMINATOR NULL
+
+## for shared in shared_items
+static const u16 sSharedShopItems_{{ shared.label }}[] =
+{
+## for item in shared.items
+    {{ item }},
+## endfor
+    ITEM_TERMINATOR,
+};
+## endfor
+
+## for shop in shops
+{{ setVarInt("stage", 0) }}
+## for stage in shop.stages
+{% if not existsIn(stage, "sharedItems") %}
+static const u16 sShopItems_{{ shop.id }}{{ getVar("stage") }}[] =
+{
+## for item in stage.items
+    {{ item }},
+## endfor
+    ITEM_TERMINATOR,
+};
+{% endif %}
+
+static const struct ShopInfo sShopInfoStage_{{ shop.id }}{{ getVar("stage") }} =
+{
+    .isUnlockedFunc = {% if existsIn(stage, "isUnlockedFunc") %} {{ stage.isUnlockedFunc }} {% else %} NULL {% endif %},
+    .items = {% if existsIn(stage, "sharedItems") %} sSharedShopItems_{{ stage.sharedItems }}{% else %} sShopItems_{{ shop.id }}{{ getVar("stage") }}{% endif %},
+}; {{ addToVar("stage", 1) }}
+## endfor
+## endfor
+
+## for shop in shops
+{{ setVarInt("stage", 0) }}
+static const struct ShopInfo *const sShopStages_{{ shop.id }}[] =
+{
+## for stage in shop.stages
+    &sShopInfoStage_{{ shop.id }}{{ getVar("stage") }},{{ addToVar("stage", 1) }}
+## endfor
+    STAGE_TERMINATOR,
+};
+## endfor
+
+static const struct ShopInfo *const *const sShopInfo[SHOP_ID_COUNT] =
+{
+## for shop in shops
+    [{{ shop.id }}] = sShopStages_{{ shop.id }},
+## endfor
+};

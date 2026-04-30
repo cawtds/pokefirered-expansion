@@ -29,21 +29,21 @@
 #include "constants/field_weather.h"
 #include "constants/songs.h"
 
+static bool8 WaitStairExitMovementFinished(s16 *speedX, s16 *speedY, s16 *offsetX, s16 *offsetY, s16 *timer);
+static void ExitStairsMovement(s16 *speedX, s16 *speedY, s16 *offsetX, s16 *offsetY, s16 *timer);
 static void ExitWarpFadeInScreen(u8 playerNotMoving);
+static void ForceStairsMovement(enum MetatileBehavior metatileBehavior, s16 *x, s16 *y);
+static void GetStairsMovementDirection(enum MetatileBehavior metatileBehavior, s16 *x, s16 *y);
+static void Task_DoorWarp(u8 taskId);
 static void Task_ExitDoor(u8 taskId);
 static void Task_ExitNonAnimDoor(u8 taskId);
 static void Task_ExitNonDoor(u8 taskId);
-static void Task_TeleportWarpIn(u8 taskId);
+static void Task_ExitStairs(u8 taskId);
+static void Task_StairWarp(u8 taskId);
 static void Task_Teleport2Warp(u8 taskId);
 static void Task_TeleportWarp(u8 taskId);
-static void Task_DoorWarp(u8 taskId);
-static void Task_StairWarp(u8 taskId);
-static void ForceStairsMovement(u16 metatileBehavior, s16 *x, s16 *y);
-static void GetStairsMovementDirection(u8 metatileBehavior, s16 *x, s16 *y);
+static void Task_TeleportWarpIn(u8 taskId);
 static void UpdateStairsMovement(s16 speedX, s16 speedY, s16 *offsetX, s16 *offsetY, s16 *timer);
-static void Task_ExitStairs(u8 taskId);
-static void ExitStairsMovement(s16 *speedX, s16 *speedY, s16 *offsetX, s16 *offsetY, s16 *timer);
-static bool8 WaitStairExitMovementFinished(s16 *speedX, s16 *speedY, s16 *offsetX, s16 *offsetY, s16 *timer);
 
 void FillPalBufferWhite(void)
 {
@@ -233,7 +233,7 @@ void FieldCB_ReturnToFieldWirelessLink(void)
 static void SetUpWarpExitTask(bool8 playerNotMoving)
 {
     s16 x, y;
-    u32 metatileBehavior;
+    enum MetatileBehavior metatileBehavior;
     TaskFunc func;
 
     PlayerGetDestCoords(&x, &y);
@@ -555,7 +555,7 @@ void DoDiveWarp(void)
     CreateTask(Task_Teleport2Warp, 10);
 }
 
-void DoStairWarp(u16 metatileBehavior, u16 delay)
+void DoStairWarp(enum MetatileBehavior metatileBehavior, u16 delay)
 {
     u8 taskId = CreateTask(Task_StairWarp, 10);
     gTasks[taskId].data[1] = metatileBehavior;
@@ -590,7 +590,7 @@ void DoFallWarp(void)
     gFieldCallback = FieldCB_FallWarpExit;
 }
 
-void DoEscalatorWarp(u8 metatileBehavior)
+void DoEscalatorWarp(enum MetatileBehavior metatileBehavior)
 {
     LockPlayerFieldControls();
     StartEscalatorWarp(metatileBehavior, 10);
@@ -903,14 +903,14 @@ static void UpdateStairsMovement(s16 speedX, s16 speedY, s16 *offsetX, s16 *offs
         ObjectEventForceSetHeldMovement(playerObj, GetWalkInPlaceNormalMovementAction(GetPlayerFacingDirection()));
 }
 
-static void ForceStairsMovement(u16 metatileBehavior, s16 *x, s16 *y)
+static void ForceStairsMovement(enum MetatileBehavior metatileBehavior, s16 *x, s16 *y)
 {
     ObjectEventForceSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], GetWalkInPlaceNormalMovementAction(GetPlayerFacingDirection()));
     GetStairsMovementDirection(metatileBehavior, x, y);
     gObjectEvents[gPlayerAvatar.objectEventId].noShadow = TRUE;
 }
 
-static void GetStairsMovementDirection(u8 metatileBehavior, s16 *x, s16 *y)
+static void GetStairsMovementDirection(enum MetatileBehavior metatileBehavior, s16 *x, s16 *y)
 {
     if (MetatileBehavior_IsDirectionalUpRightStairWarp(metatileBehavior))
     {
@@ -970,7 +970,7 @@ static void Task_ExitStairs(u8 taskId)
 static void ExitStairsMovement(s16 *speedX, s16 *speedY, s16 *offsetX, s16 *offsetY, s16 *timer)
 {
     s16 x, y;
-    u8 metatileBehavior;
+    enum MetatileBehavior metatileBehavior;
     s32 direction;
     struct Sprite *sprite;
     PlayerGetDestCoords(&x, &y);

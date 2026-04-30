@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "constants/field_effects.h"
+#include "constants/metatile_behaviors.h"
 
 extern u32 gFieldEffectArguments[8];
 extern void (*gPostMenuFieldCallback)(void);
@@ -76,7 +77,7 @@ void FieldEffectFreeGraphicsResources(struct Sprite *sprite);
 void FieldEff_CaveDust(void);
 void FieldEffectStop(struct Sprite *sprite, enum FieldEffect fldeff);
 void FieldCB_FallWarpExit(void);
-void StartEscalatorWarp(u8 metatileBehavior, u8 priority);
+void StartEscalatorWarp(enum MetatileBehavior metatileBehavior, u8 priority);
 void StartLavaridgeGymB1FWarp(u8 a0);
 void StartLavaridgeGym1FWarp(u8 a0);
 void FreeResourcesAndDestroySprite(struct Sprite *sprite, u8 spriteId);

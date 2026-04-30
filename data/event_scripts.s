@@ -48,6 +48,7 @@
 #include "constants/pokemon.h"
 #include "constants/script_menu.h"
 #include "constants/seagallop.h"
+#include "constants/shops.h"
 #include "constants/songs.h"
 #include "constants/sound.h"
 #include "constants/species.h"

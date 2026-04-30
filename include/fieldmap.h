@@ -2,6 +2,7 @@
 #define GUARD_FIELDMAP_H
 
 #include "global.h"
+#include "constants/metatile_behaviors.h"
 
 #define NUM_TILES_IN_PRIMARY 640
 #define NUM_TILES_TOTAL 1024
@@ -27,7 +28,7 @@ extern const struct MapLayout Route1_Layout;
 extern u16 ALIGNED(4) sBackupMapData[VIRTUAL_MAP_SIZE];
 
 u32 MapGridGetMetatileIdAt(s32, s32);
-u32 MapGridGetMetatileBehaviorAt(s16, s16);
+enum MetatileBehavior MapGridGetMetatileBehaviorAt(s16, s16);
 u8 MapGridGetMetatileLayerTypeAt(s16 x, s16 y);
 void MapGridSetMetatileIdAt(s32, s32, u16);
 void MapGridSetMetatileEntryAt(s32, s32, u16);

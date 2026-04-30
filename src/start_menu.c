@@ -550,20 +550,17 @@ static s8 InitStartMenuStep(void)
     case 3:
         if (GetSafariZoneFlag())
             ShowSafariZoneStatsWindow();
-        if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
+        else if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
             ShowPyramidFloorWindow();
-        sInitStartMenuData[0]++;
-        break;
-    case 4:
-        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
+        else
             DrawTimeWindow();
         sInitStartMenuData[0]++;
         break;
-    case 5:
+    case 4:
         if (PrintStartMenuActions(&sInitStartMenuData[1], 2) == TRUE)
             sInitStartMenuData[0]++;
         break;
-    case 6:
+    case 5:
         sStartMenuCursorPos = InitMenuNormal(GetStartMenuWindowId(), FONT_NORMAL, 0, 0, 15, sNumStartMenuItems, sStartMenuCursorPos);
         CopyWindowToVram(GetStartMenuWindowId(), COPYWIN_MAP);
         return TRUE;

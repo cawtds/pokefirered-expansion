@@ -54,7 +54,7 @@ static u32 GetFollowerNPCSprite(void);
 static bool32 FollowerNPCHasRunningFrames(void);
 static bool32 IsStateMovement(u32 state);
 static enum Direction GetNewPlayerMovementDirection(u32 state);
-static bool32 IsPlayerForcedOntoSameTile(u8 metatileBehavior, enum Direction direction);
+static bool32 IsPlayerForcedOntoSameTile(enum MetatileBehavior metatileBehavior, enum Direction direction);
 static u32 GetPlayerFaceToDoorDirection(struct ObjectEvent *player, struct ObjectEvent *follower);
 static u32 ReturnFollowerNPCDelayedState(enum Direction direction);
 static void TryUpdateFollowerNPCSpriteUnderwater(void);
@@ -417,7 +417,7 @@ static enum Direction GetNewPlayerMovementDirection(u32 state)
     }
 }
 
-static bool32 IsPlayerForcedOntoSameTile(u8 metatileBehavior, enum Direction direction)
+static bool32 IsPlayerForcedOntoSameTile(enum MetatileBehavior metatileBehavior, enum Direction direction)
 {
     enum Direction oppositeDirection = DIR_NONE;
 
@@ -865,13 +865,13 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, enum Dire
     enum Collision collision = COLLISION_NONE;
     s16 followerX = follower->currentCoords.x;
     s16 followerY = follower->currentCoords.y;
-    u32 currentBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
-    u32 nextBehavior;
+    enum MetatileBehavior currentBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
+    enum MetatileBehavior nextBehavior;
     u32 noSpecialAnimFrames = (GetFollowerNPCSprite() == GetFollowerNPCData(FNPC_DATA_GFX_ID));
     u32 delayedState = GetFollowerNPCData(FNPC_DATA_DELAYED_STATE);
     s16 playerDestX, playerDestY;
     enum Direction playerMoveDirection = GetNewPlayerMovementDirection(state);
-    u32 newPlayerMB;
+    enum MetatileBehavior newPlayerMB;
 
     MoveCoords(direction, &followerX, &followerY);
     nextBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);

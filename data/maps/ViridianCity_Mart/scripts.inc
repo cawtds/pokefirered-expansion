@@ -55,18 +55,8 @@ ViridianCity_Mart_EventScript_Clerk::
 	goto_if_eq VAR_MAP_SCENE_VIRIDIAN_CITY_MART, 1, ViridianCity_Mart_EventScript_SayHiToOak
 	message Text_MayIHelpYou
 	waitmessage
-	pokemart ViridianCity_Mart_Items
+	pokemart SHOP_ID_VIRIDIAN_CITY_MART
 	msgbox Text_PleaseComeAgain
-	release
-	end
-
-	.align 2
-ViridianCity_Mart_Items::
-	.2byte ITEM_POKE_BALL
-	.2byte ITEM_POTION
-	.2byte ITEM_ANTIDOTE
-	.2byte ITEM_PARALYZE_HEAL
-	.2byte ITEM_NONE
 	release
 	end
 

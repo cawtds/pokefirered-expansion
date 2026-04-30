@@ -502,7 +502,7 @@ bool32 IsPageFlipInput(u8 direction)
     return FALSE;
 }
 
-static const u8 *sStatControlStrings[] =
+static const u8 *const sStatControlStrings[] =
 {
     [PSS_SKILL_PAGE_STATS] = sText_PokeSum_Controls_PageStats,
     [PSS_SKILL_PAGE_EVS] = sText_PokeSum_Controls_PageEVs,
@@ -2187,9 +2187,7 @@ static void PrintMovesPage(void)
         if (sMonSummaryScreen->mode == PSS_MODE_SELECT_MOVE)
             PokeSum_PrintMoveName(MAX_MON_MOVES);
         else
-            AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], FONT_NORMAL,
-                                         3, GetMoveNamePrinterYpos(4),
-                                         sPrintMoveTextColors[MOVE_TEXT_COLOR_0], TEXT_SKIP_DRAW, gText_Cancel);
+            AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], FONT_NORMAL, 3, GetMoveNamePrinterYpos(4), sPrintMoveTextColors[MOVE_TEXT_COLOR_0], TEXT_SKIP_DRAW, gText_Cancel);
     }
 }
 
@@ -2572,7 +2570,7 @@ static void PokeSum_DrawMoveTypeIcons(void)
         BlitMenuTypeIcon(sMonSummaryScreen->windowIds[5], sMonSummaryScreen->moveTypes[MAX_MON_MOVES], 3, GetMoveNamePrinterYpos(MAX_MON_MOVES));
 }
 
-static const u8 *sText_PageRename = COMPOUND_STRING("{DPAD_RIGHT}PAGE {A_BUTTON}RENAME");
+static const u8 *const sText_PageRename = COMPOUND_STRING("{DPAD_RIGHT}PAGE {A_BUTTON}RENAME");
 
 static void PrintControlsString(void)
 {
@@ -3488,16 +3486,16 @@ static void Task_InputHandler_SelectOrForgetMove(u8 taskId)
         }
         else if (JOY_NEW(DPAD_DOWN))
         {
-            if (sMoveSelectionCursorPos < 4)
+            if (sMoveSelectionCursorPos < MAX_MON_MOVES)
             {
-                u8 v0 = 4;
+                u8 selectionLimit = MAX_MON_MOVES;
 
                 sMonSummaryScreen->selectMoveInputHandlerState = 3;
 
                 if (sMonSummaryScreen->isSwappingMoves == TRUE)
-                    v0--;
+                    selectionLimit--;
 
-                for (i = sMoveSelectionCursorPos; i < v0; i++)
+                for (i = sMoveSelectionCursorPos; i < selectionLimit; i++)
                     if (sMonSummaryScreen->moveIds[i + 1] != 0)
                     {
                         PlaySE(SE_SELECT);
@@ -3513,7 +3511,7 @@ static void Task_InputHandler_SelectOrForgetMove(u8 taskId)
 
                 return;
             }
-            else if (sMoveSelectionCursorPos == 4)
+            else if (sMoveSelectionCursorPos == MAX_MON_MOVES)
             {
                 sMoveSelectionCursorPos = 0;
                 sMonSummaryScreen->selectMoveInputHandlerState = 3;
@@ -3523,7 +3521,7 @@ static void Task_InputHandler_SelectOrForgetMove(u8 taskId)
         }
         else if (JOY_NEW(A_BUTTON))
         {
-            if (PokeSum_CanForgetSelectedMove() == TRUE || sMoveSelectionCursorPos == 4)
+            if (PokeSum_CanForgetSelectedMove() == TRUE || sMoveSelectionCursorPos == MAX_MON_MOVES)
             {
                 PlaySE(SE_SELECT);
                 sMoveSwapCursorPos = sMoveSelectionCursorPos;

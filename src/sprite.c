@@ -1884,7 +1884,7 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
     u32 spriteWidth = GetSpriteWidth(&gSprites[spriteId]);
     u32 spriteHeight = GetSpriteHeight(&gSprites[spriteId]);
     u32 color = 0;
-    bool32 isColor;
+    bool32 isColor = FALSE;
 
     u32 *src = NULL;
 

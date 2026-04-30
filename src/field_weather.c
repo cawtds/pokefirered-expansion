@@ -5,6 +5,7 @@
 #include "field_weather_effects.h"
 #include "field_weather.h"
 #include "gpu_regs.h"
+#include "map_preview_screen.h"
 #include "overworld.h"
 #include "palette.h"
 #include "sound.h"
@@ -301,7 +302,8 @@ static void Task_WeatherMain(u8 taskId)
 
 static void None_Init(void)
 {
-    Weather_SetBlendCoeffs(8, BASE_SHADOW_INTENSITY); // Indoor shadows
+    if (!ForestMapPreviewScreenIsRunning())
+        Weather_SetBlendCoeffs(8, BASE_SHADOW_INTENSITY); // Indoor shadows
     gWeatherPtr->noShadows = FALSE;
     gWeatherPtr->targetColorMapIndex = 0;
     gWeatherPtr->colorMapStepDelay = 0;

@@ -1223,9 +1223,13 @@
 
 	@ Opens the Pokemart system, offering the specified products for sale.
 	@ Products should be a list of .2byte item values preceded by an .align 2
-	.macro pokemart products:req
-	.byte SCR_OP_POKEMART
-	.4byte \products
+	.macro pokemart shopId:req
+	.if \shopId < SHOP_ID_COUNT
+		.byte SCR_OP_POKEMART
+		.byte \shopId
+	.else
+		.error "Invalid shopId."
+	.endif
 	.endm
 
 	@ Opens the Pokemart system and treats the list of items as decorations.

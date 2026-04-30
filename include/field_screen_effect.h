@@ -2,6 +2,7 @@
 #define GUARD_FIELD_SCREEN_EFFECT_H
 
 #include "global.h"
+#include "constants/metatile_behaviors.h"
 
 void AnimateFlash(u8);
 void FieldCB_SafariZoneRanOutOfBalls(void);
@@ -15,8 +16,8 @@ void DoDoorWarp(void);
 void DoFallWarp(void);
 void DoTeleportWarp(void);
 void DoTeleport2Warp(void);
-void DoStairWarp(u16 metatileBehavior, u16 delay);
-void DoEscalatorWarp(u8 a0);
+void DoStairWarp(enum MetatileBehavior metatileBehavior, u16 delay);
+void DoEscalatorWarp(enum MetatileBehavior metatileBehavior);
 void DoLavaridgeGymB1FWarp(void);
 void DoLavaridgeGym1FWarp(void);
 void DoTeleportWarp(void);

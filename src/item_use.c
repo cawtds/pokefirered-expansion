@@ -279,7 +279,7 @@ void ItemUseOutOfBattle_ExpShare(u8 taskId)
 void ItemUseOutOfBattle_Bike(u8 taskId)
 {
     s16 x, y;
-    u8 behavior;
+    enum MetatileBehavior behavior;
 
     PlayerGetDestCoords(&x, &y);
     behavior = MapGridGetMetatileBehaviorAt(x, y);
@@ -388,7 +388,7 @@ void ItemUseOutOfBattle_Fusion(u8 taskId)
 static bool8 CanFish(void)
 {
     s16 x, y;
-    u16 behavior;
+    enum MetatileBehavior behavior;
 
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     behavior = MapGridGetMetatileBehaviorAt(x, y);
