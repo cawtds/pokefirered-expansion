@@ -7,15 +7,6 @@
 #include "constants/quest_log.h"
 #include "constants/battle.h"
 
-// Layout of Quest Log script commands
-#define QL_CMD_EVENT_MASK  0x0FFF
-#define QL_CMD_COUNT_SHIFT 12
-#define QL_CMD_COUNT_MASK  (0xF << QL_CMD_COUNT_SHIFT)
-
-// Parameter to QuestLog_OnEscalatorWarp
-#define QL_ESCALATOR_OUT 1
-#define QL_ESCALATOR_IN  2
-
 struct QuestLogAction
 {
     union {
