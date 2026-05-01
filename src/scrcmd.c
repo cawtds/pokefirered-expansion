@@ -75,7 +75,7 @@ extern const u8 Std_ReceivedItem[];
 extern const u8 Std_MsgboxGetPoints[];
 
 static bool8 ScriptContext_NextCommandEndsScript(struct ScriptContext *ctx);
-static u8 ScriptContext_GetQuestLogInput(struct ScriptContext *ctx);
+static enum QLInput ScriptContext_GetQuestLogInput(struct ScriptContext *ctx);
 
 static EWRAM_DATA ptrdiff_t sAddressOffset = 0; // For relative addressing in vgoto etc., used by saved scripts (e.g. Mystery Event)
 static EWRAM_DATA u8 sQuestLogWaitButtonPressTimer = 0;
@@ -1772,7 +1772,7 @@ static bool8 WaitForAorBPress(void)
 
     if (ScriptContext_NextCommandEndsScript(sQuestLogScriptContextPtr) == TRUE)
     {
-        u8 qlogInput = ScriptContext_GetQuestLogInput(sQuestLogScriptContextPtr);
+        enum QLInput qlogInput = ScriptContext_GetQuestLogInput(sQuestLogScriptContextPtr);
         RegisterQuestLogInput(qlogInput);
         if (qlogInput != QL_INPUT_OFF)
         {
@@ -1816,7 +1816,7 @@ static bool8 ScriptContext_NextCommandEndsScript(struct ScriptContext *ctx)
         return TRUE;
 }
 
-static u8 ScriptContext_GetQuestLogInput(struct ScriptContext *ctx)
+static enum QLInput ScriptContext_GetQuestLogInput(struct ScriptContext *ctx)
 {
     if (JOY_HELD(DPAD_UP) && gSpecialVar_Facing != DIR_NORTH)
         return QL_INPUT_UP;

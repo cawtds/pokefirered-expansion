@@ -1292,7 +1292,7 @@ void ItemUseOutOfBattle_CannotUse(u8 taskId)
         PrintNotTheTimeToUseThat(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
 }
 
-void ItemUse_SetQuestLogEvent(u8 eventId, struct Pokemon *pokemon, enum Item itemId, u16 param)
+void ItemUse_SetQuestLogEvent(enum QLEvent eventId, struct Pokemon *pokemon, enum Item itemId, u16 param)
 {
     struct QuestLogEvent_Item *data = Alloc(sizeof(*data));
 

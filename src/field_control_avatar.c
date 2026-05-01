@@ -176,6 +176,8 @@ static void QuestLogOverrideJoyVars(struct FieldInput *input, u16 *newKeys, u16 
     switch (GetRegisteredQuestLogInput())
     {
     case QL_INPUT_OFF:
+    case QL_INPUT_A:
+    case QL_INPUT_B:
         break;
     case QL_INPUT_UP:
         *heldKeys = *newKeys = DPAD_UP;

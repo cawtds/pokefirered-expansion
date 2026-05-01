@@ -1,6 +1,8 @@
 #ifndef GUARD_ITEM_USE_H
 #define GUARD_ITEM_USE_H
 
+#include "constants/quest_log.h"
+
 void ItemUseOutOfBattle_AbilityCapsule(u8 taskId);
 void ItemUseOutOfBattle_AbilityPatch(u8 taskId);
 void ItemUseOutOfBattle_BerryPouch(u8 taskId);
@@ -48,7 +50,7 @@ void Task_UseDigEscapeRopeOnField(u8 taskId);
 u8 CanUseEscapeRopeOnCurrMap(void);
 u8 CheckIfItemIsTMHMOrEvolutionStone(enum Item itemId);
 void Task_ItemUse_CloseMessageBoxAndReturnToField_VsSeeker(u8);
-void ItemUse_SetQuestLogEvent(u8 eventId, struct Pokemon *pokemon, enum Item itemId, u16 param);
+void ItemUse_SetQuestLogEvent(enum QLEvent eventId, struct Pokemon *pokemon, enum Item itemId, u16 param);
 void FieldCB_UseItemOnField(void);
 
 enum {

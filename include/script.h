@@ -1,6 +1,8 @@
 #ifndef GUARD_SCRIPT_H
 #define GUARD_SCRIPT_H
 
+#include "constants/quest_log.h"
+
 struct ScriptContext;
 
 typedef bool8 (*ScrCmdFunc)(struct ScriptContext *);
@@ -62,7 +64,7 @@ void InitRamScript_NoObjectEvent(u8 *script, u16 scriptSize);
 bool32 ValidateRamScript(void);
 void InitRamScript_NoObjectEvent(u8 *script, u16 scriptSize);
 u8 *GetSavedRamScriptIfValid(void);
-void RegisterQuestLogInput(u8 var);
+void RegisterQuestLogInput(enum QLInput var);
 void ClearMsgBoxCancelableState(void);
 void SetQuestLogInputIsDpadFlag(void);
 void ClearQuestLogInput(void);
@@ -71,7 +73,7 @@ void MsgSetSignpost(void);
 void MsgSetNotSignpost(void);
 bool8 IsMsgSignpost(void);
 bool8 IsQuestLogInputDpad(void);
-u8 GetRegisteredQuestLogInput(void);
+enum QLInput GetRegisteredQuestLogInput(void);
 void ResetFacingNpcOrSignpostVars(void);
 bool8 CanWalkAwayToCancelMsgBox(void);
 void SetWalkingIntoSignVars(void);
