@@ -37,11 +37,11 @@
 struct WildEncounterData
 {
     u32 rngState;
-    u16 prevMetatileBehavior;
+    enum MetatileBehavior prevMetatileBehavior;
     u16 encounterRateBuff;
     u8 stepsSinceLastEncounter;
     u8 abilityEffect;
-    u16 leadMonHeldItem;
+    enum Item leadMonHeldItem;
 };
 
 static EWRAM_DATA struct WildEncounterData sWildEncounterData = {};
@@ -554,7 +554,7 @@ static bool8 AllowWildCheckOnNewMetatile(void)
     return TRUE;
 }
 
-bool8 TryStandardWildLandEncounter(u16 headerId, u32 currMetatileAttrs, u16 previousMetatileBehavior)
+bool8 TryStandardWildLandEncounter(u16 headerId, u32 currMetatileAttrs, enum MetatileBehavior previousMetatileBehavior)
 {
     struct Roamer *roamer;
     enum Season season = gLoadedSeason;
@@ -601,7 +601,7 @@ bool8 TryStandardWildLandEncounter(u16 headerId, u32 currMetatileAttrs, u16 prev
     return FALSE;
 }
 
-bool8 TryStandardWildSurfEncounter(u16 headerId, u32 currMetatileAttrs, u16 previousMetatileBehavior)
+bool8 TryStandardWildSurfEncounter(u16 headerId, u32 currMetatileAttrs, enum MetatileBehavior previousMetatileBehavior)
 {
     struct Roamer *roamer;
     enum Season season = gLoadedSeason;
@@ -650,7 +650,7 @@ bool8 TryStandardWildSurfEncounter(u16 headerId, u32 currMetatileAttrs, u16 prev
     return FALSE;
 }
 
-bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetatileBehavior)
+bool32 StandardWildEncounter(u32 currMetatileAttrs, enum MetatileBehavior previousMetatileBehavior)
 {
     u16 headerId;
 
@@ -663,7 +663,7 @@ bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetatileBehavior)
     {
         enum Season season = gLoadedSeason;
         enum TimeOfDay timeOfDay = GetTimeOfDay();
-        u16 curMetatileBehavior = ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR);
+        enum MetatileBehavior curMetatileBehavior = ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR);
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS)
         {
             headerId = GetBattlePikeWildMonHeaderId();

@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "rtc.h"
+#include "constants/metatile_behaviors.h"
 
 enum WildPokemonArea
 {
@@ -58,27 +59,27 @@ extern bool8 gIsFishingEncounter;
 extern bool8 gIsSurfingEncounter;
 extern u8 gChainFishingDexNavStreak;
 
-void DisableWildEncounters(bool8 disabled);
-bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetaTileBehavior);
-bool8 SweetScentWildEncounter(void);
-bool8 DoesCurrentMapHaveFishingMons(void);
-void FishingWildEncounter(u8 rod);
-u16 GetLocalWildMon(bool8 *isWaterMon);
-u16 GetLocalWaterMon(void);
-bool8 UpdateRepelCounter(void);
-void DisableWildEncounters(bool8 state);
-bool8 SweetScentWildEncounter(void);
-void SeedWildEncounterRng(u16 randVal);
-void ResetEncounterRateModifiers(void);
-bool8 TryStandardWildEncounter(u32 currMetatileAttrs);
-bool8 TryDoDoubleWildBattle(void);
-void CreateWildMon(enum Species species, u8 level, u8 unownSlot);
-u16 GetCurrentMapWildMonHeaderId(void);
-u8 ChooseWildMonIndex_Land(void);
-u32 ChooseWildMonIndex_Water(void);
-u32 ChooseWildMonIndex_Rocks(void);
-u8 ChooseHiddenMonIndex(void);
 bool32 MapHasNoEncounterData(void);
+bool32 StandardWildEncounter(u32 currMetatileAttrs, enum MetatileBehavior previousMetaTileBehavior);
+bool8 DoesCurrentMapHaveFishingMons(void);
+bool8 SweetScentWildEncounter(void);
+bool8 SweetScentWildEncounter(void);
+bool8 TryDoDoubleWildBattle(void);
+bool8 TryStandardWildEncounter(u32 currMetatileAttrs);
+bool8 UpdateRepelCounter(void);
+u16 GetCurrentMapWildMonHeaderId(void);
+u16 GetLocalWaterMon(void);
+u16 GetLocalWildMon(bool8 *isWaterMon);
+u32 ChooseWildMonIndex_Rocks(void);
+u32 ChooseWildMonIndex_Water(void);
+u8 ChooseHiddenMonIndex(void);
+u8 ChooseWildMonIndex_Land(void);
+void CreateWildMon(enum Species species, u8 level, u8 unownSlot);
+void DisableWildEncounters(bool8 disabled);
+void DisableWildEncounters(bool8 state);
+void FishingWildEncounter(u8 rod);
 void GetSeasonAndTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area, enum Season *season, enum TimeOfDay *timeOfDay);
+void ResetEncounterRateModifiers(void);
+void SeedWildEncounterRng(u16 randVal);
 
 #endif // GUARD_WILD_ENCOUNTER_H
