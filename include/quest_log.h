@@ -168,7 +168,7 @@ extern u16 *gQuestLogRecordingPointer;
 extern u16 gQuestLogCurActionIdx;
 
 void QuestLogRecordPlayerAvatarGfxTransition(u8);
-void SetQuestLogEvent(u16, const u16 *);
+void SetQuestLogEvent(enum QLEvent, const u16 *);
 void SetQLPlayedTheSlots(void);
 void QuestLog_RecordEnteredMap(u16);
 u8 QL_GetPlaybackState(void);
@@ -190,7 +190,7 @@ void QL_AddASLROffset(void *oldSaveBlockPtr);
 void QL_UpdateObject(struct Sprite *sprite);
 void QuestLogRecordNPCStep(u8 a0, u8 a1, u8 a2, u8 a3);
 bool8 QL_IsTrainerSightDisabled(void);
-void QuestLog_OnEscalatorWarp(u8 direction);
+void QuestLog_OnEscalatorWarp(enum QLEscalatorType direction);
 void QuestLogRecordPlayerAvatarGfxTransitionWithDuration(u8 movementActionId, u8 duration);
 void Special_UpdateTrainerFansAfterLinkBattle(void);
 void QuestLogRecordPlayerStep(u8 movementActionId);

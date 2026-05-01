@@ -1556,7 +1556,7 @@ static void TogglePlaybackStateForOverworldLock(u8 a0)
     }
 }
 
-void QuestLog_OnEscalatorWarp(u8 direction)
+void QuestLog_OnEscalatorWarp(enum QLEscalatorType direction)
 {
     u8 state = QL_GetPlaybackState();
 

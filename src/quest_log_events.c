@@ -47,13 +47,13 @@ static EWRAM_DATA bool8 sPlayedTheSlots = FALSE;
 static const u8 sText_PokemonCenter[] = _("POKéMON CENTER");
 
 static bool8 InQuestLogDisabledLocation(void);
-static bool8 ShouldRegisterEvent_HandlePartyActions(u16, const u16 *);
-static bool8 ShouldRegisterEvent_HandleBeatStoryTrainer(u16, const u16 *);
-static u16 *ShouldRegisterEvent(u16, const u16 *);
-static bool8 TryDeferLinkEvent(u16, const u16 *);
-static bool8 TryDeferTrainerBattleEvent(u16, const u16 *);
-static bool8 IsEventWithSpecialEncounterSpecies(u16, const u16 *);
-static void UpdateRepeatEventCounter(u16);
+static bool8 ShouldRegisterEvent_HandlePartyActions(enum QLEvent, const u16 *);
+static bool8 ShouldRegisterEvent_HandleBeatStoryTrainer(enum QLEvent, const u16 *);
+static u16 *ShouldRegisterEvent(enum QLEvent, const u16 *);
+static bool8 TryDeferLinkEvent(enum QLEvent eventId, const u16 *);
+static bool8 TryDeferTrainerBattleEvent(enum QLEvent, const u16 *);
+static bool8 IsEventWithSpecialEncounterSpecies(enum QLEvent, const u16 *);
+static void UpdateRepeatEventCounter(enum QLEvent);
 static u16 *QL_RecordAction_Wait(u16 *, u16);
 static u16 *RecordEvent_SwitchedPartyOrder(u16 *, const struct QuestLogEvent_SwitchedPartyOrder *);
 static u16 *RecordEvent_UsedItem(u16 *, const struct QuestLogEvent_Item *);
@@ -132,8 +132,8 @@ static const u16 *LoadEvent_SoldItem(const u16 *);
 static const u16 *LoadEvent_ObtainedStoryItem(const u16 *);
 static const u16 *LoadEvent_ArrivedInLocation(const u16 *);
 static bool8 IsSpeciesFromSpecialEncounter(enum Species species);
-static bool8 ShouldRegisterEvent_HandleDeparted(u16, const u16 *);
-static bool8 ShouldRegisterEvent_DepartedGameCorner(u16, const u16 *);
+static bool8 ShouldRegisterEvent_HandleDeparted(enum QLEvent, const u16 *);
+static bool8 ShouldRegisterEvent_DepartedGameCorner(enum QLEvent, const u16 *);
 static void TranslateLinkPartnersName(u8 *);
 
 typedef u16 *(*RecordEventFunc)(u16 *, const u16 *);
@@ -450,7 +450,7 @@ static const u16 sWorldMapFlags[] =
     FLAG_WORLD_MAP_SIX_ISLAND
 };
 
-void SetQuestLogEvent(u16 eventId, const u16 *data)
+void SetQuestLogEvent(enum QLEvent eventId, const u16 *data)
 {
     u16 *r1;
 
@@ -590,7 +590,7 @@ bool8 QuestLog_ShouldEndSceneOnMapChange(void)
     return FALSE;
 }
 
-static bool8 ShouldRegisterEvent_HandlePartyActions(u16 eventId, const u16 *data)
+static bool8 ShouldRegisterEvent_HandlePartyActions(enum QLEvent eventId, const u16 *data)
 {
     if (eventId == QL_EVENT_USED_FIELD_MOVE || eventId == QL_EVENT_USED_PKMN_CENTER)
         return TRUE;
@@ -621,7 +621,7 @@ static bool8 ShouldRegisterEvent_HandlePartyActions(u16 eventId, const u16 *data
     return FALSE;
 }
 
-static bool8 ShouldRegisterEvent_HandleBeatStoryTrainer(u16 eventId, const u16 *genericData)
+static bool8 ShouldRegisterEvent_HandleBeatStoryTrainer(enum QLEvent eventId, const u16 *genericData)
 {
     const struct QuestLogEvent_TrainerBattle *data;
 
@@ -647,7 +647,7 @@ void QL_EnableRecordingSteps(void)
     sStepRecordingMode = STEP_RECORDING_MODE_ENABLED;
 }
 
-static u16 *ShouldRegisterEvent(u16 eventId, const u16 *data)
+static u16 *ShouldRegisterEvent(enum QLEvent eventId, const u16 *data)
 {
     if (ShouldRegisterEvent_HandlePartyActions(eventId, data) == TRUE)
         return NULL;
@@ -666,7 +666,7 @@ static u16 *ShouldRegisterEvent(u16 eventId, const u16 *data)
     return sRecordEventFuncs[eventId](gQuestLogRecordingPointer, data);
 }
 
-static bool8 TryDeferLinkEvent(u16 eventId, const u16 *data)
+static bool8 TryDeferLinkEvent(enum QLEvent eventId, const u16 *data)
 {
     if (!IS_LINK_QL_EVENT(eventId))
         return FALSE;
@@ -703,7 +703,7 @@ void QuestLog_StartRecordingInputsAfterDeferredEvent(void)
     }
 }
 
-static bool8 TryDeferTrainerBattleEvent(u16 eventId, const u16 *data)
+static bool8 TryDeferTrainerBattleEvent(enum QLEvent eventId, const u16 *data)
 {
     if (eventId != QL_EVENT_DEFEATED_TRAINER
      && eventId != QL_EVENT_DEFEATED_GYM_LEADER
@@ -745,7 +745,7 @@ void QL_RecordWait(u16 duration)
     gQuestLogCurActionIdx++;
 }
 
-static bool8 IsEventWithSpecialEncounterSpecies(u16 eventId, const u16 *genericData)
+static bool8 IsEventWithSpecialEncounterSpecies(enum QLEvent eventId, const u16 *genericData)
 {
     const struct QuestLogEvent_WildBattle *data;
 
@@ -765,7 +765,7 @@ static bool8 IsEventWithSpecialEncounterSpecies(u16 eventId, const u16 *genericD
 
 u16 *QL_SkipCommand(u16 *curPtr, u16 **prevPtr_p)
 {
-    u16 eventId = curPtr[0] & QL_CMD_EVENT_MASK;
+    enum QLEvent eventId = curPtr[0] & QL_CMD_EVENT_MASK;
     u16 count = curPtr[0] >> QL_CMD_COUNT_SHIFT;
 
     if (eventId == QL_EVENT_DEFEATED_CHAMPION)
@@ -822,7 +822,7 @@ void QL_ResetRepeatEventTracker(void)
     gQuestLogRepeatEventTracker = (struct QuestLogRepeatEventTracker){};
 }
 
-static void UpdateRepeatEventCounter(u16 eventId)
+static void UpdateRepeatEventCounter(enum QLEvent eventId)
 {
     if (gQuestLogRepeatEventTracker.id != (u8)eventId || gQuestLogRepeatEventTracker.counter != gQuestLogCurActionIdx)
     {
@@ -955,7 +955,7 @@ u16 *QL_LoadAction_MovementOrGfxChange(u16 *a0, struct QuestLogAction *a1)
     return (u16 *)(r6 + 4);
 }
 
-static u16 *RecordEventHeader(u16 eventId, u16 *dest)
+static u16 *RecordEventHeader(enum QLEvent eventId, u16 *dest)
 {
     u8 cmdSize;
     u16 *record;
@@ -1000,7 +1000,7 @@ static u16 *RecordEventHeader(u16 eventId, u16 *dest)
     return record;
 }
 
-static const u16 *LoadEvent(u16 eventId, const u16 *eventData)
+static const u16 *LoadEvent(enum QLEvent eventId, const u16 *eventData)
 {
     eventData = (const void *)eventData + (gQuestLogRepeatEventTracker.counter * (sQuestLogEventCmdSizes[eventId] - CMD_HEADER_SIZE) + CMD_HEADER_SIZE);
     return eventData;
@@ -1103,14 +1103,14 @@ static const u16 *LoadEvent_UsedItem(const u16 *eventData)
         if (rItemParam != 0xFFFF)
         {
             StringCopy(gStringVar3, gMovesInfo[rItemParam].name);
-            if (rItemId >= ITEM_HM01)
+            if (IsItemHM(rItemId))
                 StringExpandPlaceholders(gStringVar4, sText_MonReplacedMoveWithHM);
             else
                 StringExpandPlaceholders(gStringVar4, sText_MonReplacedMoveWithTM);
         }
         else
         {
-            if (rItemId >= ITEM_HM01)
+            if (IsItemHM(rItemId))
                 StringExpandPlaceholders(gStringVar4, sText_MonLearnedMoveFromHM);
             else
                 StringExpandPlaceholders(gStringVar4, sText_MonLearnedMoveFromTM);
@@ -1122,7 +1122,7 @@ static const u16 *LoadEvent_UsedItem(const u16 *eventData)
     return record + 3;
 }
 
-static u16 *RecordEvent_GiveTakeHeldItem(u16 eventId, u16 *dest, const struct QuestLogEvent_Item *data)
+static u16 *RecordEvent_GiveTakeHeldItem(enum QLEvent eventId, u16 *dest, const struct QuestLogEvent_Item *data)
 {
     u16 *record = RecordEventHeader(eventId, dest);
     if (record == NULL)
@@ -1199,7 +1199,7 @@ static const u16 *LoadEvent_TookHeldItem(const u16 *eventData)
 #define rGivenItemId record[1]
 #define rSpecies     record[2]
 
-static u16 *RecordEvent_SwappedHeldItem(u16 eventId, u16 *dest, const struct QuestLogEvent_SwappedHeldItem *data)
+static u16 *RecordEvent_SwappedHeldItem(enum QLEvent eventId, u16 *dest, const struct QuestLogEvent_SwappedHeldItem *data)
 {
     u16 *record = RecordEventHeader(eventId, dest);
     if (record == NULL)
@@ -1726,7 +1726,7 @@ static const u16 *LoadEvent_WithdrewItemFromPC(const u16 *eventData)
 #define rMapSec          (*((u8*)&record[3] + 0)) // 1st byte of record[3]
 #define rHpFractionId    (*((u8*)&record[3] + 1)) // 2nd byte of record[3]
 
-static u16 *RecordEvent_DefeatedTrainer(u16 eventId, u16 *dest, const struct QuestLogEvent_TrainerBattle *data)
+static u16 *RecordEvent_DefeatedTrainer(enum QLEvent eventId, u16 *dest, const struct QuestLogEvent_TrainerBattle *data)
 {
     u16 *record = RecordEventHeader(eventId, dest);
     if (record == NULL)
@@ -2009,7 +2009,7 @@ void SetQLPlayedTheSlots(void)
     sPlayedTheSlots = TRUE;
 }
 
-static bool8 ShouldRegisterEvent_HandleDeparted(u16 eventId, const u16 *genericData)
+static bool8 ShouldRegisterEvent_HandleDeparted(enum QLEvent eventId, const u16 *genericData)
 {
     const struct QuestLogEvent_Departed *data;
 
@@ -2027,7 +2027,7 @@ static bool8 ShouldRegisterEvent_HandleDeparted(u16 eventId, const u16 *genericD
     return TRUE;
 }
 
-static bool8 ShouldRegisterEvent_DepartedGameCorner(u16 eventId, const u16 *genericData)
+static bool8 ShouldRegisterEvent_DepartedGameCorner(enum QLEvent eventId, const u16 *genericData)
 {
     const struct QuestLogEvent_Departed *data;
 
