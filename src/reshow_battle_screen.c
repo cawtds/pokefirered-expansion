@@ -422,12 +422,12 @@ static void CreateHealthboxSprite(u8 battler)
 
 static void CreateCaughtMonSprite(void)
 {
-    SetMultiuseSpriteTemplateToPokemon(GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerTarget]], MON_DATA_SPECIES), GetBattlerPosition(gBattlerTarget));
+    SetMultiuseSpriteTemplateToPokemon(GetMonData(GetBattlerMon(gBattlerTarget), MON_DATA_SPECIES), GetBattlerPosition(gBattlerTarget));
     gBattlerSpriteIds[gBattlerTarget] = CreateSprite(&gMultiuseSpriteTemplate, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, GetBattlerSpriteSubpriority(gBattlerTarget));
     gSprites[gBattlerSpriteIds[gBattlerTarget]].oam.paletteNum = gBattlerTarget;
     gSprites[gBattlerSpriteIds[gBattlerTarget]].callback = SpriteCallbackDummy;
     gSprites[gBattlerSpriteIds[gBattlerTarget]].data[0] = gBattlerTarget;
-    gSprites[gBattlerSpriteIds[gBattlerTarget]].data[2] = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerTarget]], MON_DATA_SPECIES);
+    gSprites[gBattlerSpriteIds[gBattlerTarget]].data[2] = GetMonData(GetBattlerMon(gBattlerTarget), MON_DATA_SPECIES);
 
     StartSpriteAnim(&gSprites[gBattlerSpriteIds[gBattlerTarget]], 0);
 

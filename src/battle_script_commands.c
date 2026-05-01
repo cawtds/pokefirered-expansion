@@ -11180,7 +11180,7 @@ static void Cmd_displaydexinfo(void)
     case 0:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
         ClearTemporarySpeciesSpriteData(caughtBattler, FALSE, FALSE);
-        // BattleLoadMonSpriteGfx(mon, caughtBattler);
+        BattleLoadMonSpriteGfx(mon, caughtBattler);
         gBattleCommunication[0]++;
         break;
     case 1:
