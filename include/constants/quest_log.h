@@ -183,7 +183,7 @@ enum QLInput
     QL_INPUT_B,
 };
 
-enum QLAction
+enum QLActionType
 {
     QL_ACTION_MOVEMENT,
     QL_ACTION_GFX_CHANGE,
