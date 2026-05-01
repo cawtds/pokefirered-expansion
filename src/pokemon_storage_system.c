@@ -4405,7 +4405,7 @@ void CreateBoxMonIconAtPos(u8 boxPosition)
         u32 personality = GetCurrentBoxMonData(boxPosition, MON_DATA_PERSONALITY);
 
         gStorage->boxMonsSprites[boxPosition] = CreateMonIconSprite(species, personality, x, y, 2, 19 - (boxPosition % IN_BOX_COLUMNS));
-        if (gStorage->boxOption == OPTION_MOVE_ITEMS)
+        if (ShouldBoxmonSpriteBeTransparent(StorageGetCurrentBox(), boxPosition))
             gStorage->boxMonsSprites[boxPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
     }
 }
@@ -4502,6 +4502,9 @@ static u8 CreateBoxMonIconsInColumn(u8 column, u16 distance, s16 speed)
                     gStorage->boxMonsSprites[boxPosition]->sSpeed = speed;
                     gStorage->boxMonsSprites[boxPosition]->sDestX = xDest;
                     gStorage->boxMonsSprites[boxPosition]->callback = SpriteCB_BoxMonIconScrollIn;
+                    if (ShouldBoxmonSpriteBeTransparent(gStorage->incomingBoxId, boxPosition))
+                        gStorage->boxMonsSprites[boxPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
+
                     count++;
                 }
             }
