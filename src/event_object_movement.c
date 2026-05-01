@@ -1829,6 +1829,11 @@ u16 LoadSheetGraphicsInfo(const struct ObjectEventGraphicsInfo *info, u16 uuid, 
         // Not usingSheet and info size differs; realloc tiles
         ReallocSpriteTiles(sprite, info->images->size);
     }
+    // experimental fix
+    else if (sprite && sprite->images->size != info->images->size)
+    {
+        sprite->oam.tileNum = ReallocSpriteTiles(sprite, info->images->size);
+    }
     return tag;
 }
 
@@ -2998,13 +3003,12 @@ static void ObjectEventSetGraphics(struct ObjectEvent *objectEvent, const struct
         UpdateSpritePalette(&sObjectEventSpritePalettes[i], sprite);
 
     // If gfx size changes, we need to reallocate tiles
-    if ((OW_LARGE_OW_SUPPORT && !OW_GFX_COMPRESS && graphicsInfo->oam->size != sprite->oam.size)
-     || (sprite->images->size != graphicsInfo->images->size))
+    // experimental fix
+    if (OW_LARGE_OW_SUPPORT && !OW_GFX_COMPRESS && graphicsInfo->images->size != sprite->images->size)
         ReallocSpriteTiles(sprite, graphicsInfo->images->size);
 
-    #if OW_GFX_COMPRESS
-    LoadSheetGraphicsInfo(graphicsInfo, objectEvent->graphicsId, sprite);
-    #endif
+    if (OW_GFX_COMPRESS)
+        LoadSheetGraphicsInfo(graphicsInfo, objectEvent->graphicsId, sprite);
 
     sprite->oam.shape = graphicsInfo->oam->shape;
     sprite->oam.size = graphicsInfo->oam->size;
