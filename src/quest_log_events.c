@@ -363,7 +363,7 @@ static const u8 *const sDepartedLocationTexts[] =
     [QL_DEPARTED_MISC_BUILDING_2] = sText_DepartedFromLocationToNextDestination
 };
 
-static const u8 sLocationToDepartedTextId[] =
+static const enum QLDepartedType sLocationToDepartedTextId[] =
 {
     [QL_LOCATION_HOME]               = QL_DEPARTED_HOME,
     [QL_LOCATION_OAKS_LAB]           = QL_DEPARTED_OAKS_LAB,
@@ -1974,7 +1974,8 @@ static u16 *RecordEvent_DepartedLocation(u16 *dest, const struct QuestLogEvent_D
 
 static const u16 *LoadEvent_DepartedLocation(const u16 *eventData)
 {
-    u8 i, locationId;
+    u8 i;
+    enum QLLocation locationId;
     const u8 *record = (const u8 *)LoadEvent(QL_EVENT_DEPARTED, eventData);
 
     locationId = rLocationId;

@@ -2636,7 +2636,7 @@ static bool8 FieldCB2_Credits_WaitFade(void)
         return FALSE;
 }
 
-bool32 Overworld_DoScrollSceneForCredits(u8 *state_p, const struct CreditsOverworldCmd *script, u8 tintMode)
+bool32 Overworld_DoScrollSceneForCredits(u8 *state_p, const struct CreditsOverworldCmd *script, enum QLTintMode tintMode)
 {
     sCreditsOverworld_Script = script;
     gGlobalFieldTintMode = tintMode;

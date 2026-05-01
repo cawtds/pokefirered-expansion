@@ -246,7 +246,7 @@ bool8 IsQuestLogInputDpad(void)
         return FALSE;
 }
 
-void RegisterQuestLogInput(u8 var)
+void RegisterQuestLogInput(enum QLInput var)
 {
     sQuestLogInput = var;
 }
@@ -256,7 +256,7 @@ void ClearQuestLogInput(void)
     sQuestLogInput = 0;
 }
 
-u8 GetRegisteredQuestLogInput(void)
+enum QLInput GetRegisteredQuestLogInput(void)
 {
     return sQuestLogInput;
 }

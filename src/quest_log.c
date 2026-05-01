@@ -251,7 +251,7 @@ bool8 QL_IsRoomToSaveAction(const void * cursor, size_t size)
     return TRUE;
 }
 
-static void SetQuestLogState(u8 state)
+static void SetQuestLogState(enum QLState state)
 {
     gQuestLogState = state;
     if (state == QL_STATE_RECORDING)
@@ -297,12 +297,12 @@ void GetQuestLogState(void)
     gSpecialVar_Result = gQuestLogState;
 }
 
-u8 GetQuestLogStartType(void)
+enum QLStartType GetQuestLogStartType(void)
 {
     return gSaveBlock1Ptr->questLog[sCurrentSceneNum].startType;
 }
 
-void QL_StartRecordingAction(u16 eventId)
+void QL_StartRecordingAction(enum QLEvent eventId)
 {
     if (sCurrentSceneNum >= QUEST_LOG_SCENE_COUNT)
         sCurrentSceneNum = 0;
@@ -314,6 +314,7 @@ void QL_StartRecordingAction(u16 eventId)
         gSaveBlock1Ptr->questLog[sCurrentSceneNum].startType = QL_START_WARP;
     else
         gSaveBlock1Ptr->questLog[sCurrentSceneNum].startType = QL_START_NORMAL;
+
     SetPokemonCounts();
     SetPlayerInitialCoordsAtScene(sCurrentSceneNum);
     SetNPCInitialCoordsAtScene(sCurrentSceneNum);
@@ -1558,7 +1559,7 @@ static void TogglePlaybackStateForOverworldLock(u8 a0)
 
 void QuestLog_OnEscalatorWarp(enum QLEscalatorType direction)
 {
-    u8 state = QL_GetPlaybackState();
+    enum QLPlaybackState state = QL_GetPlaybackState();
 
     switch (direction)
     {
@@ -1740,7 +1741,7 @@ void QL_AfterRecordFishActionSuccessful(void)
     sNextActionDelay++;
 }
 
-u8 QL_GetPlaybackState(void)
+enum QLPlaybackState QL_GetPlaybackState(void)
 {
     switch (gQuestLogPlaybackState)
     {

@@ -2131,7 +2131,7 @@ void QuestLog_TryRecordDepartedLocation(void)
 {
     s16 x, y;
     struct QuestLogEvent_Departed data;
-    u16 locationId = VarGet(VAR_QL_ENTRANCE);
+    enum QLLocation locationId = VarGet(VAR_QL_ENTRANCE);
     data.mapSec = 0;
     data.locationId = 0;
     if (FlagGet(FLAG_SYS_QL_DEPARTED))

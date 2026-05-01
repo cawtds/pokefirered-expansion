@@ -4,6 +4,7 @@
 #include "global.h"
 #include "main.h"
 #include "constants/metatile_behaviors.h"
+#include "constants/quest_log.h"
 
 #define LINK_KEY_CODE_NULL 0x00
 #define LINK_KEY_CODE_EMPTY 0x11
@@ -84,7 +85,7 @@ bool32 CurrentMapHasShadows(void);
 bool32 IsOverworldLinkActive(void);
 bool32 IsSendingKeysOverCable(void);
 bool32 MapHasNaturalLight(u8 mapType);
-bool32 Overworld_DoScrollSceneForCredits(u8 *, const struct CreditsOverworldCmd *, u8);
+bool32 Overworld_DoScrollSceneForCredits(u8 *, const struct CreditsOverworldCmd *, enum QLTintMode);
 bool32 Overworld_IsBikingAllowed(void);
 bool32 Overworld_IsRecvQueueAtMax(void);
 bool32 Overworld_MusicCanOverrideMapMusic(u16 song);
