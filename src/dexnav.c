@@ -72,6 +72,7 @@ STATIC_ASSERT(DN_VAR_STEP_COUNTER != 0, DNVarStepCounter_Must_Not_Be_Zero);
 enum WindowIds
 {
     WINDOW_INFO,
+    WINDOW_MAP_NAME,
     WINDOW_REGISTERED,
     WINDOW_COUNT,
 };
@@ -120,9 +121,9 @@ struct DexNavGUI
     MainCallback savedCallback;
     u8 state;
     u8 cursorSpriteId;
-    enum Species landSpecies[LAND_WILD_COUNT];
-    enum Species waterSpecies[WATER_WILD_COUNT];
-    enum Species hiddenSpecies[HIDDEN_WILD_COUNT];
+    enum Species landSpecies[TOTAL_LAND_COUNT];
+    enum Species waterSpecies[TOTAL_WATER_COUNT];
+    enum Species hiddenSpecies[TOTAL_HIDDEN_COUNT];
     u8 landSpeciesCount;
     u8 waterSpeciesCount;
     u8 hiddenSpeciesCount;
@@ -152,6 +153,7 @@ EWRAM_DATA u16 gDexNavSpecies = SPECIES_NONE;
 static void Task_DexNavWaitFadeIn(u8 taskId);
 static void Task_DexNavMain(u8 taskId);
 static void PrintCurrentSpeciesInfo(void);
+static void PrintSearchableSpecies(enum Species species);
 // SEARCH
 static bool8 TryStartHiddenMonFieldEffect(enum EncounterType environment, u8 xSize, u8 ySize, bool8 smallScan);
 static void DexNavGenerateMoveset(enum Species species, u8 searchLevel, u8 encounterLevel, enum Move *moveDst);
@@ -209,6 +211,8 @@ static const u8 sText_ArrowRight[] = _("{RIGHT_ARROW}");
 static const u8 sText_ArrowUp[] = _("{UP_ARROW}");
 static const u8 sText_ArrowDown[] = _("{DOWN_ARROW}");
 
+static const u8 sText_Paging[] = _("{STR_VAR_1}/{STR_VAR_2}");
+
 static const struct WindowTemplate sDexNavGuiWindowTemplates[] =
 {
     [WINDOW_INFO] =
@@ -221,15 +225,25 @@ static const struct WindowTemplate sDexNavGuiWindowTemplates[] =
         .paletteNum = 15,
         .baseBlock = 1,
     },
+    [WINDOW_MAP_NAME] =
+    {
+        .bg = 0,
+        .tilemapLeft = 19,
+        .tilemapTop = 0,
+        .width = 11,
+        .height = 2,
+        .paletteNum = 15,
+        .baseBlock = 200,
+    },
     [WINDOW_REGISTERED] =
     {
         .bg = 0,
         .tilemapLeft = 4,
         .tilemapTop = 0,
-        .width = 26,
-        .height = 2,
+        .width = 15,
+        .height = 20,
         .paletteNum = 15,
-        .baseBlock = 200,
+        .baseBlock = 222,
     },
     DUMMY_WIN_TEMPLATE
 };
@@ -2022,7 +2036,7 @@ static void UpdateSpeciesIcons(void)
 
     for (u32 i = 0; i < VISIBLE_LAND_COUNT; i++)
     {
-        enum Species species;
+        enum Species species = sDexNavUiDataPtr->landSpecies[i + landOffset];
         s16 x = ROW_LAND_ICON_X + (24 * (i % COL_LAND_COUNT));
         s16 y = ROW_LAND_TOP_ICON_Y + (i > COL_LAND_MAX ? 28 : 0);
 
@@ -2037,16 +2051,12 @@ static void UpdateSpeciesIcons(void)
             sDexNavUiDataPtr->landIconSpriteIds[i] = MAX_SPRITES;
         }
 
-        if (i + landOffset >= LAND_WILD_COUNT)
-            continue;
-
-        species = sDexNavUiDataPtr->landSpecies[i + landOffset];
         sDexNavUiDataPtr->landIconSpriteIds[i] = TryDrawIconInSlot(species, x, y);
     }
 
     for (u32 i = 0; i < VISIBLE_WATER_COUNT; i++)
     {
-        enum Species species;
+        enum Species species = sDexNavUiDataPtr->waterSpecies[i + waterOffset];
         s16 x = ROW_WATER_ICON_X + 24 * i;
         s16 y = ROW_WATER_ICON_Y;
 
@@ -2061,16 +2071,12 @@ static void UpdateSpeciesIcons(void)
             sDexNavUiDataPtr->waterIconSpriteIds[i] = MAX_SPRITES;
         }
 
-        if (i + waterOffset >= WATER_WILD_COUNT)
-            continue;
-
-        species = sDexNavUiDataPtr->waterSpecies[i + waterOffset];
         sDexNavUiDataPtr->waterIconSpriteIds[i] = TryDrawIconInSlot(species, x, y);
     }
 
     for (u32 i = 0; i < VISIBLE_HIDDEN_COUNT; i++)
     {
-        enum Species species;
+        enum Species species = sDexNavUiDataPtr->hiddenSpecies[i + hiddenOffset];
         s16 x = ROW_HIDDEN_ICON_X + 24 * i;
         s16 y = ROW_HIDDEN_ICON_Y;
 
@@ -2085,10 +2091,6 @@ static void UpdateSpeciesIcons(void)
             sDexNavUiDataPtr->hiddenIconSpriteIds[i] = MAX_SPRITES;
         }
 
-        if (i + hiddenOffset >= HIDDEN_WILD_COUNT)
-            continue;
-
-        species = sDexNavUiDataPtr->hiddenSpecies[i + hiddenOffset];
         if (FlagGet(DN_FLAG_DETECTOR_MODE))
         {
             sDexNavUiDataPtr->hiddenIconSpriteIds[i] = TryDrawIconInSlot(species, x, y);
@@ -2160,6 +2162,30 @@ static void SetTypeIconPosAndPal(enum Type type, u8 x, u8 y, u8 spriteArrayId)
     ShowTypeIcon(sprite, type, x + 16, y + 8);
 }
 
+static u32 GetMaxScrollForRow(enum EncounterType type)
+{
+    u32 totalRows = 0;
+    switch (type)
+    {
+    case ENCOUNTER_TYPE_WATER:
+        if (sDexNavUiDataPtr->waterSpeciesCount > 0)
+            totalRows = ((sDexNavUiDataPtr->waterSpeciesCount  - 1) / COL_WATER_COUNT)  + 1;
+
+        return totalRows < VISIBLE_ROW_WATER_COUNT ? 0 : totalRows - VISIBLE_ROW_WATER_COUNT;
+    case ENCOUNTER_TYPE_LAND:
+    default:
+        if (sDexNavUiDataPtr->landSpeciesCount > 0)
+            totalRows = ((sDexNavUiDataPtr->landSpeciesCount  - 1) / COL_LAND_COUNT)  + 1;
+
+        return totalRows < VISIBLE_ROW_LAND_COUNT ? 0 : totalRows - VISIBLE_ROW_LAND_COUNT;
+    case ENCOUNTER_TYPE_HIDDEN:
+        if (sDexNavUiDataPtr->hiddenSpeciesCount > 0)
+            totalRows = ((sDexNavUiDataPtr->hiddenSpeciesCount  - 1) / COL_HIDDEN_COUNT)  + 1;
+
+        return totalRows < VISIBLE_ROW_HIDDEN_COUNT ? 0 : totalRows - VISIBLE_ROW_HIDDEN_COUNT;
+    }
+}
+
 static void PrintCurrentSpeciesInfo(void)
 {
     enum Species species = DexNavGetSpecies();
@@ -2229,19 +2255,26 @@ static void PrintCurrentSpeciesInfo(void)
 
     CopyWindowToVram(WINDOW_INFO, 3);
     PutWindowTilemap(WINDOW_INFO);
+
+    PrintSearchableSpecies(VarGet(DN_VAR_SPECIES) & DEXNAV_MASK_SPECIES);
 }
 
 static void PrintMapName(void)
 {
+    u32 x;
+    FillWindowPixelBuffer(WINDOW_MAP_NAME, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
+    PutWindowTilemap(WINDOW_MAP_NAME);
+
     GetMapName(gStringVar3, GetCurrentRegionMapSectionId(), 0);
-    AddTextPrinterParameterized3(WINDOW_REGISTERED, FONT_NORMAL, 108 +
-                                 GetStringRightAlignXOffset(1, gStringVar3, MAP_NAME_LENGTH * GetFontAttribute(1, FONTATTR_MAX_LETTER_WIDTH)),
-                                 0, sFontColor_White, 0, gStringVar3);
-    CopyWindowToVram(WINDOW_REGISTERED, 3);
+    x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar3, sDexNavGuiWindowTemplates[WINDOW_MAP_NAME].width * TILE_WIDTH);
+    AddTextPrinterParameterized3(WINDOW_MAP_NAME, FONT_NORMAL, x, 0, sFontColor_White, 0, gStringVar3);
+    CopyWindowToVram(WINDOW_MAP_NAME, 3);
 }
 
 static void PrintSearchableSpecies(enum Species species)
 {
+    u32 pageCount;
+
     FillWindowPixelBuffer(WINDOW_REGISTERED, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
     PutWindowTilemap(WINDOW_REGISTERED);
     if (species == SPECIES_NONE)
@@ -2254,6 +2287,36 @@ static void PrintSearchableSpecies(enum Species species)
         StringExpandPlaceholders(gStringVar4, sText_DexNav_SearchForRegisteredSpecies);
         AddTextPrinterParameterized3(WINDOW_REGISTERED, FONT_NORMAL, 0, 0, sFontColor_White, TEXT_SKIP_DRAW, gStringVar4);
     }
+
+    // paging
+    pageCount = GetMaxScrollForRow(ENCOUNTER_TYPE_WATER) + 1;
+    if (pageCount > 1)
+    {
+        ConvertIntToDecimalStringN(gStringVar1, sDexNavUiDataPtr->waterScrollOffset + 1, STR_CONV_MODE_LEFT_ALIGN, 1);
+        ConvertIntToDecimalStringN(gStringVar2, pageCount, STR_CONV_MODE_LEFT_ALIGN, 1);
+        StringExpandPlaceholders(gStringVar4, sText_Paging);
+        AddTextPrinterParameterized3(WINDOW_REGISTERED, FONT_SMALL, 87, 10, sFontColor_Black, 0, gStringVar4);
+    }
+
+    pageCount = GetMaxScrollForRow(ENCOUNTER_TYPE_LAND) + 1;
+    if (pageCount > 1)
+    {
+        ConvertIntToDecimalStringN(gStringVar1, sDexNavUiDataPtr->landScrollOffset + 1, STR_CONV_MODE_LEFT_ALIGN, 1);
+        ConvertIntToDecimalStringN(gStringVar2, pageCount, STR_CONV_MODE_LEFT_ALIGN, 1);
+        StringExpandPlaceholders(gStringVar4, sText_Paging);
+        AddTextPrinterParameterized3(WINDOW_REGISTERED, FONT_SMALL, 100, 51, sFontColor_Black, 0, gStringVar4);
+    }
+
+    pageCount = GetMaxScrollForRow(ENCOUNTER_TYPE_HIDDEN) + 1;
+    if (pageCount > 1)
+    {
+        ConvertIntToDecimalStringN(gStringVar1, sDexNavUiDataPtr->hiddenScrollOffset + 1, STR_CONV_MODE_LEFT_ALIGN, 1);
+        ConvertIntToDecimalStringN(gStringVar2, pageCount, STR_CONV_MODE_LEFT_ALIGN, 1);
+        StringExpandPlaceholders(gStringVar4, sText_Paging);
+        AddTextPrinterParameterized3(WINDOW_REGISTERED, FONT_SMALL, 62, 116, sFontColor_Black, 0, gStringVar4);
+    }
+
+    CopyWindowToVram(WINDOW_REGISTERED, COPYWIN_FULL);
 
     PrintMapName();
 }
@@ -2421,30 +2484,6 @@ static void Task_DexNavWaitFadeIn(u8 taskId)
 {
     if (!gPaletteFade.active)
         gTasks[taskId].func = Task_DexNavMain;
-}
-
-static u32 GetMaxScrollForRow(enum EncounterType type)
-{
-    u32 totalRows = 0;
-    switch (type)
-    {
-    case ENCOUNTER_TYPE_WATER:
-        if (sDexNavUiDataPtr->waterSpeciesCount > 0)
-            totalRows = ((sDexNavUiDataPtr->waterSpeciesCount  - 1) / COL_WATER_COUNT)  + 1;
-
-        return totalRows < VISIBLE_ROW_WATER_COUNT ? 0 : totalRows - VISIBLE_ROW_WATER_COUNT;
-    case ENCOUNTER_TYPE_LAND:
-    default:
-        if (sDexNavUiDataPtr->landSpeciesCount > 0)
-            totalRows = ((sDexNavUiDataPtr->landSpeciesCount  - 1) / COL_LAND_COUNT)  + 1;
-
-        return totalRows < VISIBLE_ROW_LAND_COUNT ? 0 : totalRows - VISIBLE_ROW_LAND_COUNT;
-    case ENCOUNTER_TYPE_HIDDEN:
-        if (sDexNavUiDataPtr->hiddenSpeciesCount > 0)
-            totalRows = ((sDexNavUiDataPtr->hiddenSpeciesCount  - 1) / COL_HIDDEN_COUNT)  + 1;
-
-        return totalRows < VISIBLE_ROW_HIDDEN_COUNT ? 0 : totalRows - VISIBLE_ROW_HIDDEN_COUNT;
-    }
 }
 
 static void Task_DexNavMain(u8 taskId)
@@ -2621,7 +2660,7 @@ static void Task_DexNavMain(u8 taskId)
         if (species != SPECIES_NONE)
         {
             PrintSearchableSpecies(species);
-            //PlaySE(SE_DEX_SEARCH);
+            PlaySE(SE_DEX_SEARCH);
             PlayCry_Script(species, 0);
 
             // create value to store in a var
