@@ -129,6 +129,12 @@ struct DexNavGUI
     u8 potential;
     u8 typeIconSpriteIds[2];
     u8 starSpriteIds[3];
+    u8 landScrollOffset;
+    u8 landIconSpriteIds[VISIBLE_LAND_COUNT];
+    u8 waterScrollOffset;
+    u8 waterIconSpriteIds[VISIBLE_WATER_COUNT];
+    u8 hiddenScrollOffset;
+    u8 hiddenIconSpriteIds[VISIBLE_HIDDEN_COUNT];
 };
 
 // RAM
@@ -1698,9 +1704,9 @@ static void CreateSelectionCursor(void)
     UpdateCursorPosition();
 }
 
-static void CreateNoDataIcon(s16 x, s16 y)
+static u32 CreateNoDataIcon(s16 x, s16 y)
 {
-    CreateSprite(&sNoDataIconTemplate, x, y, 0);
+    return CreateSprite(&sNoDataIconTemplate, x, y, 0);
 }
 
 static bool8 CapturedAllLandMons(u32 headerId)
@@ -1978,72 +1984,140 @@ static void DexNavLoadEncounterData(void)
     }
 }
 
-static void TryDrawIconInSlot(enum Species species, s16 x, s16 y)
+#define sIsMonSprite data[5]
+
+static u32 TryDrawIconInSlot(enum Species species, s16 x, s16 y)
 {
+    u8 spriteId;
     if (species == SPECIES_NONE || species > NUM_SPECIES)
-        CreateNoDataIcon(x, y);   //'X' in slot
+    {
+        spriteId = CreateNoDataIcon(x, y);   //'X' in slot
+        gSprites[spriteId].sIsMonSprite = FALSE;
+    }
     else if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_SEEN))
-        CreateMonIcon(SPECIES_NONE, SpriteCB_MonIcon, x, y, 0, 0xFFFFFFFF); //question mark
+    {
+        spriteId = CreateMonIcon(SPECIES_NONE, SpriteCB_MonIcon, x, y, 0, 0xFFFFFFFF); //question mark
+        gSprites[spriteId].sIsMonSprite = TRUE;
+    }
     else
-        CreateMonIcon(species, SpriteCB_MonIcon, x, y, 0, 0xFFFFFFFF);
+    {
+        spriteId = CreateMonIcon(species, SpriteCB_MonIcon, x, y, 0, 0xFFFFFFFF);
+        gSprites[spriteId].sIsMonSprite = TRUE;
+    }
+
+    return spriteId;
+}
+
+static void UpdateSpeciesIcons(void)
+{
+    u32 landOffset = sDexNavUiDataPtr->landScrollOffset * COL_LAND_COUNT;
+    u32 waterOffset = sDexNavUiDataPtr->waterScrollOffset * COL_WATER_COUNT;
+    u32 hiddenOffset = sDexNavUiDataPtr->hiddenScrollOffset * COL_HIDDEN_COUNT;
+
+    for (u32 i = 0; i < VISIBLE_LAND_COUNT; i++)
+    {
+        enum Species species;
+        s16 x = ROW_LAND_ICON_X + (24 * (i % COL_LAND_COUNT));
+        s16 y = ROW_LAND_TOP_ICON_Y + (i > COL_LAND_MAX ? 28 : 0);
+
+        if (sDexNavUiDataPtr->landIconSpriteIds[i] != MAX_SPRITES)
+        {
+            struct Sprite *sprite = &gSprites[sDexNavUiDataPtr->landIconSpriteIds[i]];
+            if (sprite->sIsMonSprite)
+                FreeAndDestroyMonIconSprite(sprite);
+            else
+                DestroySprite(sprite);
+
+            sDexNavUiDataPtr->landIconSpriteIds[i] = MAX_SPRITES;
+        }
+
+        if (i + landOffset >= LAND_WILD_COUNT)
+            continue;
+
+        species = sDexNavUiDataPtr->landSpecies[i + landOffset];
+        sDexNavUiDataPtr->landIconSpriteIds[i] = TryDrawIconInSlot(species, x, y);
+    }
+
+    for (u32 i = 0; i < VISIBLE_WATER_COUNT; i++)
+    {
+        enum Species species = sDexNavUiDataPtr->waterSpecies[i + waterOffset];
+        s16 x = ROW_WATER_ICON_X + 24 * i;
+        s16 y = ROW_WATER_ICON_Y;
+
+        if (sDexNavUiDataPtr->waterIconSpriteIds[i] != MAX_SPRITES)
+        {
+            struct Sprite *sprite = &gSprites[sDexNavUiDataPtr->waterIconSpriteIds[i]];
+            if (sprite->sIsMonSprite)
+                FreeAndDestroyMonIconSprite(sprite);
+            else
+                DestroySprite(sprite);
+        }
+        sDexNavUiDataPtr->waterIconSpriteIds[i] = TryDrawIconInSlot(species, x, y);
+    }
+
+    for (u32 i = 0; i < VISIBLE_HIDDEN_COUNT; i++)
+    {
+        enum Species species = sDexNavUiDataPtr->hiddenSpecies[i + hiddenOffset];
+        s16 x = ROW_HIDDEN_ICON_X + 24 * i;
+        s16 y = ROW_HIDDEN_ICON_Y;
+
+        if (sDexNavUiDataPtr->hiddenIconSpriteIds[i] != MAX_SPRITES)
+        {
+            struct Sprite *sprite = &gSprites[sDexNavUiDataPtr->hiddenIconSpriteIds[i]];
+            if (sprite->sIsMonSprite)
+                FreeAndDestroyMonIconSprite(sprite);
+            else
+                DestroySprite(sprite);
+        }
+
+        if (FlagGet(DN_FLAG_DETECTOR_MODE))
+        {
+            sDexNavUiDataPtr->hiddenIconSpriteIds[i] = TryDrawIconInSlot(species, x, y);
+        }
+        else if (species == SPECIES_NONE || species > NUM_SPECIES)
+        {
+            sDexNavUiDataPtr->hiddenIconSpriteIds[i] = CreateNoDataIcon(x, y);
+            gSprites[sDexNavUiDataPtr->hiddenIconSpriteIds[i]].sIsMonSprite = FALSE;
+        }
+        else
+        {
+            sDexNavUiDataPtr->hiddenIconSpriteIds[i] = CreateMonIcon(SPECIES_NONE, SpriteCB_MonIcon, x, y, 0, 0xFFFFFFFF); //question mark if detector mode inactive
+            gSprites[sDexNavUiDataPtr->hiddenIconSpriteIds[i]].sIsMonSprite = TRUE;
+        }
+    }
 }
 
 static void DrawSpeciesIcons(void)
 {
-    s16 x, y;
-    enum Species species;
-
     LoadCompressedSpriteSheetUsingHeap(&sNoDataIconSpriteSheet);
-    for (u32 i = 0; i < LAND_WILD_COUNT; i++)
-    {
-        species = sDexNavUiDataPtr->landSpecies[i];
-        x = ROW_LAND_ICON_X + (24 * (i % COL_LAND_COUNT));
-        y = ROW_LAND_TOP_ICON_Y + (i > COL_LAND_MAX ? 28 : 0);
-        TryDrawIconInSlot(species, x, y);
-    }
-
-    for (u32 i = 0; i < WATER_WILD_COUNT; i++)
-    {
-        species = sDexNavUiDataPtr->waterSpecies[i];
-        x = ROW_WATER_ICON_X + 24 * i;
-        y = ROW_WATER_ICON_Y;
-        TryDrawIconInSlot(species, x, y);
-    }
-
-    for (u32 i = 0; i < HIDDEN_WILD_COUNT; i++)
-    {
-        species = sDexNavUiDataPtr->hiddenSpecies[i];
-        x = ROW_HIDDEN_ICON_X + 24 * i;
-        y = ROW_HIDDEN_ICON_Y;
-        if (FlagGet(DN_FLAG_DETECTOR_MODE))
-            TryDrawIconInSlot(species, x, y);
-       else if (species == SPECIES_NONE || species > NUM_SPECIES)
-            CreateNoDataIcon(x, y);
-        else
-            CreateMonIcon(SPECIES_NONE, SpriteCB_MonIcon, x, y, 0, 0xFFFFFFFF); //question mark if detector mode inactive
-    }
+    UpdateSpeciesIcons();
 }
 
 static enum Species DexNavGetSpecies(void)
 {
     enum Species species;
+    u32 offset;
 
     switch (sDexNavUiDataPtr->cursorRow)
     {
     case ROW_WATER:
-        species = sDexNavUiDataPtr->waterSpecies[sDexNavUiDataPtr->cursorCol];
+        offset = sDexNavUiDataPtr->waterScrollOffset * COL_WATER_COUNT;
+        species = sDexNavUiDataPtr->waterSpecies[sDexNavUiDataPtr->cursorCol + offset];
         break;
     case ROW_LAND_TOP:
-        species = sDexNavUiDataPtr->landSpecies[sDexNavUiDataPtr->cursorCol];
+        offset = sDexNavUiDataPtr->landScrollOffset * COL_LAND_COUNT;
+        species = sDexNavUiDataPtr->landSpecies[sDexNavUiDataPtr->cursorCol + offset];
         break;
     case ROW_LAND_BOT:
-        species = sDexNavUiDataPtr->landSpecies[sDexNavUiDataPtr->cursorCol + COL_LAND_COUNT];
+        offset = sDexNavUiDataPtr->landScrollOffset * COL_LAND_COUNT;
+        species = sDexNavUiDataPtr->landSpecies[sDexNavUiDataPtr->cursorCol + COL_LAND_COUNT + offset];
         break;
     case ROW_HIDDEN:
+        offset = sDexNavUiDataPtr->hiddenScrollOffset * COL_HIDDEN_COUNT;
         if (!FlagGet(DN_FLAG_DETECTOR_MODE))
             species = SPECIES_NONE;
         else
-            species = sDexNavUiDataPtr->hiddenSpecies[sDexNavUiDataPtr->cursorCol];
+            species = sDexNavUiDataPtr->hiddenSpecies[sDexNavUiDataPtr->cursorCol + offset];
         break;
     default:
         return SPECIES_NONE;
@@ -2295,6 +2369,16 @@ static void DexNavGuiInit(MainCallback callback)
 
     sDexNavUiDataPtr->state = 0;
     sDexNavUiDataPtr->savedCallback = callback;
+    for (u32 i = 0; i < VISIBLE_LAND_COUNT; i++)
+        sDexNavUiDataPtr->landIconSpriteIds[i] = MAX_SPRITES;
+    sDexNavUiDataPtr->landScrollOffset = 0;
+    for (u32 i = 0; i < VISIBLE_WATER_COUNT; i++)
+        sDexNavUiDataPtr->waterIconSpriteIds[i] = MAX_SPRITES;
+    sDexNavUiDataPtr->waterScrollOffset = 0;
+    for (u32 i = 0; i < VISIBLE_HIDDEN_COUNT; i++)
+        sDexNavUiDataPtr->hiddenIconSpriteIds[i] = MAX_SPRITES;
+    sDexNavUiDataPtr->hiddenScrollOffset = 0;
+
     SetMainCallback2(DexNav_RunSetup);
 }
 
@@ -2336,43 +2420,103 @@ static void Task_DexNavMain(u8 taskId)
     }
     else if (JOY_NEW(DPAD_UP))
     {
-        if (sDexNavUiDataPtr->cursorRow == ROW_WATER)
+        switch (sDexNavUiDataPtr->cursorRow)
         {
-            sDexNavUiDataPtr->cursorRow = ROW_HIDDEN;
-            if (sDexNavUiDataPtr->cursorCol >= COL_HIDDEN_COUNT)
-                sDexNavUiDataPtr->cursorCol = COL_HIDDEN_MAX;
-        }
-        else
-        {
-            if (sDexNavUiDataPtr->cursorRow == ROW_LAND_TOP && sDexNavUiDataPtr->cursorCol == COL_LAND_MAX)
-                sDexNavUiDataPtr->cursorCol = COL_WATER_MAX;
+        case ROW_WATER:
+            if (sDexNavUiDataPtr->waterScrollOffset == 0)
+            {
+                sDexNavUiDataPtr->cursorRow = ROW_HIDDEN;
+                sDexNavUiDataPtr->hiddenScrollOffset = MAX_SCROLL_HIDDEN;
+                if (sDexNavUiDataPtr->cursorCol >= COL_HIDDEN_COUNT)
+                    sDexNavUiDataPtr->cursorCol = COL_HIDDEN_MAX;
+            }
+            else
+            {
+                sDexNavUiDataPtr->waterScrollOffset--;
+            }
+            break;
+        case ROW_HIDDEN:
+            if (sDexNavUiDataPtr->hiddenScrollOffset == 0)
+            {
+                sDexNavUiDataPtr->cursorRow = ROW_LAND_BOT;
+                sDexNavUiDataPtr->landScrollOffset = MAX_SCROLL_LAND;
+            }
+            else
+            {
+                sDexNavUiDataPtr->hiddenScrollOffset--;
+            }
+            break;
+        case ROW_LAND_TOP:
+            if (sDexNavUiDataPtr->landScrollOffset == 0)
+            {
+                if (sDexNavUiDataPtr->cursorCol == COL_LAND_MAX)
+                    sDexNavUiDataPtr->cursorCol = COL_WATER_MAX;
 
-            sDexNavUiDataPtr->cursorRow--;
+                sDexNavUiDataPtr->cursorRow = ROW_WATER;
+                sDexNavUiDataPtr->waterScrollOffset = MAX_SCROLL_WATER;
+            }
+            else
+            {
+                sDexNavUiDataPtr->landScrollOffset--;
+            }
+            break;
+        case ROW_LAND_BOT:
+            sDexNavUiDataPtr->cursorRow = ROW_LAND_TOP;
+            break;
         }
 
         PlaySE(SE_BAG_CURSOR);
         UpdateCursorPosition();
+        UpdateSpeciesIcons();
     }
     else if (JOY_NEW(DPAD_DOWN))
     {
-        if (sDexNavUiDataPtr->cursorRow == ROW_HIDDEN)
+        switch (sDexNavUiDataPtr->cursorRow)
         {
-            sDexNavUiDataPtr->cursorRow = ROW_WATER;
-        }
-        else if (sDexNavUiDataPtr->cursorRow == ROW_LAND_BOT)
-        {
-            if (sDexNavUiDataPtr->cursorCol >= COL_HIDDEN_COUNT)
-                sDexNavUiDataPtr->cursorCol = COL_HIDDEN_MAX;
+        case ROW_WATER:
+            if (sDexNavUiDataPtr->waterScrollOffset < MAX_SCROLL_WATER)
+            {
+                sDexNavUiDataPtr->waterScrollOffset++;
+            }
+            else
+            {
+                sDexNavUiDataPtr->cursorRow = ROW_LAND_TOP;
+                sDexNavUiDataPtr->landScrollOffset = 0;
+            }
+            break;
+        case ROW_HIDDEN:
+            if (sDexNavUiDataPtr->hiddenScrollOffset < MAX_SCROLL_HIDDEN)
+            {
+                sDexNavUiDataPtr->hiddenScrollOffset++;
+            }
+            else
+            {
+                sDexNavUiDataPtr->cursorRow = ROW_WATER;
+                sDexNavUiDataPtr->waterScrollOffset = 0;
+            }
+            break;
+        case ROW_LAND_TOP:
+                sDexNavUiDataPtr->cursorRow = ROW_LAND_BOT;
+            break;
+        case ROW_LAND_BOT:
+            if (sDexNavUiDataPtr->landScrollOffset < MAX_SCROLL_LAND)
+            {
+                sDexNavUiDataPtr->landScrollOffset++;
+            }
+            else
+            {
+                if (sDexNavUiDataPtr->cursorCol >= COL_HIDDEN_COUNT)
+                    sDexNavUiDataPtr->cursorCol = COL_HIDDEN_MAX;
 
-            sDexNavUiDataPtr->cursorRow++;
-        }
-        else
-        {
-            sDexNavUiDataPtr->cursorRow++;
+                sDexNavUiDataPtr->cursorRow = ROW_HIDDEN;
+                sDexNavUiDataPtr->hiddenScrollOffset = 0;
+            }
+            break;
         }
 
         PlaySE(SE_BAG_CURSOR);
         UpdateCursorPosition();
+        UpdateSpeciesIcons();
     }
     else if (JOY_NEW(DPAD_LEFT))
     {
