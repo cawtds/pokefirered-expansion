@@ -123,6 +123,9 @@ struct DexNavGUI
     enum Species landSpecies[LAND_WILD_COUNT];
     enum Species waterSpecies[WATER_WILD_COUNT];
     enum Species hiddenSpecies[HIDDEN_WILD_COUNT];
+    u8 landSpeciesCount;
+    u8 waterSpeciesCount;
+    u8 hiddenSpeciesCount;
     u8 cursorRow;
     u8 cursorCol;
     u8 environment;
@@ -1959,6 +1962,7 @@ static void DexNavLoadEncounterData(void)
             if (species != SPECIES_NONE && !SpeciesInArray(species, 0))
                 sDexNavUiDataPtr->landSpecies[grassIndex++] = landMonsInfo->wildPokemon[i].species;
         }
+        sDexNavUiDataPtr->landSpeciesCount = grassIndex;
     }
 
     // water mons
@@ -1970,6 +1974,7 @@ static void DexNavLoadEncounterData(void)
             if (species != SPECIES_NONE && !SpeciesInArray(species, 1))
                 sDexNavUiDataPtr->waterSpecies[waterIndex++] = waterMonsInfo->wildPokemon[i].species;
         }
+        sDexNavUiDataPtr->waterSpeciesCount = waterIndex;
     }
 
     // hidden mons
@@ -1981,6 +1986,7 @@ static void DexNavLoadEncounterData(void)
             if (species != SPECIES_NONE && !SpeciesInArray(species, 2))
                 sDexNavUiDataPtr->hiddenSpecies[hiddenIndex++] = hiddenMonsInfo->wildPokemon[i].species;
         }
+        sDexNavUiDataPtr->hiddenSpeciesCount = hiddenIndex;
     }
 }
 
@@ -2040,7 +2046,7 @@ static void UpdateSpeciesIcons(void)
 
     for (u32 i = 0; i < VISIBLE_WATER_COUNT; i++)
     {
-        enum Species species = sDexNavUiDataPtr->waterSpecies[i + waterOffset];
+        enum Species species;
         s16 x = ROW_WATER_ICON_X + 24 * i;
         s16 y = ROW_WATER_ICON_Y;
 
@@ -2051,13 +2057,20 @@ static void UpdateSpeciesIcons(void)
                 FreeAndDestroyMonIconSprite(sprite);
             else
                 DestroySprite(sprite);
+
+            sDexNavUiDataPtr->waterIconSpriteIds[i] = MAX_SPRITES;
         }
+
+        if (i + waterOffset >= WATER_WILD_COUNT)
+            continue;
+
+        species = sDexNavUiDataPtr->waterSpecies[i + waterOffset];
         sDexNavUiDataPtr->waterIconSpriteIds[i] = TryDrawIconInSlot(species, x, y);
     }
 
     for (u32 i = 0; i < VISIBLE_HIDDEN_COUNT; i++)
     {
-        enum Species species = sDexNavUiDataPtr->hiddenSpecies[i + hiddenOffset];
+        enum Species species;
         s16 x = ROW_HIDDEN_ICON_X + 24 * i;
         s16 y = ROW_HIDDEN_ICON_Y;
 
@@ -2068,8 +2081,14 @@ static void UpdateSpeciesIcons(void)
                 FreeAndDestroyMonIconSprite(sprite);
             else
                 DestroySprite(sprite);
+
+            sDexNavUiDataPtr->hiddenIconSpriteIds[i] = MAX_SPRITES;
         }
 
+        if (i + hiddenOffset >= HIDDEN_WILD_COUNT)
+            continue;
+
+        species = sDexNavUiDataPtr->hiddenSpecies[i + hiddenOffset];
         if (FlagGet(DN_FLAG_DETECTOR_MODE))
         {
             sDexNavUiDataPtr->hiddenIconSpriteIds[i] = TryDrawIconInSlot(species, x, y);
@@ -2404,6 +2423,30 @@ static void Task_DexNavWaitFadeIn(u8 taskId)
         gTasks[taskId].func = Task_DexNavMain;
 }
 
+static u32 GetMaxScrollForRow(enum EncounterType type)
+{
+    u32 totalRows = 0;
+    switch (type)
+    {
+    case ENCOUNTER_TYPE_WATER:
+        if (sDexNavUiDataPtr->waterSpeciesCount > 0)
+            totalRows = ((sDexNavUiDataPtr->waterSpeciesCount  - 1) / COL_WATER_COUNT)  + 1;
+
+        return totalRows < VISIBLE_ROW_WATER_COUNT ? 0 : totalRows - VISIBLE_ROW_WATER_COUNT;
+    case ENCOUNTER_TYPE_LAND:
+    default:
+        if (sDexNavUiDataPtr->landSpeciesCount > 0)
+            totalRows = ((sDexNavUiDataPtr->landSpeciesCount  - 1) / COL_LAND_COUNT)  + 1;
+
+        return totalRows < VISIBLE_ROW_LAND_COUNT ? 0 : totalRows - VISIBLE_ROW_LAND_COUNT;
+    case ENCOUNTER_TYPE_HIDDEN:
+        if (sDexNavUiDataPtr->hiddenSpeciesCount > 0)
+            totalRows = ((sDexNavUiDataPtr->hiddenSpeciesCount  - 1) / COL_HIDDEN_COUNT)  + 1;
+
+        return totalRows < VISIBLE_ROW_HIDDEN_COUNT ? 0 : totalRows - VISIBLE_ROW_HIDDEN_COUNT;
+    }
+}
+
 static void Task_DexNavMain(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
@@ -2426,7 +2469,7 @@ static void Task_DexNavMain(u8 taskId)
             if (sDexNavUiDataPtr->waterScrollOffset == 0)
             {
                 sDexNavUiDataPtr->cursorRow = ROW_HIDDEN;
-                sDexNavUiDataPtr->hiddenScrollOffset = MAX_SCROLL_HIDDEN;
+                sDexNavUiDataPtr->hiddenScrollOffset = GetMaxScrollForRow(ENCOUNTER_TYPE_HIDDEN);
                 if (sDexNavUiDataPtr->cursorCol >= COL_HIDDEN_COUNT)
                     sDexNavUiDataPtr->cursorCol = COL_HIDDEN_MAX;
             }
@@ -2439,7 +2482,7 @@ static void Task_DexNavMain(u8 taskId)
             if (sDexNavUiDataPtr->hiddenScrollOffset == 0)
             {
                 sDexNavUiDataPtr->cursorRow = ROW_LAND_BOT;
-                sDexNavUiDataPtr->landScrollOffset = MAX_SCROLL_LAND;
+                sDexNavUiDataPtr->landScrollOffset = GetMaxScrollForRow(ENCOUNTER_TYPE_LAND);
             }
             else
             {
@@ -2453,7 +2496,7 @@ static void Task_DexNavMain(u8 taskId)
                     sDexNavUiDataPtr->cursorCol = COL_WATER_MAX;
 
                 sDexNavUiDataPtr->cursorRow = ROW_WATER;
-                sDexNavUiDataPtr->waterScrollOffset = MAX_SCROLL_WATER;
+                sDexNavUiDataPtr->waterScrollOffset = GetMaxScrollForRow(ENCOUNTER_TYPE_WATER);
             }
             else
             {
@@ -2474,7 +2517,7 @@ static void Task_DexNavMain(u8 taskId)
         switch (sDexNavUiDataPtr->cursorRow)
         {
         case ROW_WATER:
-            if (sDexNavUiDataPtr->waterScrollOffset < MAX_SCROLL_WATER)
+            if (sDexNavUiDataPtr->waterScrollOffset < GetMaxScrollForRow(ENCOUNTER_TYPE_WATER))
             {
                 sDexNavUiDataPtr->waterScrollOffset++;
             }
@@ -2485,7 +2528,7 @@ static void Task_DexNavMain(u8 taskId)
             }
             break;
         case ROW_HIDDEN:
-            if (sDexNavUiDataPtr->hiddenScrollOffset < MAX_SCROLL_HIDDEN)
+            if (sDexNavUiDataPtr->hiddenScrollOffset < GetMaxScrollForRow(ENCOUNTER_TYPE_HIDDEN))
             {
                 sDexNavUiDataPtr->hiddenScrollOffset++;
             }
@@ -2499,7 +2542,7 @@ static void Task_DexNavMain(u8 taskId)
                 sDexNavUiDataPtr->cursorRow = ROW_LAND_BOT;
             break;
         case ROW_LAND_BOT:
-            if (sDexNavUiDataPtr->landScrollOffset < MAX_SCROLL_LAND)
+            if (sDexNavUiDataPtr->landScrollOffset < GetMaxScrollForRow(ENCOUNTER_TYPE_LAND))
             {
                 sDexNavUiDataPtr->landScrollOffset++;
             }
