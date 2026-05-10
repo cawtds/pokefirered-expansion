@@ -2408,9 +2408,9 @@ static int GetTypeEffectivenessPoints(enum Move move, int targetSpecies, int mod
         u32 typeEffectiveness1 = UQ_4_12_TO_INT(GetTypeModifier(moveType, defType1) * 2) * 5;
         u32 typeEffectiveness2 = UQ_4_12_TO_INT(GetTypeModifier(moveType, defType2) * 2) * 5;
 
-        typePower = (typeEffectiveness1 *typePower) / 10;
+        typePower = (typeEffectiveness1 * typePower) / 10;
         if (defType2 != defType1)
-            typePower = (typeEffectiveness2 *typePower) / 10;
+            typePower = (typeEffectiveness2 * typePower) / 10;
 
         if (defAbility == ABILITY_WONDER_GUARD && typeEffectiveness1 != TYPE_x1 && typeEffectiveness2 != TYPE_x1)
             typePower = 0;

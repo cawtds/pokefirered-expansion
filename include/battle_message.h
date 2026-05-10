@@ -261,7 +261,7 @@ bool8 BattleStringShouldBeColored(u16);
 extern struct BattleMsgData *gBattleMsgDataPtr;
 
 extern const u8 *const gBattleStringsTable[];
-extern const u8 *const gStatNamesTable[];
+extern const u8 *const gStatNamesTable[NUM_BATTLE_STATS];
 extern const u8 *const gPokeblockWasTooXStringTable[];
 extern const u8 *const gRefereeStringsTable[];
 extern const u8 *const gRoundsStringTable[];
