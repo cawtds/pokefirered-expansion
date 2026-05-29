@@ -3304,28 +3304,24 @@ void AnimTask_RolePlaySilhouette(u8 taskId)
     u32 priority;
     u8 spriteId;
     s16 coord1, coord2;
+    struct Pokemon *mon;
 
     GetAnimBattlerSpriteId(ANIM_ATTACKER);
-    if (IsContest())
-    {
-        return;
-    }
+    mon = GetBattlerMon(gBattleAnimTarget);
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
+        isBackPic = FALSE;
     else
-    {
-        struct Pokemon *mon = GetBattlerMon(gBattleAnimTarget);
-        if (!IsOnPlayerSide(gBattleAnimAttacker))
-            isBackPic = FALSE;
-        else
-            isBackPic = TRUE;
-        personality = GetMonData(mon, MON_DATA_PERSONALITY);
-        isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
-        if (gBattleSpritesDataPtr->battlerData[gBattleAnimTarget].transformSpecies == SPECIES_NONE)
-            species = GetMonData(mon, MON_DATA_SPECIES);
-        else
-            species = gBattleSpritesDataPtr->battlerData[gBattleAnimTarget].transformSpecies;
+        isBackPic = TRUE;
 
-        xOffset = -20;
-    }
+    personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
+    if (gBattleSpritesDataPtr->battlerData[gBattleAnimTarget].transformSpecies == SPECIES_NONE)
+        species = GetMonData(mon, MON_DATA_SPECIES);
+    else
+        species = gBattleSpritesDataPtr->battlerData[gBattleAnimTarget].transformSpecies;
+
+    xOffset = -20;
+
     priority = GetBattlerSpriteBGPriority(gBattleAnimAttacker);
 
     coord1 = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X);
@@ -4897,11 +4893,6 @@ void AnimTask_MonToSubstitute(u8 taskId)
     else
     {
         LoadBattleMonGfxAndAnimate(gBattleAnimAttacker, FALSE, spriteId);
-        if (IsContest())
-        {
-            return;
-        }
-
         for (i = 0; i < NUM_TASK_DATA; i++)
             gTasks[taskId].data[i] = 0;
 
@@ -5165,6 +5156,7 @@ void AnimTask_GetReturnPowerLevel(u8 taskId)
 // No args.
 void AnimTask_SnatchOpposingMonMove(u8 taskId)
 {
+    struct Pokemon *mon;
     u8 spriteId, spriteId2;
     int personality;
     u16 species;
@@ -5191,32 +5183,25 @@ void AnimTask_SnatchOpposingMonMove(u8 taskId)
         }
         break;
     case 1:
-        if (IsContest())
+        mon = GetBattlerMon(gBattleAnimAttacker);
+        personality = GetMonData(mon, MON_DATA_PERSONALITY);
+        isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
+        if (gBattleSpritesDataPtr->battlerData[gBattleAnimAttacker].transformSpecies == SPECIES_NONE)
+            species = GetMonData(mon, MON_DATA_SPECIES);
+        else
+            species = gBattleSpritesDataPtr->battlerData[gBattleAnimAttacker].transformSpecies;
+
+        if (IsOnPlayerSide(gBattleAnimAttacker))
         {
-            return;
+            subpriority = gSprites[GetAnimBattlerSpriteId(ANIM_TARGET)].subpriority + 1;
+            isBackPic = FALSE;
+            x = DISPLAY_WIDTH + 32;
         }
         else
         {
-            struct Pokemon *mon = GetBattlerMon(gBattleAnimAttacker);
-            personality = GetMonData(mon, MON_DATA_PERSONALITY);
-            isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
-            if (gBattleSpritesDataPtr->battlerData[gBattleAnimAttacker].transformSpecies == SPECIES_NONE)
-                species = GetMonData(mon, MON_DATA_SPECIES);
-            else
-                species = gBattleSpritesDataPtr->battlerData[gBattleAnimAttacker].transformSpecies;
-
-            if (IsOnPlayerSide(gBattleAnimAttacker))
-            {
-                subpriority = gSprites[GetAnimBattlerSpriteId(ANIM_TARGET)].subpriority + 1;
-                isBackPic = FALSE;
-                x = DISPLAY_WIDTH + 32;
-            }
-            else
-            {
-                subpriority = gSprites[GetAnimBattlerSpriteId(ANIM_TARGET)].subpriority - 1;
-                isBackPic = TRUE;
-                x = -32;
-            }
+            subpriority = gSprites[GetAnimBattlerSpriteId(ANIM_TARGET)].subpriority - 1;
+            isBackPic = TRUE;
+            x = -32;
         }
 
         spriteId2 = CreateAdditionalMonSpriteForMoveAnim(species, isBackPic, 0, x, GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y), subpriority, personality, isShiny, gBattleAnimAttacker);
