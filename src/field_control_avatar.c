@@ -16,6 +16,7 @@
 #include "fieldmap.h"
 #include "follower_npc.h"
 #include "item_menu.h"
+#include "itemfinder.h"
 #include "link.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
@@ -569,7 +570,7 @@ static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *position
     case 5:
     case 6:
     case BG_EVENT_HIDDEN_ITEM:
-        if (GetHiddenItemAttr(bgEvent->bgUnion.hiddenItem, HIDDEN_ITEM_UNDERFOOT) == TRUE)
+        if (IsUnderfootItem(bgEvent))
             return NULL;
         gSpecialVar_0x8005 = GetHiddenItemAttr(bgEvent->bgUnion.hiddenItem, HIDDEN_ITEM_ITEM);
         gSpecialVar_0x8004 = GetHiddenItemAttr(bgEvent->bgUnion.hiddenItem, HIDDEN_ITEM_FLAG);
