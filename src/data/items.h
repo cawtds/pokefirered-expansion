@@ -13917,7 +13917,11 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_DOWSING_MACHINE] =
     {
+#if I_ORAS_DOWSING_FLAG == 0
+        .name = ITEM_NAME("Itemfinder"),
+#else
         .name = ITEM_NAME("Dowsing Machine"),
+#endif
         .price = 0,
         .description = COMPOUND_STRING(
             "A device that "
