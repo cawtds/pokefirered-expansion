@@ -2426,7 +2426,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 }
             }
             if (protectMethod != PROTECT_MAX_GUARD
-             && IsUnseenFistContactMove(battlerDef, battlerAtk, predictedMove))
+             && AI_CanContactBypassProtect(battlerDef, battlerAtk, predictedMove))
             {
                 ADJUST_SCORE(-10);
                 break;
