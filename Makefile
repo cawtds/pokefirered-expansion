@@ -60,7 +60,7 @@ include config.mk
 all: rom
 
 # Toolchain selection
-TOOLCHAIN := $(DEVKITARM)
+TOOLCHAIN := $(GCCARM15)
 # don't use dkP's base_tools anymore
 # because the redefinition of $(CC) conflicts
 # with when we want to use $(CC) to preprocess files
