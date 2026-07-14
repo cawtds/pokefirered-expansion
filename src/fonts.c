@@ -1,6 +1,6 @@
 #include "global.h"
 
-ALIGNED(4) const u16 gFontSmallNarrowLatinGlyphs[] = INCBIN_U16("graphics/fonts/small_narrow.latfont");
+ALIGNED(4) const u16 gFontSmallNarrowLatinGlyphs[] = INCBIN_U16("graphics/fonts/small_narrow.fwlatfont");
 ALIGNED(4) const u8 gFontSmallNarrowLatinGlyphWidths[] = {
     3,  5,  5,  5,  5,  5,  5,  5,  5,  4,  3,  4,  4,  5,  5,  5,
     5,  5,  5,  5,  5,  5,  5,  5,  3,  4,  5,  5,  5,  5,  4,  3,
@@ -36,7 +36,7 @@ ALIGNED(4) const u8 gFontSmallNarrowLatinGlyphWidths[] = {
     8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  3,
 };
 
-ALIGNED(4) const u16 gFontSmallLatinGlyphs[] = INCBIN_U16("graphics/fonts/latin_small.latfont");
+ALIGNED(4) const u16 gFontSmallLatinGlyphs[] = INCBIN_U16("graphics/fonts/latin_small.fwlatfont");
 ALIGNED(4) const u8 gFontSmallLatinGlyphWidths[] =
 {
      5,  5,  5,  5,  5,  5,  5,  5,  5,  4,  5,  4,  4,  5,
@@ -78,7 +78,7 @@ ALIGNED(4) const u8 gFontSmallLatinGlyphWidths[] =
      8,  8,  8,  8,  8,  8,  8,  5
 };
 
-ALIGNED(4) const u16 gFontNarrowLatinGlyphs[] = INCBIN_U16("graphics/fonts/narrow.latfont");
+ALIGNED(4) const u16 gFontNarrowLatinGlyphs[] = INCBIN_U16("graphics/fonts/narrow.fwlatfont");
 ALIGNED(4) const u8 gFontNarrowLatinGlyphWidths[] = {
     3,  5,  5,  5,  5,  5,  5,  5,  5,  4,  3,  4,  4,  5,  5,  5,
     8,  5,  5,  5,  5,  6,  5,  5,  3,  5,  5,  5,  5,  5,  4,  3,
@@ -114,7 +114,7 @@ ALIGNED(4) const u8 gFontNarrowLatinGlyphWidths[] = {
     8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  3,
 };
 
-ALIGNED(4) const u16 gFontShortLatinGlyphs[] = INCBIN_U16("graphics/fonts/short.latfont");
+ALIGNED(4) const u16 gFontShortLatinGlyphs[] = INCBIN_U16("graphics/fonts/short.fwlatfont");
 ALIGNED(4) const u8 gFontShortLatinGlyphWidths[] = {
     3,  6,  6,  6,  6,  6,  6,  6,  6,  6,  3,  6,  6,  6,  6,  6,
     8,  6,  6,  6,  6,  6,  6,  6,  3,  6,  6,  6,  6,  6,  6,  3,
@@ -152,7 +152,7 @@ ALIGNED(4) const u8 gFontShortLatinGlyphWidths[] = {
 
 ALIGNED(4) const u16 gFontSmallJapaneseGlyphs[] = INCBIN_U16("graphics/fonts/japanese_small.fwjpnfont");
 
-ALIGNED(4) const u16 gFontNormalCopy1LatinGlyphs[] = INCBIN_U16("graphics/fonts/latin_normal.latfont");
+ALIGNED(4) const u16 gFontNormalCopy1LatinGlyphs[] = INCBIN_U16("graphics/fonts/latin_normal.fwlatfont");
 ALIGNED(4) const u8 gFontNormalCopy1LatinGlyphWidths[] =
 {
      6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
@@ -195,7 +195,7 @@ ALIGNED(4) const u8 gFontNormalCopy1LatinGlyphWidths[] =
 };
 ALIGNED(4) const u16 gFontTallJapaneseGlyphs[] = INCBIN_U16("graphics/fonts/japanese_tall.fwjpnfont");
 
-ALIGNED(4) const u16 gFontNormalLatinGlyphs[] = INCBIN_U16("graphics/fonts/latin_normal.latfont");
+ALIGNED(4) const u16 gFontNormalLatinGlyphs[] = INCBIN_U16("graphics/fonts/latin_normal.fwlatfont");
 ALIGNED(4) const u8 gFontNormalLatinGlyphWidths[] =
 {
      6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
@@ -261,7 +261,7 @@ ALIGNED(4) const u8 gFontNormalJapaneseGlyphWidths[] =
     10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,  0
 };
 
-ALIGNED(4) const u16 gFontMaleLatinGlyphs[] = INCBIN_U16("graphics/fonts/latin_male.latfont");
+ALIGNED(4) const u16 gFontMaleLatinGlyphs[] = INCBIN_U16("graphics/fonts/latin_male.fwlatfont");
 ALIGNED(4) const u8 gFontMaleLatinGlyphWidths[] =
 {
      6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
@@ -327,7 +327,7 @@ ALIGNED(4) const u8 gFontMaleJapaneseGlyphWidths[] =
     10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,  0
 };
 
-ALIGNED(4) const u16 gFontFemaleLatinGlyphs[] = INCBIN_U16("graphics/fonts/latin_female.latfont");
+ALIGNED(4) const u16 gFontFemaleLatinGlyphs[] = INCBIN_U16("graphics/fonts/latin_female.fwlatfont");
 ALIGNED(4) const u8 gFontFemaleLatinGlyphWidths[] =
 {
      6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
@@ -393,7 +393,7 @@ ALIGNED(4) const u8 gFontFemaleJapaneseGlyphWidths[] =
     10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,  0
 };
 
-ALIGNED(4) const u16 gFontNarrowerLatinGlyphs[] = INCBIN_U16("graphics/fonts/narrower.latfont");
+ALIGNED(4) const u16 gFontNarrowerLatinGlyphs[] = INCBIN_U16("graphics/fonts/narrower.fwlatfont");
 ALIGNED(4) const u8 gFontNarrowerLatinGlyphWidths[] = {
     3,  4,  4,  4,  4,  4,  4,  4,  4,  4,  3,  4,  4,  4,  4,  4,
     8,  4,  4,  4,  5,  5,  4,  4,  3,  4,  4,  4,  4,  4,  4,  3,
@@ -429,7 +429,7 @@ ALIGNED(4) const u8 gFontNarrowerLatinGlyphWidths[] = {
     8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  3,
 };
 
-ALIGNED(4) const u16 gFontSmallNarrowerLatinGlyphs[] = INCBIN_U16("graphics/fonts/small_narrower.latfont");
+ALIGNED(4) const u16 gFontSmallNarrowerLatinGlyphs[] = INCBIN_U16("graphics/fonts/small_narrower.fwlatfont");
 ALIGNED(4) const u8 gFontSmallNarrowerLatinGlyphWidths[] = {
     3,  4,  4,  4,  4,  4,  4,  4,  4,  4,  3,  4,  4,  4,  4,  4,
     5,  4,  4,  4,  5,  4,  4,  4,  3,  4,  4,  4,  4,  4,  3,  3,
@@ -465,7 +465,7 @@ ALIGNED(4) const u8 gFontSmallNarrowerLatinGlyphWidths[] = {
     8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  3,
 };
 
-ALIGNED(4) const u16 gFontShortNarrowLatinGlyphs[] = INCBIN_U16("graphics/fonts/short_narrow.latfont");
+ALIGNED(4) const u16 gFontShortNarrowLatinGlyphs[] = INCBIN_U16("graphics/fonts/short_narrow.fwlatfont");
 ALIGNED(4) const u8 gFontShortNarrowLatinGlyphWidths[] = {
     3,  5,  5,  5,  5,  5,  5,  5,  5,  4,  3,  4,  4,  5,  5,  5,
     8,  5,  5,  5,  5,  6,  5,  5,  3,  5,  5,  5,  5,  5,  4,  3,
@@ -501,7 +501,7 @@ ALIGNED(4) const u8 gFontShortNarrowLatinGlyphWidths[] = {
     8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  3,
 };
 
-ALIGNED(4) const u16 gFontShortNarrowerLatinGlyphs[] = INCBIN_U16("graphics/fonts/short_narrower.latfont");
+ALIGNED(4) const u16 gFontShortNarrowerLatinGlyphs[] = INCBIN_U16("graphics/fonts/short_narrower.fwlatfont");
 ALIGNED(4) const u8 gFontShortNarrowerLatinGlyphWidths[] = {
     1,  4,  4,  4,  4,  4,  4,  4,  4,  4,  3,  4,  4,  4,  4,  4,
     8,  4,  4,  4,  5,  5,  4,  4,  3,  4,  4,  4,  4,  4,  4,  3,

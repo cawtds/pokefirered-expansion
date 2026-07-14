@@ -1693,7 +1693,12 @@ static u16 DexScreen_CountMonsInOrderedList(u8 orderIdx)
             enum Species species = NationalPokedexNumToSpecies(natDex);
 
             if (!IsSpeciesEnabled(species))
+            {
+                sPokedexScreenData->listItems[i].id = 0;
+                sPokedexScreenData->listItems[i].name = sText_5Dashes;
+                i++;
                 continue;
+            }
 
             seen = DexScreen_GetSetPokedexFlag(natDex, FLAG_GET_SEEN, FALSE);
             caught = DexScreen_GetSetPokedexFlag(natDex, FLAG_GET_CAUGHT, FALSE);
