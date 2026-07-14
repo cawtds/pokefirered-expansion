@@ -32,61 +32,61 @@ contest_types := cool beauty cute smart tough
 
 
 ### Fonts ###
-$(FONTGFXDIR)/latin_small.latfont: $(FONTGFXDIR)/latin_small.png
-	$(GFX) $< $@
-
-$(FONTGFXDIR)/latin_normal.latfont: $(FONTGFXDIR)/latin_normal.png
-	$(GFX) $< $@
-
-$(FONTGFXDIR)/short.latfont: $(FONTGFXDIR)/latin_short.png
-	$(GFX) $< $@
-
-$(FONTGFXDIR)/narrow.latfont: $(FONTGFXDIR)/latin_narrow.png
-	$(GFX) $< $@
-
-$(FONTGFXDIR)/small_narrow.latfont: $(FONTGFXDIR)/latin_small_narrow.png
-	$(GFX) $< $@
-
-$(FONTGFXDIR)/narrower.latfont: $(FONTGFXDIR)/latin_narrower.png
-	$(GFX) $< $@
-
-$(FONTGFXDIR)/small_narrower.latfont: $(FONTGFXDIR)/latin_small_narrower.png
-	$(GFX) $< $@
-
-$(FONTGFXDIR)/short_narrow.latfont: $(FONTGFXDIR)/latin_short_narrow.png
-	$(GFX) $< $@
-
-$(FONTGFXDIR)/short_narrower.latfont: $(FONTGFXDIR)/latin_short_narrower.png
+$(FONTGFXDIR)/latin_small.fwlatfont: $(FONTGFXDIR)/latin_small.png
 	$(GFX) $< $@
 
 $(FONTGFXDIR)/japanese_small.fwjpnfont: $(FONTGFXDIR)/japanese_small.png
 	$(GFX) $< $@
 
+$(FONTGFXDIR)/japanese_tall.fwjpnfont: $(FONTGFXDIR)/japanese_tall.png
+	$(GFX) $< $@
+
+$(FONTGFXDIR)/latin_normal.fwlatfont: $(FONTGFXDIR)/latin_normal.png
+	$(GFX) $< $@
+
 $(FONTGFXDIR)/japanese_normal.fwjpnfont: $(FONTGFXDIR)/japanese_normal.png
 	$(GFX) $< $@
 
-$(FONTGFXDIR)/japanese_bold.fwjpnfont: $(FONTGFXDIR)/japanese_bold.png
-	$(GFX) $< $@
-
-$(FONTGFXDIR)/short.fwjpnfont: $(FONTGFXDIR)/japanese_short.png
-	$(GFX) $< $@
-
-$(FONTGFXDIR)/braille.fwjpnfont: $(FONTGFXDIR)/braille.png
+$(FONTGFXDIR)/latin_male.fwlatfont: $(FONTGFXDIR)/latin_male.png
 	$(GFX) $< $@
 
 $(FONTGFXDIR)/japanese_male.fwjpnfont: $(FONTGFXDIR)/japanese_male.png
 	$(GFX) $< $@
 
-$(FONTGFXDIR)/japanese_tall.fwjpnfont: $(FONTGFXDIR)/japanese_tall.png
+$(FONTGFXDIR)/latin_female.fwlatfont: $(FONTGFXDIR)/latin_female.png
 	$(GFX) $< $@
 
 $(FONTGFXDIR)/japanese_female.fwjpnfont: $(FONTGFXDIR)/japanese_female.png
 	$(GFX) $< $@
 
-$(FONTGFXDIR)/latin_male.latfont: $(FONTGFXDIR)/latin_male.png
+$(FONTGFXDIR)/braille.fwjpnfont: $(FONTGFXDIR)/braille.png
 	$(GFX) $< $@
 
-$(FONTGFXDIR)/latin_female.latfont: $(FONTGFXDIR)/latin_female.png
+$(FONTGFXDIR)/japanese_bold.fwjpnfont: $(FONTGFXDIR)/japanese_bold.png
+	$(GFX) $< $@
+
+$(FONTGFXDIR)/short.fwlatfont: $(FONTGFXDIR)/latin_short.png
+	$(GFX) $< $@
+
+$(FONTGFXDIR)/narrow.fwlatfont: $(FONTGFXDIR)/latin_narrow.png
+	$(GFX) $< $@
+
+$(FONTGFXDIR)/small_narrow.fwlatfont: $(FONTGFXDIR)/latin_small_narrow.png
+	$(GFX) $< $@
+
+$(FONTGFXDIR)/narrower.fwlatfont: $(FONTGFXDIR)/latin_narrower.png
+	$(GFX) $< $@
+
+$(FONTGFXDIR)/small_narrower.fwlatfont: $(FONTGFXDIR)/latin_small_narrower.png
+	$(GFX) $< $@
+
+$(FONTGFXDIR)/short_narrow.fwlatfont: $(FONTGFXDIR)/latin_short_narrow.png
+	$(GFX) $< $@
+
+$(FONTGFXDIR)/short_narrower.fwlatfont: $(FONTGFXDIR)/latin_short_narrower.png
+	$(GFX) $< $@
+
+$(FONTGFXDIR)/short.fwjpnfont: $(FONTGFXDIR)/japanese_short.png
 	$(GFX) $< $@
 
 graphics/pokemon_jump/bg.4bpp: %.4bpp: %.png

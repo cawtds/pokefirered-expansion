@@ -124,7 +124,7 @@ static const struct CombinedMove sCombinedMoves[2] =
 
 #define KANTO_TO_NATIONAL(name)     [KANTO_DEX_##name - 1] = NATIONAL_DEX_##name,
 #define HOENN_TO_NATIONAL(name)     [HOENN_DEX_##name - 1] = NATIONAL_DEX_##name,
-#define NATIONAL_TO_SPECIES(name)   [NATIONAL_DEX_##name - 1] = SPECIES_##name,
+#define NATIONAL_TO_SPECIES(name)   [NATIONAL_DEX_##name] = SPECIES_##name,
 
 
 static const enum NationalDexOrder sKantoToNationalOrder[KANTO_DEX_COUNT] =
@@ -139,7 +139,7 @@ static const enum NationalDexOrder sHoennToNationalOrder[HOENN_DEX_COUNT - 1] =
     FOREACH_SPECIES_IN_HOENN_DEX_ORDER(HOENN_TO_NATIONAL)
 };
 
-static const enum Species sNationalOrderToSpecies[NATIONAL_DEX_COUNT] =
+static const enum Species sNationalOrderToSpecies[NATIONAL_DEX_END] =
 {
     FOREACH_SPECIES_IN_NATIONAL_DEX(NATIONAL_TO_SPECIES)
 };
@@ -4685,10 +4685,7 @@ bool8 IsMonPastEvolutionLevel(struct Pokemon *mon)
 
 enum Species NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum)
 {
-    if (!nationalNum)
-        return 0;
-
-    return sNationalOrderToSpecies[nationalNum - 1];
+    return sNationalOrderToSpecies[nationalNum];
 }
 
 enum HoennDexOrder NationalToHoennOrder(enum NationalDexOrder nationalNum)

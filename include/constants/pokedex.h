@@ -3,6 +3,7 @@
 
 
 #define FOREACH_SPECIES_IN_NATIONAL_DEX(F) \
+    F(NONE) \
     F(BULBASAUR) \
     F(IVYSAUR) \
     F(VENUSAUR) \
@@ -1033,7 +1034,6 @@
 // These constants are NOT disabled by P_GEN_X_POKEMON to keep pokedex_orders.h clean.
 enum NationalDexOrder
 {
-    NATIONAL_DEX_NONE,
     #define NATIONAL_DEX_ENUM(name) NATIONAL_DEX_ ##name,
     FOREACH_SPECIES_IN_NATIONAL_DEX(NATIONAL_DEX_ENUM)
     #undef NATIONAL_DEX_ENUM
