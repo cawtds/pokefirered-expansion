@@ -9,6 +9,7 @@
 #define TAG_MOVE_TYPES_3 33336
 
 void InitTypeIconGfx(void);
+void LoadTypeIconPalettes(void);
 u32 CreateTypeIconSprite(void);
 void ShowTypeIcon(struct Sprite *icon, enum Type type, s32 x, s32 y);
 
