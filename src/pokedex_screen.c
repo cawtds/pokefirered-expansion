@@ -1937,6 +1937,7 @@ static void Task_DexScreen_CategorySubmenu(u8 taskId)
         pageFlipCmd = 0;
         if (JOY_NEW(A_BUTTON) && DexScreen_GetSetPokedexFlag(sPokedexScreenData->pageSpecies[sPokedexScreenData->categoryCursorPosInPage], FLAG_GET_SEEN, TRUE))
         {
+            LoadTypeIconPalettes();
             RemoveScrollIndicatorArrowPair(sPokedexScreenData->scrollArrowsTaskId);
             ListMenuRemoveCursorObject(sPokedexScreenData->categoryPageCursorTaskId, 0);
             sPokedexScreenData->state = 12;

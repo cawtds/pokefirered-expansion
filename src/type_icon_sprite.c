@@ -214,11 +214,19 @@ static const struct SpriteTemplate gSpriteTemplate_MoveTypes =
     .anims = sSpriteAnimTable_MoveTypes,
 };
 
-void InitTypeIconGfx(void)
+void LoadTypeIconPalettes(void)
 {
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_1);
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_2);
+    FreeSpritePaletteByTag(TAG_MOVE_TYPES_3);
     LoadSpritePalette(&gSpritePalette_MoveTypes1);
     LoadSpritePalette(&gSpritePalette_MoveTypes2);
     LoadSpritePalette(&gSpritePalette_MoveTypes3);
+}
+
+void InitTypeIconGfx(void)
+{
+    LoadTypeIconPalettes();
     LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
 }
 
