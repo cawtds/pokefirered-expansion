@@ -185,6 +185,19 @@ void FreezeForApproachingTrainers(void)
         UnfreezeObjectEvent(followerObj);
 }
 
+bool8 IsFreezeObjectAndPlayerFinished(void)
+{
+    if (FuncIsActiveTask(Task_FreezeObjectAndPlayer))
+    {
+        return FALSE;
+    }
+    else
+    {
+        StopPlayerAvatar();
+        return TRUE;
+    }
+}
+
 #undef tPlayerFrozen
 #undef tObjectFrozen
 #undef tObjectId

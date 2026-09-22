@@ -9,6 +9,7 @@ bool8 IsFreezeSelectedObjectAndPlayerFinished(void);
 void FreezeObjects_WaitForPlayerAndSelected(void);
 void FreezeForApproachingTrainers(void);
 void ScriptUnfreezeObjectEvents(void);
+bool8 IsFreezeObjectAndPlayerFinished(void);
 bool8 IsPlayerStandingStill(void);
 void UnionRoom_UnlockPlayerAndChatPartner(void);
 

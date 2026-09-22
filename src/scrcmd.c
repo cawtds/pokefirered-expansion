@@ -2972,7 +2972,7 @@ bool8 ScrCmd_lockfortrainer(struct ScriptContext *ctx)
         if (gObjectEvents[gSelectedObjectEvent].active)
         {
             FreezeForApproachingTrainers();
-            SetupNativeScript(ctx, IsFreezePlayerFinished);
+            SetupNativeScript(ctx, IsFreezeObjectAndPlayerFinished);
         }
         return TRUE;
     }
